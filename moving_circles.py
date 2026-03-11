@@ -1,3 +1,20 @@
+"""
+py5 Ship and Aircraft Tracker
+
+This script visualizes real-time ship and aircraft positions on a world map.
+It uses py5 (Python wrapper for Processing) for visualization and fetches data from:
+- AISStream (WebSocket) for ship positions
+- OpenSky Network (REST API) for aircraft positions
+
+Features:
+- Real-time tracking of ships and aircraft
+- Movement history trails (cyan for ships, yellow for aircraft)
+- Simplified world map background
+- Performance optimization (limits display to 50 objects each)
+
+Note: This script requires an internet connection and uses public APIs.
+"""
+
 import py5
 import threading
 import time
