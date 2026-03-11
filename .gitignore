@@ -7,3 +7,6 @@ __pycache__/
 output.log
 .venv
 venv
+*
+!.py
+!.gitignore
