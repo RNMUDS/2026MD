@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第3回: 条件分岐とインタラクティブ・アニメーション | MD1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET & BASE ============ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 32px; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #111111;
+  color: #e0e0e0;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============ LAYOUT ============ */
+.container { max-width: 1600px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+
+/* ============ HEADER ============ */
+.hero {
+  background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a);
+  color: white;
+  padding: clamp(3rem, 8vw, 6rem) 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(108,99,255,0.3), transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(155,89,182,0.2), transparent 50%);
+}
+.hero .container { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 100px;
+  padding: 0.35rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+}
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+
+/* ============ SUBMISSION BOX ============ */
+.submission-box {
+  background: linear-gradient(135deg, #1A1A1A, #1a2e0a);
+  border: 2px solid #76B900;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin: 2rem 0;
+}
+.submission-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #76B900;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.submission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.5rem;
+}
+.sub-item {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  gap: 0.3rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.4rem;
+  padding: 0.6rem 0.4rem;
+  font-size: 0.55rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.sub-item .sub-count {
+  margin-bottom: 0.1rem;
+}
+.sub-item .tag {
+  margin-bottom: 0.15rem;
+}
+.sub-count {
+  background: #76B900;
+  color: white;
+  border-radius: 0.2rem;
+  min-width: 1.5rem; height: 1.5rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700;
+}
+
+/* ============ TAGS ============ */
+.tag {
+  display: inline-flex; align-items: center; gap: 0.2rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 100px;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.tag-note      { background: #1a2e0a; color: #76B900; }
+.tag-standard  { background: #0a1a2e; color: #4FC3F7; }
+.tag-advanced  { background: #2e1a0a; color: #FFB800; }
+.tag-group     { background: #1a2e0a; color: #76B900; }
+
+/* ============ EXAM ALERT TAG ============ */
+.exam-alert {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  background: rgba(255, 82, 82, 0.15);
+  border: 1px solid #FFB800;
+  color: #FFB800;
+  padding: 0.2rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  animation: exam-pulse 2s ease-in-out 3;
+}
+@keyframes exam-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ============ SECTION HEADERS ============ */
+.section-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.section-num {
+  width: 2.5rem; height: 2.5rem;
+  border-radius: 0.4rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 900; color: white;
+  flex-shrink: 0;
+}
+.section-header h2 {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+/* ============ CARDS ============ */
+.card {
+  background: #141414;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  border: 1px solid #2a2a2a;
+}
+.card-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #222;
+}
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.standard  { border-left: 4px solid #76B900; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.card.group     { border-left: 4px solid #93D500; }
+
+/* ============ NOTION CALLOUT ============ */
+.notion-submit {
+  background: #1a2e0a;
+  border: 1px solid #76B900;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  display: flex; align-items: flex-start; gap: 0.5rem;
+}
+.notion-submit::before { content: '\1F4DD'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+
+/* ============ TABLES ============ */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem;
+  margin: 1rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+th {
+  background: rgba(108, 99, 255, 0.15);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  color: #76B900;
+  letter-spacing: 0.02em;
+}
+td {
+  padding: 0.55rem 0.8rem;
+  border-top: 1px solid #222;
+}
+tr:nth-child(even) td { background: #111; }
+
+/* ============ CODE ============ */
+pre {
+  background: #0A0A0A;
+  color: #E0E0E0;
+  border-radius: 12px;
+  padding: clamp(0.8rem, 2vw, 1.4rem);
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
+  font-size: clamp(0.75rem, 1.3vw, 0.88rem);
+  line-height: 1.7;
+  margin: 1rem 0;
+  position: relative;
+}
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #FFB800; }
+pre .op { color: #93D500; }
+.code-label {
+  position: absolute; top: 0; right: 0;
+  background: rgba(255,255,255,0.08);
+  color: #999999;
+  padding: 0.2rem 0.8rem;
+  border-radius: 0 12px 0 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+/* inline code */
+:not(pre) > code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(108,99,255,0.15);
+  padding: 0.15em 0.45em;
+  border-radius: 5px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+:not(pre) > code:hover { background: rgba(108,99,255,0.3); }
+:not(pre) > code.copied { background: rgba(108,99,255,0.5); }
+
+/* ============ EXPLANATION BLOCKS ============ */
+.concept-box {
+  background: rgba(108, 99, 255, 0.15);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  border: 1px solid #2a2a3a;
+}
+.concept-box h4 {
+  font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem;
+}
+.analogy {
+  background: #1a1a0a;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 0.75rem 0;
+  border-left: 3px solid #FFB800;
+  font-size: 0.95rem;
+}
+.analogy::before {
+  content: '\1F4A1 日常の例';
+  display: block;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #FFB800;
+  margin-bottom: 0.3rem;
+}
+.point-list {
+  list-style: none;
+  padding: 0;
+}
+.point-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+}
+.point-list li::before {
+  content: '\25B8';
+  position: absolute; left: 0;
+  color: #76B900;
+  font-weight: 700;
+}
+
+/* ============ ANSWERS (COLLAPSIBLE) ============ */
+details {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+details summary {
+  padding: 0.8rem 1.2rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 0.5rem;
+  background: #1a1a1a;
+  user-select: none;
+}
+details summary::marker { content: ''; }
+details summary::before {
+  content: '\25B6';
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+  color: #666;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
+
+/* ============ WARNING / DANGER CALLOUT ============ */
+.callout-danger {
+  background: rgba(255, 82, 82, 0.08);
+  border: 1px solid rgba(255, 82, 82, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-danger h4 {
+  color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-warning {
+  background: rgba(255, 184, 0, 0.08);
+  border: 1px solid rgba(255, 184, 0, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-warning h4 {
+  color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-info {
+  background: rgba(108, 99, 255, 0.08);
+  border: 1px solid rgba(108, 99, 255, 0.3);
+  border-left: 4px solid #76B900;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-info h4 {
+  color: #76B900; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-tip {
+  background: rgba(155, 89, 182, 0.08);
+  border: 1px solid rgba(155, 89, 182, 0.3);
+  border-left: 4px solid #93D500;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-tip h4 {
+  color: #93D500; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+
+/* ============ FOOTER ============ */
+footer {
+  background: #0A0A0A;
+  color: #999999;
+  padding: 2rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 640px) {
+  .submission-items { grid-template-columns: 1fr; }
+  .section-num { width: 2rem; height: 2rem; font-size: 0.85rem; }
+}
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
+/* ============ SUB-ITEM LINKS ============ */
+a.sub-item { transition: transform 0.15s, box-shadow 0.15s; }
+a.sub-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(118,185,0,0.3);
+  border-color: #76B900;
+}
+
+/* ============ SECTION NAV (sticky) ============ */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.5rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-exam { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3rem; }
+
+/* ============ REDUCED MOTION ============ */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  details summary::before { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SECTION NAV ============ -->
+<nav class="section-nav">
+  <a href="#sec-schedule">日程</a>
+  <a href="#sec-teacher">0. 説明</a>
+  <a href="#sec-condition">1. 条件分岐</a>
+  <a href="#sec-animation">2. アニメーション</a>
+  <a href="#sec-input">3. ユーザ入力</a>
+  <a href="#sec-std3-1" class="nav-assignment">std3-1</a>
+  <a href="#sec-adv3-1" class="nav-assignment">adv3-1</a>
+  <a href="#sec-cs">CS/DS基礎</a>
+  <a href="#answers-section">解答例</a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">Media creation Data design 1（MD1）─ 2026年度前期</div>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.1rem;white-space:nowrap">武蔵野大学データサイエンス学部</p>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.3rem;white-space:nowrap">武蔵野大学国際データサイエンス学部（通信教育部）</p>
+    <p style="font-size:0.95rem;opacity:0.85;margin-bottom:1rem">中村 亮太</p>
+    <h1>MD1 第3回: 条件分岐とインタラクティブ・アニメーション</h1>
+    <p style="white-space:nowrap">if/elif/elseで振る舞いを変え、draw()でアニメーションを実装する</p>
+    <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:0.3rem;padding:0.4rem 0.8rem;margin-top:1rem;font-size:0.7rem;display:inline-block">
+      <strong>対象環境:</strong> Apple M1 / M2 / M3 / M4 / M5 チップ搭載 Mac ｜ macOS Tahoe
+    </div>
+  </div>
+</header>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section id="sec-schedule" style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div class="submission-box">
+      <h3>提出ガイド</h3>
+      <div class="submission-items">
+        <a href="#sec-std3-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std3-1<br>Wordレポート（PDF）</a>
+        <a href="#sec-adv3-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv3-1</a>
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.85rem;color:#93D500">
+        <strong>提出方法:</strong> Wordフォーマットで作成 → PDFにエクスポート → Google Classroomに<strong>PDF 1ファイル</strong>を提出
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:0.5rem;font-size:0.85rem;color:#FFB800">
+        <strong>提出期限:</strong> 5/18(月) 13:10（第4回授業開始まで）
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRE-CLASS NOTES ============ -->
+<section>
+  <div class="container">
+    <div class="callout-warning">
+      <h4>授業前の連絡事項</h4>
+      <ul class="point-list" style="margin-top:0.5rem">
+        <li><strong>前回ess2-4のプレゼンテーション（第1ターム 40分）:</strong> 発表係が90秒プレゼン、Zoom画面共有、投票で最優秀作品決定</li>
+        <li><strong>レポート作成方法変更:</strong> 今後の標準課題はWordフォーマットでPDF提出（Google Classroomのリンクからwordファイルをダウンロード）</li>
+        <li><strong>Word必須要件:</strong> タイトル、名前、章立て(1., 1.1, 1.2)、字下げ、句読点(．，)、表/図/Listのタイトルと本文参照</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 0. TEACHER EXPLANATION ============ -->
+<section id="sec-teacher">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">0</div>
+      <h2>先生の説明（約30分）</h2>
+    </div>
+
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <h3>前回プレゼン + レポートフォーマット + 条件分岐の基本</h3>
+        <span class="tag tag-note">ノート</span>
+      </div>
+
+      <div class="concept-box">
+        <h4>本日の流れ</h4>
+        <ol style="padding-left:1.5rem;font-size:0.95rem;margin-top:0.5rem">
+          <li style="margin-bottom:0.4rem"><strong>第1ターム（40分）:</strong> ess2-4プレゼン発表 → 投票 → 最優秀作品決定</li>
+          <li style="margin-bottom:0.4rem"><strong>レポートフォーマット説明:</strong> Word形式での提出方法の確認</li>
+          <li style="margin-bottom:0.4rem"><strong>条件分岐の基本:</strong> if/elif/elseの仕組みとプログラムにおける役割</li>
+          <li><strong>グループワーク:</strong> セクション1〜4を各自のペースで進行</li>
+        </ol>
+      </div>
+
+      <div class="callout-info" style="margin-top:1rem">
+        <h4>Wordレポートの書き方</h4>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li>Google Classroomのリンクからwordファイルをダウンロード</li>
+          <li>タイトル、名前を記入</li>
+          <li>章立て: 1., 1.1, 1.2 のように階層化</li>
+          <li>字下げ: 段落の先頭を1文字下げる</li>
+          <li>句読点: ．（ピリオド）と，（カンマ）を使用</li>
+          <li>表/図/List: 必ずタイトルを付け、本文中で「図1に示す」のように参照する</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GROUP WORK DIVIDER ============ -->
+<section style="padding:2rem 0;background:linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a)">
+  <div class="container" style="text-align:center">
+    <div style="font-size:1.5rem;font-weight:900;color:#76B900;margin-bottom:0.5rem">ここから先はグループで進めてください</div>
+    <p style="font-size:0.85rem;color:#93D500;margin-bottom:1rem">この資料を上から順に読みながら、グループで協力して演習を進めましょう</p>
+    <div style="display:inline-flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;font-size:0.7rem">
+      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
+        <div style="color:#76B900;font-weight:700">1. 条件分岐</div>
+        <div style="color:#999">約20分</div>
+      </div>
+      <div style="color:#76B900;display:flex;align-items:center">&rarr;</div>
+      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
+        <div style="color:#76B900;font-weight:700">2. アニメーション</div>
+        <div style="color:#999">約20分</div>
+      </div>
+      <div style="color:#76B900;display:flex;align-items:center">&rarr;</div>
+      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
+        <div style="color:#76B900;font-weight:700">3. ユーザ入力</div>
+        <div style="color:#999">約20分</div>
+      </div>
+      <div style="color:#76B900;display:flex;align-items:center">&rarr;</div>
+      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
+        <div style="color:#76B900;font-weight:700">4. std3-1</div>
+        <div style="color:#999">約20分</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1. 条件分岐処理の基本 ============ -->
+<section id="sec-condition">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>条件分岐処理の基本（約20分）</h2>
+    </div>
+
+    <!-- if/elif/else -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>if / elif / else 文</h3></div>
+
+      <div class="concept-box">
+        <h4>条件分岐とは</h4>
+        <p>条件によって処理を分けることを<strong>条件分岐</strong>といいます。Pythonでは <code>if</code>、<code>elif</code>、<code>else</code> を使います。</p>
+      </div>
+
+      <div class="analogy">
+        信号機と同じです。「青なら進む、黄色なら止まる準備、赤なら止まる」。条件に応じて行動が変わります。
+      </div>
+
+      <pre><span class="code-label">Python ── if/elif/else の基本</span>
+score <span class="op">=</span> <span class="num">75</span>
+
+<span class="kw">if</span> score <span class="op">&gt;=</span> <span class="num">90</span>:
+    <span class="fn">print</span>(<span class="str">"優秀です！"</span>)
+<span class="kw">elif</span> score <span class="op">&gt;=</span> <span class="num">60</span>:
+    <span class="fn">print</span>(<span class="str">"合格です"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">"不合格です"</span>)</pre>
+
+      <div class="callout-info">
+        <h4>インデント（字下げ）が重要</h4>
+        <p>Pythonでは<strong>インデント（半角スペース4つ）</strong>で処理のブロックを表します。インデントがずれるとエラーになります。</p>
+      </div>
+    </div>
+
+    <!-- 比較演算子 -->
+    <div class="card" style="border-left:4px solid #93D500">
+      <div class="card-header"><h3>比較演算子</h3></div>
+
+      <table>
+        <tr><th>演算子</th><th>意味</th><th>例</th><th>結果</th></tr>
+        <tr><td><code>==</code></td><td>等しい</td><td><code>5 == 5</code></td><td><code>True</code></td></tr>
+        <tr><td><code>!=</code></td><td>等しくない</td><td><code>5 != 3</code></td><td><code>True</code></td></tr>
+        <tr><td><code>&gt;</code></td><td>より大きい</td><td><code>5 &gt; 3</code></td><td><code>True</code></td></tr>
+        <tr><td><code>&lt;</code></td><td>より小さい</td><td><code>3 &lt; 5</code></td><td><code>True</code></td></tr>
+        <tr><td><code>&gt;=</code></td><td>以上</td><td><code>5 &gt;= 5</code></td><td><code>True</code></td></tr>
+        <tr><td><code>&lt;=</code></td><td>以下</td><td><code>3 &lt;= 5</code></td><td><code>True</code></td></tr>
+      </table>
+
+      <div class="callout-danger">
+        <h4>== と = を間違えないこと</h4>
+        <p><code>=</code> は代入、<code>==</code> は比較です。<code>if x = 5:</code> はエラーになります。正しくは <code>if x == 5:</code> です。</p>
+      </div>
+    </div>
+
+    <!-- 論理演算子 -->
+    <div class="card" style="border-left:4px solid #93D500">
+      <div class="card-header"><h3>論理演算子</h3></div>
+
+      <table>
+        <tr><th>演算子</th><th>意味</th><th>例</th></tr>
+        <tr><td><code>and</code></td><td>かつ（両方True）</td><td><code>x &gt; 0 and x &lt; 10</code></td></tr>
+        <tr><td><code>or</code></td><td>または（どちらかTrue）</td><td><code>x &lt; 0 or x &gt; 100</code></td></tr>
+        <tr><td><code>not</code></td><td>否定（TrueをFalseに）</td><td><code>not (x == 0)</code></td></tr>
+      </table>
+
+      <pre><span class="code-label">Python ── 論理演算子の例</span>
+age <span class="op">=</span> <span class="num">20</span>
+has_ticket <span class="op">=</span> <span class="kw">True</span>
+
+<span class="kw">if</span> age <span class="op">&gt;=</span> <span class="num">18</span> <span class="kw">and</span> has_ticket:
+    <span class="fn">print</span>(<span class="str">"入場できます"</span>)
+<span class="kw">elif</span> age <span class="op">&lt;</span> <span class="num">18</span>:
+    <span class="fn">print</span>(<span class="str">"18歳未満は入場不可"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">"チケットが必要です"</span>)</pre>
+    </div>
+
+    <!-- 練習問題 -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <h3>練習問題: 条件分岐</h3>
+        <span class="tag tag-note">ノート</span>
+      </div>
+
+      <p>以下のコードを <code>~/MD1/no3/.venv</code> 環境で実行し、結果を確認しましょう。</p>
+
+      <h4 style="color:#76B900;margin-top:1rem;margin-bottom:0.5rem">環境準備</h4>
+      <pre><span class="code-label">Terminal</span>
+<span class="fn">mkdir</span> <span class="op">-p</span> ~/MD1/no3
+<span class="fn">cd</span> ~/MD1/no3
+<span class="fn">uv</span> venv
+<span class="fn">source</span> .venv/bin/activate
+<span class="fn">uv</span> pip install py5</pre>
+
+      <h4 style="color:#76B900;margin-top:1rem;margin-bottom:0.5rem">練習1: 数値の判定</h4>
+      <p>変数 <code>n</code> が正の数、ゼロ、負の数のどれかを判定して表示するプログラムを書きましょう。</p>
+      <pre><span class="code-label">Python ── practice1.py</span>
+n <span class="op">=</span> <span class="op">-</span><span class="num">7</span>
+
+<span class="kw">if</span> n <span class="op">&gt;</span> <span class="num">0</span>:
+    <span class="fn">print</span>(<span class="str">"正の数です"</span>)
+<span class="kw">elif</span> n <span class="op">==</span> <span class="num">0</span>:
+    <span class="fn">print</span>(<span class="str">"ゼロです"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">"負の数です"</span>)</pre>
+
+      <h4 style="color:#76B900;margin-top:1rem;margin-bottom:0.5rem">練習2: FizzBuzz</h4>
+      <p>変数 <code>n</code> が3の倍数なら "Fizz"、5の倍数なら "Buzz"、両方の倍数なら "FizzBuzz"、それ以外はそのまま表示するプログラムを書きましょう。</p>
+
+      <details>
+        <summary>ヒント</summary>
+        <div class="answer-content">
+          <p><code>%</code>（余り演算子）を使います。<code>n % 3 == 0</code> で「3の倍数」を判定できます。</p>
+          <p>注意: 「両方の倍数」の判定を<strong>最初に</strong>書く必要があります（なぜでしょう？）。</p>
+        </div>
+      </details>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 2. py5で条件分岐活用 ============ -->
+<section id="sec-animation">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#93D500">2</div>
+      <h2>py5で条件分岐活用 ─ アニメーション（約20分）</h2>
+    </div>
+
+    <!-- アクティブモード -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>アクティブモード: setup() + draw()</h3></div>
+
+      <div class="concept-box">
+        <h4>スタティックモード vs アクティブモード</h4>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li><strong>スタティックモード:</strong> <code>setup()</code> だけ。1回だけ描画して終了（前回まで）</li>
+          <li><strong>アクティブモード:</strong> <code>setup()</code> + <code>draw()</code>。<code>draw()</code> が毎フレーム繰り返し実行される</li>
+        </ul>
+      </div>
+
+      <div class="analogy">
+        パラパラ漫画と同じです。<code>draw()</code> が1ページ分の絵を描き、毎秒60回（60fps）新しいページを描くことで、動いているように見えます。
+      </div>
+
+      <pre><span class="code-label">Python ── アクティブモードの基本構造</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    <span class="cmt"># 最初に1回だけ実行される</span>
+    py5.<span class="fn">size</span>(<span class="num">800</span>, <span class="num">400</span>)
+    py5.<span class="fn">frame_rate</span>(<span class="num">60</span>)  <span class="cmt"># 1秒間に60回 draw() を呼ぶ</span>
+
+<span class="kw">def</span> <span class="fn">draw</span>():
+    <span class="cmt"># 毎フレーム繰り返し実行される</span>
+    py5.<span class="fn">background</span>(<span class="num">192</span>)  <span class="cmt"># 毎回背景をリセット</span>
+    py5.<span class="fn">ellipse</span>(py5.mouse_x, py5.mouse_y, <span class="num">50</span>, <span class="num">50</span>)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+    </div>
+
+    <!-- グローバル変数 -->
+    <div class="card" style="border-left:4px solid #93D500">
+      <div class="card-header"><h3>グローバル変数と global 宣言</h3></div>
+
+      <div class="concept-box">
+        <h4>なぜ global が必要なのか</h4>
+        <p>関数の中で定義した変数は<strong>ローカル変数</strong>で、その関数の中でしか使えません。<code>setup()</code> で作った変数を <code>draw()</code> で使うには、関数の外（グローバルスコープ）で変数を定義し、関数内で <code>global</code> 宣言をして「この変数はグローバル変数ですよ」と伝えます。</p>
+      </div>
+
+      <pre><span class="code-label">Python ── global 宣言の例</span>
+<span class="kw">import</span> py5
+
+x <span class="op">=</span> <span class="num">0</span>      <span class="cmt"># グローバル変数</span>
+dx <span class="op">=</span> <span class="num">5</span>     <span class="cmt"># 移動速度</span>
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">800</span>, <span class="num">400</span>)
+    py5.<span class="fn">fill</span>(<span class="num">0</span>, <span class="num">128</span>, <span class="num">255</span>)
+    py5.<span class="fn">frame_rate</span>(<span class="num">60</span>)
+
+<span class="kw">def</span> <span class="fn">draw</span>():
+    <span class="kw">global</span> x, dx          <span class="cmt"># グローバル変数を変更するために必要</span>
+    py5.<span class="fn">background</span>(<span class="num">192</span>)
+    py5.<span class="fn">ellipse</span>(x, <span class="num">200</span>, <span class="num">50</span>, <span class="num">50</span>)
+    x <span class="op">+=</span> dx               <span class="cmt"># 毎フレーム x を dx だけ移動</span>
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="callout-danger">
+        <h4>global を忘れるとどうなる？</h4>
+        <p><code>global</code> を書かずに <code>x += dx</code> とすると、Python は <code>x</code> をローカル変数だと解釈し、<code>UnboundLocalError</code> が発生します。</p>
+      </div>
+    </div>
+
+    <!-- 跳ね返り -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <h3>練習: ボールの跳ね返り（左右）</h3>
+        <span class="tag tag-note">ノート</span>
+      </div>
+
+      <p>上のコードでは、ボールが画面右端を超えて消えてしまいます。条件分岐を使って、端に到達したら方向を反転させましょう。</p>
+
+      <pre><span class="code-label">Python ── 跳ね返りの追加</span>
+<span class="kw">import</span> py5
+
+x <span class="op">=</span> <span class="num">0</span>
+dx <span class="op">=</span> <span class="num">5</span>
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">800</span>, <span class="num">400</span>)
+    py5.<span class="fn">fill</span>(<span class="num">0</span>, <span class="num">128</span>, <span class="num">255</span>)
+    py5.<span class="fn">frame_rate</span>(<span class="num">60</span>)
+
+<span class="kw">def</span> <span class="fn">draw</span>():
+    <span class="kw">global</span> x, dx
+    py5.<span class="fn">background</span>(<span class="num">192</span>)
+    py5.<span class="fn">ellipse</span>(x, <span class="num">200</span>, <span class="num">50</span>, <span class="num">50</span>)
+    x <span class="op">+=</span> dx
+
+    <span class="cmt"># 端に到達したら方向を反転</span>
+    <span class="kw">if</span> x <span class="op">&gt;</span> py5.width <span class="kw">or</span> x <span class="op">&lt;</span> <span class="num">0</span>:
+        dx <span class="op">=</span> <span class="op">-</span>dx
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="concept-box">
+        <h4>なぜ跳ね返るのか？</h4>
+        <p><code>dx = -dx</code> で速度の正負を反転しています。<code>dx = 5</code> が <code>dx = -5</code> になると、x座標が減少する＝左に移動します。再び左端に到達すると <code>dx = 5</code> に戻り、右に移動します。</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 3. ユーザ入力×条件分岐 ============ -->
+<section id="sec-input">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#93D500">3</div>
+      <h2>ユーザ入力 × 条件分岐（約20分）</h2>
+    </div>
+
+    <!-- キー入力 -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>キーボード入力: key_pressed()</h3></div>
+
+      <div class="concept-box">
+        <h4>イベント駆動プログラミング</h4>
+        <p>py5では、キーが押されたときに自動的に呼ばれる関数 <code>key_pressed()</code> を定義できます。どのキーが押されたかは <code>py5.key</code>（文字キー）や <code>py5.key_code</code>（特殊キー）で取得します。</p>
+      </div>
+
+      <table>
+        <tr><th>変数/関数</th><th>説明</th><th>例</th></tr>
+        <tr><td><code>key_pressed()</code></td><td>キーが押されたときに呼ばれる</td><td>関数として定義</td></tr>
+        <tr><td><code>py5.key</code></td><td>押された文字キー</td><td><code>'r'</code>, <code>'g'</code>, <code>'b'</code></td></tr>
+        <tr><td><code>py5.key_code</code></td><td>特殊キーのコード</td><td><code>py5.LEFT</code>, <code>py5.RIGHT</code></td></tr>
+        <tr><td><code>mouse_pressed()</code></td><td>マウスクリック時に呼ばれる</td><td>関数として定義</td></tr>
+        <tr><td><code>py5.mouse_x</code></td><td>マウスのX座標</td><td>数値</td></tr>
+        <tr><td><code>py5.mouse_y</code></td><td>マウスのY座標</td><td>数値</td></tr>
+      </table>
+    </div>
+
+    <!-- 色チェンジャ練習 -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <h3>練習: 色チェンジャ</h3>
+        <span class="tag tag-note">ノート</span>
+      </div>
+
+      <p>キーボードの <code>r</code>、<code>g</code>、<code>b</code> キーを押すと円の色が変わるプログラムです。</p>
+
+      <pre><span class="code-label">Python ── color_changer.py</span>
+<span class="kw">import</span> py5
+
+r <span class="op">=</span> <span class="num">128</span>
+g <span class="op">=</span> <span class="num">128</span>
+b <span class="op">=</span> <span class="num">128</span>
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">400</span>)
+
+<span class="kw">def</span> <span class="fn">draw</span>():
+    py5.<span class="fn">background</span>(<span class="num">220</span>)
+    py5.<span class="fn">fill</span>(r, g, b)
+    py5.<span class="fn">ellipse</span>(<span class="num">200</span>, <span class="num">200</span>, <span class="num">150</span>, <span class="num">150</span>)
+
+<span class="kw">def</span> <span class="fn">key_pressed</span>():
+    <span class="kw">global</span> r, g, b
+    <span class="kw">if</span> py5.key <span class="op">==</span> <span class="str">'r'</span>:
+        r, g, b <span class="op">=</span> <span class="num">255</span>, <span class="num">0</span>, <span class="num">0</span>
+    <span class="kw">elif</span> py5.key <span class="op">==</span> <span class="str">'g'</span>:
+        r, g, b <span class="op">=</span> <span class="num">0</span>, <span class="num">255</span>, <span class="num">0</span>
+    <span class="kw">elif</span> py5.key <span class="op">==</span> <span class="str">'b'</span>:
+        r, g, b <span class="op">=</span> <span class="num">0</span>, <span class="num">0</span>, <span class="num">255</span>
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="callout-tip">
+        <h4>拡張してみよう</h4>
+        <p>マウスクリックでも色を変えたい場合、<code>mouse_pressed()</code> 関数を追加しましょう。<code>py5.mouse_button == py5.LEFT</code> で左クリック、<code>py5.mouse_button == py5.RIGHT</code> で右クリックを判定できます。</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 4. std3-1 ============ -->
+<section id="sec-std3-1">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">4</div>
+      <h2>std3-1: ボールの跳ね返り（約20分）</h2>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header">
+        <h3>std3-1: ユーザ入力 × アニメーション</h3>
+        <span class="tag tag-standard">標準課題</span>
+      </div>
+
+      <div class="concept-box">
+        <h4>課題内容</h4>
+        <p>以下のベースコードに<strong>上下移動</strong>と<strong>上下左右端での跳ね返り</strong>を追加してください。完成したら<strong>Wordレポート</strong>にまとめてPDFで提出します。</p>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li>上下の矢印キーで上下に移動できるようにする</li>
+          <li>画面の上下左右すべての端でボールが跳ね返る</li>
+          <li>Wordレポートとして提出（コード、実行結果スクリーンショット、考察を含める）</li>
+        </ul>
+      </div>
+
+      <h4 style="color:#76B900;margin-top:1rem;margin-bottom:0.5rem">ベースコード（ここから始めてください）</h4>
+      <pre><span class="code-label">Python ── std3-1_base.py</span>
+<span class="kw">import</span> py5
+
+x, y <span class="op">=</span> <span class="num">200</span>, <span class="num">150</span>
+dx, dy <span class="op">=</span> <span class="num">0</span>, <span class="num">0</span>
+speed <span class="op">=</span> <span class="num">5</span>
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">300</span>)
+
+<span class="kw">def</span> <span class="fn">draw</span>():
+    <span class="kw">global</span> x, y
+    py5.<span class="fn">background</span>(<span class="num">220</span>)
+    x <span class="op">+=</span> dx
+    y <span class="op">+=</span> dy
+    py5.<span class="fn">circle</span>(x, y, <span class="num">30</span>)
+
+<span class="kw">def</span> <span class="fn">key_pressed</span>():
+    <span class="kw">global</span> dx, dy
+    <span class="kw">if</span> py5.key_code <span class="op">==</span> py5.LEFT:
+        dx, dy <span class="op">=</span> <span class="op">-</span>speed, <span class="num">0</span>
+    <span class="kw">elif</span> py5.key_code <span class="op">==</span> py5.RIGHT:
+        dx, dy <span class="op">=</span> speed, <span class="num">0</span>
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <h4 style="color:#FFB800;margin-top:1rem;margin-bottom:0.5rem">追加すべき内容</h4>
+      <ol style="padding-left:1.5rem;font-size:0.95rem;margin-top:0.5rem">
+        <li style="margin-bottom:0.4rem"><code>key_pressed()</code> に上下キーの処理を追加（<code>py5.UP</code>、<code>py5.DOWN</code>）</li>
+        <li style="margin-bottom:0.4rem"><code>draw()</code> に上下左右の跳ね返り処理を追加</li>
+        <li>ボールが画面外に出ないようにする</li>
+      </ol>
+
+      <details>
+        <summary>ヒント1: 上下キーの処理</summary>
+        <div class="answer-content">
+          <pre><span class="code-label">Python ── 上下キー追加</span>
+<span class="kw">elif</span> py5.key_code <span class="op">==</span> py5.UP:
+    dx, dy <span class="op">=</span> <span class="num">0</span>, <span class="op">-</span>speed
+<span class="kw">elif</span> py5.key_code <span class="op">==</span> py5.DOWN:
+    dx, dy <span class="op">=</span> <span class="num">0</span>, speed</pre>
+        </div>
+      </details>
+
+      <details>
+        <summary>ヒント2: 跳ね返り処理</summary>
+        <div class="answer-content">
+          <p><code>draw()</code> の中で x, y が画面端を超えたか判定し、速度を反転させます。</p>
+          <pre><span class="code-label">Python ── 跳ね返り</span>
+<span class="cmt"># 左右の跳ね返り</span>
+<span class="kw">if</span> x <span class="op">&gt;</span> py5.width <span class="kw">or</span> x <span class="op">&lt;</span> <span class="num">0</span>:
+    dx <span class="op">=</span> <span class="op">-</span>dx
+<span class="cmt"># 上下の跳ね返り</span>
+<span class="kw">if</span> y <span class="op">&gt;</span> py5.height <span class="kw">or</span> y <span class="op">&lt;</span> <span class="num">0</span>:
+    dy <span class="op">=</span> <span class="op">-</span>dy</pre>
+        </div>
+      </details>
+
+      <div class="notion-submit">
+        <div><strong>Wordレポート提出:</strong> Google Classroomからwordファイルをダウンロード → 記入 → PDF化 → 提出</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ adv3-1 ============ -->
+<section id="sec-adv3-1">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">*</div>
+      <h2>adv3-1: 発展課題</h2>
+    </div>
+
+    <div class="card advanced">
+      <div class="card-header">
+        <h3>adv3-1: インタラクティブ・アート</h3>
+        <span class="tag tag-advanced">発展課題</span>
+      </div>
+
+      <div class="concept-box">
+        <h4>課題内容</h4>
+        <p>今回学んだ<strong>条件分岐</strong>、<strong>アニメーション（draw）</strong>、<strong>ユーザ入力（キーボード/マウス）</strong>を組み合わせて、オリジナルのインタラクティブ作品を作成してください。</p>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li>条件分岐（if/elif/else）を最低3つ使用すること</li>
+          <li>アニメーション（draw()による動き）を含むこと</li>
+          <li>ユーザ入力（キーボードまたはマウス）で操作できること</li>
+          <li>コード中にコメントで処理の説明を書くこと</li>
+        </ul>
+      </div>
+
+      <h4 style="color:#FFB800;margin-top:1rem;margin-bottom:0.5rem">作品のアイデア例</h4>
+      <ul class="point-list">
+        <li>複数のボールが跳ね返る + クリックでボール追加</li>
+        <li>キー操作で色や大きさが変わるアニメーション</li>
+        <li>簡単なゲーム（避けゲー、キャッチゲームなど）</li>
+        <li>マウスで絵を描けるお絵かきツール</li>
+      </ul>
+
+      <div class="notion-submit">
+        <div><strong>提出:</strong> コード(.py) + 実行画面のスクリーンショット + 作品の説明を Google Classroom に提出</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CS/DS 基礎知識 ============ -->
+<section id="sec-cs">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4A7A00">CS</div>
+      <h2>CS/DS 基礎知識</h2>
+    </div>
+
+    <!-- 状態遷移 -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>状態遷移（State Transition）</h3></div>
+
+      <div class="concept-box">
+        <h4>ボールの跳ね返り＝状態機械の実例</h4>
+        <p>ボールの動きは「右に移動中」「左に移動中」という<strong>状態（State）</strong>を持っています。壁に当たると状態が切り替わります。これを<strong>状態機械（State Machine）</strong>といい、ゲームやUIの設計で広く使われる概念です。</p>
+      </div>
+
+      <div class="analogy">
+        自動販売機と同じです。「待機中」→ お金投入 →「選択待ち」→ ボタン押す →「払い出し中」→「待機中」と状態が遷移します。
+      </div>
+    </div>
+
+    <!-- CPU と条件分岐 -->
+    <div class="card" style="border-left:4px solid #93D500">
+      <div class="card-header"><h3>CPUはif文をどう処理するか</h3></div>
+
+      <div class="concept-box">
+        <h4>条件分岐 ＝ CPUの基本動作</h4>
+        <p>CPUは<strong>条件分岐命令（branch instruction）</strong>で「次にどの命令を実行するか」を切り替えます。Pythonの <code>if</code> 文は最終的にCPUの条件分岐命令に変換されます。</p>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li><strong>比較（CMP）:</strong> 2つの値を比較してフラグをセット</li>
+          <li><strong>分岐（JMP/BEQ/BNE）:</strong> フラグに応じて実行する命令のアドレスを変更</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- プロセスとスレッド -->
+    <div class="card" style="border-left:4px solid #93D500">
+      <div class="card-header"><h3>プロセスとスレッド</h3></div>
+
+      <div class="concept-box">
+        <h4>概念の理解</h4>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li><strong>プロセス:</strong> 実行中のプログラム。独自のメモリ空間を持つ。py5のスケッチは1つのプロセスとして動く</li>
+          <li><strong>スレッド:</strong> プロセスの中の実行単位。1つのプロセスに複数のスレッドを持てる。py5の <code>draw()</code> は描画スレッドで実行される</li>
+        </ul>
+      </div>
+
+      <div class="analogy">
+        会社（プロセス）と社員（スレッド）の関係です。会社はオフィス（メモリ）を持ち、社員はそのオフィスの中で同時に仕事をします。
+      </div>
+    </div>
+
+    <!-- スコープ -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>スコープ（ローカル変数とグローバル変数）</h3></div>
+
+      <div class="concept-box">
+        <h4>変数の有効範囲</h4>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li><strong>ローカル変数:</strong> 関数の中で定義した変数。その関数内でのみ有効</li>
+          <li><strong>グローバル変数:</strong> 関数の外で定義した変数。どこからでも参照可能（変更には <code>global</code> 宣言が必要）</li>
+        </ul>
+      </div>
+
+      <pre><span class="code-label">Python ── スコープの例</span>
+message <span class="op">=</span> <span class="str">"こんにちは"</span>  <span class="cmt"># グローバル変数</span>
+
+<span class="kw">def</span> <span class="fn">greet</span>():
+    name <span class="op">=</span> <span class="str">"太郎"</span>       <span class="cmt"># ローカル変数（greet の中だけで有効）</span>
+    <span class="fn">print</span>(message, name)  <span class="cmt"># グローバル変数は参照可能</span>
+
+<span class="fn">greet</span>()          <span class="cmt"># → こんにちは 太郎</span>
+<span class="fn">print</span>(message)  <span class="cmt"># → こんにちは</span>
+<span class="cmt"># print(name)  → NameError（ローカル変数は外から参照不可）</span></pre>
+    </div>
+
+    <!-- 関数 -->
+    <div class="card" style="border-left:4px solid #93D500">
+      <div class="card-header"><h3>関数（引数と戻り値）</h3></div>
+
+      <div class="concept-box">
+        <h4>関数の基本</h4>
+        <p><strong>関数</strong>は処理をまとめたものです。<strong>引数</strong>で値を受け取り、<strong>戻り値</strong>で結果を返します。</p>
+      </div>
+
+      <pre><span class="code-label">Python ── 関数の例</span>
+<span class="kw">def</span> <span class="fn">add</span>(a, b):        <span class="cmt"># a, b は引数（パラメータ）</span>
+    <span class="kw">return</span> a <span class="op">+</span> b       <span class="cmt"># 戻り値を返す</span>
+
+result <span class="op">=</span> <span class="fn">add</span>(<span class="num">3</span>, <span class="num">5</span>)    <span class="cmt"># 引数に 3 と 5 を渡す</span>
+<span class="fn">print</span>(result)           <span class="cmt"># → 8</span></pre>
+
+      <div class="analogy">
+        電子レンジ（関数）と同じです。食材（引数）を入れて、温かい料理（戻り値）が出てきます。電子レンジの中身（処理の詳細）を知らなくても使えます。
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 解答例 ============ -->
+<section id="answers-section" data-release="2026-05-18T13:10">
+  <div class="container" id="sec-answers">
+    <div class="section-header">
+      <div class="section-num" style="background:#4A7A00">A</div>
+      <h2>解答例</h2>
+    </div>
+
+    <p style="font-size:0.9rem;color:#999;margin-bottom:1.5rem">解答例は提出期限後（5/18 13:10〜）に公開されます。</p>
+
+    <div id="answers-locked" style="display:none"></div>
+
+    <div id="answers-content">
+
+      <!-- FizzBuzz 解答 -->
+      <details>
+        <summary>練習2: FizzBuzz ─ 解答例</summary>
+        <div class="answer-content">
+          <p>「両方の倍数」を最初に判定する理由: <code>15</code> は3の倍数でもあるので、<code>if n % 3 == 0</code> を先に書くと "Fizz" が表示されてしまい、"FizzBuzz" にたどり着きません。</p>
+          <pre><span class="code-label">Python ── FizzBuzz 解答</span>
+n <span class="op">=</span> <span class="num">15</span>
+
+<span class="kw">if</span> n <span class="op">%</span> <span class="num">3</span> <span class="op">==</span> <span class="num">0</span> <span class="kw">and</span> n <span class="op">%</span> <span class="num">5</span> <span class="op">==</span> <span class="num">0</span>:
+    <span class="fn">print</span>(<span class="str">"FizzBuzz"</span>)
+<span class="kw">elif</span> n <span class="op">%</span> <span class="num">3</span> <span class="op">==</span> <span class="num">0</span>:
+    <span class="fn">print</span>(<span class="str">"Fizz"</span>)
+<span class="kw">elif</span> n <span class="op">%</span> <span class="num">5</span> <span class="op">==</span> <span class="num">0</span>:
+    <span class="fn">print</span>(<span class="str">"Buzz"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(n)</pre>
+        </div>
+      </details>
+
+      <!-- std3-1 解答 -->
+      <details>
+        <summary>std3-1: ボールの跳ね返り ─ 解答例</summary>
+        <div class="answer-content">
+          <p>ベースコードに上下キーの処理と、上下左右すべての端での跳ね返りを追加したコードです。</p>
+          <pre><span class="code-label">Python ── std3-1 解答</span>
+<span class="kw">import</span> py5
+
+x, y <span class="op">=</span> <span class="num">200</span>, <span class="num">150</span>
+dx, dy <span class="op">=</span> <span class="num">0</span>, <span class="num">0</span>
+speed <span class="op">=</span> <span class="num">5</span>
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">300</span>)
+
+<span class="kw">def</span> <span class="fn">draw</span>():
+    <span class="kw">global</span> x, y, dx, dy
+    py5.<span class="fn">background</span>(<span class="num">220</span>)
+    x <span class="op">+=</span> dx
+    y <span class="op">+=</span> dy
+
+    <span class="cmt"># 左右の跳ね返り</span>
+    <span class="kw">if</span> x <span class="op">&gt;</span> py5.width <span class="kw">or</span> x <span class="op">&lt;</span> <span class="num">0</span>:
+        dx <span class="op">=</span> <span class="op">-</span>dx
+    <span class="cmt"># 上下の跳ね返り</span>
+    <span class="kw">if</span> y <span class="op">&gt;</span> py5.height <span class="kw">or</span> y <span class="op">&lt;</span> <span class="num">0</span>:
+        dy <span class="op">=</span> <span class="op">-</span>dy
+
+    py5.<span class="fn">circle</span>(x, y, <span class="num">30</span>)
+
+<span class="kw">def</span> <span class="fn">key_pressed</span>():
+    <span class="kw">global</span> dx, dy
+    <span class="kw">if</span> py5.key_code <span class="op">==</span> py5.LEFT:
+        dx, dy <span class="op">=</span> <span class="op">-</span>speed, <span class="num">0</span>
+    <span class="kw">elif</span> py5.key_code <span class="op">==</span> py5.RIGHT:
+        dx, dy <span class="op">=</span> speed, <span class="num">0</span>
+    <span class="kw">elif</span> py5.key_code <span class="op">==</span> py5.UP:
+        dx, dy <span class="op">=</span> <span class="num">0</span>, <span class="op">-</span>speed
+    <span class="kw">elif</span> py5.key_code <span class="op">==</span> py5.DOWN:
+        dx, dy <span class="op">=</span> <span class="num">0</span>, speed
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+          <div class="concept-box">
+            <h4>ポイント</h4>
+            <ul class="point-list" style="margin-top:0.5rem">
+              <li><code>draw()</code> 内で <code>dx</code> と <code>dy</code> も <code>global</code> 宣言に追加（跳ね返りで値を変更するため）</li>
+              <li>左右と上下の跳ね返りは別々の <code>if</code> 文で処理（<code>elif</code> ではない。x方向とy方向は独立に判定するため）</li>
+              <li>ボールの半径を考慮する場合は <code>x &gt; py5.width - 15</code> のように調整する</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+    </div><!-- /answers-content -->
+
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div>MD1 ─ 2026年度前期 ─ 第3回</div>
+    <div style="margin-top:0.5rem;font-size:0.8rem;color:#666">&copy;2026 Ryota Nakamura.</div>
+  </div>
+</footer>
+
+<!-- ============ SCRIPTS ============ -->
+<script src="answer-gate.js"></script>
+<script>
+// Copy button for pre blocks
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var code = pre.textContent.replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|\.zshrc|Notion テンプレート)( ── [^\n]+)?\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+
+// Click-to-copy on inline code elements
+document.querySelectorAll(':not(pre) > code').forEach(function(code) {
+  code.title = 'クリックでコピー';
+  code.addEventListener('click', function() {
+    navigator.clipboard.writeText(code.textContent).then(function() {
+      code.classList.add('copied');
+      setTimeout(function() {
+        code.classList.remove('copied');
+      }, 1500);
+    });
+  });
+});
+</script>
+
+</body>
+</html>

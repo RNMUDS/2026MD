@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第5回: 時系列データと加速度センサの基礎 | MD1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET & BASE ============ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 32px; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #111111;
+  color: #e0e0e0;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============ LAYOUT ============ */
+.container { max-width: 1600px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+
+/* ============ HEADER ============ */
+.hero {
+  background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a);
+  color: white;
+  padding: clamp(3rem, 8vw, 6rem) 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(108,99,255,0.3), transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(155,89,182,0.2), transparent 50%);
+}
+.hero .container { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 100px;
+  padding: 0.35rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+}
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+
+/* ============ SUBMISSION BOX ============ */
+.submission-box {
+  background: linear-gradient(135deg, #1A1A1A, #1a2e0a);
+  border: 2px solid #76B900;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin: 2rem 0;
+}
+.submission-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #76B900;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.submission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.5rem;
+}
+.sub-item {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  gap: 0.3rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.4rem;
+  padding: 0.6rem 0.4rem;
+  font-size: 0.55rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.sub-item .sub-count {
+  margin-bottom: 0.1rem;
+}
+.sub-item .tag {
+  margin-bottom: 0.15rem;
+}
+.sub-count {
+  background: #76B900;
+  color: white;
+  border-radius: 0.2rem;
+  min-width: 1.5rem; height: 1.5rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700;
+}
+
+/* ============ TAGS ============ */
+.tag {
+  display: inline-flex; align-items: center; gap: 0.2rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 100px;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.tag-note      { background: #1a2e0a; color: #76B900; }
+.tag-standard  { background: #0a1a2e; color: #4FC3F7; }
+.tag-advanced  { background: #2e1a0a; color: #FFB800; }
+.tag-group     { background: #1a2e0a; color: #76B900; }
+
+/* ============ EXAM ALERT TAG ============ */
+.exam-alert {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  background: rgba(255, 82, 82, 0.15);
+  border: 1px solid #FFB800;
+  color: #FFB800;
+  padding: 0.2rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  animation: exam-pulse 2s ease-in-out 3;
+}
+@keyframes exam-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ============ SECTION HEADERS ============ */
+.section-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.section-num {
+  width: 2.5rem; height: 2.5rem;
+  border-radius: 0.4rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 900; color: white;
+  flex-shrink: 0;
+}
+.section-header h2 {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+/* ============ CARDS ============ */
+.card {
+  background: #141414;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  border: 1px solid #2a2a2a;
+}
+.card-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #222;
+}
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.standard  { border-left: 4px solid #76B900; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.card.group     { border-left: 4px solid #93D500; }
+
+/* ============ NOTION CALLOUT ============ */
+.notion-submit {
+  background: #1a2e0a;
+  border: 1px solid #76B900;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  display: flex; align-items: flex-start; gap: 0.5rem;
+}
+.notion-submit::before { content: '\1F4DD'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+
+/* ============ TABLES ============ */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem;
+  margin: 1rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+th {
+  background: rgba(108, 99, 255, 0.15);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  color: #76B900;
+  letter-spacing: 0.02em;
+}
+td {
+  padding: 0.55rem 0.8rem;
+  border-top: 1px solid #222;
+}
+tr:nth-child(even) td { background: #111; }
+
+/* ============ CODE ============ */
+pre {
+  background: #0A0A0A;
+  color: #E0E0E0;
+  border-radius: 12px;
+  padding: clamp(0.8rem, 2vw, 1.4rem);
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
+  font-size: clamp(0.75rem, 1.3vw, 0.88rem);
+  line-height: 1.7;
+  margin: 1rem 0;
+  position: relative;
+}
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #FFB800; }
+pre .op { color: #93D500; }
+.code-label {
+  position: absolute; top: 0; right: 0;
+  background: rgba(255,255,255,0.08);
+  color: #999999;
+  padding: 0.2rem 0.8rem;
+  border-radius: 0 12px 0 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+/* inline code */
+:not(pre) > code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(108,99,255,0.15);
+  padding: 0.15em 0.45em;
+  border-radius: 5px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+:not(pre) > code:hover { background: rgba(108,99,255,0.3); }
+:not(pre) > code.copied { background: rgba(108,99,255,0.5); }
+
+/* ============ EXPLANATION BLOCKS ============ */
+.concept-box {
+  background: rgba(108, 99, 255, 0.15);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  border: 1px solid #2a2a3a;
+}
+.concept-box h4 {
+  font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem;
+}
+.analogy {
+  background: #1a1a0a;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 0.75rem 0;
+  border-left: 3px solid #FFB800;
+  font-size: 0.95rem;
+}
+.analogy::before {
+  content: '\1F4A1 日常の例';
+  display: block;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #FFB800;
+  margin-bottom: 0.3rem;
+}
+.point-list {
+  list-style: none;
+  padding: 0;
+}
+.point-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+}
+.point-list li::before {
+  content: '\25B8';
+  position: absolute; left: 0;
+  color: #76B900;
+  font-weight: 700;
+}
+
+/* ============ ANSWERS (COLLAPSIBLE) ============ */
+details {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+details summary {
+  padding: 0.8rem 1.2rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 0.5rem;
+  background: #1a1a1a;
+  user-select: none;
+}
+details summary::marker { content: ''; }
+details summary::before {
+  content: '\25B6';
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+  color: #666;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
+
+/* ============ WARNING / DANGER CALLOUT ============ */
+.callout-danger {
+  background: rgba(255, 82, 82, 0.08);
+  border: 1px solid rgba(255, 82, 82, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-danger h4 {
+  color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-warning {
+  background: rgba(255, 184, 0, 0.08);
+  border: 1px solid rgba(255, 184, 0, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-warning h4 {
+  color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-info {
+  background: rgba(108, 99, 255, 0.08);
+  border: 1px solid rgba(108, 99, 255, 0.3);
+  border-left: 4px solid #76B900;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-info h4 {
+  color: #76B900; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-tip {
+  background: rgba(155, 89, 182, 0.08);
+  border: 1px solid rgba(155, 89, 182, 0.3);
+  border-left: 4px solid #93D500;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-tip h4 {
+  color: #93D500; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+
+/* ============ FOOTER ============ */
+footer {
+  background: #0A0A0A;
+  color: #999999;
+  padding: 2rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 640px) {
+  .submission-items { grid-template-columns: 1fr; }
+  .section-num { width: 2rem; height: 2rem; font-size: 0.85rem; }
+}
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
+/* ============ SUB-ITEM LINKS ============ */
+a.sub-item { transition: transform 0.15s, box-shadow 0.15s; }
+a.sub-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(118,185,0,0.3);
+  border-color: #76B900;
+}
+
+/* ============ SECTION NAV (sticky) ============ */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.5rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-exam { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3rem; }
+
+/* ============ REDUCED MOTION ============ */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  details summary::before { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SECTION NAV ============ -->
+<nav class="section-nav">
+  <a href="#sec-schedule">日程</a>
+  <a href="#sec-teacher">0. 説明</a>
+  <a href="#sec-std5-1" class="nav-assignment">std5-1</a>
+  <a href="#sec-std5-2" class="nav-assignment">std5-2</a>
+  <a href="#sec-exam" class="nav-exam">口頭試問</a>
+  <a href="#sec-cs">CS/DS基礎</a>
+  <a href="#answers-section">解答例</a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">Media creation Data design 1（MD1）─ 2026年度前期</div>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.1rem;white-space:nowrap">武蔵野大学データサイエンス学部</p>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.3rem;white-space:nowrap">武蔵野大学国際データサイエンス学部（通信教育部）</p>
+    <p style="font-size:0.95rem;opacity:0.85;margin-bottom:1rem">中村 亮太</p>
+    <h1>MD1 第5回: 時系列データと加速度センサの基礎</h1>
+    <p style="white-space:nowrap">CSVデータを読み込み、加速度センサの値をpy5で可視化する</p>
+    <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:0.3rem;padding:0.4rem 0.8rem;margin-top:1rem;font-size:0.7rem;display:inline-block">
+      <strong>対象環境:</strong> Apple M1 / M2 / M3 / M4 / M5 チップ搭載 Mac ｜ macOS Tahoe 26.4.1
+    </div>
+  </div>
+</header>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section id="sec-schedule" style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div class="submission-box">
+      <h3>提出ガイド</h3>
+      <div class="submission-items">
+        <a href="#sec-std5-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std5-1<br>スクリーンショット2枚</a>
+        <a href="#sec-std5-2" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std5-2<br>Wordレポート（PDF）</a>
+        <div class="sub-item"><span class="sub-count">0</span><span class="tag tag-advanced">発展課題</span>授業終了後公開</div>
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.85rem;color:#93D500">
+        <strong>提出方法:</strong> Wordフォーマットで作成 → PDFにエクスポート → Google Classroomに<strong>PDF 1ファイル</strong>を提出
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:0.5rem;font-size:0.85rem;color:#FFB800">
+        <strong>提出期限:</strong> 6/1(月) 13:10（第6回授業開始まで）
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 0. TEACHER EXPLANATION ============ -->
+<section id="sec-teacher">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">0</div>
+      <h2>先生の説明（約30分）</h2>
+    </div>
+
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <h3>時系列データ・加速度センサ・Jupyter Notebook</h3>
+        <span class="tag tag-note">ノート</span>
+      </div>
+
+      <div class="concept-box">
+        <h4>本日の流れ</h4>
+        <ol style="padding-left:1.5rem;font-size:0.95rem;margin-top:0.5rem">
+          <li style="margin-bottom:0.4rem"><strong>時系列データとは:</strong> 時間の経過に沿って記録されたデータ（センサ値、株価、気温など）</li>
+          <li style="margin-bottom:0.4rem"><strong>加速度センサの仕組み:</strong> 3軸（X/Y/Z）で重力・動きを検出、スマートフォンにも搭載</li>
+          <li style="margin-bottom:0.4rem"><strong>CSVとJSON:</strong> 表形式データの2つの代表的フォーマット</li>
+          <li><strong>Jupyter Notebook:</strong> コードと実行結果を1つのドキュメントにまとめる対話型環境</li>
+        </ol>
+      </div>
+
+      <!-- 時系列データ -->
+      <div class="concept-box" style="margin-top:1rem">
+        <h4>時系列データ（Time Series Data）</h4>
+        <p>時間の経過とともに記録されたデータを<strong>時系列データ</strong>と呼びます。一定間隔でデータを取得することを<strong>サンプリング</strong>、その頻度を<strong>サンプリングレート</strong>（例: 100Hz = 1秒間に100回取得）と呼びます。</p>
+      </div>
+
+      <div class="analogy">
+        体温計で毎朝体温を測り記録するのと同じです。1日1回なら「サンプリングレート = 1回/日」です。加速度センサは1秒間に数十〜数百回測定します。
+      </div>
+
+      <!-- 加速度センサ -->
+      <div class="concept-box" style="margin-top:1rem">
+        <h4>加速度センサ（Accelerometer）</h4>
+        <p>物体にかかる加速度を3軸（X: 左右、Y: 上下、Z: 前後）で測定するセンサです。静止状態でも重力加速度（約9.81 m/s&sup2;）がZ軸方向に検出されます。</p>
+        <table>
+          <tr><th>軸</th><th>方向</th><th>スマホを水平に持ったとき</th></tr>
+          <tr><td><strong>X</strong></td><td>左右</td><td>左右に傾けると変化</td></tr>
+          <tr><td><strong>Y</strong></td><td>上下</td><td>前後に傾けると変化</td></tr>
+          <tr><td><strong>Z</strong></td><td>前後（垂直）</td><td>静止時 &asymp; 9.81 m/s&sup2;</td></tr>
+        </table>
+      </div>
+
+      <!-- CSV vs JSON -->
+      <div class="concept-box" style="margin-top:1rem">
+        <h4>データ形式: CSV と JSON</h4>
+        <table>
+          <tr><th>項目</th><th>CSV</th><th>JSON</th></tr>
+          <tr><td>正式名</td><td>Comma-Separated Values</td><td>JavaScript Object Notation</td></tr>
+          <tr><td>構造</td><td>表形式（行と列）</td><td>キーと値のペア（階層構造可）</td></tr>
+          <tr><td>可読性</td><td>シンプル、Excelで開ける</td><td>構造化されたデータに適する</td></tr>
+          <tr><td>用途</td><td>センサデータ、統計データ</td><td>API通信、設定ファイル</td></tr>
+        </table>
+      </div>
+
+      <pre><span class="code-label">CSV ── acc_y.csv の例</span>
+timestamp,AccY
+0.00,-0.12
+0.01,0.34
+0.02,1.56
+0.03,2.78
+0.04,3.21</pre>
+
+      <pre><span class="code-label">JSON ── 同じデータのJSON表現</span>
+[
+  {<span class="str">"timestamp"</span>: <span class="num">0.00</span>, <span class="str">"AccY"</span>: <span class="num">-0.12</span>},
+  {<span class="str">"timestamp"</span>: <span class="num">0.01</span>, <span class="str">"AccY"</span>: <span class="num">0.34</span>},
+  {<span class="str">"timestamp"</span>: <span class="num">0.02</span>, <span class="str">"AccY"</span>: <span class="num">1.56</span>}
+]</pre>
+
+      <!-- 欠損値・外れ値 -->
+      <div class="concept-box" style="margin-top:1rem">
+        <h4>欠損値と外れ値</h4>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li><strong>欠損値（Missing Value）:</strong> データが記録されなかった箇所。CSVでは空のセル（<code>0.03,</code>）として現れる</li>
+          <li><strong>外れ値（Outlier）:</strong> 他のデータと比べて極端に大きい・小さい値。センサの誤作動やノイズが原因のことが多い</li>
+        </ul>
+      </div>
+
+      <!-- ログデータ -->
+      <div class="concept-box" style="margin-top:1rem">
+        <h4>ログデータ</h4>
+        <p>システムやアプリケーションの動作を時系列で記録したデータを<strong>ログ（Log）</strong>と呼びます。センサデータもログデータの一種です。タイムスタンプ付きで記録されるため、後から「いつ何が起きたか」を分析できます。</p>
+      </div>
+
+      <!-- Jupyter Notebook -->
+      <div class="callout-info" style="margin-top:1rem">
+        <h4>Jupyter Notebook / JupyterLab</h4>
+        <p>コードを「セル」単位で実行し、結果をすぐに確認できる対話型開発環境です。データ分析・可視化に広く使われています。今回は JupyterLab を使ってpy5のコードを実行します。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GROUP WORK DIVIDER ============ -->
+<section style="padding:2rem 0;background:linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a)">
+  <div class="container" style="text-align:center">
+    <div style="font-size:1.5rem;font-weight:900;color:#76B900;margin-bottom:0.5rem">ここから先はグループで進めてください</div>
+    <p style="font-size:0.85rem;color:#93D500;margin-bottom:1rem">この資料を上から順に読みながら、グループで協力して演習を進めましょう</p>
+    <div style="display:inline-flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;font-size:0.7rem">
+      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
+        <div style="color:#76B900;font-weight:700">1. std5-1</div>
+        <div style="color:#999">約50分</div>
+      </div>
+      <div style="color:#76B900;display:flex;align-items:center">&rarr;</div>
+      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
+        <div style="color:#76B900;font-weight:700">2. std5-2</div>
+        <div style="color:#999">約50分</div>
+      </div>
+      <div style="color:#76B900;display:flex;align-items:center">&rarr;</div>
+      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
+        <div style="color:#76B900;font-weight:700">3. 口頭試問</div>
+        <div style="color:#999">約10分</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1. std5-1 グループワーク1 ============ -->
+<section id="sec-std5-1">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">1</div>
+      <h2>std5-1: グループワーク1 ─ Jupyter環境構築 + CSVデータ表示（約50分）</h2>
+    </div>
+
+    <!-- 環境構築 -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <h3>Step 1: 環境構築</h3>
+        <span class="tag tag-note">ノート</span>
+      </div>
+
+      <p>ターミナルを開き、以下のコマンドを<strong>1行ずつ</strong>実行してください。</p>
+
+      <pre><span class="code-label">Terminal</span>
+<span class="fn">cd</span> ~/MD1
+<span class="fn">mkdir</span> no5
+<span class="fn">cd</span> no5
+<span class="fn">uv</span> venv
+<span class="fn">source</span> .venv/bin/activate
+<span class="fn">uv</span> pip install py5 jupyterlab
+<span class="fn">code</span> .</pre>
+
+      <div class="callout-info">
+        <h4>uv を使う理由</h4>
+        <p><code>uv</code> は <code>pip</code> より高速なPythonパッケージマネージャです。この授業では <code>pip</code> の代わりに <code>uv</code> を使います。仮想環境（<code>.venv</code>）を作ることで、プロジェクトごとにパッケージを分離できます。</p>
+      </div>
+
+      <p style="margin-top:1rem">VSCodeが開いたら、<strong>新しいファイル</strong>を作成し <code>step5.ipynb</code> という名前で保存してください。これがJupyter Notebookファイルです。</p>
+
+      <div class="callout-warning">
+        <h4>カーネルの選択</h4>
+        <p><code>step5.ipynb</code> を開いたとき、右上の「カーネルの選択」で <code>~/MD1/no5/.venv</code> のPythonを選択してください。これを忘れると <code>py5</code> が見つからずエラーになります。</p>
+      </div>
+    </div>
+
+    <!-- CSVファイルの準備 -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <h3>Step 2: CSVファイルの準備</h3>
+        <span class="tag tag-note">ノート</span>
+      </div>
+
+      <p>Google Drive から <code>acc_y.csv</code> をダウンロードし、<code>~/MD1/no5/</code> フォルダに配置してください。</p>
+
+      <div class="callout-info">
+        <h4>acc_y.csv の構造</h4>
+        <p>1行目がヘッダー（列名）、2行目以降がデータです。</p>
+      </div>
+
+      <pre><span class="code-label">CSV ── acc_y.csv</span>
+timestamp,AccY
+0.00,-0.12
+0.01,0.34
+0.02,1.56
+...</pre>
+
+      <p style="margin-top:0.5rem">ファイル配置を確認しましょう:</p>
+      <pre><span class="code-label">Directory Tree</span>
+~/MD1/no5/
+  ├── .venv/
+  ├── step5.ipynb
+  └── acc_y.csv</pre>
+    </div>
+
+    <!-- ベースコード -->
+    <div class="card standard">
+      <div class="card-header">
+        <h3>Step 3: ベースコード ─ CSVデータの表示</h3>
+        <span class="tag tag-standard">標準課題</span>
+      </div>
+
+      <p>以下のコードを <code>step5.ipynb</code> のセルに入力して実行してください。CSVファイルの先頭5行が表示されます。</p>
+
+      <pre><span class="code-label">Python ── ベースコード</span>
+<span class="kw">import</span> py5
+
+lines <span class="op">=</span> []
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">400</span>)
+    <span class="kw">global</span> lines
+    lines <span class="op">=</span> py5.<span class="fn">load_strings</span>(<span class="str">"acc_y.csv"</span>)
+
+<span class="kw">def</span> <span class="fn">draw</span>():
+    <span class="kw">global</span> lines
+    py5.<span class="fn">background</span>(<span class="num">255</span>)
+    py5.<span class="fn">fill</span>(<span class="num">0</span>)
+    py5.<span class="fn">text_size</span>(<span class="num">18</span>)
+    margin <span class="op">=</span> <span class="num">0</span>
+    line_height <span class="op">=</span> <span class="num">18</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):
+        line <span class="op">=</span> lines[i].<span class="fn">strip</span>()
+        columns <span class="op">=</span> line.<span class="fn">split</span>(<span class="str">','</span>)
+        text <span class="op">=</span> <span class="str">f"</span>{columns[<span class="num">0</span>]}<span class="str"> : </span>{columns[<span class="num">1</span>]}<span class="str">"</span>
+        py5.<span class="fn">text</span>(text, margin, margin <span class="op">+</span> i <span class="op">*</span> line_height)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="callout-danger">
+        <h4>問題点に気づきましたか？</h4>
+        <p>このコードには2つの問題があります。実行して確認しましょう:</p>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li><strong>問題1:</strong> <code>margin = 0</code> のため、テキストが画面の左上に張り付いて見切れている</li>
+          <li><strong>問題2:</strong> 5行しか表示されず、ヘッダー行も含まれている</li>
+        </ul>
+      </div>
+
+      <h4 style="color:#4FC3F7;margin-top:1.5rem;margin-bottom:0.5rem">修正課題1: margin を修正する</h4>
+      <p><code>margin</code> と <code>line_height</code> の値を調整して、テキストが画面内に収まるようにしてください。表示行数も増やしてみましょう。</p>
+
+      <h4 style="color:#4FC3F7;margin-top:1.5rem;margin-bottom:0.5rem">修正課題2: AccY列のみを表示する</h4>
+      <p>ヘッダー行（1行目）をスキップし、AccY列（<code>columns[1]</code>）の値だけを表示するように修正してください。</p>
+
+      <details>
+        <summary>ヒント: margin の修正</summary>
+        <div class="answer-content">
+          <p><code>margin = 20</code> のように余白を設定し、<code>line_height = 22</code> に増やすと読みやすくなります。</p>
+          <p><code>range(5)</code> を <code>range(len(lines))</code> や <code>range(min(20, len(lines)))</code> に変えると表示行数を増やせます。</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>ヒント: ヘッダースキップ</summary>
+        <div class="answer-content">
+          <p>ヘッダーをスキップするには、ループの開始を <code>range(1, ...)</code> にします。AccYだけを表示するには <code>columns[1]</code> のみを使います。</p>
+          <pre><span class="code-label">Python ── ヒント</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">min</span>(<span class="num">20</span>, <span class="fn">len</span>(lines))):
+    line <span class="op">=</span> lines[i].<span class="fn">strip</span>()
+    columns <span class="op">=</span> line.<span class="fn">split</span>(<span class="str">','</span>)
+    y_value <span class="op">=</span> columns[<span class="num">1</span>]
+    py5.<span class="fn">text</span>(y_value, margin, margin <span class="op">+</span> (i <span class="op">-</span> <span class="num">1</span>) <span class="op">*</span> line_height)</pre>
+        </div>
+      </details>
+
+      <div style="background:#0a1a2e;border:1px solid #4FC3F7;border-radius:10px;padding:1rem 1.2rem;margin-top:1.5rem">
+        <h4 style="color:#4FC3F7;margin-bottom:0.5rem">std5-1 提出物</h4>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li><strong>スクリーンショット1:</strong> margin修正後の表示画面</li>
+          <li><strong>スクリーンショット2:</strong> AccY列のみ表示の画面</li>
+        </ul>
+        <p style="font-size:0.85rem;color:#999;margin-top:0.5rem">2枚のスクリーンショットをGoogle Classroomに提出してください。</p>
+      </div>
+
+      <h4 style="color:#76B900;margin-top:1.5rem;margin-bottom:0.5rem">Notion テンプレート</h4>
+      <pre><span class="code-label">Notion テンプレート ── std5-1</span>
+## std5-1: CSVデータ表示の修正
+
+### 修正1: margin の調整
+- 変更した値: margin = __, line_height = __
+- 表示行数: __行
+
+### 修正2: AccY列のみ表示
+- 変更したコード箇所の説明:
+- ヘッダーをスキップする方法:
+
+### スクリーンショット
+1. margin修正後の画面
+2. AccY列のみ表示の画面</pre>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 2. std5-2 グループワーク2 ============ -->
+<section id="sec-std5-2">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">2</div>
+      <h2>std5-2: グループワーク2 ─ 時系列データアニメーション（約50分）</h2>
+    </div>
+
+    <!-- アニメーションの基本 -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <h3>Step 1: CSVデータでアニメーション</h3>
+        <span class="tag tag-note">ノート</span>
+      </div>
+
+      <p>CSVから読み込んだAccY値を使って、円を動かすアニメーションを作ります。</p>
+
+      <pre><span class="code-label">Python ── アニメーション基本コード</span>
+<span class="kw">import</span> py5
+
+y_values <span class="op">=</span> []
+frame_index <span class="op">=</span> <span class="num">0</span>
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">400</span>)
+    lines <span class="op">=</span> py5.<span class="fn">load_strings</span>(<span class="str">"acc_y.csv"</span>)
+    <span class="kw">for</span> line <span class="kw">in</span> lines[<span class="num">1</span>:]:
+        parts <span class="op">=</span> line.<span class="fn">split</span>(<span class="str">','</span>)
+        y <span class="op">=</span> <span class="fn">float</span>(parts[<span class="num">1</span>])
+        y_values.<span class="fn">append</span>(y)
+
+<span class="kw">def</span> <span class="fn">draw</span>():
+    <span class="kw">global</span> frame_index
+    py5.<span class="fn">background</span>(<span class="num">255</span>)
+    <span class="kw">if</span> frame_index <span class="op">&lt;</span> <span class="fn">len</span>(y_values):
+        y <span class="op">=</span> y_values[frame_index]
+        py5.<span class="fn">fill</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">255</span>)
+        py5.<span class="fn">ellipse</span>(<span class="num">200</span>, y, <span class="num">30</span>, <span class="num">30</span>)
+        frame_index <span class="op">+=</span> <span class="num">1</span>
+    <span class="kw">else</span>:
+        py5.<span class="fn">no_loop</span>()
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="callout-warning">
+        <h4>円が画面外に飛び出す？</h4>
+        <p>加速度の値は -10〜10 程度の小さな値のため、画面サイズ（400px）に対してほとんど動きません。<strong>正規化（remap）</strong>が必要です。</p>
+      </div>
+    </div>
+
+    <!-- remap -->
+    <div class="card" style="border-left:4px solid #93D500">
+      <div class="card-header">
+        <h3>Step 2: py5.remap() で値を画面に合わせる</h3>
+        <span class="tag tag-note">ノート</span>
+      </div>
+
+      <div class="concept-box">
+        <h4>正規化・remap とは</h4>
+        <p>ある範囲の値を別の範囲に変換することを<strong>正規化</strong>（remap）と呼びます。<code>py5.remap()</code> を使うと、加速度の値（例: -10〜10）を画面のY座標（0〜400）に変換できます。</p>
+      </div>
+
+      <div class="analogy">
+        温度計の目盛りと同じです。摂氏0〜100度を、温度計の0〜30cmの液柱に「変換」して表示しています。
+      </div>
+
+      <pre><span class="code-label">Python ── remap の使い方</span>
+<span class="cmt"># py5.remap(値, 元の最小, 元の最大, 変換先の最小, 変換先の最大)</span>
+screen_y <span class="op">=</span> py5.<span class="fn">remap</span>(y, <span class="num">-10</span>, <span class="num">10</span>, <span class="num">0</span>, <span class="num">400</span>)
+
+<span class="cmt"># 例: y = 5 の場合</span>
+<span class="cmt"># remap(5, -10, 10, 0, 400) → 300</span></pre>
+
+      <p style="margin-top:1rem"><code>draw()</code> 内の <code>y</code> を <code>py5.remap()</code> で変換してみましょう:</p>
+
+      <pre><span class="code-label">Python ── remap を適用した draw()</span>
+<span class="kw">def</span> <span class="fn">draw</span>():
+    <span class="kw">global</span> frame_index
+    py5.<span class="fn">background</span>(<span class="num">255</span>)
+    <span class="kw">if</span> frame_index <span class="op">&lt;</span> <span class="fn">len</span>(y_values):
+        y <span class="op">=</span> y_values[frame_index]
+        screen_y <span class="op">=</span> py5.<span class="fn">remap</span>(y, <span class="num">-10</span>, <span class="num">10</span>, <span class="num">0</span>, <span class="num">400</span>)
+        py5.<span class="fn">fill</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">255</span>)
+        py5.<span class="fn">ellipse</span>(<span class="num">200</span>, screen_y, <span class="num">30</span>, <span class="num">30</span>)
+        frame_index <span class="op">+=</span> <span class="num">1</span>
+    <span class="kw">else</span>:
+        py5.<span class="fn">no_loop</span>()</pre>
+    </div>
+
+    <!-- 時間軸の追加 -->
+    <div class="card" style="border-left:4px solid #93D500">
+      <div class="card-header">
+        <h3>Step 3: 時間軸を加える</h3>
+        <span class="tag tag-note">ノート</span>
+      </div>
+
+      <p>円のX座標を <code>frame_index</code> に連動させると、時間の経過に沿ってデータが流れるアニメーションになります。</p>
+
+      <pre><span class="code-label">Python ── 時間軸の追加</span>
+<span class="cmt"># X座標も frame_index から計算</span>
+screen_x <span class="op">=</span> py5.<span class="fn">remap</span>(frame_index, <span class="num">0</span>, <span class="fn">len</span>(y_values), <span class="num">0</span>, <span class="num">400</span>)
+py5.<span class="fn">ellipse</span>(screen_x, screen_y, <span class="num">10</span>, <span class="num">10</span>)</pre>
+
+      <div class="callout-tip">
+        <h4>軌跡を残すには？</h4>
+        <p><code>py5.background(255)</code> を <code>draw()</code> の先頭から削除するか、<code>py5.background(255, 20)</code>（半透明の白）に変えると、これまでの軌跡が薄く残ります。</p>
+      </div>
+    </div>
+
+    <!-- UFO画像 -->
+    <div class="card standard">
+      <div class="card-header">
+        <h3>Step 4: UFO画像で表示する</h3>
+        <span class="tag tag-standard">標準課題</span>
+      </div>
+
+      <p>青い円の代わりにUFO画像を表示しましょう。画像ファイル（<code>ufo.png</code>）をGoogle Driveからダウンロードし、<code>~/MD1/no5/</code> に配置してください。</p>
+
+      <pre><span class="code-label">Python ── UFO画像を使ったアニメーション</span>
+<span class="kw">import</span> py5
+
+y_values <span class="op">=</span> []
+frame_index <span class="op">=</span> <span class="num">0</span>
+ufo_img <span class="op">=</span> <span class="kw">None</span>
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    <span class="kw">global</span> ufo_img
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">400</span>)
+    ufo_img <span class="op">=</span> py5.<span class="fn">load_image</span>(<span class="str">"ufo.png"</span>)
+    lines <span class="op">=</span> py5.<span class="fn">load_strings</span>(<span class="str">"acc_y.csv"</span>)
+    <span class="kw">for</span> line <span class="kw">in</span> lines[<span class="num">1</span>:]:
+        parts <span class="op">=</span> line.<span class="fn">split</span>(<span class="str">','</span>)
+        y <span class="op">=</span> <span class="fn">float</span>(parts[<span class="num">1</span>])
+        y_values.<span class="fn">append</span>(y)
+
+<span class="kw">def</span> <span class="fn">draw</span>():
+    <span class="kw">global</span> frame_index
+    py5.<span class="fn">background</span>(<span class="num">255</span>)
+    <span class="kw">if</span> frame_index <span class="op">&lt;</span> <span class="fn">len</span>(y_values):
+        y <span class="op">=</span> y_values[frame_index]
+        screen_y <span class="op">=</span> py5.<span class="fn">remap</span>(y, <span class="num">-10</span>, <span class="num">10</span>, <span class="num">0</span>, <span class="num">400</span>)
+        py5.<span class="fn">image</span>(ufo_img, <span class="num">200</span> <span class="op">-</span> <span class="num">25</span>, screen_y <span class="op">-</span> <span class="num">25</span>, <span class="num">50</span>, <span class="num">50</span>)
+        frame_index <span class="op">+=</span> <span class="num">1</span>
+    <span class="kw">else</span>:
+        py5.<span class="fn">no_loop</span>()
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="callout-info">
+        <h4>py5.image() の引数</h4>
+        <p><code>py5.image(画像, x, y, 幅, 高さ)</code> で画像を描画します。<code>x</code>, <code>y</code> は画像の<strong>左上</strong>の座標なので、中央に配置するために画像サイズの半分を引いています。</p>
+      </div>
+
+      <div style="background:#0a1a2e;border:1px solid #4FC3F7;border-radius:10px;padding:1rem 1.2rem;margin-top:1.5rem">
+        <h4 style="color:#4FC3F7;margin-bottom:0.5rem">std5-2 提出物</h4>
+        <p>以下の内容をWordレポートにまとめ、PDFで提出してください:</p>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li><strong>1. コード全文:</strong> UFO画像が加速度データに従って動く完成コード</li>
+          <li><strong>2. 実行結果:</strong> アニメーション実行中のスクリーンショット</li>
+          <li><strong>3. 工夫した点:</strong> remap の範囲調整、時間軸追加、軌跡表示など自分で工夫した内容の説明</li>
+        </ul>
+      </div>
+
+      <h4 style="color:#76B900;margin-top:1.5rem;margin-bottom:0.5rem">Notion テンプレート</h4>
+      <pre><span class="code-label">Notion テンプレート ── std5-2</span>
+## std5-2: UFO時系列アニメーション
+
+### 完成コード
+（ここにコード全文を貼り付け）
+
+### 実行結果
+（スクリーンショットを貼り付け）
+
+### 工夫した点
+1. remap の範囲:
+2. 時間軸の追加: あり / なし
+3. 軌跡の表示: あり / なし
+4. その他の工夫:</pre>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 3. 口頭試問 ============ -->
+<section id="sec-exam">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FF5252">3</div>
+      <h2>口頭試問</h2>
+    </div>
+
+    <div class="card group">
+      <div class="card-header">
+        <h3>口頭試問: グループ内Q&amp;A</h3>
+        <span class="tag tag-group">口頭試問</span>
+        <span class="exam-alert">必須</span>
+      </div>
+
+      <p>グループ内で今日学んだ内容について質問し合いましょう。互いに説明することで理解を深めます。</p>
+
+      <h4 style="color:#76B900;margin-top:1rem;margin-bottom:0.5rem">質問例</h4>
+      <table>
+        <tr><th style="width:30px">#</th><th>質問</th></tr>
+        <tr><td>1</td><td>CSVとJSONの違いは何ですか？</td></tr>
+        <tr><td>2</td><td>加速度センサの3軸（X, Y, Z）はそれぞれ何を測定していますか？</td></tr>
+        <tr><td>3</td><td><code>py5.remap()</code> は何をする関数ですか？具体例を挙げてください。</td></tr>
+        <tr><td>4</td><td>サンプリングレートとは何ですか？</td></tr>
+        <tr><td>5</td><td>欠損値と外れ値の違いを説明してください。</td></tr>
+      </table>
+
+      <h4 style="color:#76B900;margin-top:1.5rem;margin-bottom:0.5rem">Notion記録テンプレート</h4>
+      <pre><span class="code-label">Notion テンプレート ── 口頭試問</span>
+## 口頭試問記録
+
+日付: 2026/05/25
+グループ名: ____
+
+質問者 → 回答者:
+Q1: ____
+A1: ____
+
+Q2: ____
+A2: ____
+
+感想・気づき: ____</pre>
+
+      <div class="notion-submit">
+        <div><strong>Notion提出:</strong> グループの口頭試問記録をNotionに記入し、PDFで提出</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ CS/DS基礎 ============ -->
+<section id="sec-cs">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#93D500">CS</div>
+      <h2>CS/DS基礎知識まとめ</h2>
+    </div>
+
+    <div class="card" style="border-left:4px solid #93D500">
+      <div class="card-header">
+        <h3>今回学んだCS/DS概念</h3>
+        <span class="tag tag-note">ノート</span>
+      </div>
+
+      <table>
+        <tr><th>概念</th><th>説明</th></tr>
+        <tr><td><strong>CSV</strong></td><td>カンマ区切りの表形式データ。1行目がヘッダー、2行目以降がデータ</td></tr>
+        <tr><td><strong>JSON</strong></td><td>キーと値のペアで構造化されたデータ形式。API通信に広く使用</td></tr>
+        <tr><td><strong>サンプリング</strong></td><td>連続的な現象から一定間隔でデータを取得すること</td></tr>
+        <tr><td><strong>サンプリングレート</strong></td><td>1秒間に何回データを取得するか（単位: Hz）</td></tr>
+        <tr><td><strong>加速度センサ</strong></td><td>3軸（X/Y/Z）で加速度を測定。静止時はZ軸に重力加速度 &asymp; 9.81 m/s&sup2;</td></tr>
+        <tr><td><strong>欠損値</strong></td><td>データが記録されなかった箇所。分析前に処理が必要</td></tr>
+        <tr><td><strong>外れ値</strong></td><td>他と比べて極端に大きい・小さい値。ノイズや異常の可能性</td></tr>
+        <tr><td><strong>正規化（remap）</strong></td><td>ある範囲の値を別の範囲に線形変換すること</td></tr>
+        <tr><td><strong>ログデータ</strong></td><td>タイムスタンプ付きで記録されたシステムの動作記録</td></tr>
+      </table>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 解答例 ============ -->
+<section id="answers-section" data-release="2026-06-01T13:10">
+  <div class="container" id="sec-answers">
+    <div class="section-header">
+      <div class="section-num" style="background:#4A7A00">A</div>
+      <h2>解答例</h2>
+    </div>
+
+    <p style="font-size:0.9rem;color:#999;margin-bottom:1.5rem">解答例は提出期限後（6/1 13:10〜）に公開されます。</p>
+
+    <div id="answers-locked" style="display:none"></div>
+
+    <div id="answers-content">
+
+      <!-- std5-1 解答 -->
+      <details>
+        <summary>std5-1: CSVデータ表示の修正 ─ 解答例</summary>
+        <div class="answer-content">
+          <p>margin と line_height を調整し、ヘッダーをスキップしてAccY列のみを表示するコードです。</p>
+          <pre><span class="code-label">Python ── std5-1 解答</span>
+<span class="kw">import</span> py5
+
+lines <span class="op">=</span> []
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">400</span>)
+    <span class="kw">global</span> lines
+    lines <span class="op">=</span> py5.<span class="fn">load_strings</span>(<span class="str">"acc_y.csv"</span>)
+
+<span class="kw">def</span> <span class="fn">draw</span>():
+    <span class="kw">global</span> lines
+    py5.<span class="fn">background</span>(<span class="num">255</span>)
+    py5.<span class="fn">fill</span>(<span class="num">0</span>)
+    py5.<span class="fn">text_size</span>(<span class="num">14</span>)
+    margin <span class="op">=</span> <span class="num">20</span>
+    line_height <span class="op">=</span> <span class="num">20</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">min</span>(<span class="num">20</span>, <span class="fn">len</span>(lines))):
+        line <span class="op">=</span> lines[i].<span class="fn">strip</span>()
+        columns <span class="op">=</span> line.<span class="fn">split</span>(<span class="str">','</span>)
+        y_value <span class="op">=</span> columns[<span class="num">1</span>]
+        py5.<span class="fn">text</span>(y_value, margin, margin <span class="op">+</span> (i <span class="op">-</span> <span class="num">1</span>) <span class="op">*</span> line_height)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+          <div class="concept-box">
+            <h4>ポイント</h4>
+            <ul class="point-list" style="margin-top:0.5rem">
+              <li><code>margin = 20</code> で左上に余白を確保</li>
+              <li><code>range(1, ...)</code> でヘッダー行（index 0）をスキップ</li>
+              <li><code>(i - 1)</code> で行位置を調整（1始まりのため）</li>
+              <li><code>min(20, len(lines))</code> で行数が少ないCSVでもエラーにならない</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <!-- std5-2 解答 -->
+      <details>
+        <summary>std5-2: UFO時系列アニメーション ─ 解答例</summary>
+        <div class="answer-content">
+          <p>remap + 時間軸 + UFO画像を組み合わせた完成コードです。</p>
+          <pre><span class="code-label">Python ── std5-2 解答</span>
+<span class="kw">import</span> py5
+
+y_values <span class="op">=</span> []
+frame_index <span class="op">=</span> <span class="num">0</span>
+ufo_img <span class="op">=</span> <span class="kw">None</span>
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    <span class="kw">global</span> ufo_img
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">400</span>)
+    ufo_img <span class="op">=</span> py5.<span class="fn">load_image</span>(<span class="str">"ufo.png"</span>)
+    lines <span class="op">=</span> py5.<span class="fn">load_strings</span>(<span class="str">"acc_y.csv"</span>)
+    <span class="kw">for</span> line <span class="kw">in</span> lines[<span class="num">1</span>:]:
+        parts <span class="op">=</span> line.<span class="fn">split</span>(<span class="str">','</span>)
+        y <span class="op">=</span> <span class="fn">float</span>(parts[<span class="num">1</span>])
+        y_values.<span class="fn">append</span>(y)
+
+<span class="kw">def</span> <span class="fn">draw</span>():
+    <span class="kw">global</span> frame_index
+    py5.<span class="fn">background</span>(<span class="num">255</span>)
+    <span class="kw">if</span> frame_index <span class="op">&lt;</span> <span class="fn">len</span>(y_values):
+        y <span class="op">=</span> y_values[frame_index]
+        screen_x <span class="op">=</span> py5.<span class="fn">remap</span>(frame_index, <span class="num">0</span>, <span class="fn">len</span>(y_values), <span class="num">0</span>, <span class="num">400</span>)
+        screen_y <span class="op">=</span> py5.<span class="fn">remap</span>(y, <span class="num">-10</span>, <span class="num">10</span>, <span class="num">0</span>, <span class="num">400</span>)
+        py5.<span class="fn">image</span>(ufo_img, screen_x <span class="op">-</span> <span class="num">25</span>, screen_y <span class="op">-</span> <span class="num">25</span>, <span class="num">50</span>, <span class="num">50</span>)
+        frame_index <span class="op">+=</span> <span class="num">1</span>
+    <span class="kw">else</span>:
+        py5.<span class="fn">no_loop</span>()
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+          <div class="concept-box">
+            <h4>ポイント</h4>
+            <ul class="point-list" style="margin-top:0.5rem">
+              <li><code>py5.remap(y, -10, 10, 0, 400)</code> で加速度値を画面Y座標に変換</li>
+              <li><code>py5.remap(frame_index, 0, len(y_values), 0, 400)</code> でフレームを画面X座標に変換</li>
+              <li><code>py5.image()</code> の座標を <code>-25</code> ずらすことで画像中心を基準点に配置</li>
+              <li><code>py5.no_loop()</code> で全データ表示後にアニメーションを停止</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+    </div><!-- /answers-content -->
+
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div>MD1 ─ 2026年度前期 ─ 第5回</div>
+    <div style="margin-top:0.5rem;font-size:0.8rem;color:#666">&copy;2026 Ryota Nakamura.</div>
+  </div>
+</footer>
+
+<!-- ============ SCRIPTS ============ -->
+<script src="answer-gate.js"></script>
+<script>
+// Copy button for pre blocks
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var code = pre.textContent.replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|\.zshrc|Notion テンプレート|CSV)( ── [^\n]+)?\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+
+// Click-to-copy on inline code elements
+document.querySelectorAll(':not(pre) > code').forEach(function(code) {
+  code.title = 'クリックでコピー';
+  code.addEventListener('click', function() {
+    navigator.clipboard.writeText(code.textContent).then(function() {
+      code.classList.add('copied');
+      setTimeout(function() {
+        code.classList.remove('copied');
+      }, 1500);
+    });
+  });
+});
+</script>
+
+</body>
+</html>

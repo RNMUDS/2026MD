@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第6回: 音のプログラミングとFFT和音解析 | MD1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET & BASE ============ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 32px; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #111111;
+  color: #e0e0e0;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============ LAYOUT ============ */
+.container { max-width: 1600px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+
+/* ============ HEADER ============ */
+.hero {
+  background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a);
+  color: white;
+  padding: clamp(3rem, 8vw, 6rem) 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(108,99,255,0.3), transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(155,89,182,0.2), transparent 50%);
+}
+.hero .container { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 100px;
+  padding: 0.35rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+}
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+
+/* ============ SUBMISSION BOX ============ */
+.submission-box {
+  background: linear-gradient(135deg, #1A1A1A, #1a2e0a);
+  border: 2px solid #76B900;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin: 2rem 0;
+}
+.submission-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #76B900;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.submission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.5rem;
+}
+.sub-item {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  gap: 0.3rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.4rem;
+  padding: 0.6rem 0.4rem;
+  font-size: 0.55rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.sub-item .sub-count {
+  margin-bottom: 0.1rem;
+}
+.sub-item .tag {
+  margin-bottom: 0.15rem;
+}
+.sub-count {
+  background: #76B900;
+  color: white;
+  border-radius: 0.2rem;
+  min-width: 1.5rem; height: 1.5rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700;
+}
+
+/* ============ TAGS ============ */
+.tag {
+  display: inline-flex; align-items: center; gap: 0.2rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 100px;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.tag-note      { background: #1a2e0a; color: #76B900; }
+.tag-standard  { background: #0a1a2e; color: #4FC3F7; }
+.tag-advanced  { background: #2e1a0a; color: #FFB800; }
+.tag-group     { background: #1a2e0a; color: #76B900; }
+
+/* ============ EXAM ALERT TAG ============ */
+.exam-alert {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  background: rgba(255, 82, 82, 0.15);
+  border: 1px solid #FFB800;
+  color: #FFB800;
+  padding: 0.2rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  animation: exam-pulse 2s ease-in-out 3;
+}
+@keyframes exam-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ============ SECTION HEADERS ============ */
+.section-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.section-num {
+  width: 2.5rem; height: 2.5rem;
+  border-radius: 0.4rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 900; color: white;
+  flex-shrink: 0;
+}
+.section-header h2 {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+/* ============ CARDS ============ */
+.card {
+  background: #141414;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  border: 1px solid #2a2a2a;
+}
+.card-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #222;
+}
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.standard  { border-left: 4px solid #76B900; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.card.group     { border-left: 4px solid #93D500; }
+
+/* ============ NOTION CALLOUT ============ */
+.notion-submit {
+  background: #1a2e0a;
+  border: 1px solid #76B900;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  display: flex; align-items: flex-start; gap: 0.5rem;
+}
+.notion-submit::before { content: '\1F4DD'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+
+/* ============ TABLES ============ */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem;
+  margin: 1rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+th {
+  background: rgba(108, 99, 255, 0.15);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  color: #76B900;
+  letter-spacing: 0.02em;
+}
+td {
+  padding: 0.55rem 0.8rem;
+  border-top: 1px solid #222;
+}
+tr:nth-child(even) td { background: #111; }
+
+/* ============ CODE ============ */
+pre {
+  background: #0A0A0A;
+  color: #E0E0E0;
+  border-radius: 12px;
+  padding: clamp(0.8rem, 2vw, 1.4rem);
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
+  font-size: clamp(0.75rem, 1.3vw, 0.88rem);
+  line-height: 1.7;
+  margin: 1rem 0;
+  position: relative;
+}
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #FFB800; }
+pre .op { color: #93D500; }
+.code-label {
+  position: absolute; top: 0; right: 0;
+  background: rgba(255,255,255,0.08);
+  color: #999999;
+  padding: 0.2rem 0.8rem;
+  border-radius: 0 12px 0 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+/* inline code */
+:not(pre) > code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(108,99,255,0.15);
+  padding: 0.15em 0.45em;
+  border-radius: 5px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+:not(pre) > code:hover { background: rgba(108,99,255,0.3); }
+:not(pre) > code.copied { background: rgba(108,99,255,0.5); }
+
+/* ============ EXPLANATION BLOCKS ============ */
+.concept-box {
+  background: rgba(108, 99, 255, 0.15);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  border: 1px solid #2a2a3a;
+}
+.concept-box h4 {
+  font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem;
+}
+.analogy {
+  background: #1a1a0a;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 0.75rem 0;
+  border-left: 3px solid #FFB800;
+  font-size: 0.95rem;
+}
+.analogy::before {
+  content: '\1F4A1 日常の例';
+  display: block;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #FFB800;
+  margin-bottom: 0.3rem;
+}
+.point-list {
+  list-style: none;
+  padding: 0;
+}
+.point-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+}
+.point-list li::before {
+  content: '\25B8';
+  position: absolute; left: 0;
+  color: #76B900;
+  font-weight: 700;
+}
+
+/* ============ ANSWERS (COLLAPSIBLE) ============ */
+details {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+details summary {
+  padding: 0.8rem 1.2rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 0.5rem;
+  background: #1a1a1a;
+  user-select: none;
+}
+details summary::marker { content: ''; }
+details summary::before {
+  content: '\25B6';
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+  color: #666;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
+
+/* ============ WARNING / DANGER CALLOUT ============ */
+.callout-danger {
+  background: rgba(255, 82, 82, 0.08);
+  border: 1px solid rgba(255, 82, 82, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-danger h4 {
+  color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-warning {
+  background: rgba(255, 184, 0, 0.08);
+  border: 1px solid rgba(255, 184, 0, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-warning h4 {
+  color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-info {
+  background: rgba(108, 99, 255, 0.08);
+  border: 1px solid rgba(108, 99, 255, 0.3);
+  border-left: 4px solid #76B900;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-info h4 {
+  color: #76B900; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-tip {
+  background: rgba(155, 89, 182, 0.08);
+  border: 1px solid rgba(155, 89, 182, 0.3);
+  border-left: 4px solid #93D500;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-tip h4 {
+  color: #93D500; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+
+/* ============ FOOTER ============ */
+footer {
+  background: #0A0A0A;
+  color: #999999;
+  padding: 2rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 640px) {
+  .submission-items { grid-template-columns: 1fr; }
+  .section-num { width: 2rem; height: 2rem; font-size: 0.85rem; }
+}
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
+/* ============ SUB-ITEM LINKS ============ */
+a.sub-item { transition: transform 0.15s, box-shadow 0.15s; }
+a.sub-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(118,185,0,0.3);
+  border-color: #76B900;
+}
+
+/* ============ SECTION NAV (sticky) ============ */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.5rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-exam { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3rem; }
+
+/* ============ REDUCED MOTION ============ */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  details summary::before { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SECTION NAV ============ -->
+<nav class="section-nav">
+  <a href="#sec-schedule">日程</a>
+  <a href="#sec-teacher">0. 説明</a>
+  <a href="#sec-mp3">1. MP3再生</a>
+  <a href="#sec-sine">2. 音を作る</a>
+  <a href="#sec-std6-1" class="nav-assignment">std6-1</a>
+  <a href="#sec-fft">4. FFT可視化</a>
+  <a href="#sec-chord">5. 和音の秘密</a>
+  <a href="#sec-std6-2" class="nav-assignment">std6-2</a>
+  <a href="#sec-std6-3" class="nav-assignment">std6-3</a>
+  <a href="#sec-cs">CS/DS基礎</a>
+  <a href="#answers-section">解答例</a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">Media creation Data design 1（MD1）─ 2026年度前期</div>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.1rem;white-space:nowrap">武蔵野大学データサイエンス学部</p>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.3rem;white-space:nowrap">武蔵野大学国際データサイエンス学部（通信教育部）</p>
+    <p style="font-size:0.95rem;opacity:0.85;margin-bottom:1rem">中村 亮太</p>
+    <h1>MD1 第6回: 音のプログラミングとFFT和音解析</h1>
+    <p style="white-space:nowrap">pydubで音を生成・再生し、FFTで周波数成分を可視化する</p>
+    <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:0.3rem;padding:0.4rem 0.8rem;margin-top:1rem;font-size:0.7rem;display:inline-block">
+      <strong>対象環境:</strong> Apple M1 / M2 / M3 / M4 / M5 チップ搭載 Mac ｜ macOS Tahoe
+    </div>
+  </div>
+</header>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section id="sec-schedule" style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div class="submission-box">
+      <h3>提出ガイド</h3>
+      <div class="submission-items">
+        <a href="#sec-std6-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std6-1<br>Pythonスクリプト</a>
+        <a href="#sec-std6-2" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">2</span><span class="tag tag-standard">標準課題</span>std6-2<br>Pythonスクリプト</a>
+        <a href="#sec-std6-3" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">3</span><span class="tag tag-standard">標準課題</span>std6-3<br>Wordレポート（PDF）</a>
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.85rem;color:#93D500">
+        <strong>提出方法:</strong> std6-1, std6-2 は Pythonスクリプト（.py）、std6-3 は Wordフォーマットで作成 → PDFにエクスポート → Google Classroomに提出
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:0.5rem;font-size:0.85rem;color:#FFB800">
+        <strong>提出期限:</strong> 6/8(月) 13:10（第7回授業開始まで）
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 0. TEACHER EXPLANATION ============ -->
+<section id="sec-teacher">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">0</div>
+      <h2>先生の説明（約30分）</h2>
+    </div>
+
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <h3>音をコンピュータで扱う仕組み</h3>
+        <span class="tag tag-note">ノート</span>
+      </div>
+
+      <div class="concept-box">
+        <h4>本日の流れ</h4>
+        <ol style="padding-left:1.5rem;font-size:0.95rem;margin-top:0.5rem">
+          <li style="margin-bottom:0.4rem"><strong>先生の説明（30分）:</strong> AD/DA変換、音のデジタル表現、FFTの概念紹介</li>
+          <li style="margin-bottom:0.4rem"><strong>グループディスカッション:</strong>「音をコンピュータで扱うためにはどうすればいいか？」</li>
+          <li style="margin-bottom:0.4rem"><strong>Step 1〜2:</strong> pydubでMP3再生、正弦波で音を生成</li>
+          <li style="margin-bottom:0.4rem"><strong>Step 3:</strong> キーボードピアノ（std6-1）</li>
+          <li style="margin-bottom:0.4rem"><strong>Step 4〜5:</strong> FFTで音を可視化、和音の秘密</li>
+          <li><strong>Step 6:</strong> インタラクティブ音実験（std6-2, std6-3）</li>
+        </ol>
+      </div>
+
+      <div class="concept-box">
+        <h4>AD/DA変換 ─ アナログとデジタルの橋渡し</h4>
+        <p>音は空気の振動（アナログ信号）です。コンピュータで扱うには<strong>デジタル信号</strong>に変換する必要があります。</p>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li><strong>AD変換（Analog-to-Digital）:</strong> マイクで拾った音（連続的な波）を、一定間隔で測定し数値化する</li>
+          <li><strong>標本化（サンプリング）:</strong> 波の高さを1秒間に何回測定するか → <strong>サンプリングレート</strong>（CDは44,100Hz = 1秒に44,100回）</li>
+          <li><strong>量子化:</strong> 測定した値を離散的な数値に丸める → <strong>ビット深度</strong>（CDは16bit = 65,536段階）</li>
+          <li><strong>DA変換（Digital-to-Analog）:</strong> デジタルデータをスピーカーで再びアナログの振動に変換して音を鳴らす</li>
+        </ul>
+      </div>
+
+      <div class="analogy">
+        音のデジタル化は「パラパラ漫画」と同じです。連続的な動きを1コマずつ描いて記録し（AD変換）、高速でめくると動いて見える（DA変換）。コマ数が多いほど滑らかになります。
+      </div>
+
+      <div class="concept-box" style="margin-top:1rem">
+        <h4>グループディスカッション</h4>
+        <p style="font-size:0.95rem">テーマ:「音をコンピュータで扱うためにはどうすればいいか？」</p>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li>音の特徴（大きさ、高さ、音色）をどう数値化する？</li>
+          <li>1秒間に何回測定すれば「十分」か？</li>
+          <li>画像と音のデジタル化の共通点は？</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout-danger">
+      <h4>環境構築の変更: Python 3.10 が必要です</h4>
+      <p style="font-size:0.9rem">今回使用する <code>pydub</code> は Python 3.12 との互換性に問題があるため、<strong>Python 3.10.x</strong> で仮想環境を作り直してください。また <code>ffmpeg</code> のインストールが必要です。</p>
+    </div>
+
+    <pre><span class="code-label">Bash ── 環境構築</span>
+<span class="fn">cd</span> ~/MD1
+<span class="fn">mkdir</span> no6
+<span class="fn">cd</span> no6
+uv venv <span class="op">--</span>python <span class="num">3.10</span>
+<span class="fn">source</span> .venv/bin/activate
+uv pip install pydub py5 simpleaudio jupyterlab sounddevice
+brew install ffmpeg</pre>
+
+    <div class="callout-info">
+      <h4>ffmpegとは？</h4>
+      <p style="font-size:0.9rem"><code>ffmpeg</code> は動画・音声を変換するコマンドラインツールです。pydubがMP3やWAVなどのファイルを読み書きするために内部で使用します。<code>brew install ffmpeg</code> で一度インストールすればOKです。</p>
+    </div>
+
+    <div style="background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:1rem 1.2rem;margin-top:1.5rem;text-align:center;font-size:1rem;color:#76B900;font-weight:700">
+      ── ここから先はグループで進めてください ──
+    </div>
+  </div>
+</section>
+
+<!-- ============ Step 1: MP3再生 ============ -->
+<section id="sec-mp3">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>Step 1: MP3ファイルを再生する（約15分）</h2>
+    </div>
+
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <h3>pydubの基本 ─ AudioSegment</h3>
+        <span class="tag tag-note">ノート</span>
+      </div>
+
+      <div class="concept-box">
+        <h4>pydubとは</h4>
+        <p><code>pydub</code> は音声ファイルをPythonで簡単に扱うためのライブラリです。MP3、WAV、OGGなど様々な形式に対応しています。音声データは <code>AudioSegment</code> オブジェクトとして扱います。</p>
+      </div>
+
+      <p style="font-size:0.9rem;margin-top:1rem">まず、適当なMP3ファイルを <code>~/MD1/no6/</code> に配置してください。フリー音源サイトからダウンロードしたものでOKです。</p>
+
+      <pre><span class="code-label">Python ── MP3再生</span>
+<span class="kw">from</span> pydub <span class="kw">import</span> AudioSegment
+<span class="kw">from</span> pydub.playback <span class="kw">import</span> play
+
+<span class="cmt"># MP3ファイルを読み込む</span>
+audio <span class="op">=</span> AudioSegment.<span class="fn">from_file</span>(<span class="str">"sample.mp3"</span>)
+
+<span class="cmt"># 音声情報を表示</span>
+<span class="fn">print</span>(<span class="str">f"長さ: <span class="op">{</span><span class="fn">len</span>(audio)<span class="op">}</span>ミリ秒"</span>)
+<span class="fn">print</span>(<span class="str">f"チャンネル数: <span class="op">{</span>audio.channels<span class="op">}</span>"</span>)
+<span class="fn">print</span>(<span class="str">f"サンプリングレート: <span class="op">{</span>audio.frame_rate<span class="op">}</span>Hz"</span>)
+<span class="fn">print</span>(<span class="str">f"ビット深度: <span class="op">{</span>audio.sample_width <span class="op">*</span> <span class="num">8</span><span class="op">}</span>bit"</span>)
+
+<span class="cmt"># 再生</span>
+<span class="fn">play</span>(audio)</pre>
+
+      <div class="concept-box">
+        <h4>AudioSegmentの基本操作</h4>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li><code>len(audio)</code> → 長さ（ミリ秒）</li>
+          <li><code>audio[:5000]</code> → 最初の5秒を切り出し</li>
+          <li><code>audio + audio2</code> → 2つの音声を連結</li>
+          <li><code>audio.apply_gain(-10)</code> → 音量を10dB下げる</li>
+          <li><code>audio.overlay(audio2)</code> → 2つの音声を重ねる</li>
+          <li><code>audio.export("output.wav", format="wav")</code> → ファイルに保存</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" style="border-left:4px solid #93D500">
+      <div class="card-header">
+        <h3>練習1: 音声を加工してみよう</h3>
+        <span class="tag tag-note">ノート</span>
+      </div>
+
+      <p style="font-size:0.9rem">読み込んだMP3を加工して再生してみましょう。</p>
+
+      <pre><span class="code-label">Python ── 音声加工の練習</span>
+<span class="kw">from</span> pydub <span class="kw">import</span> AudioSegment
+<span class="kw">from</span> pydub.playback <span class="kw">import</span> play
+
+audio <span class="op">=</span> AudioSegment.<span class="fn">from_file</span>(<span class="str">"sample.mp3"</span>)
+
+<span class="cmt"># 最初の3秒だけ切り出す</span>
+clip <span class="op">=</span> audio[:<span class="num">3000</span>]
+
+<span class="cmt"># 逆再生</span>
+reversed_clip <span class="op">=</span> clip.<span class="fn">reverse</span>()
+
+<span class="cmt"># 元の音 → 逆再生を連結</span>
+combined <span class="op">=</span> clip <span class="op">+</span> reversed_clip
+
+<span class="fn">play</span>(combined)</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Step 2: 周波数指定で音を作る ============ -->
+<section id="sec-sine">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">2</div>
+      <h2>Step 2: 周波数を指定して音を作る（約15分）</h2>
+    </div>
+
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <h3>正弦波で音を生成する</h3>
+        <span class="tag tag-note">ノート</span>
+      </div>
+
+      <div class="concept-box">
+        <h4>音の三要素</h4>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li><strong>高さ（ピッチ）:</strong> 周波数（Hz）で決まる。440Hz = ラの音</li>
+          <li><strong>大きさ（音量）:</strong> 振幅で決まる。波の高さが大きいほど音が大きい</li>
+          <li><strong>音色（ティンバー）:</strong> 波の形で決まる。正弦波 = 純音、矩形波 = ブザー音</li>
+        </ul>
+      </div>
+
+      <pre><span class="code-label">Python ── 正弦波の生成</span>
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">from</span> pydub <span class="kw">import</span> AudioSegment
+<span class="kw">from</span> pydub.playback <span class="kw">import</span> play
+
+<span class="kw">def</span> <span class="fn">create_sine_wave</span>(frequency, duration_ms, sample_rate<span class="op">=</span><span class="num">44100</span>):
+    <span class="str">"""指定した周波数・長さの正弦波を生成する"""</span>
+    num_samples <span class="op">=</span> <span class="fn">int</span>(sample_rate <span class="op">*</span> duration_ms <span class="op">/</span> <span class="num">1000</span>)
+    t <span class="op">=</span> np.<span class="fn">linspace</span>(<span class="num">0</span>, duration_ms <span class="op">/</span> <span class="num">1000</span>, num_samples)
+    wave <span class="op">=</span> np.<span class="fn">sin</span>(<span class="num">2</span> <span class="op">*</span> np.pi <span class="op">*</span> frequency <span class="op">*</span> t)
+    wave <span class="op">=</span> (wave <span class="op">*</span> <span class="num">32767</span>).<span class="fn">astype</span>(np.int16)
+    audio <span class="op">=</span> <span class="fn">AudioSegment</span>(wave.<span class="fn">tobytes</span>(),
+                         frame_rate<span class="op">=</span>sample_rate,
+                         sample_width<span class="op">=</span><span class="num">2</span>,
+                         channels<span class="op">=</span><span class="num">1</span>)
+    <span class="kw">return</span> audio
+
+<span class="cmt"># ラの音（440Hz）を1秒鳴らす</span>
+la_sound <span class="op">=</span> <span class="fn">create_sine_wave</span>(<span class="num">440</span>, <span class="num">1000</span>)
+<span class="fn">play</span>(la_sound)</pre>
+
+      <div class="concept-box">
+        <h4>ドレミの周波数</h4>
+        <table>
+          <tr><th>音名</th><th>周波数 (Hz)</th><th>音名</th><th>周波数 (Hz)</th></tr>
+          <tr><td>ド (C4)</td><td>261.63</td><td>ファ (F4)</td><td>349.23</td></tr>
+          <tr><td>レ (D4)</td><td>293.66</td><td>ソ (G4)</td><td>392.00</td></tr>
+          <tr><td>ミ (E4)</td><td>329.63</td><td>ラ (A4)</td><td>440.00</td></tr>
+          <tr><td>ファ# (F#4)</td><td>369.99</td><td>シ (B4)</td><td>493.88</td></tr>
+        </table>
+      </div>
+
+      <pre><span class="code-label">Python ── ドレミファソラシドを演奏</span>
+<span class="cmt"># ドレミファソラシドの周波数</span>
+doremi <span class="op">=</span> [<span class="num">261.63</span>, <span class="num">293.66</span>, <span class="num">329.63</span>, <span class="num">349.23</span>,
+          <span class="num">392.00</span>, <span class="num">440.00</span>, <span class="num">493.88</span>, <span class="num">523.25</span>]
+
+<span class="cmt"># 各音を0.4秒ずつ生成して連結</span>
+melody <span class="op">=</span> AudioSegment.<span class="fn">silent</span>(duration<span class="op">=</span><span class="num">0</span>)
+<span class="kw">for</span> freq <span class="kw">in</span> doremi:
+    note <span class="op">=</span> <span class="fn">create_sine_wave</span>(freq, <span class="num">400</span>)
+    melody <span class="op">=</span> melody <span class="op">+</span> note
+
+<span class="fn">play</span>(melody)</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Step 3: キーボードピアノ + std6-1 ============ -->
+<section id="sec-std6-1">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">3</div>
+      <h2>Step 3: キーボードピアノ + std6-1（約25分）</h2>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header">
+        <h3>std6-1: インタラクティブ・ビジュアルピアノ</h3>
+        <span class="tag tag-standard">標準課題</span>
+      </div>
+
+      <div class="concept-box">
+        <h4>課題内容</h4>
+        <p>py5でピアノの鍵盤を描画し、<strong>キーボード入力で2オクターブ分の音を鳴らすアプリ</strong>を作成してください。</p>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li>キーボードの <code>a</code> <code>s</code> <code>d</code> <code>f</code> <code>g</code> <code>h</code> <code>j</code> <code>k</code> で1オクターブ目（C4〜C5）</li>
+          <li>キーボードの <code>q</code> <code>w</code> <code>e</code> <code>r</code> <code>t</code> <code>y</code> <code>u</code> <code>i</code> で2オクターブ目（C5〜C6）</li>
+          <li>押されたキーに対応する鍵盤がハイライトされること</li>
+          <li>音の再生には <code>simpleaudio</code> または <code>sounddevice</code> を使用（pydubの <code>play()</code> はブロッキングするため、リアルタイム演奏には不向き）</li>
+        </ul>
+      </div>
+
+      <div class="callout-tip">
+        <h4>ヒント: simpleaudioでノンブロッキング再生</h4>
+        <p style="font-size:0.9rem"><code>pydub.playback.play()</code> は再生が終わるまで処理が止まります。リアルタイムにキー入力を受け付けるには <code>simpleaudio</code> を使いましょう。</p>
+      </div>
+
+      <pre><span class="code-label">Python ── simpleaudioでの再生</span>
+<span class="kw">import</span> simpleaudio <span class="kw">as</span> sa
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">def</span> <span class="fn">play_tone</span>(frequency, duration_ms<span class="op">=</span><span class="num">300</span>, sample_rate<span class="op">=</span><span class="num">44100</span>):
+    <span class="str">"""ノンブロッキングで音を再生する"""</span>
+    num_samples <span class="op">=</span> <span class="fn">int</span>(sample_rate <span class="op">*</span> duration_ms <span class="op">/</span> <span class="num">1000</span>)
+    t <span class="op">=</span> np.<span class="fn">linspace</span>(<span class="num">0</span>, duration_ms <span class="op">/</span> <span class="num">1000</span>, num_samples, <span class="kw">False</span>)
+    wave <span class="op">=</span> np.<span class="fn">sin</span>(<span class="num">2</span> <span class="op">*</span> np.pi <span class="op">*</span> frequency <span class="op">*</span> t)
+    audio <span class="op">=</span> (wave <span class="op">*</span> <span class="num">32767</span>).<span class="fn">astype</span>(np.int16)
+    play_obj <span class="op">=</span> sa.<span class="fn">play_buffer</span>(audio, <span class="num">1</span>, <span class="num">2</span>, sample_rate)
+    <span class="kw">return</span> play_obj  <span class="cmt"># ノンブロッキング: 再生中でも次の処理へ</span></pre>
+
+      <pre><span class="code-label">Python ── std6-1 ベースコード</span>
+<span class="kw">import</span> py5
+<span class="kw">import</span> simpleaudio <span class="kw">as</span> sa
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="cmt"># 2オクターブ分の音名と周波数</span>
+NOTES_LOW <span class="op">=</span> {
+    <span class="str">'a'</span>: <span class="num">261.63</span>, <span class="str">'s'</span>: <span class="num">293.66</span>, <span class="str">'d'</span>: <span class="num">329.63</span>, <span class="str">'f'</span>: <span class="num">349.23</span>,
+    <span class="str">'g'</span>: <span class="num">392.00</span>, <span class="str">'h'</span>: <span class="num">440.00</span>, <span class="str">'j'</span>: <span class="num">493.88</span>, <span class="str">'k'</span>: <span class="num">523.25</span>,
+}
+NOTES_HIGH <span class="op">=</span> {
+    <span class="str">'q'</span>: <span class="num">523.25</span>, <span class="str">'w'</span>: <span class="num">587.33</span>, <span class="str">'e'</span>: <span class="num">659.25</span>, <span class="str">'r'</span>: <span class="num">698.46</span>,
+    <span class="str">'t'</span>: <span class="num">783.99</span>, <span class="str">'y'</span>: <span class="num">880.00</span>, <span class="str">'u'</span>: <span class="num">987.77</span>, <span class="str">'i'</span>: <span class="num">1046.50</span>,
+}
+
+current_key <span class="op">=</span> <span class="str">""</span>
+
+<span class="kw">def</span> <span class="fn">play_tone</span>(frequency, duration_ms<span class="op">=</span><span class="num">300</span>, sample_rate<span class="op">=</span><span class="num">44100</span>):
+    num_samples <span class="op">=</span> <span class="fn">int</span>(sample_rate <span class="op">*</span> duration_ms <span class="op">/</span> <span class="num">1000</span>)
+    t <span class="op">=</span> np.<span class="fn">linspace</span>(<span class="num">0</span>, duration_ms <span class="op">/</span> <span class="num">1000</span>, num_samples, <span class="kw">False</span>)
+    wave <span class="op">=</span> np.<span class="fn">sin</span>(<span class="num">2</span> <span class="op">*</span> np.pi <span class="op">*</span> frequency <span class="op">*</span> t)
+    audio <span class="op">=</span> (wave <span class="op">*</span> <span class="num">32767</span>).<span class="fn">astype</span>(np.int16)
+    sa.<span class="fn">play_buffer</span>(audio, <span class="num">1</span>, <span class="num">2</span>, sample_rate)
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">800</span>, <span class="num">300</span>)
+    py5.<span class="fn">text_size</span>(<span class="num">20</span>)
+
+<span class="kw">def</span> <span class="fn">draw</span>():
+    py5.<span class="fn">background</span>(<span class="num">30</span>)
+
+    <span class="cmt"># TODO: ここに鍵盤の描画を実装する</span>
+    <span class="cmt"># ヒント: 8つの白い四角形を横に並べて鍵盤を表現</span>
+    <span class="cmt"># current_key に対応する鍵盤の色を変える</span>
+
+    py5.<span class="fn">fill</span>(<span class="num">200</span>)
+    py5.<span class="fn">text</span>(<span class="str">f"押されたキー: <span class="op">{</span>current_key<span class="op">}</span>"</span>, <span class="num">20</span>, <span class="num">30</span>)
+
+<span class="kw">def</span> <span class="fn">key_pressed</span>():
+    <span class="kw">global</span> current_key
+    k <span class="op">=</span> py5.key
+    <span class="kw">if</span> k <span class="kw">in</span> NOTES_LOW:
+        current_key <span class="op">=</span> k
+        <span class="fn">play_tone</span>(NOTES_LOW[k])
+    <span class="kw">elif</span> k <span class="kw">in</span> NOTES_HIGH:
+        current_key <span class="op">=</span> k
+        <span class="fn">play_tone</span>(NOTES_HIGH[k])
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="notion-submit">
+        <strong>std6-1</strong> 完成したPythonスクリプト（.py）をGoogle Classroomに提出してください。鍵盤の描画とキーボード入力による2オクターブ分の音再生が動作すること。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Step 4: FFTで音を可視化 ============ -->
+<section id="sec-fft">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">4</div>
+      <h2>Step 4: FFTで音を可視化する（約25分）</h2>
+    </div>
+
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <h3>FFT（高速フーリエ変換）入門</h3>
+        <span class="tag tag-note">ノート</span>
+      </div>
+
+      <div class="concept-box">
+        <h4>FFTとは何か</h4>
+        <p><strong>FFT（Fast Fourier Transform / 高速フーリエ変換）</strong>は、音の波形データを<strong>周波数成分に分解</strong>する数学的手法です。</p>
+        <p style="margin-top:0.5rem">例えば、ギターの「ラ」の音は440Hzだけでなく、880Hz、1320Hz…など複数の周波数が混ざっています。FFTを使うと「この音にはどんな周波数がどれだけ含まれているか」がわかります。</p>
+      </div>
+
+      <div class="analogy">
+        虹と同じです。白い光（音の波形）をプリズム（FFT）に通すと、赤・橙・黄…と色（周波数）に分解されます。
+      </div>
+
+      <div class="concept-box" style="margin-top:1rem">
+        <h4>ステップバイステップ: FFTの手順</h4>
+        <ol style="padding-left:1.5rem;font-size:0.95rem;margin-top:0.5rem">
+          <li style="margin-bottom:0.4rem"><strong>音声データを読み込む</strong> → サンプル値の配列（波形）を得る</li>
+          <li style="margin-bottom:0.4rem"><strong>窓（ウィンドウ）を切り出す</strong> → 全体ではなく一部分（4096サンプルなど）を取り出す</li>
+          <li style="margin-bottom:0.4rem"><strong>np.fft.fft() を実行</strong> → 複素数の配列が返る</li>
+          <li style="margin-bottom:0.4rem"><strong>np.abs() で振幅を取る</strong> → 各周波数の強さ（マグニチュード）</li>
+          <li><strong>前半だけ使う</strong> → FFT結果は左右対称なので前半のみ有効</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="card" style="border-left:4px solid #93D500">
+      <div class="card-header">
+        <h3>FFTスペクトルをpy5で描画する</h3>
+        <span class="tag tag-note">ノート</span>
+      </div>
+
+      <pre><span class="code-label">Python ── FFT可視化</span>
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">import</span> py5
+<span class="kw">from</span> pydub <span class="kw">import</span> AudioSegment
+
+<span class="cmt"># 音声ファイルを読み込み、モノラルに変換</span>
+audio <span class="op">=</span> AudioSegment.<span class="fn">from_file</span>(<span class="str">"sample.mp3"</span>).<span class="fn">set_channels</span>(<span class="num">1</span>)
+samples <span class="op">=</span> np.<span class="fn">array</span>(audio.<span class="fn">get_array_of_samples</span>())
+
+<span class="cmt"># FFTパラメータ</span>
+WINDOW <span class="op">=</span> <span class="num">4096</span>
+fft <span class="op">=</span> np.fft.<span class="fn">fft</span>(samples[:WINDOW])
+magnitude <span class="op">=</span> np.<span class="fn">abs</span>(fft[:WINDOW <span class="op">//</span> <span class="num">2</span>])
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">800</span>, <span class="num">400</span>)
+    py5.<span class="fn">color_mode</span>(py5.HSB, <span class="num">255</span>)
+    py5.<span class="fn">no_loop</span>()
+
+<span class="kw">def</span> <span class="fn">draw</span>():
+    py5.<span class="fn">background</span>(<span class="num">0</span>)
+
+    <span class="cmt"># スペクトルを棒グラフとして描画</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">0</span>, <span class="fn">len</span>(magnitude), <span class="num">8</span>):
+        x <span class="op">=</span> py5.<span class="fn">remap</span>(i, <span class="num">0</span>, <span class="fn">len</span>(magnitude), <span class="num">0</span>, py5.width)
+        y <span class="op">=</span> py5.<span class="fn">remap</span>(magnitude[i], <span class="num">0</span>, magnitude.<span class="fn">max</span>(), py5.height, <span class="num">0</span>)
+        <span class="cmt"># 色を周波数に応じて変化させる（HSBカラー）</span>
+        py5.<span class="fn">stroke</span>(py5.<span class="fn">remap</span>(i, <span class="num">0</span>, <span class="fn">len</span>(magnitude), <span class="num">0</span>, <span class="num">255</span>), <span class="num">200</span>, <span class="num">255</span>)
+        py5.<span class="fn">line</span>(x, py5.height, x, y)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="callout-info">
+        <h4>コードの読み方</h4>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li><code>set_channels(1)</code> → ステレオをモノラルに変換（解析を簡単にするため）</li>
+          <li><code>WINDOW = 4096</code> → 一度に解析するサンプル数。2のべき乗にするとFFTが高速</li>
+          <li><code>fft[:WINDOW // 2]</code> → FFT結果の前半だけ取る（後半は対称なので不要）</li>
+          <li><code>remap()</code> → 値の範囲を別の範囲に変換する（py5の便利関数）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Step 5: 和音の秘密 ============ -->
+<section id="sec-chord">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">5</div>
+      <h2>Step 5: 和音の秘密（約15分）</h2>
+    </div>
+
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <h3>なぜドミソは美しく響くのか？</h3>
+        <span class="tag tag-note">ノート</span>
+      </div>
+
+      <div class="concept-box">
+        <h4>和音と周波数比</h4>
+        <p>和音が「美しい」と感じるかどうかは、<strong>周波数の比率</strong>で決まります。比率がシンプルな整数比に近いほど「協和」して美しく聞こえます。</p>
+        <table style="margin-top:0.5rem">
+          <tr><th>和音</th><th>音名</th><th>周波数 (Hz)</th><th>ド基準の比率</th><th>近似整数比</th></tr>
+          <tr><td>ド</td><td>C4</td><td>261.63</td><td>1.00</td><td>1</td></tr>
+          <tr><td>ミ</td><td>E4</td><td>329.63</td><td>1.26</td><td>5/4</td></tr>
+          <tr><td>ソ</td><td>G4</td><td>392.00</td><td>1.50</td><td>3/2</td></tr>
+        </table>
+        <p style="margin-top:0.5rem">ミ/ド = 5/4、ソ/ド = 3/2 → シンプルな整数比 = 美しい和音（協和音）</p>
+      </div>
+
+      <pre><span class="code-label">Python ── ドミソ和音の生成</span>
+<span class="kw">from</span> pydub.generators <span class="kw">import</span> Sine
+<span class="kw">from</span> pydub.playback <span class="kw">import</span> play
+
+<span class="cmt"># ドミソの3つの音を生成</span>
+do <span class="op">=</span> <span class="fn">Sine</span>(<span class="num">261.63</span>).<span class="fn">to_audio_segment</span>(duration<span class="op">=</span><span class="num">1000</span>)
+mi <span class="op">=</span> <span class="fn">Sine</span>(<span class="num">329.63</span>).<span class="fn">to_audio_segment</span>(duration<span class="op">=</span><span class="num">1000</span>)
+so <span class="op">=</span> <span class="fn">Sine</span>(<span class="num">392.00</span>).<span class="fn">to_audio_segment</span>(duration<span class="op">=</span><span class="num">1000</span>)
+
+<span class="cmt"># 音量を下げてから重ねる（クリッピング防止）</span>
+chord <span class="op">=</span> do.<span class="fn">apply_gain</span>(<span class="num">-10</span>).<span class="fn">overlay</span>(mi.<span class="fn">apply_gain</span>(<span class="num">-10</span>)).<span class="fn">overlay</span>(so.<span class="fn">apply_gain</span>(<span class="num">-10</span>))
+<span class="fn">play</span>(chord)
+
+<span class="cmt"># 周波数比を確認</span>
+<span class="fn">print</span>(<span class="str">f"ミ÷ド = <span class="op">{</span><span class="num">329.63</span> <span class="op">/</span> <span class="num">261.63</span>:<span class="num">.3f</span><span class="op">}</span> ≈ 5/4 = <span class="op">{</span><span class="num">5</span><span class="op">/</span><span class="num">4</span>:<span class="num">.3f</span><span class="op">}</span>"</span>)
+<span class="fn">print</span>(<span class="str">f"ソ÷ド = <span class="op">{</span><span class="num">392.00</span> <span class="op">/</span> <span class="num">261.63</span>:<span class="num">.3f</span><span class="op">}</span> ≈ 3/2 = <span class="op">{</span><span class="num">3</span><span class="op">/</span><span class="num">2</span>:<span class="num">.3f</span><span class="op">}</span>"</span>)</pre>
+
+      <div class="concept-box" style="margin-top:1rem">
+        <h4>実験してみよう: 不協和音</h4>
+        <p>周波数比が複雑な音を重ねると「不協和音」になります。</p>
+      </div>
+
+      <pre><span class="code-label">Python ── 不協和音の実験</span>
+<span class="cmt"># ド + ド# → 半音の重なり = 不協和音</span>
+do <span class="op">=</span> <span class="fn">Sine</span>(<span class="num">261.63</span>).<span class="fn">to_audio_segment</span>(duration<span class="op">=</span><span class="num">1000</span>)
+do_sharp <span class="op">=</span> <span class="fn">Sine</span>(<span class="num">277.18</span>).<span class="fn">to_audio_segment</span>(duration<span class="op">=</span><span class="num">1000</span>)
+dissonance <span class="op">=</span> do.<span class="fn">apply_gain</span>(<span class="num">-10</span>).<span class="fn">overlay</span>(do_sharp.<span class="fn">apply_gain</span>(<span class="num">-10</span>))
+<span class="fn">play</span>(dissonance)
+<span class="fn">print</span>(<span class="str">f"ド#÷ド = <span class="op">{</span><span class="num">277.18</span> <span class="op">/</span> <span class="num">261.63</span>:<span class="num">.3f</span><span class="op">}</span> → 複雑な比率 = 不協和"</span>)</pre>
+
+      <div class="analogy">
+        縄跳びの二重回しと同じです。2人が同じリズム（3:2など）で跳ぶと美しく見える。バラバラのリズムだと混乱する。音の波も同じで、山と山が規則的に重なると心地よく聞こえます。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Step 6: インタラクティブ音実験 + std6-2, std6-3 ============ -->
+<section id="sec-std6-2">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">6</div>
+      <h2>Step 6: インタラクティブ音実験 + std6-2, std6-3（約25分）</h2>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header">
+        <h3>std6-2: ビジュアルキーボードピアノ</h3>
+        <span class="tag tag-standard">標準課題</span>
+      </div>
+
+      <div class="concept-box">
+        <h4>課題内容</h4>
+        <p>std6-1 を拡張して、以下の機能を追加してください。</p>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li><strong>視覚エフェクト:</strong> キーを押すと鍵盤が光る、パーティクルが飛ぶ、波形アニメーションなど</li>
+          <li><strong>複数の波形:</strong> 正弦波だけでなく、矩形波・三角波・ノコギリ波を選択可能にする（キーで切り替え）</li>
+          <li><strong>録音機能:</strong> 演奏した音を順番に記録し、再生ボタンで再生できるようにする</li>
+        </ul>
+      </div>
+
+      <div class="callout-tip">
+        <h4>ヒント: 波形の種類</h4>
+        <ul class="point-list" style="margin-top:0.3rem">
+          <li><strong>正弦波:</strong> <code>np.sin(2 * np.pi * f * t)</code> → 純音、フルートに近い</li>
+          <li><strong>矩形波:</strong> <code>np.sign(np.sin(2 * np.pi * f * t))</code> → ブザー、ファミコン音に近い</li>
+          <li><strong>三角波:</strong> <code>2 * np.abs(2 * (f * t % 1) - 1) - 1</code> → 柔らかい電子音</li>
+          <li><strong>ノコギリ波:</strong> <code>2 * (f * t % 1) - 1</code> → ブラス楽器、力強い音</li>
+        </ul>
+      </div>
+
+      <div class="notion-submit">
+        <strong>std6-2</strong> 完成したPythonスクリプト（.py）をGoogle Classroomに提出してください。視覚エフェクト・複数波形切り替え・録音再生の3機能が動作すること。
+      </div>
+    </div>
+
+    <div class="card standard" id="sec-std6-3">
+      <div class="card-header">
+        <h3>std6-3: サウンドペインター</h3>
+        <span class="tag tag-standard">標準課題</span>
+      </div>
+
+      <div class="concept-box">
+        <h4>課題内容</h4>
+        <p>音の特徴を解析して<strong>自動的に絵を描く</strong>アプリを作成し、<strong>Wordレポート（PDF）</strong>で提出してください。</p>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li>MP3ファイルを読み込み、FFTで周波数成分を解析</li>
+          <li>低い周波数 → 暖色（赤・オレンジ）、高い周波数 → 寒色（青・紫）で描画</li>
+          <li>音量 → 図形のサイズ、周波数 → 色、テンポ → 速度 など自由にマッピング</li>
+          <li>レポートには: プログラムの説明、工夫した点、結果のスクリーンショット、考察を含めること</li>
+        </ul>
+      </div>
+
+      <div class="callout-tip">
+        <h4>ヒント: 時間軸に沿ったFFT</h4>
+        <p style="font-size:0.9rem">音声を一定間隔（例: 100ms）で区切り、各区間ごとにFFTを実行すると、時間の変化に沿ったスペクトルが得られます。</p>
+      </div>
+
+      <pre><span class="code-label">Python ── 時間軸FFTのヒント</span>
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">from</span> pydub <span class="kw">import</span> AudioSegment
+
+audio <span class="op">=</span> AudioSegment.<span class="fn">from_file</span>(<span class="str">"sample.mp3"</span>).<span class="fn">set_channels</span>(<span class="num">1</span>)
+samples <span class="op">=</span> np.<span class="fn">array</span>(audio.<span class="fn">get_array_of_samples</span>())
+
+WINDOW <span class="op">=</span> <span class="num">4096</span>
+HOP <span class="op">=</span> <span class="num">2048</span>  <span class="cmt"># ウィンドウをずらす幅</span>
+
+spectrums <span class="op">=</span> []
+<span class="kw">for</span> start <span class="kw">in</span> <span class="fn">range</span>(<span class="num">0</span>, <span class="fn">len</span>(samples) <span class="op">-</span> WINDOW, HOP):
+    chunk <span class="op">=</span> samples[start:start <span class="op">+</span> WINDOW]
+    fft <span class="op">=</span> np.fft.<span class="fn">fft</span>(chunk)
+    mag <span class="op">=</span> np.<span class="fn">abs</span>(fft[:WINDOW <span class="op">//</span> <span class="num">2</span>])
+    spectrums.<span class="fn">append</span>(mag)
+
+<span class="cmt"># spectrums[i] が時刻 i のスペクトル</span>
+<span class="cmt"># これをpy5のdraw()ループで順番に描画すると</span>
+<span class="cmt"># 時間経過とともに変化するビジュアルが作れる</span></pre>
+
+      <div class="notion-submit">
+        <strong>std6-3</strong> Wordレポート（PDF）をGoogle Classroomに提出してください。プログラムの説明・工夫した点・スクリーンショット・考察を含むこと。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CS/DS 基礎知識 ============ -->
+<section id="sec-cs">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4A7A00">CS</div>
+      <h2>CS/DS 基礎知識</h2>
+    </div>
+
+    <!-- AD/DA変換 -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>AD/DA変換（アナログ-デジタル変換）</h3></div>
+
+      <div class="concept-box">
+        <h4>すべてのメディアはデジタル化される</h4>
+        <p>コンピュータは0と1しか扱えません。音・画像・テキストなど、あらゆる情報を<strong>数値（デジタル）</strong>に変換する必要があります。</p>
+        <table style="margin-top:0.5rem">
+          <tr><th>メディア</th><th>デジタル化の方法</th><th>単位</th></tr>
+          <tr><td>音</td><td>標本化（サンプリング）+ 量子化</td><td>44,100 Hz / 16bit</td></tr>
+          <tr><td>画像</td><td>ピクセル分割 + RGB値</td><td>1920x1080 / 24bit</td></tr>
+          <tr><td>テキスト</td><td>文字コード割り当て</td><td>ASCII / UTF-8</td></tr>
+        </table>
+      </div>
+
+      <div class="analogy">
+        温度計で気温を記録するのと同じです。アナログの温度計は連続的に変化しますが、1時間ごとに値を読み取って「9時:20℃、10時:22℃…」とメモすれば、それがAD変換です。
+      </div>
+    </div>
+
+    <!-- 文字コード -->
+    <div class="card" style="border-left:4px solid #93D500">
+      <div class="card-header"><h3>文字コード ─ すべてはデジタル</h3></div>
+
+      <div class="concept-box">
+        <h4>文字も数値で表現する</h4>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li><strong>ASCII:</strong> 英数字・記号を7bit（128文字）で表現。<code>'A' = 65</code>、<code>'a' = 97</code>、<code>'0' = 48</code></li>
+          <li><strong>UTF-8:</strong> 世界中の文字を可変長（1〜4バイト）で表現。日本語は3バイト/文字</li>
+          <li><strong>絵文字も数値:</strong> 「&#128522;」は U+1F60A = 128522</li>
+        </ul>
+      </div>
+
+      <pre><span class="code-label">Python ── 文字コードの確認</span>
+<span class="fn">print</span>(<span class="fn">ord</span>(<span class="str">'A'</span>))      <span class="cmt"># → 65</span>
+<span class="fn">print</span>(<span class="fn">ord</span>(<span class="str">'あ'</span>))     <span class="cmt"># → 12354</span>
+<span class="fn">print</span>(<span class="fn">chr</span>(<span class="num">65</span>))       <span class="cmt"># → 'A'</span>
+<span class="fn">print</span>(<span class="fn">chr</span>(<span class="num">128522</span>))   <span class="cmt"># → '😊'</span></pre>
+    </div>
+
+    <!-- FFT -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>FFT（高速フーリエ変換）</h3></div>
+
+      <div class="concept-box">
+        <h4>時間領域 → 周波数領域の変換</h4>
+        <p><strong>フーリエ変換</strong>は「どんな複雑な波も、単純な正弦波の組み合わせで表せる」という数学的定理に基づいています。</p>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li><strong>時間領域:</strong> 横軸=時間、縦軸=振幅 → 「波形」</li>
+          <li><strong>周波数領域:</strong> 横軸=周波数、縦軸=強さ → 「スペクトル」</li>
+          <li><strong>DFT（離散フーリエ変換）:</strong> デジタル信号に適用可能なフーリエ変換。計算量 O(N&sup2;)</li>
+          <li><strong>FFT:</strong> DFTを高速化したアルゴリズム。計算量 O(N log N) → 実用的な速度</li>
+        </ul>
+      </div>
+
+      <div class="analogy">
+        カクテルの味から「レモン30%、砂糖20%、ラム50%」と材料を特定するようなものです。混ざった音（カクテル）を個々の周波数（材料）に分解します。
+      </div>
+    </div>
+
+    <!-- フィルタリング -->
+    <div class="card" style="border-left:4px solid #93D500">
+      <div class="card-header"><h3>フィルタリング概念</h3></div>
+
+      <div class="concept-box">
+        <h4>不要な周波数を除去する</h4>
+        <p>FFTで周波数成分に分解した後、不要な成分を除去して元に戻す（逆FFT）ことで音を加工できます。</p>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li><strong>ローパスフィルタ:</strong> 低い周波数だけ通す → こもった音、ノイズ除去</li>
+          <li><strong>ハイパスフィルタ:</strong> 高い周波数だけ通す → シャリシャリした音</li>
+          <li><strong>バンドパスフィルタ:</strong> 特定の範囲だけ通す → 電話の音声（300Hz〜3400Hz）</li>
+        </ul>
+      </div>
+
+      <div class="analogy">
+        コーヒーフィルターと同じです。豆の粒子（不要な周波数）を取り除いて、液体（欲しい周波数）だけを通します。
+      </div>
+    </div>
+
+    <!-- サンプリング定理 -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>サンプリング定理（ナイキストの定理）</h3></div>
+
+      <div class="concept-box">
+        <h4>なぜサンプリングレートは44,100Hz？</h4>
+        <p><strong>ナイキストの定理:</strong> 周波数 f の音を正しくデジタル化するには、<strong>2f 以上</strong>のサンプリングレートが必要です。</p>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li>人間の可聴域: 約20Hz〜20,000Hz</li>
+          <li>20,000Hz × 2 = 40,000Hz → 少し余裕を持って 44,100Hz</li>
+          <li>サンプリングレートが不足すると「エイリアシング」（偽の周波数が現れる）が発生</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 解答例 ============ -->
+<section id="answers-section" data-release="2026-06-08T13:10">
+  <div class="container" id="sec-answers">
+    <div class="section-header">
+      <div class="section-num" style="background:#4A7A00">A</div>
+      <h2>解答例</h2>
+    </div>
+
+    <p style="font-size:0.9rem;color:#999;margin-bottom:1.5rem">解答例は提出期限後（6/8 13:10〜）に公開されます。</p>
+
+    <div id="answers-locked" style="display:none"></div>
+
+    <div id="answers-content">
+
+      <!-- std6-1 解答 -->
+      <details>
+        <summary>std6-1: インタラクティブ・ビジュアルピアノ ─ 解答例</summary>
+        <div class="answer-content">
+          <p>キーボード入力で2オクターブ分の音を鳴らし、鍵盤をハイライト表示するピアノアプリです。</p>
+          <pre><span class="code-label">Python ── std6-1 解答</span>
+<span class="kw">import</span> py5
+<span class="kw">import</span> simpleaudio <span class="kw">as</span> sa
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+NOTES_LOW <span class="op">=</span> {
+    <span class="str">'a'</span>: (<span class="num">261.63</span>, <span class="str">'ド'</span>),  <span class="str">'s'</span>: (<span class="num">293.66</span>, <span class="str">'レ'</span>),
+    <span class="str">'d'</span>: (<span class="num">329.63</span>, <span class="str">'ミ'</span>),  <span class="str">'f'</span>: (<span class="num">349.23</span>, <span class="str">'ファ'</span>),
+    <span class="str">'g'</span>: (<span class="num">392.00</span>, <span class="str">'ソ'</span>),  <span class="str">'h'</span>: (<span class="num">440.00</span>, <span class="str">'ラ'</span>),
+    <span class="str">'j'</span>: (<span class="num">493.88</span>, <span class="str">'シ'</span>),  <span class="str">'k'</span>: (<span class="num">523.25</span>, <span class="str">'ド'</span>),
+}
+NOTES_HIGH <span class="op">=</span> {
+    <span class="str">'q'</span>: (<span class="num">523.25</span>, <span class="str">'ド'</span>),  <span class="str">'w'</span>: (<span class="num">587.33</span>, <span class="str">'レ'</span>),
+    <span class="str">'e'</span>: (<span class="num">659.25</span>, <span class="str">'ミ'</span>),  <span class="str">'r'</span>: (<span class="num">698.46</span>, <span class="str">'ファ'</span>),
+    <span class="str">'t'</span>: (<span class="num">783.99</span>, <span class="str">'ソ'</span>),  <span class="str">'y'</span>: (<span class="num">880.00</span>, <span class="str">'ラ'</span>),
+    <span class="str">'u'</span>: (<span class="num">987.77</span>, <span class="str">'シ'</span>),  <span class="str">'i'</span>: (<span class="num">1046.50</span>, <span class="str">'ド'</span>),
+}
+
+LOW_KEYS <span class="op">=</span> <span class="fn">list</span>(<span class="str">'asdfghjk'</span>)
+HIGH_KEYS <span class="op">=</span> <span class="fn">list</span>(<span class="str">'qwertyui'</span>)
+current_key <span class="op">=</span> <span class="str">""</span>
+note_name <span class="op">=</span> <span class="str">""</span>
+
+<span class="kw">def</span> <span class="fn">play_tone</span>(frequency, duration_ms<span class="op">=</span><span class="num">300</span>, sample_rate<span class="op">=</span><span class="num">44100</span>):
+    num_samples <span class="op">=</span> <span class="fn">int</span>(sample_rate <span class="op">*</span> duration_ms <span class="op">/</span> <span class="num">1000</span>)
+    t <span class="op">=</span> np.<span class="fn">linspace</span>(<span class="num">0</span>, duration_ms <span class="op">/</span> <span class="num">1000</span>, num_samples, <span class="kw">False</span>)
+    wave <span class="op">=</span> np.<span class="fn">sin</span>(<span class="num">2</span> <span class="op">*</span> np.pi <span class="op">*</span> frequency <span class="op">*</span> t)
+    audio <span class="op">=</span> (wave <span class="op">*</span> <span class="num">32767</span>).<span class="fn">astype</span>(np.int16)
+    sa.<span class="fn">play_buffer</span>(audio, <span class="num">1</span>, <span class="num">2</span>, sample_rate)
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">800</span>, <span class="num">350</span>)
+    py5.<span class="fn">text_align</span>(py5.CENTER, py5.CENTER)
+
+<span class="kw">def</span> <span class="fn">draw_octave</span>(keys, notes, y_offset, label):
+    key_w <span class="op">=</span> <span class="num">90</span>
+    start_x <span class="op">=</span> (<span class="num">800</span> <span class="op">-</span> key_w <span class="op">*</span> <span class="num">8</span>) <span class="op">//</span> <span class="num">2</span>
+    <span class="kw">for</span> i, k <span class="kw">in</span> <span class="fn">enumerate</span>(keys):
+        x <span class="op">=</span> start_x <span class="op">+</span> i <span class="op">*</span> key_w
+        <span class="kw">if</span> k <span class="op">==</span> current_key:
+            py5.<span class="fn">fill</span>(<span class="num">118</span>, <span class="num">185</span>, <span class="num">0</span>)
+        <span class="kw">else</span>:
+            py5.<span class="fn">fill</span>(<span class="num">240</span>)
+        py5.<span class="fn">rect</span>(x, y_offset, key_w <span class="op">-</span> <span class="num">4</span>, <span class="num">100</span>, <span class="num">8</span>)
+        py5.<span class="fn">fill</span>(<span class="num">50</span>)
+        py5.<span class="fn">text_size</span>(<span class="num">14</span>)
+        py5.<span class="fn">text</span>(notes[k][<span class="num">1</span>], x <span class="op">+</span> key_w <span class="op">//</span> <span class="num">2</span> <span class="op">-</span> <span class="num">2</span>, y_offset <span class="op">+</span> <span class="num">70</span>)
+        py5.<span class="fn">text_size</span>(<span class="num">12</span>)
+        py5.<span class="fn">text</span>(k, x <span class="op">+</span> key_w <span class="op">//</span> <span class="num">2</span> <span class="op">-</span> <span class="num">2</span>, y_offset <span class="op">+</span> <span class="num">88</span>)
+    py5.<span class="fn">fill</span>(<span class="num">150</span>)
+    py5.<span class="fn">text_size</span>(<span class="num">13</span>)
+    py5.<span class="fn">text</span>(label, <span class="num">400</span>, y_offset <span class="op">-</span> <span class="num">12</span>)
+
+<span class="kw">def</span> <span class="fn">draw</span>():
+    py5.<span class="fn">background</span>(<span class="num">30</span>)
+    py5.<span class="fn">fill</span>(<span class="num">200</span>)
+    py5.<span class="fn">text_size</span>(<span class="num">18</span>)
+    py5.<span class="fn">text</span>(<span class="str">f"<span class="op">{</span>note_name<span class="op">}</span>"</span>, <span class="num">400</span>, <span class="num">25</span>)
+    <span class="fn">draw_octave</span>(HIGH_KEYS, NOTES_HIGH, <span class="num">50</span>, <span class="str">"上段 (q〜i)"</span>)
+    <span class="fn">draw_octave</span>(LOW_KEYS, NOTES_LOW, <span class="num">190</span>, <span class="str">"下段 (a〜k)"</span>)
+
+<span class="kw">def</span> <span class="fn">key_pressed</span>():
+    <span class="kw">global</span> current_key, note_name
+    k <span class="op">=</span> py5.key
+    <span class="kw">if</span> k <span class="kw">in</span> NOTES_LOW:
+        current_key <span class="op">=</span> k
+        note_name <span class="op">=</span> <span class="str">f"<span class="op">{</span>NOTES_LOW[k][<span class="num">1</span>]<span class="op">}</span> (<span class="op">{</span>NOTES_LOW[k][<span class="num">0</span>]<span class="op">}</span>Hz)"</span>
+        <span class="fn">play_tone</span>(NOTES_LOW[k][<span class="num">0</span>])
+    <span class="kw">elif</span> k <span class="kw">in</span> NOTES_HIGH:
+        current_key <span class="op">=</span> k
+        note_name <span class="op">=</span> <span class="str">f"<span class="op">{</span>NOTES_HIGH[k][<span class="num">1</span>]<span class="op">}</span> (<span class="op">{</span>NOTES_HIGH[k][<span class="num">0</span>]<span class="op">}</span>Hz)"</span>
+        <span class="fn">play_tone</span>(NOTES_HIGH[k][<span class="num">0</span>])
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+          <div class="concept-box">
+            <h4>ポイント</h4>
+            <ul class="point-list" style="margin-top:0.5rem">
+              <li><code>simpleaudio.play_buffer()</code> はノンブロッキング: 音の再生中もpy5のdraw()が止まらない</li>
+              <li>鍵盤の描画を関数化（<code>draw_octave</code>）してコードの重複を避ける</li>
+              <li>辞書に周波数と音名をタプルで格納し、表示にも活用</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <!-- std6-2 解答 -->
+      <details>
+        <summary>std6-2: ビジュアルキーボードピアノ ─ 解答例（方針）</summary>
+        <div class="answer-content">
+          <p>std6-1 に以下の拡張を加えます。実装の方針を示します。</p>
+          <div class="concept-box">
+            <h4>拡張ポイント</h4>
+            <ul class="point-list" style="margin-top:0.5rem">
+              <li><strong>視覚エフェクト:</strong> パーティクルリストを用意し、キーを押すたびに鍵盤の位置からパーティクルを追加。draw()で徐々にフェードアウト</li>
+              <li><strong>波形切り替え:</strong> グローバル変数 <code>wave_type</code> を用意し、<code>1</code>〜<code>4</code> キーで切り替え。play_tone() 内で波形を条件分岐</li>
+              <li><strong>録音機能:</strong> リストに <code>(frequency, timestamp)</code> を追加。<code>p</code> キーで再生、<code>c</code> キーでクリア</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <!-- std6-3 解答 -->
+      <details>
+        <summary>std6-3: サウンドペインター ─ 解答例（方針）</summary>
+        <div class="answer-content">
+          <p>音声ファイルのFFT結果を色と形にマッピングして描画します。</p>
+          <div class="concept-box">
+            <h4>実装の流れ</h4>
+            <ol style="padding-left:1.5rem;font-size:0.95rem;margin-top:0.5rem">
+              <li>MP3を読み込み、全体をWINDOW幅でスライスしてFFTを事前計算</li>
+              <li>draw()の中でフレームごとに1つのスペクトルを取得</li>
+              <li>低周波成分の強さ → 暖色系の円を描画</li>
+              <li>高周波成分の強さ → 寒色系の線を描画</li>
+              <li>全体の音量（RMS）→ 図形のサイズに反映</li>
+            </ol>
+          </div>
+        </div>
+      </details>
+
+    </div><!-- /answers-content -->
+
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div>MD1 ─ 2026年度前期 ─ 第6回</div>
+    <div style="margin-top:0.5rem;font-size:0.8rem;color:#666">&copy;2026 Ryota Nakamura.</div>
+  </div>
+</footer>
+
+<!-- ============ SCRIPTS ============ -->
+<script src="answer-gate.js"></script>
+<script>
+// Copy button for pre blocks
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var code = pre.textContent.replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|\.zshrc|Notion テンプレート)( ── [^\n]+)?\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+
+// Click-to-copy on inline code elements
+document.querySelectorAll(':not(pre) > code').forEach(function(code) {
+  code.title = 'クリックでコピー';
+  code.addEventListener('click', function() {
+    navigator.clipboard.writeText(code.textContent).then(function() {
+      code.classList.add('copied');
+      setTimeout(function() {
+        code.classList.remove('copied');
+      }, 1500);
+    });
+  });
+});
+</script>
+
+</body>
+</html>

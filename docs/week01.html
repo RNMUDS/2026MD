@@ -1,0 +1,2044 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第1回: グループディスカッション・ターミナル操作・環境構築 | MD1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET & BASE ============ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 32px; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #111111;
+  color: #e0e0e0;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============ LAYOUT ============ */
+.container { max-width: 1600px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+
+/* ============ HEADER ============ */
+.hero {
+  background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a);
+  color: white;
+  padding: clamp(3rem, 8vw, 6rem) 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(108,99,255,0.3), transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(155,89,182,0.2), transparent 50%);
+}
+.hero .container { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 100px;
+  padding: 0.35rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+}
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+
+/* ============ SUBMISSION BOX ============ */
+.submission-box {
+  background: linear-gradient(135deg, #1A1A1A, #1a2e0a);
+  border: 2px solid #76B900;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin: 2rem 0;
+}
+.submission-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #76B900;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.submission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.5rem;
+}
+.sub-item {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  gap: 0.3rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.4rem;
+  padding: 0.6rem 0.4rem;
+  font-size: 0.55rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.sub-item .sub-count {
+  margin-bottom: 0.1rem;
+}
+.sub-item .tag {
+  margin-bottom: 0.15rem;
+}
+.sub-count {
+  background: #76B900;
+  color: white;
+  border-radius: 0.2rem;
+  min-width: 1.5rem; height: 1.5rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700;
+}
+
+/* ============ TAGS ============ */
+.tag {
+  display: inline-flex; align-items: center; gap: 0.2rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 100px;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.tag-note      { background: #1a2e0a; color: #76B900; }
+.tag-standard  { background: #0a1a2e; color: #4FC3F7; }
+.tag-advanced  { background: #2e1a0a; color: #FFB800; }
+.tag-group     { background: #1a2e0a; color: #76B900; }
+
+/* ============ EXAM ALERT TAG ============ */
+.exam-alert {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  background: rgba(255, 82, 82, 0.15);
+  border: 1px solid #FFB800;
+  color: #FFB800;
+  padding: 0.2rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  animation: exam-pulse 2s ease-in-out 3;
+}
+@keyframes exam-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ============ SECTION HEADERS ============ */
+.section-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.section-num {
+  width: 2.5rem; height: 2.5rem;
+  border-radius: 0.4rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 900; color: white;
+  flex-shrink: 0;
+}
+.section-header h2 {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+/* ============ CARDS ============ */
+.card {
+  background: #141414;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  border: 1px solid #2a2a2a;
+}
+.card-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #222;
+}
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.standard  { border-left: 4px solid #76B900; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.card.group     { border-left: 4px solid #93D500; }
+
+/* ============ NOTION CALLOUT ============ */
+.notion-submit {
+  background: #1a2e0a;
+  border: 1px solid #76B900;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  display: flex; align-items: flex-start; gap: 0.5rem;
+}
+.notion-submit::before { content: '\1F4DD'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+
+/* ============ TABLES ============ */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem;
+  margin: 1rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+th {
+  background: rgba(108, 99, 255, 0.15);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  color: #76B900;
+  letter-spacing: 0.02em;
+}
+td {
+  padding: 0.55rem 0.8rem;
+  border-top: 1px solid #222;
+}
+tr:nth-child(even) td { background: #111; }
+
+/* ============ CODE ============ */
+pre {
+  background: #0A0A0A;
+  color: #E0E0E0;
+  border-radius: 12px;
+  padding: clamp(0.8rem, 2vw, 1.4rem);
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
+  font-size: clamp(0.75rem, 1.3vw, 0.88rem);
+  line-height: 1.7;
+  margin: 1rem 0;
+  position: relative;
+}
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #FFB800; }
+pre .op { color: #93D500; }
+.code-label {
+  position: absolute; top: 0; right: 0;
+  background: rgba(255,255,255,0.08);
+  color: #999999;
+  padding: 0.2rem 0.8rem;
+  border-radius: 0 12px 0 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+/* inline code */
+:not(pre) > code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(108,99,255,0.15);
+  padding: 0.15em 0.45em;
+  border-radius: 5px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+:not(pre) > code:hover { background: rgba(108,99,255,0.3); }
+:not(pre) > code.copied { background: rgba(108,99,255,0.5); }
+
+/* ============ EXPLANATION BLOCKS ============ */
+.concept-box {
+  background: rgba(108, 99, 255, 0.15);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  border: 1px solid #2a2a3a;
+}
+.concept-box h4 {
+  font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem;
+}
+.analogy {
+  background: #1a1a0a;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 0.75rem 0;
+  border-left: 3px solid #FFB800;
+  font-size: 0.95rem;
+}
+.analogy::before {
+  content: '\1F4A1 日常の例';
+  display: block;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #FFB800;
+  margin-bottom: 0.3rem;
+}
+.point-list {
+  list-style: none;
+  padding: 0;
+}
+.point-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+}
+.point-list li::before {
+  content: '\25B8';
+  position: absolute; left: 0;
+  color: #76B900;
+  font-weight: 700;
+}
+
+/* ============ ANSWERS (COLLAPSIBLE) ============ */
+details {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+details summary {
+  padding: 0.8rem 1.2rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 0.5rem;
+  background: #1a1a1a;
+  user-select: none;
+}
+details summary::marker { content: ''; }
+details summary::before {
+  content: '\25B6';
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+  color: #666;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
+
+/* ============ WARNING / DANGER CALLOUT ============ */
+.callout-danger {
+  background: rgba(255, 82, 82, 0.08);
+  border: 1px solid rgba(255, 82, 82, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-danger h4 {
+  color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-warning {
+  background: rgba(255, 184, 0, 0.08);
+  border: 1px solid rgba(255, 184, 0, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-warning h4 {
+  color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-info {
+  background: rgba(108, 99, 255, 0.08);
+  border: 1px solid rgba(108, 99, 255, 0.3);
+  border-left: 4px solid #76B900;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-info h4 {
+  color: #76B900; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-tip {
+  background: rgba(155, 89, 182, 0.08);
+  border: 1px solid rgba(155, 89, 182, 0.3);
+  border-left: 4px solid #93D500;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-tip h4 {
+  color: #93D500; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+
+/* ============ FOOTER ============ */
+footer {
+  background: #0A0A0A;
+  color: #999999;
+  padding: 2rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 640px) {
+  .submission-items { grid-template-columns: 1fr; }
+  .section-num { width: 2rem; height: 2rem; font-size: 0.85rem; }
+}
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
+/* ============ SUB-ITEM LINKS ============ */
+a.sub-item { transition: transform 0.15s, box-shadow 0.15s; }
+a.sub-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(118,185,0,0.3);
+  border-color: #76B900;
+}
+
+/* ============ SECTION NAV (sticky) ============ */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.5rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-exam { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3rem; }
+
+/* ============ REDUCED MOTION ============ */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  details summary::before { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SECTION NAV ============ -->
+<nav class="section-nav">
+  <a href="#sec-schedule">日程</a>
+  <a href="#sec-notion">0. Notion</a>
+  <a href="#sec-guidance">1. ガイダンス</a>
+  <a href="#sec-terminal">2. ターミナル</a>
+  <a href="#terminal-quiz" class="nav-exam">試問1</a>
+  <a href="#sec-environment">3. 環境構築</a>
+  <a href="#env-quiz" class="nav-exam">試問2</a>
+  <a href="#sec-assignments" class="nav-assignment">4. 課題</a>
+  <a href="#py5-quiz" class="nav-exam">試問3</a>
+  <a href="#std1-1" class="nav-assignment">std1-1</a>
+  <a href="#adv1-1" class="nav-assignment">adv1-1</a>
+  <a href="#adv1-2" class="nav-assignment">adv1-2</a>
+  <a href="#adv1-3" class="nav-assignment">adv1-3</a>
+  <a href="#sec-appendix">予備知識</a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">Media creation Data design 1（MD1）─ 2026年度前期</div>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.1rem;white-space:nowrap">武蔵野大学データサイエンス学部</p>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.3rem;white-space:nowrap">武蔵野大学国際データサイエンス学部（通信教育部）</p>
+    <p style="font-size:0.95rem;opacity:0.85;margin-bottom:1rem">中村 亮太</p>
+    <h1>MD1 第1回: グループディスカッション・ターミナル操作・環境構築</h1>
+    <p style="white-space:nowrap">開発環境を構築し、ターミナルの基本操作を身につける</p>
+    <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:0.3rem;padding:0.4rem 0.8rem;margin-top:1rem;font-size:0.7rem;display:inline-block">
+      <strong>対象環境:</strong> Apple M1 / M2 / M3 / M4 / M5 チップ搭載 Mac ｜ macOS Tahoe 26.4.1 (25E246)
+    </div>
+  </div>
+</header>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div class="submission-box">
+      <h3>提出ガイド（1つのNotionページにまとめ、PDF 1枚を提出）</h3>
+      <div class="submission-items">
+        <a href="#notion-checklist" class="sub-item" style="text-decoration:none;color:inherit;border-color:#76B900"><span class="sub-count" style="background:#76B900">6</span><span class="tag" style="background:#1a2e0a;color:#76B900">ノート</span>穴埋め・記録</a>
+        <a href="#std1-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std1-1</a>
+        <a href="#adv1-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv1-1 コード+音声</a>
+        <a href="#adv1-2" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv1-2 コード+音声</a>
+        <a href="#adv1-3" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv1-3 コード+音声</a>
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.85rem;color:#93D500">
+        <strong>提出方法:</strong> 下記の項目をすべて<strong>1つのNotionページにまとめて記録</strong> → PDFにエクスポート → Google Classroomに<strong>PDF 1ファイル</strong>を提出
+        <span style="display:inline-block;margin-left:0.5rem"><a href="#sec-notion" class="tag" style="background:#1a2e0a;color:#93D500;font-size:0.45rem;text-decoration:none">Notionの使い方は「0. Notion」で説明 ↑</a></span>
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:0.5rem;font-size:0.85rem;color:#FFB800">
+        <strong>提出期限:</strong> 4/27(月) 13:10（第2回授業開始まで）
+      </div>
+
+      <!-- Notionに書くべき項目チェックリスト -->
+      <div id="notion-checklist" style="background:#141414;border:1px solid #333;border-radius:0.4rem;padding:1rem;margin-top:1rem">
+        <p style="color:#76B900;font-weight:700;font-size:0.85rem;margin-bottom:0.3rem">ノート: Notionに記録する項目（提出前に確認）</p>
+        <p style="font-size:0.75rem;color:#999;margin-bottom:0.8rem">以下の6項目を1つのNotionページに記録し、PDF化して提出します。各項目は資料内の該当箇所にテンプレートがあります。</p>
+        <table style="font-size:0.8rem">
+          <tr><th style="width:5%"></th><th style="width:30%">セクション</th><th>記録する内容</th><th style="width:10%">リンク</th></tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> 確認事項</td>
+            <td>グループ番号・メンバー名・自分の役割・Slackマナー穴埋め・Google ClassroomのURL</td>
+            <td><a href="#sec-guidance" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> アウトカム</td>
+            <td>アウトプット/アウトカムの穴埋め＋4段階の説明＋自分の体験に当てはめる</td>
+            <td><a href="#sec-guidance" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> ファイルシステム</td>
+            <td>木構造・ディレクトリ・パスの穴埋め</td>
+            <td><a href="#sec-terminal" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> ターミナル口頭試問</td>
+            <td>3問の作問＋全員分の出題・回答・正誤の記録</td>
+            <td><a href="#terminal-quiz" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> ネットワーク</td>
+            <td>クライアント/サーバ・DNS・HTTPSの穴埋め＋google.comアクセスの3ステップ説明</td>
+            <td><a href="#sec-environment" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> 環境構築口頭試問</td>
+            <td>3問の作問＋全員分の出題・回答・正誤の記録</td>
+            <td><a href="#env-quiz" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> py5コード口頭試問</td>
+            <td>2問の作問＋全員分の出題・回答結果</td>
+            <td><a href="#py5-quiz" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std1-1</td>
+            <td>コード＋実行結果＋説明文</td>
+            <td><a href="#std1-1" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-advanced" style="font-size:0.65rem">発展課題</span> adv1-1</td>
+            <td>コード＋実行結果＋音声説明（1〜2分）</td>
+            <td><a href="#adv1-1" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-advanced" style="font-size:0.65rem">発展課題</span> adv1-2</td>
+            <td>コード＋実行結果＋音声説明（1〜2分）</td>
+            <td><a href="#adv1-2" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-advanced" style="font-size:0.65rem">発展課題</span> adv1-3</td>
+            <td>コード＋実行結果＋音声説明（1〜2分）</td>
+            <td><a href="#adv1-3" style="color:#76B900">移動</a></td>
+          </tr>
+        </table>
+        <p style="font-size:0.75rem;color:#999;margin-top:0.5rem">※ 発展課題は任意。それ以外はすべて記録が必要です。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCHEDULE ============ -->
+<section id="sec-schedule" style="padding-top:1rem;padding-bottom:0">
+  <div class="container">
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>授業スケジュール（前期・月曜3・4限 13:10〜16:40）</h3></div>
+      <table>
+        <tr><th style="width:40px">回</th><th>日付</th><th>テーマ</th><th>提出期限</th></tr>
+        <tr style="background:rgba(118,185,0,0.1)"><td><strong>1</strong></td><td><strong>4/20(月)</strong></td><td>グループディスカッション・ターミナル操作・環境構築</td><td><strong>4/27 13:10</strong></td></tr>
+        <tr><td>2</td><td>4/27(月)</td><td>順次制御・繰り返し処理・色の表現</td><td>5/11 13:10</td></tr>
+        <tr style="color:#616161"><td>-</td><td><s>5/4(月)</s></td><td colspan="2" style="color:#FFB800">休講（GW）</td></tr>
+        <tr><td>3</td><td>5/11(月)</td><td>条件分岐・アニメーション</td><td>5/18 13:10</td></tr>
+        <tr><td>4</td><td>5/18(月)</td><td>リスト・辞書・関数設計</td><td>5/25 13:10</td></tr>
+        <tr><td>5</td><td>5/25(月)</td><td>時系列データ・加速度センサ</td><td>6/1 13:10</td></tr>
+        <tr><td>6</td><td>6/1(月)</td><td>音のプログラミング・FFT和音解析</td><td>6/8 13:10</td></tr>
+        <tr><td>7</td><td>6/8(月)</td><td>最終課題制作</td><td>6/15 13:10</td></tr>
+      </table>
+      <p style="font-size:0.85rem;color:#999;margin-top:0.5rem">※ 各回の提出期限は次回授業開始時刻（13:10）です。1秒でも遅れると未提出扱いになります。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TIME FLOW ============ -->
+<section style="padding-top:1rem;padding-bottom:0">
+  <div class="container">
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>本日の授業の流れ</h3></div>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin:0.5rem 0">
+        <div style="flex:1;min-width:8rem;background:#1A1A1A;border:2px solid #76B900;border-radius:0.4rem;padding:0.6rem;text-align:center">
+          <div style="font-size:1.2rem;font-weight:900;color:#76B900">13:10 - 13:40</div>
+          <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">教員による説明</div>
+          <div style="font-size:0.65rem;color:#999">アウトカム / 相談フロー / グループ役割 / Slack</div>
+        </div>
+        <div style="flex:2;min-width:12rem;background:#1A1A1A;border:2px solid #93D500;border-radius:0.4rem;padding:0.6rem;text-align:center">
+          <div style="font-size:1.2rem;font-weight:900;color:#93D500">13:40 - 16:40</div>
+          <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">グループ演習（この資料を上から順に進める）</div>
+          <div style="font-size:0.65rem;color:#999">ターミナル操作 → 環境構築 → Notion → 課題 → 口頭試問<br>グループで協力し、資料を読みながら自分たちで進める</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NOTION ============ -->
+<section id="sec-notion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">0</div>
+      <h2>Notionでのノート・レポート作成 <span style="font-size:0.6rem;color:#999;font-weight:400">── 教員が説明します</span></h2>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">Step 1</span>
+        <h3>Notionにログイン</h3>
+      </div>
+      <ol style="padding-left:1.5rem;font-size:0.95rem;line-height:2">
+        <li><a href="https://www.notion.so/" target="_blank" style="color:#76B900">notion.so</a> にアクセスし、大学のメールアドレスでサインアップ（Education Plusプランが無料で使える場合あり）</li>
+        <li>ワークスペースを作成（例:「MD1 - 2026」）</li>
+        <li><strong>Mac アプリをインストール:</strong> <a href="https://www.notion.so/desktop" target="_blank" style="color:#76B900">notion.so/desktop</a> からダウンロード、またはターミナルで以下を実行</li>
+      </ol>
+      <pre><code>brew install --cask notion</code></pre>
+      <p style="font-size:0.8rem;color:#999">ブラウザでも使えますが、アプリの方が動作が速く、オフラインでも編集できます。</p>
+      <ol start="4" style="padding-left:1.5rem;font-size:0.95rem;line-height:2">
+        <li><strong>スマートフォンアプリもインストール:</strong> App Store で「Notion」を検索してインストール</li>
+      </ol>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="card" style="border-left:4px solid #93D500">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#93D500">Step 2</span>
+        <h3>授業ノートページ作成</h3>
+      </div>
+      <p>Notionに毎回の授業ノートを作成します。授業の学習内容、気づき、課題の回答をここに記録していきます。</p>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">Step 3</span>
+        <h3>基本操作</h3>
+      </div>
+      <table>
+        <tr><th>機能</th><th>操作</th><th>説明</th></tr>
+        <tr><td>見出し</td><td><code>/heading</code></td><td>H1, H2, H3の見出しを挿入</td></tr>
+        <tr><td>箇条書き</td><td><code>/bullet</code></td><td>箇条書きリストを作成</td></tr>
+        <tr><td>コードブロック</td><td><code>/code</code></td><td>シンタックスハイライト付きコードブロック</td></tr>
+        <tr><td>画像</td><td><code>/image</code></td><td>画像の挿入（ドラッグ&amp;ドロップでもOK）</td></tr>
+        <tr><td>テーブル</td><td><code>/table</code></td><td>テーブルの作成</td></tr>
+        <tr><td>チェックリスト</td><td><code>/todo</code></td><td>チェックボックス付きリスト</td></tr>
+        <tr><td>区切り線</td><td><code>/divider</code></td><td>セクションの区切り</td></tr>
+      </table>
+    </div>
+
+    <!-- Step 4: テンプレート -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">Step 4</span>
+        <h3>課題ノートのテンプレート</h3>
+      </div>
+      <p>以下をコピーしてNotionに貼り付け、各セクションを埋めていってください。これが提出するPDFの元になります。</p>
+      <pre><code># MD1 第1回
+
+名前:
+学籍番号:
+
+---
+
+## ガイダンス確認事項
+- グループ番号:
+- メンバー:
+- 自分の役割:
+- 役割の仕事内容:
+
+## Notion設定
+- [ ] Macアプリをインストールした
+- [ ] スマートフォンアプリをインストールした
+
+## Slack設定
+- [ ] スマートフォンアプリをインストールした
+- [ ] 通知設定を確認した
+- [ ] リアクションの練習をした
+- [ ] メンション・DM・スレッド返信を試した
+- 参加したチャンネル一覧:
+
+## Slackマナー
+- メンションやDMを受けたら ＿＿時間以内に返信する
+- すぐに回答できないときは「＿＿＿＿＿＿」と一言返す
+- メッセージを読んだら ＿＿＿＿ をつけて「読んだ」と伝える
+- 返信はチャンネルに直接書かず ＿＿＿＿＿＿ で行う。理由は＿＿＿＿＿＿
+
+## Google Classroom
+- URL:
+- [ ] 課題一覧を確認した
+
+---
+
+## アウトカム
+- ものづくりにおいて今後重要なキーワード: ＿＿＿＿＿＿
+- そのキーワードの意味: ＿＿＿＿＿＿＿＿＿＿＿＿＿＿
+
+---
+
+## CS基礎: ファイルシステムと木構造
+- コンピュータのファイルは ＿＿構造（＿＿＿＿構造）で整理されている
+- ディレクトリとは ＿＿＿＿＿＿ のこと（Windowsでは＿＿＿＿と呼ぶ）
+- 「/」は ＿＿＿＿＿＿ を意味する
+- 「~」は ＿＿＿＿ディレクトリを意味する
+- 木構造はファイルシステム以外にも ＿＿＿＿＿＿ や ＿＿＿＿＿＿ で使われている
+
+## ターミナル口頭試問
+| 出題者 | 問題（概要） | 回答者 | 結果 |
+|--------|-------------|--------|------|
+|        |             |        | ⭕/❌ |
+|        |             |        | ⭕/❌ |
+|        |             |        | ⭕/❌ |
+
+---
+
+## CS基礎: ネットワークの仕組み
+- サービスを要求する側を ＿＿＿＿＿＿ 、提供する側を ＿＿＿ と呼ぶ
+- uv pip install py5 を実行すると、PCは ＿＿＿＿ というサーバに接続する
+- IPアドレスとは ＿＿＿＿＿＿＿＿＿＿ のこと
+- DNSの役割は ＿＿＿＿＿＿ を ＿＿＿＿＿＿＿ に変換すること
+- HTTPSの「S」は ＿＿＿＿ の意味で、通信内容が ＿＿＿＿ される
+- ネットワーク通信はすべて ＿＿＿＿＿（要求）と ＿＿＿＿＿（応答）の繰り返し
+
+google.com にアクセスしたとき裏で何が起きるか:
+1. ＿＿＿＿＿＿＿＿＿＿
+2. ＿＿＿＿＿＿＿＿＿＿
+3. ＿＿＿＿＿＿＿＿＿＿
+
+## 環境構築口頭試問
+| 出題者 | 問題（概要） | 回答者 | 結果 |
+|--------|-------------|--------|------|
+|        |             |        | ⭕/❌ |
+|        |             |        | ⭕/❌ |
+|        |             |        | ⭕/❌ |
+
+---
+
+## py5コード口頭試問
+| 出題者 | 問題（概要） | 回答者 | 結果 |
+|--------|-------------|--------|------|
+|        |             |        | ⭕/❌ |
+|        |             |        | ⭕/❌ |
+
+---
+
+## 標準課題 std1-1: 指定図形の描画
+
+### Code
+（std1-1.py のコード全体を貼り付け）
+
+### View
+（実行結果のスクリーンショットを貼り付け）
+
+### Description
+（コードの各行が何をしているか説明）
+
+---
+
+## 発展課題 adv1-1: 応用図形の描画（※取り組まない場合はこのセクションごと削除）
+### Code
+### View
+### 音声説明（1〜2分の音声ファイルを添付）
+
+---
+
+## 発展課題 adv1-2: 自由制作（クリーパー）（※取り組まない場合はこのセクションごと削除）
+### Code
+### View
+### 音声説明（1〜2分の音声ファイルを添付）
+
+---
+
+## 発展課題 adv1-3: オリジナル作品（※取り組まない場合はこのセクションごと削除）
+### Code
+### View
+### 音声説明（1〜2分の音声ファイルを添付）</code></pre>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="card" style="border-left:4px solid #93D500">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#93D500">Step 5</span>
+        <h3>PDFエクスポートして提出</h3>
+      </div>
+      <ol style="padding-left:1.5rem;font-size:0.95rem;line-height:2">
+        <li>Notionで課題ページを開く</li>
+        <li>右上の <strong>...</strong>（三点メニュー）→ <strong>エクスポート</strong> → 形式を <strong>PDF</strong> に設定</li>
+        <li>「エクスポート」をクリックしてPDFをダウンロード</li>
+        <li>Google Classroomの該当課題にPDFを添付して提出</li>
+      </ol>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
+        <strong>Notionに書いただけでは提出にならない。</strong>必ずPDFにエクスポートし、Google Classroomに提出すること。
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 1. GUIDANCE ============ -->
+<section id="sec-guidance">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>ガイダンス <span style="font-size:0.6rem;color:#999;font-weight:400">── 教員が説明します（約30分）</span></h2>
+    </div>
+
+    <!-- アウトプットとアウトカム -->
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header"><h3>現代のものづくりで最も大切なこと ── アウトプットとアウトカムの違い</h3></div>
+
+      <div class="concept-box" style="background:rgba(255,184,0,0.1);border:1px solid rgba(255,184,0,0.3)">
+        <h4 style="color:#FFB800">AIコーディング（バイブコーディング）時代の現実</h4>
+        <p>GPT-5.4、Gemini 3.1 Pro、Claude Opus 4.7 ── これらの最新AIとバイブコーディング（自然言語でAIに指示してコードを生成させる手法）を使えば、誰でもそれなりに動くアプリを作れる時代です。</p>
+        <p style="margin-top:0.5rem">つまり<strong>「作ったこと」自体の価値は急速に下がっている。</strong></p>
+        <p style="margin-top:0.5rem">では何に価値があるのか？ ── それが<strong>アウトカム</strong>です。</p>
+      </div>
+
+      <p style="margin-top:1rem;font-size:0.95rem"><strong>アプリはアウトプット、ユーザの変化がアウトカム。</strong></p>
+
+      <!-- 段階表 -->
+      <table style="margin-top:0.8rem">
+        <tr>
+          <th style="width:8%"></th>
+          <th style="width:25%">段階</th>
+          <th style="width:37%">具体例</th>
+          <th style="width:30%">この授業での評価</th>
+        </tr>
+        <tr>
+          <td style="font-size:1.2rem;text-align:center">&#x2716;</td>
+          <td><strong>① アプリを完成させた</strong><br><span style="color:#999;font-size:0.8rem">＝アウトプット</span></td>
+          <td>コードを書いた、動くものができた</td>
+          <td style="color:#999">最低限の得点<br><span style="font-size:0.75rem">これだけでは不十分</span></td>
+        </tr>
+        <tr>
+          <td style="font-size:1.2rem;text-align:center">&#x25B3;</td>
+          <td><strong>② 自分が理解・成長した</strong><br><span style="color:#FFB800;font-size:0.8rem">＝弱いアウトカム（内部変化）</span></td>
+          <td>技術理解が深まった、設計できるようになった、なぜ動くか説明できる</td>
+          <td style="color:#FFB800"><strong>加点対象</strong><br><span style="font-size:0.75rem">口頭試問・音声説明で確認</span></td>
+        </tr>
+        <tr style="background:rgba(118,185,0,0.08)">
+          <td style="font-size:1.2rem;text-align:center">&#x2B55;</td>
+          <td><strong>③ 他人が使って変化が起きた</strong><br><span style="color:#76B900;font-size:0.8rem">＝典型的なアウトカム</span></td>
+          <td>ユーザが使った、便利になった、時間短縮した、グループメンバーが理解できた</td>
+          <td style="color:#76B900"><strong style="font-size:1rem">大幅加点</strong><br><span style="font-size:0.75rem">周囲への影響を確認</span></td>
+        </tr>
+        <tr style="background:rgba(118,185,0,0.12)">
+          <td style="font-size:1.2rem;text-align:center">&#x25CE;</td>
+          <td><strong>④ 行動・社会レベルで変化</strong><br><span style="color:#76B900;font-size:0.8rem">＝強いアウトカム</span></td>
+          <td>利用が習慣化した、課題が解決された、新しい行動が定着した</td>
+          <td style="color:#76B900"><strong style="font-size:1rem">最高評価</strong><br><span style="font-size:0.75rem">最終課題で目指す水準</span></td>
+        </tr>
+      </table>
+
+      <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:0.4rem;padding:1rem;margin-top:1rem">
+        <p style="color:#FFB800;font-weight:700;font-size:0.9rem;margin-bottom:0.5rem">最も重要なライン</p>
+        <p><strong>「誰かの状態・行動が変わったか？」</strong></p>
+        <p style="margin-top:0.3rem;font-size:0.85rem;color:#999">単に作っただけでは「やっただけ」で終わる。変化が起きて初めて価値が証明される。</p>
+      </div>
+
+      <!-- この授業での具体的な基準 -->
+      <div style="background:#1A1A1A;border:2px solid #76B900;border-radius:0.4rem;padding:1rem;margin-top:0.8rem">
+        <p style="color:#76B900;font-weight:700;font-size:0.9rem;margin-bottom:0.5rem">この授業でアウトカムを示す具体的な行動</p>
+        <ul class="point-list">
+          <li><strong>② のレベル：</strong>口頭試問で自分の言葉でコードの仕組みを説明できる／音声説明で「なぜこの値にしたか」を語れる</li>
+          <li><strong>③ のレベル：</strong>グループメンバーに教えて、相手が理解できた／作った作品を他の人が使って反応があった</li>
+          <li><strong>④ のレベル：</strong>最終課題で実際のデータを可視化し、見た人の認識や行動が変わった</li>
+        </ul>
+        <p style="margin-top:0.8rem;font-size:0.85rem;color:#93D500"><strong>②以上が確認できた学生には大幅に加点します。③④を達成した学生は最高評価とします。</strong></p>
+      </div>
+
+      <p style="margin-top:1rem">以下をコピーしてNotionに貼り付け、空欄を埋めてください。</p>
+      <pre><code>【ノート】アウトプットとアウトカム
+
+- ものづくりにおいて今後重要なキーワード: ＿＿＿＿＿＿
+- そのキーワードの意味: ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿</code></pre>
+
+    </div>
+
+    <!-- 問題解決の段階 -->
+    <div class="card" style="border-left:4px solid #93D500">
+      <div class="card-header"><h3>困ったときの相談フロー ── 自分たちで解決する力をつける</h3></div>
+      <p>この授業では<strong>「自分たちで問題を解決する力」</strong>を身につけることも大きな目標です。すぐに教員に聞くのではなく、以下の順番で段階的に相談してください。</p>
+
+      <div style="background:#1A1A1A;border-radius:0.4rem;padding:1rem;margin:1rem 0">
+        <div style="display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap;font-size:0.75rem">
+          <span style="background:#76B900;color:white;padding:0.3rem 0.8rem;border-radius:0.3rem;font-weight:700">Step 1<br>まず自分で調べる</span>
+          <span style="color:#76B900;font-size:1rem">&rarr;</span>
+          <span style="background:#1a2e0a;color:#76B900;padding:0.3rem 0.8rem;border-radius:0.3rem;border:1px solid #76B900;font-weight:700">Step 2<br>グループで相談</span>
+          <span style="color:#76B900;font-size:1rem">&rarr;</span>
+          <span style="background:#1a2e0a;color:#76B900;padding:0.3rem 0.8rem;border-radius:0.3rem;border:1px solid #76B900;font-weight:700">Step 3<br>Slack 2026雑談ch</span>
+          <span style="color:#76B900;font-size:1rem">&rarr;</span>
+          <span style="background:#1a2e0a;color:#76B900;padding:0.3rem 0.8rem;border-radius:0.3rem;border:1px solid #76B900;font-weight:700">Step 4<br>Slackで先輩に質問</span>
+          <span style="color:#76B900;font-size:1rem">&rarr;</span>
+          <span style="background:#FFB800;color:#111;padding:0.3rem 0.8rem;border-radius:0.3rem;font-weight:700">Step 5<br>教員に相談</span>
+        </div>
+      </div>
+
+      <table>
+        <tr><th>段階</th><th>方法</th><th>なぜこの順番か</th></tr>
+        <tr><td><strong>Step 1</strong></td><td>エラーメッセージを読む、Google/AI検索</td><td>自分で調べる習慣が最も重要なスキル</td></tr>
+        <tr><td><strong>Step 2</strong></td><td>隣のグループメンバーに聞く</td><td>教え合いが最も効果的な学習方法</td></tr>
+        <tr><td><strong>Step 3</strong></td><td>Slack「2026雑談」チャンネルに投稿</td><td>同じ問題で困っている仲間がいるかもしれない</td></tr>
+        <tr><td><strong>Step 4</strong></td><td>Slackで先輩（2年生以上）に質問</td><td>先輩は同じ道を通った経験者</td></tr>
+        <tr><td><strong>Step 5</strong></td><td>教員・SAに相談</td><td>上記で解決しない場合の最終手段</td></tr>
+      </table>
+
+      <div class="analogy">
+        <strong>社会人の仕事も同じ：</strong>いきなり上司に聞くのではなく、自分で調べる → 同僚に聞く → チームで相談 → 上司に相談、という段階を踏みます。この練習を大学で始めましょう。
+      </div>
+    </div>
+
+    <!-- グループ活動 -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>グループ活動（役割の決定）</h3></div>
+      <p>グループ内で以下の役割を決定してください。各メンバーが1つ以上の役割を担当します。</p>
+      <table>
+        <tr><th>#</th><th>役割</th><th>仕事内容</th></tr>
+        <tr><td>1</td><td><strong>リーダー</strong></td><td>グループ運用、ディスカッション司会</td></tr>
+        <tr><td>2</td><td><strong>サブリーダー</strong></td><td>リーダーのサポート</td></tr>
+        <tr><td>3</td><td><strong>書記</strong></td><td>Notionでの記録担当・共有</td></tr>
+        <tr><td>4</td><td><strong>発表者</strong></td><td>グループ成果の発表</td></tr>
+        <tr><td>5</td><td><strong>タイムキーパー</strong></td><td>課題提出期限の管理とリマインド</td></tr>
+        <tr><td>6</td><td><strong>質問担当</strong></td><td>雑談チャンネルやSA、講師に対する質問・相談（リーダー兼務可）</td></tr>
+      </table>
+    </div>
+
+    <!-- ベストプラクティス -->
+    <div class="concept-box">
+      <h4>グループ活動のベストプラクティス</h4>
+      <ul class="point-list">
+        <li>全員が<strong>平等に</strong>発言できる機会を設ける</li>
+        <li>他のメンバーの<strong>意見を最後まで聞く</strong></li>
+        <li>建設的な意見を心がける（「〜してはどうでしょうか」という提案型の表現を使う）</li>
+        <li><strong>締め切り</strong>を意識して議論を進める</li>
+        <li>メンバー全員が理解できているか適宜確認する</li>
+      </ul>
+    </div>
+
+    <!-- Slack -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>Slack操作・マナー確認</h3></div>
+      <ul class="point-list">
+        <li><strong>スレッド返信:</strong> チャンネルのタイムラインが分断されず、話題ごとにまとまる</li>
+        <li><strong>24時間以内に返信:</strong> メンションやDMを受けたら、24時間以内に何らかの返信をする。すぐに回答できなくても「確認しました」「あとで返します」の一言を返す</li>
+        <li><strong>リアクションで反応:</strong> メッセージを読んだら絵文字リアクション（👍 ✅ 👀 など）をつける。「読んだよ」の意思表示になり、相手が安心できる</li>
+        <li><strong>送る時間に注意:</strong> 深夜、土日・祝日に送るのは基本NG。スケジュール機能を活用（例: 翌日の9:00に送信）</li>
+        <li><strong>通知設定:</strong> スマホアプリをインストールし、通知設定を適切に行う</li>
+      </ul>
+      <div class="callout-warning" style="margin-top:1rem">
+        <h4>送る時間に注意</h4>
+        <ul class="point-list">
+          <li>深夜、土日・祝日に送るのは基本NG</li>
+          <li>スケジュール機能を活用（例: 明日の9:00に送信）</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- チェックリスト -->
+    <div class="card" style="border-left:4px solid #93D500">
+      <div class="card-header"><h3>ガイダンス確認事項</h3></div>
+      <p>以下をコピーしてNotionに貼り付け、空欄を埋めてください。</p>
+
+      <pre><code>## ガイダンス確認事項
+
+**グループ情報**
+- グループ番号: （例: G3）
+- メンバー: （全員の名前を記載）
+- 自分の役割: （例: 書記）
+- 役割の仕事内容: （自分の言葉で書く）
+
+**Notion設定**
+- [ ] Macアプリをインストールした
+- [ ] スマートフォンアプリをインストールした
+
+**Slack設定**
+- [ ] スマートフォンアプリをインストールした
+- [ ] 通知設定を確認した
+- [ ] リアクションの練習をした（誰のどのメッセージに何のリアクションをしたか）
+- [ ] メンション・DM・スレッド返信を試した
+- 参加したチャンネル一覧: （例: #2026雑談, #md1-general, ...）
+
+**Slackマナー（空欄を埋めてください）**
+- メンションやDMを受けたら ＿＿時間以内に返信する
+- すぐに回答できないときは「＿＿＿＿＿＿＿＿」と一言返す
+- メッセージを読んだら ＿＿＿＿ をつけて「読んだ」と伝える
+- 返信はチャンネルに直接書かず ＿＿＿＿＿＿ で行う。理由は＿＿＿＿＿＿＿＿
+
+**Google Classroom**
+- Google ClassroomのURL: （リンクを貼る）
+- [ ] 課題一覧を確認した</code></pre>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ GROUP WORK DIVIDER ============ -->
+<section style="padding:2rem 0;background:linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a)">
+  <div class="container" style="text-align:center">
+    <div style="font-size:1.5rem;font-weight:900;color:#76B900;margin-bottom:0.5rem">ここから先はグループで進めてください</div>
+    <p style="font-size:0.85rem;color:#93D500;margin-bottom:1rem">この資料を上から順に読みながら、グループで協力して演習を進めましょう</p>
+    <div style="display:inline-flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;font-size:0.7rem">
+      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
+        <div style="color:#76B900;font-weight:700">2. ターミナル</div>
+        <div style="color:#999">約40分</div>
+      </div>
+      <div style="color:#76B900;display:flex;align-items:center">&rarr;</div>
+      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
+        <div style="color:#76B900;font-weight:700">3. 環境構築</div>
+        <div style="color:#999">約30分</div>
+      </div>
+      <div style="color:#76B900;display:flex;align-items:center">&rarr;</div>
+      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
+        <div style="color:#76B900;font-weight:700">4. 課題</div>
+        <div style="color:#999">約40分</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1. TERMINAL ============ -->
+<section id="sec-terminal">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">2</div>
+      <h2>ターミナル操作練習 <span style="font-size:0.5rem;color:#999;font-weight:400">── グループ演習・約40分</span></h2>
+    </div>
+
+    <!-- ターミナルとは -->
+    <div class="concept-box">
+      <h4>ターミナルとは</h4>
+      <p>ターミナルとは、PCに命令を出すための特別な画面です。普段使うマウスでクリックする操作とは違い、文字を打ち込んでPCを操作します。キーボードで命令文（コマンド）を入力すると、PCがその通りに動きます。</p>
+    </div>
+
+    <div class="analogy">
+      普段のPC操作は「メニューから料理を選ぶ」ようなもの。ターミナルは「シェフに直接注文する」ようなもの。自由度が高い分、正確に伝える必要があります。
+    </div>
+
+    <!-- ターミナルの起動方法 -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">Step</span>
+        <h3>ターミナルの起動方法</h3>
+      </div>
+      <ol style="padding-left:1.5rem;font-size:0.95rem;line-height:2">
+        <li>4本指でピンチ操作（指を中央に寄せる操作）でアプリ一覧を表示。「その他」をクリック</li>
+        <li>ターミナルアプリを探して起動。または <code>&#8984; + スペース</code>（Spotlight検索）で「ターミナル」と入力</li>
+      </ol>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:0.8rem;font-size:0.85rem;color:#93D500">
+        <strong>ヒント:</strong> ターミナルアプリを画面下のDockにドラッグ&amp;ドロップしておくと、次回からの起動が簡単になる
+      </div>
+    </div>
+
+    <!-- CS基礎: ファイルシステムと木構造 -->
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <span class="tag" style="background:#2e1a0a;color:#FFB800">CS基礎</span>
+        <h3>ファイルシステムと木構造</h3>
+      </div>
+      <p>コンピュータの中のファイルは<strong>木構造（ツリー構造）</strong>で整理されています。これは<strong>コンピュータサイエンスの最も基本的なデータ構造</strong>の1つです。</p>
+
+      <div class="analogy">
+        <strong>本棚に例えると：</strong>本棚（ルートディレクトリ）の中に棚（ディレクトリ）があり、棚の中に本（ファイル）がある。棚の中にさらに小さな仕切り（サブディレクトリ）を作ることもできる。
+      </div>
+
+      <pre><span class="code-label">木構造の例</span>
+/ （ルート = 木の根）
+├── Users/
+│   └── username/        <span class="cmt">← ホームディレクトリ（~）</span>
+│       ├── Documents/
+│       ├── Downloads/
+│       └── Desktop/
+├── Applications/
+└── System/</pre>
+
+      <div class="concept-box">
+        <h4>なぜ木構造が重要か</h4>
+        <ul class="point-list">
+          <li><strong>ファイルシステム</strong>（今学んでいるもの）── ディレクトリとファイルの階層</li>
+          <li><strong>Webページ（HTML）</strong>── タグの入れ子構造も木構造</li>
+          <li><strong>AI・機械学習</strong>── 決定木、探索木など至るところに登場</li>
+          <li>木構造を理解すると<strong>パス（/Users/username/Documents/...）</strong>の意味が腑に落ちる</li>
+        </ul>
+      </div>
+
+      <p style="margin-top:1rem">以下をコピーしてNotionに貼り付け、空欄を埋めてください。</p>
+      <pre><code>【CS基礎】ファイルシステムと木構造
+
+- コンピュータのファイルは ＿＿構造（＿＿＿＿構造）で整理されている
+- ディレクトリとは ＿＿＿＿＿＿＿＿＿＿＿＿＿＿ のこと（Windowsでは＿＿＿＿と呼ぶ）
+- 「/」（スラッシュ）は ＿＿＿＿＿＿ を意味する
+- 「~」（チルダ）は ＿＿＿＿ディレクトリを意味する
+- /Users/rn/Documents/Lecture というパスは、ルートから順に ＿＿ → ＿＿ → ＿＿＿＿＿＿ → ＿＿＿＿＿ と辿った場所を表す
+- 木構造はファイルシステム以外にも ＿＿＿＿＿＿ や ＿＿＿＿＿＿ で使われている</code></pre>
+    </div>
+
+    <!-- ステップ1 -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>ステップ1: 現在地の確認とファイルシステムの基本</h3></div>
+
+      <p><strong>1. 今どこにいるかを確認</strong></p>
+      <pre><span class="code-label">Terminal</span>
+pwd</pre>
+      <p>結果: 例えば <code>/Users/username</code> と表示される</p>
+
+      <p style="margin-top:1rem"><strong>2. 今の場所にあるファイル・ディレクトリを確認</strong></p>
+      <pre><span class="code-label">Terminal</span>
+ls</pre>
+
+      <p style="margin-top:1rem"><strong>3. 隠しファイルも含めてすべて見る</strong></p>
+      <pre><span class="code-label">Terminal</span>
+ls -a</pre>
+      <p><code>.</code>（ピリオド/ドット）から始まるファイルも表示される</p>
+
+      <p style="margin-top:1rem"><strong>4. ディレクトリの移動</strong>（<code>cd</code> = change directory）</p>
+      <p><strong>ディレクトリ</strong>とは、ファイルやデータを整理して保存する場所。Windowsのフォルダと同じ概念。</p>
+
+      <pre><span class="code-label">Directory Tree</span>
+ホームディレクトリ (~)
+├── Documents/
+│   ├── work/
+│   │   ├── project1/
+│   │   └── project2/
+│   └── personal/
+├── Downloads/
+├── Desktop/
+└── Applications/</pre>
+
+      <table>
+        <tr><th>コマンド</th><th>説明</th></tr>
+        <tr><td><code>cd MD</code></td><td>現在のディレクトリ内の MD ディレクトリに移動</td></tr>
+        <tr><td><code>cd ~</code></td><td>ホームディレクトリに移動（<code>cd</code> だけでも同じ）</td></tr>
+        <tr><td><code>cd ..</code></td><td>1つ上の階層に移動</td></tr>
+      </table>
+
+      <p>ホームディレクトリにいることを確認:</p>
+      <pre><span class="code-label">Terminal</span>
+cd ~
+pwd</pre>
+    </div>
+
+    <!-- ステップ2 -->
+    <div class="card" style="border-left:4px solid #93D500">
+      <div class="card-header"><h3>ステップ2: ディレクトリとファイルの操作</h3></div>
+
+      <p><strong>1. Lecture ディレクトリを作成</strong></p>
+      <pre><span class="code-label">Terminal</span>
+mkdir Lecture</pre>
+      <p style="font-size:0.9rem;color:#999">ディレクトリ名の頭文字は大文字の方が判別しやすい。短ければすべて大文字もOK。</p>
+
+      <p style="margin-top:1rem"><strong>2. 作成されたことを確認し、移動</strong></p>
+      <pre><span class="code-label">Terminal</span>
+ls
+cd Lecture</pre>
+
+      <p style="margin-top:1rem"><strong>3. 4つの科目用サブディレクトリを作成</strong></p>
+      <pre><span class="code-label">Terminal</span>
+mkdir MD1 MD2 SI DS
+ls</pre>
+
+      <p style="margin-top:1rem"><strong>4. ディレクトリ間の移動を練習</strong></p>
+      <pre><span class="code-label">Terminal</span>
+cd MD1     <span class="cmt"># MD1に移動</span>
+cd ..      <span class="cmt"># Lectureに戻る</span>
+pwd        <span class="cmt"># 現在地を確認</span></pre>
+
+      <p style="margin-top:1rem"><strong>5. サブディレクトリを作成し、ファイルを編集</strong></p>
+      <pre><span class="code-label">Terminal</span>
+cd MD1
+mkdir No1
+cd No1
+nano note.txt</pre>
+      <p style="margin-top:0.5rem"><strong>nano エディタの操作:</strong></p>
+      <ol style="padding-left:1.5rem;font-size:0.95rem">
+        <li>テキストを入力（例:「今日はターミナルの練習です。」）</li>
+        <li><code>Control + O</code> で保存</li>
+        <li>保存するファイル名を確認し、<code>Enter</code></li>
+        <li><code>Control + X</code> で終了</li>
+      </ol>
+
+      <p style="margin-top:1rem"><strong>6. ファイルの確認と削除</strong></p>
+      <pre><span class="code-label">Terminal</span>
+cat note.txt   <span class="cmt"># 中身を表示</span>
+rm note.txt    <span class="cmt"># ファイルを削除</span></pre>
+    </div>
+
+    <!-- グループ口頭試問（ターミナル） -->
+    <div class="card group" id="terminal-quiz" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <span class="tag tag-group">グループワーク</span>
+        <h3>ターミナル口頭試問 <span class="exam-alert">ここで一度グループワーク</span></h3>
+      </div>
+
+      <p>ここまでに学んだターミナル操作について、グループ内で口頭試問を行います。</p>
+
+      <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:0.4rem;padding:1rem;margin:1rem 0">
+        <p style="color:#FFB800;font-weight:700;font-size:0.9rem;margin-bottom:0.8rem">進め方（20分）</p>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2">
+          <li><strong>各自で3問作成する</strong>（5分）── ここまでの操作に関する問題と、その正解を用意する</li>
+          <li><strong>出題 → 回答者がターミナルで実演</strong>（15分）── 1人ずつ順番に出題し、回答者は<strong>口で説明しながらターミナルで実際にコマンドを実行</strong>して見せる</li>
+          <li><strong>出題者が正誤を判定</strong>し、必要なら正解を解説する</li>
+        </ol>
+      </div>
+
+      <div class="concept-box">
+        <h4>作問のルール</h4>
+        <ul class="point-list">
+          <li>答えが<strong>1つのコマンド</strong>（または短い操作手順）で完結する問題にする</li>
+          <li>以下の<strong>出題テンプレ</strong>に沿って作問する</li>
+        </ul>
+        <pre><code>**問題:** （ここに問題文）
+**想定状況:** （どこにいて何をしたい？）
+**回答（コマンド）:** （正解コマンド）
+**確認方法:** （例: pwd / ls で確認）</code></pre>
+      </div>
+
+      <details style="margin-top:1rem">
+        <summary><strong>出題例</strong>（参考にしてOK。ただし3問中2問は自分で考えること）</summary>
+        <div class="answer-content">
+          <table>
+            <tr><th style="width:40%">問題</th><th style="width:20%">想定状況</th><th style="width:20%">正解</th><th style="width:20%">確認方法</th></tr>
+            <tr><td>ホームディレクトリに戻るには？</td><td>どこかのディレクトリにいる</td><td><code>cd</code> or <code>cd ~</code></td><td><code>pwd</code> で確認</td></tr>
+            <tr><td>1つ上の階層に移動するには？</td><td>MD1 の中にいる</td><td><code>cd ..</code></td><td><code>pwd</code> で確認</td></tr>
+            <tr><td>今いる場所を表示するには？</td><td>任意の場所</td><td><code>pwd</code></td><td>パスが表示される</td></tr>
+            <tr><td>隠しファイルも含めて一覧表示するには？</td><td>ホームディレクトリ</td><td><code>ls -a</code></td><td>. で始まるファイルが見える</td></tr>
+            <tr><td>Lecture/MD1 に一発で移動するには？</td><td>ホームにいる</td><td><code>cd ~/Lecture/MD1</code></td><td><code>pwd</code> で確認</td></tr>
+            <tr><td>Tempdir をディレクトリごと削除するには？</td><td>Tempdir の親にいる</td><td><code>rm -rf Tempdir</code></td><td><code>ls</code> で消えたか確認</td></tr>
+            <tr style="background:rgba(255,184,0,0.08)"><td colspan="4" style="color:#FFB800;font-weight:700;font-size:0.8rem;text-align:center">以下はCS基礎の問題（口頭で回答）</td></tr>
+            <tr><td>ディレクトリの階層構造を何構造と呼ぶ？</td><td>─</td><td>木構造（ツリー構造）</td><td>自分の言葉で説明</td></tr>
+            <tr><td>パス /Users/rn/Documents の「/」は何を意味する？</td><td>─</td><td>階層の区切り（ルートから順に辿る道筋）</td><td>実際にcdで辿って確認</td></tr>
+          </table>
+        </div>
+      </details>
+
+      <p style="margin-top:1rem">結果をNotionに簡潔に記録してください。</p>
+      <pre><code>## ターミナル口頭試問
+
+| 出題者 | 問題（概要） | 回答者 | 結果 |
+|--------|-------------|--------|------|
+|        |             |        | ⭕/❌ |
+|        |             |        | ⭕/❌ |
+|        |             |        | ⭕/❌ |</code></pre>
+
+      <div class="notion-submit">
+        <strong>Notionノートに記録</strong> ── 上の表をコピーし、全員分の出題・回答結果を記入
+      </div>
+    </div>
+
+    <!-- ステップ3 -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>ステップ3: .zshrc を編集してプロンプトを変える</h3></div>
+
+      <p><strong>1. ホームに移動して .zshrc を開く</strong></p>
+      <pre><span class="code-label">Terminal</span>
+cd
+nano .zshrc</pre>
+
+      <p style="margin-top:1rem"><strong>2. 一番下に以下の1行を追加</strong></p>
+      <pre><span class="code-label">.zshrc</span>
+PROMPT="&#x1f300; %n:%~ %# "</pre>
+
+      <p style="margin-top:1rem"><strong>3. 保存して終了し、設定を即反映</strong></p>
+      <pre><span class="code-label">Terminal</span>
+source .zshrc</pre>
+      <p>プロンプトが変わったことを確認（先頭のアイコンや形式）</p>
+
+      <div class="callout-info" style="margin-top:1rem">
+        <h4>注意点</h4>
+        <ul class="point-list">
+          <li>ホームディレクトリにいることを確認（<code>pwd</code> で確認、または <code>cd</code> で移動）</li>
+          <li><code>.zshrc</code> ファイルが存在することを確認（<code>ls -a</code> で確認）</li>
+          <li>上記を確認してから <code>source</code> コマンドを実行すること</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ステップ4-5 -->
+    <div class="card" style="border-left:4px solid #93D500">
+      <div class="card-header"><h3>ステップ4-5: 繰り返し練習</h3></div>
+
+      <p><strong>プロンプト変更の繰り返し練習</strong></p>
+      <pre><span class="code-label">Terminal</span>
+cd
+nano .zshrc</pre>
+      <p>新しいプロンプト設定を追加（既存設定は <code>#</code> でコメントアウト）:</p>
+      <pre><span class="code-label">.zshrc</span>
+PROMPT=" %1~ %# "</pre>
+      <p>保存して反映:</p>
+      <pre><span class="code-label">Terminal</span>
+source .zshrc</pre>
+
+      <table>
+        <tr><th>設定</th><th>説明</th></tr>
+        <tr><td><code>%1~</code></td><td>カレントディレクトリを表示（1階層のみ）</td></tr>
+        <tr><td><code>%#</code></td><td>一般ユーザは <code>%</code>、rootユーザは <code>#</code> を表示</td></tr>
+      </table>
+
+      <p style="margin-top:1rem"><strong>ファイル操作練習（応用編）</strong></p>
+      <pre><span class="code-label">Terminal</span>
+cd ~/Lecture/MD1
+mkdir -p Challenge/Log            <span class="cmt"># -p で親子同時作成</span>
+nano Challenge/Log/test.txt       <span class="cmt"># 「これは練習用のファイルです」と書いて保存</span>
+cat Challenge/Log/test.txt        <span class="cmt"># 確認</span>
+rm -rf Challenge                  <span class="cmt"># ディレクトリごと削除</span></pre>
+    </div>
+
+    <!-- Warning -->
+    <div class="callout-danger">
+      <h4>警告: rm -rf * は絶対に使用しないでください！</h4>
+      <p>カレントディレクトリ内のすべてのファイルとディレクトリが即座に削除され、復元が不可能になります。</p>
+      <ul class="point-list" style="margin-top:0.5rem">
+        <li>必ず削除対象を具体的に指定する</li>
+        <li><code>-rf</code> オプションの使用は慎重に行う</li>
+        <li>実行前に削除対象を確認する</li>
+      </ul>
+    </div>
+
+
+  </div>
+</section>
+
+<!-- ============ 2. ENVIRONMENT ============ -->
+<section id="sec-environment">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#93D500">3</div>
+      <h2>プログラミング環境構築確認 <span style="font-size:0.5rem;color:#999;font-weight:400">── グループ演習・約30分</span></h2>
+    </div>
+
+    <p style="margin-bottom:1rem">以下の Work 1〜5 を順番に進めてください。課題で py5 を使うため、<strong>全員がここまで完了する必要があります</strong>。</p>
+
+    <!-- Work 1: uv -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">Work 1</span>
+        <h3>uv をインストール</h3>
+      </div>
+      <p><strong>uv</strong> は Python のバージョン管理・仮想環境・パッケージ管理を1つのツールで高速に行える次世代ツールです。</p>
+
+      <p style="margin-top:0.8rem"><strong>(1)</strong> ターミナルで以下を実行</p>
+      <pre><code>brew install uv</code></pre>
+
+      <div class="concept-box">
+        <h4>なぜ uv？</h4>
+        <p>昨年までは pyenv + pip + venv を別々に使っていましたが、uv は Python の導入・仮想環境の作成・パッケージ管理をすべてまとめて扱えます。設定がシンプルで動作も高速（pip の 10〜100倍）です。</p>
+      </div>
+
+      <p><strong>(2)</strong> インストール確認</p>
+      <pre><code>uv --version</code></pre>
+      <p style="font-size:0.8rem;color:#999">例: <code>uv 0.10.9 (f675560f3 2026-03-06)</code> のようにバージョンが表示されれば成功</p>
+    </div>
+
+    <!-- Work 2: Python -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">Work 2</span>
+        <h3>Python をインストール</h3>
+      </div>
+
+      <p><strong>(1)</strong> Python 3.12 をインストール</p>
+      <pre><code>uv python install 3.12</code></pre>
+      <p style="font-size:0.8rem;color:#999">例: <code>Installed Python 3.12.13 in 1.37s</code> と表示されれば成功</p>
+
+      <p style="margin-top:0.8rem"><strong>(2)</strong> Python が使えることを確認</p>
+      <pre><code>uv run python -V</code></pre>
+      <p style="font-size:0.8rem;color:#999">例: <code>Python 3.12.13</code> と表示されれば成功</p>
+    </div>
+
+    <!-- Work 3: VSCode -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">Work 3</span>
+        <h3>VSCode をインストール</h3>
+      </div>
+
+      <div class="concept-box">
+        <h4>VSCode とは</h4>
+        <p>Microsoft が開発した無料のソースコードエディタ。プログラミングに必要な様々な機能を備えています。</p>
+      </div>
+
+      <p><strong>(1)</strong> Homebrew で VSCode をインストール（パスワード入力を求められる場合あり）</p>
+      <pre><code>brew install --cask visual-studio-code</code></pre>
+      <p style="font-size:0.8rem;color:#999"><code>--cask</code> は macOS 向け GUI アプリをインストールするためのオプションです。</p>
+
+      <p style="margin-top:0.8rem"><strong>(2)</strong> <code>code</code> コマンドが使えるか確認</p>
+      <pre><code>code --version</code></pre>
+
+      <details>
+        <summary><code>command not found: code</code> と表示された場合</summary>
+        <div class="answer-content">
+          <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2">
+            <li>VSCode のアイコンをダブルクリックして開く</li>
+            <li><code>Command + Shift + P</code> でコマンドパレットを表示</li>
+            <li>「Shell Command: Install 'code' command in PATH」を選択して実行</li>
+            <li>ターミナルを再起動して <code>code --version</code> を再実行</li>
+          </ol>
+        </div>
+      </details>
+    </div>
+
+    <!-- Work 4: Java & Ant -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">Work 4</span>
+        <h3>Java と Ant をインストール</h3>
+      </div>
+      <p style="font-size:0.85rem;color:#999">py5 の内部で Java を使用するため、事前にインストールが必要です。</p>
+
+      <p style="margin-top:0.8rem"><strong>(1)</strong> Java と Ant をインストール</p>
+      <pre><code>brew install java ant</code></pre>
+
+      <p style="margin-top:0.8rem"><strong>(2)</strong> インストール後に表示される <code>sudo ln -sfn ...</code> コマンドをコピーして実行（パスワード入力あり）</p>
+      <pre><code>sudo ln -sfn /opt/homebrew/opt/openjdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk.jdk</code></pre>
+
+      <p style="margin-top:0.8rem"><strong>(3)</strong> Java が使えるか確認</p>
+      <pre><code>java -version</code></pre>
+
+      <p style="margin-top:0.8rem"><strong>(4)</strong> Java の環境設定</p>
+      <pre><code>export JAVA_HOME=$(/usr/libexec/java_home)</code></pre>
+      <p style="font-size:0.8rem;color:#999">実行しても何も表示されませんが正常です。</p>
+    </div>
+
+    <!-- Work 5: 仮想環境 + py5 -->
+    <div class="card" style="border-left:4px solid #93D500">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">Work 5</span>
+        <h3>仮想環境を作成し、py5 で図形を描く</h3>
+      </div>
+
+      <p><strong>(1)</strong> 作業ディレクトリを作成して移動</p>
+      <pre><code>cd                       <span class="cmt"># ホームディレクトリに移動</span>
+mkdir -p MD1/no1          <span class="cmt"># MD1 の中に no1 を作成（-p で親子同時作成）</span>
+cd MD1/no1</code></pre>
+
+      <div class="analogy">
+        <strong>ディレクトリ構成：</strong>今後の授業では回ごとにフォルダを分けます。第1回は <code>no1</code>、第2回は <code>no2</code> ... のように管理します。<br><strong>ディレクトリ名・ファイル名には日本語を使わないこと。</strong>半角英字・数字・記号（ハイフン、アンダースコアなど）のみを使用してください。
+      </div>
+
+      <pre><span class="code-label">今回作るディレクトリ構成</span>
+~/
+└── MD1/
+    └── no1/          <span class="cmt">← 今ここに仮想環境を作る</span>
+        ├── .venv/    <span class="cmt">← 仮想環境（自動生成）</span>
+        └── step1.py  <span class="cmt">← これから作るファイル</span></pre>
+
+      <p style="margin-top:0.8rem"><strong>(2)</strong> 仮想環境を作成</p>
+      <pre><code>uv venv</code></pre>
+
+      <div class="concept-box">
+        <h4>仮想環境とは</h4>
+        <p>プロジェクトごとに独立した作業部屋（環境）を作る仕組み。他のプロジェクトに影響を与えず、必要なツールを自由に入れられます。</p>
+      </div>
+
+      <p><strong>(3)</strong> 仮想環境を有効化</p>
+      <pre><code>source .venv/bin/activate</code></pre>
+      <p style="font-size:0.8rem;color:#999">プロンプトの先頭に <code>(.venv)</code> と表示されれば有効化成功です。</p>
+
+      <p style="margin-top:0.8rem"><strong>(4)</strong> py5 をインストール</p>
+      <pre><code>uv pip install py5</code></pre>
+
+      <p style="margin-top:0.8rem"><strong>(5)</strong> VSCode を起動</p>
+      <pre><code>code .</code></pre>
+      <p style="font-size:0.8rem;color:#999"><code>.</code> は現在のディレクトリを VSCode で開くことを意味します。</p>
+
+      <p style="margin-top:0.8rem">VSCode が起動したら、拡張機能から以下をインストール：</p>
+      <ul class="point-list">
+        <li><strong>Japanese Language Pack for Visual Studio Code</strong> ── 日本語化</li>
+        <li><strong>Python</strong> ── Python 開発サポート</li>
+      </ul>
+
+      <p style="margin-top:0.8rem"><strong>(6)</strong> <code>step1.py</code> を作成し、以下のコードを入力して実行（右上の ▶ ボタン）</p>
+      <pre><code><span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.size(<span class="num">400</span>, <span class="num">300</span>)
+    py5.rect(<span class="num">150</span>, <span class="num">100</span>, <span class="num">100</span>, <span class="num">100</span>)
+
+py5.run_sketch()</code></pre>
+      <p style="font-size:0.8rem;color:#999">白い矩形が表示されたウィンドウが開けば成功です。</p>
+
+      <p style="margin-top:1rem"><strong>終了するとき</strong></p>
+      <pre><code>deactivate               <span class="cmt"># 仮想環境を抜ける（(.venv) が消える）</span></code></pre>
+
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.8rem 1rem;margin-top:1rem;font-size:0.85rem;color:#93D500">
+        <strong>課題で py5 を使います。</strong>ここまでの Work 1〜5 が完了していないと課題に取り組めません。困ったらグループで助け合い、それでも解決しない場合は Slack の 2026雑談チャンネルに投稿してください。
+      </div>
+    </div>
+
+    <!-- uv コマンドまとめ -->
+    <div class="card" style="border-left:4px solid #93D500">
+      <div class="card-header"><h3>uv コマンドまとめ</h3></div>
+      <table>
+        <tr><th>コマンド</th><th>説明</th></tr>
+        <tr><td><code>brew install uv</code></td><td>uv をインストール</td></tr>
+        <tr><td><code>uv python install 3.12</code></td><td>Python をインストール</td></tr>
+        <tr><td><code>uv venv</code></td><td>仮想環境を作成</td></tr>
+        <tr><td><code>source .venv/bin/activate</code></td><td>仮想環境を有効化</td></tr>
+        <tr><td><code>uv pip install py5</code></td><td>パッケージをインストール</td></tr>
+        <tr><td><code>uv pip list</code></td><td>インストール済み一覧</td></tr>
+        <tr><td><code>deactivate</code></td><td>仮想環境を抜ける</td></tr>
+      </table>
+      <div class="analogy">
+        <strong>pip との違い：</strong> コマンドの頭に <code>uv</code> を付けるだけ。<code>pip install</code> → <code>uv pip install</code>。動作は同じだが依存関係の解決が桁違いに速い。
+      </div>
+    </div>
+
+    <!-- CS基礎: パッケージはどこから来る？ + ネットワーク基礎 -->
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <span class="tag" style="background:#2e1a0a;color:#FFB800">CS基礎</span>
+        <h3>パッケージはどこから来る？ ── ネットワークの基礎</h3>
+      </div>
+
+      <p><code>uv pip install py5</code> を実行すると、一瞬でライブラリがインストールされます。裏で何が起きているのでしょうか？</p>
+
+      <div style="background:#1A1A1A;border-radius:0.4rem;padding:1rem;margin:1rem 0">
+        <div style="display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap;font-size:0.7rem">
+          <span style="background:#76B900;color:white;padding:0.3rem 0.8rem;border-radius:0.3rem;font-weight:700">あなたのPC<br>（クライアント）</span>
+          <span style="color:#76B900;font-size:1rem">&rarr;</span>
+          <span style="background:#1a2e0a;color:#76B900;padding:0.3rem 0.8rem;border-radius:0.3rem;border:1px solid #76B900;font-weight:700">DNS<br>名前→IPアドレス</span>
+          <span style="color:#76B900;font-size:1rem">&rarr;</span>
+          <span style="background:#1a2e0a;color:#76B900;padding:0.3rem 0.8rem;border-radius:0.3rem;border:1px solid #76B900;font-weight:700">HTTPS通信<br>暗号化された経路</span>
+          <span style="color:#76B900;font-size:1rem">&rarr;</span>
+          <span style="background:#FFB800;color:#111;padding:0.3rem 0.8rem;border-radius:0.3rem;font-weight:700">PyPI サーバ<br>pypi.org</span>
+          <span style="color:#76B900;font-size:1rem">&rarr;</span>
+          <span style="background:#76B900;color:white;padding:0.3rem 0.8rem;border-radius:0.3rem;font-weight:700">ダウンロード<br>.venv に保存</span>
+        </div>
+      </div>
+
+      <table>
+        <tr><th style="width:25%">用語</th><th>意味</th><th>身近な例え</th></tr>
+        <tr>
+          <td><strong>クライアント</strong></td>
+          <td>サービスを要求する側（あなたのPC）</td>
+          <td>レストランの客</td>
+        </tr>
+        <tr>
+          <td><strong>サーバ</strong></td>
+          <td>サービスを提供する側（PyPI、Webサイトなど）</td>
+          <td>レストランの厨房</td>
+        </tr>
+        <tr>
+          <td><strong>IPアドレス</strong></td>
+          <td>コンピュータの住所（例: 151.101.128.223）</td>
+          <td>建物の住所</td>
+        </tr>
+        <tr>
+          <td><strong>ポート</strong></td>
+          <td>1つのIPアドレス上の窓口番号（例: 443 = HTTPS）</td>
+          <td>建物の中の部屋番号</td>
+        </tr>
+        <tr>
+          <td><strong>URL</strong></td>
+          <td>リソースの場所を示す文字列（例: https://pypi.org/project/py5/）</td>
+          <td>「東京都○○区△△ビル3階」のような完全な住所</td>
+        </tr>
+        <tr>
+          <td><strong>DNS</strong></td>
+          <td>ドメイン名（pypi.org）をIPアドレスに変換する仕組み</td>
+          <td>電話帳（名前→電話番号）</td>
+        </tr>
+        <tr>
+          <td><strong>HTTP</strong></td>
+          <td>Webの通信ルール（プロトコル）。データのやり取りの決まり事</td>
+          <td>郵便の書式ルール</td>
+        </tr>
+        <tr>
+          <td><strong>HTTPS</strong></td>
+          <td>HTTPに暗号化を加えたもの。盗聴を防ぐ</td>
+          <td>中身が見えない封筒で郵送</td>
+        </tr>
+      </table>
+
+      <div class="concept-box">
+        <h4>リクエストとレスポンス</h4>
+        <p>すべてのネットワーク通信は<strong>「要求（リクエスト）」と「応答（レスポンス）」</strong>の繰り返しです。</p>
+        <ul class="point-list">
+          <li><code>uv pip install py5</code> → PCが PyPI サーバに「py5をください」と<strong>リクエスト</strong></li>
+          <li>PyPI サーバが py5 のファイルを<strong>レスポンス</strong>として返す</li>
+          <li>uv がファイルを受け取り、.venv の中にインストール</li>
+        </ul>
+        <p style="margin-top:0.5rem;font-size:0.85rem;color:#999">ブラウザでWebサイトを見るのも、Slackでメッセージを送るのも、すべて同じリクエスト・レスポンスの仕組みです。</p>
+      </div>
+
+      <p style="margin-top:1rem">以下をコピーしてNotionに貼り付け、空欄を埋めてください。</p>
+      <pre><code>【CS基礎】ネットワークの仕組み
+
+- サービスを要求する側を ＿＿＿＿＿＿ 、提供する側を ＿＿＿ と呼ぶ
+- uv pip install py5 を実行すると、PCは ＿＿＿＿ というサーバに接続してパッケージを取得する
+- IPアドレスとは ＿＿＿＿＿＿＿＿＿＿ のこと。例: 151.101.128.223
+- DNSの役割は ＿＿＿＿＿＿（例: pypi.org）を ＿＿＿＿＿＿＿ に変換すること
+- HTTPSの「S」は ＿＿＿＿ の意味で、通信内容が ＿＿＿＿ される
+- ネットワーク通信はすべて ＿＿＿＿＿（要求）と ＿＿＿＿＿（応答）の繰り返しである
+
+【理解度チェック】自分の言葉で説明
+
+- ブラウザで google.com にアクセスしたとき、裏で何が起きているか3ステップで説明してください:
+  1. ＿＿＿＿＿＿＿＿＿＿＿＿＿＿
+  2. ＿＿＿＿＿＿＿＿＿＿＿＿＿＿
+  3. ＿＿＿＿＿＿＿＿＿＿＿＿＿＿</code></pre>
+    </div>
+
+    <!-- 仮想環境 -->
+    <div class="concept-box">
+      <h4>仮想環境とは</h4>
+      <p>プロジェクトごとに独立したPython環境を作る仕組み。異なるプロジェクトで異なるバージョンのライブラリを使い分けることができ、依存関係の衝突を防ぐ。</p>
+      <pre><span class="code-label">Terminal</span>
+uv venv                    <span class="cmt"># 仮想環境を作成（.venvディレクトリができる）</span>
+source .venv/bin/activate  <span class="cmt"># 仮想環境を有効化（macOS）</span>
+uv pip install py5         <span class="cmt"># ライブラリをインストール</span>
+deactivate                 <span class="cmt"># 仮想環境を無効化</span></pre>
+    </div>
+
+    <!-- グループ口頭試問（環境構築） -->
+    <div class="card group" id="env-quiz" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <span class="tag tag-group">グループワーク</span>
+        <h3>環境構築・uv 口頭試問 <span class="exam-alert">ここでグループワーク</span></h3>
+      </div>
+
+      <p>ここまでに学んだ Homebrew・uv・仮想環境について、グループ内で口頭試問を行います。</p>
+
+      <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:0.4rem;padding:1rem;margin:1rem 0">
+        <p style="color:#FFB800;font-weight:700;font-size:0.9rem;margin-bottom:0.8rem">進め方（15分）</p>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2">
+          <li><strong>各自で3問作成する</strong>（5分）── Homebrew / uv / 仮想環境に関する問題と正解を用意</li>
+          <li><strong>出題 → 回答者がターミナルで実演</strong>（10分）── 口で説明しながら実際にコマンドを実行して見せる</li>
+          <li><strong>出題者が正誤を判定</strong>し、必要なら正解を解説</li>
+        </ol>
+      </div>
+
+      <div class="concept-box">
+        <h4>作問のテンプレ</h4>
+        <pre><code>**問題:** （ここに問題文）
+**想定状況:** （どこにいて何をしたい？）
+**回答（コマンド）:** （正解コマンド）
+**確認方法:** （どうやって正解だとわかるか）</code></pre>
+      </div>
+
+      <details style="margin-top:1rem">
+        <summary><strong>出題例</strong>（参考にしてOK。ただし3問中2問は自分で考えること）</summary>
+        <div class="answer-content">
+          <table>
+            <tr><th style="width:40%">問題</th><th style="width:20%">想定状況</th><th style="width:20%">正解</th><th style="width:20%">確認方法</th></tr>
+            <tr><td>uv のバージョンを確認するには？</td><td>ターミナルを開いた直後</td><td><code>uv --version</code></td><td>バージョン番号が表示</td></tr>
+            <tr><td>仮想環境を作成するには？</td><td>MD1 ディレクトリにいる</td><td><code>uv venv</code></td><td><code>ls -a</code> で .venv が見える</td></tr>
+            <tr><td>仮想環境を有効化するには？</td><td>.venv がある場所にいる</td><td><code>source .venv/bin/activate</code></td><td>プロンプト先頭に (.venv) が表示</td></tr>
+            <tr><td>py5 をインストールするには？</td><td>仮想環境を有効化済み</td><td><code>uv pip install py5</code></td><td><code>uv pip list</code> で py5 が見える</td></tr>
+            <tr><td>仮想環境を抜けるには？</td><td>(.venv) が表示されている</td><td><code>deactivate</code></td><td>(.venv) が消える</td></tr>
+            <tr style="background:rgba(255,184,0,0.08)"><td colspan="4" style="color:#FFB800;font-weight:700;font-size:0.8rem;text-align:center">以下はCS・ネットワーク基礎の問題（コマンド不要、口頭で回答）</td></tr>
+            <tr><td>クライアントとサーバの違いは？</td><td>─</td><td>クライアント＝要求する側、サーバ＝提供する側</td><td>具体例を挙げられるか</td></tr>
+            <tr><td>uv pip install 時、PCは何と通信している？</td><td>─</td><td>PyPI（pypi.org）サーバ</td><td>リクエスト・レスポンスで説明</td></tr>
+            <tr><td>HTTPとHTTPSの違いは？</td><td>─</td><td>HTTPSは暗号化あり</td><td>なぜHTTPSが必要か説明</td></tr>
+            <tr><td>DNSの役割は？</td><td>─</td><td>ドメイン名→IPアドレスの変換</td><td>身近な例えで説明できるか</td></tr>
+            <tr><td>ファイルシステムが木構造である理由は？</td><td>─</td><td>階層的に整理でき、パスで一意に特定可能</td><td>自分の言葉で説明</td></tr>
+          </table>
+        </div>
+      </details>
+
+      <p style="margin-top:1rem">結果をNotionに簡潔に記録してください。</p>
+      <pre><code>## 環境構築・uv 口頭試問
+
+| 出題者 | 問題（概要） | 回答者 | 結果 |
+|--------|-------------|--------|------|
+|        |             |        | ⭕/❌ |
+|        |             |        | ⭕/❌ |
+|        |             |        | ⭕/❌ |</code></pre>
+
+      <div class="notion-submit">
+        <strong>Notionノートに記録</strong> ── 上の表をコピーし、全員分の出題・回答結果を記入
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============ 4. ASSIGNMENTS ============ -->
+<section id="sec-assignments">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#93D500">4</div>
+      <h2>課題 <span style="font-size:0.5rem;color:#999;font-weight:400">── グループ演習・約40分</span></h2>
+    </div>
+
+    <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.8rem 1rem;margin-bottom:1rem;font-size:0.85rem;color:#93D500">
+      <strong>課題の作業場所：</strong> Work 5 で作成した仮想環境内（<code>~/MD1/no1</code>）で作業してください。
+      <pre style="margin:0.5rem 0 0 0;border:none;padding:0.3rem 0;background:transparent"><code>cd ~/MD1/no1
+source .venv/bin/activate    <span class="cmt"># (.venv) が表示されることを確認</span></code></pre>
+    </div>
+
+    <!-- py5 コード解説 -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>py5 の基本コードを理解する</h3></div>
+      <p>課題に取り組む前に、以下のコードを読んで各行の意味を理解しましょう。</p>
+
+      <pre><code><span class="kw">import</span> py5                <span class="cmt"># py5ライブラリを読み込む</span>
+
+<span class="kw">def</span> <span class="fn">setup</span>():              <span class="cmt"># プログラム開始時に1回だけ実行される関数</span>
+    py5.size(<span class="num">400</span>, <span class="num">300</span>)    <span class="cmt"># ウィンドウサイズ: 幅400px、高さ300px</span>
+    py5.background(<span class="num">255</span>)    <span class="cmt"># 背景色: 白（0=黒、255=白）</span>
+
+    py5.fill(<span class="num">255</span>, <span class="num">0</span>, <span class="num">0</span>)    <span class="cmt"># 塗りつぶし色: 赤（R=255, G=0, B=0）</span>
+    py5.rect(<span class="num">50</span>, <span class="num">50</span>, <span class="num">120</span>, <span class="num">80</span>)  <span class="cmt"># 矩形: 左上(50,50)、幅120、高さ80</span>
+
+    py5.fill(<span class="num">0</span>, <span class="num">0</span>, <span class="num">255</span>)    <span class="cmt"># 塗りつぶし色: 青</span>
+    py5.ellipse(<span class="num">300</span>, <span class="num">100</span>, <span class="num">100</span>, <span class="num">100</span>)  <span class="cmt"># 円: 中心(300,100)、幅100、高さ100</span>
+
+py5.run_sketch()           <span class="cmt"># プログラムを実行する</span></code></pre>
+
+      <table style="margin-top:1rem">
+        <tr><th>関数</th><th>意味</th><th>引数</th></tr>
+        <tr><td><code>py5.size(w, h)</code></td><td>ウィンドウサイズを設定</td><td>w=幅、h=高さ（ピクセル）</td></tr>
+        <tr><td><code>py5.background(r, g, b)</code></td><td>背景色を設定</td><td>RGB値（各0〜255）</td></tr>
+        <tr><td><code>py5.fill(r, g, b)</code></td><td>塗りつぶし色を設定</td><td>以降の図形に適用される</td></tr>
+        <tr><td><code>py5.rect(x, y, w, h)</code></td><td>矩形を描画</td><td>左上座標(x,y)、幅w、高さh</td></tr>
+        <tr><td><code>py5.ellipse(x, y, w, h)</code></td><td>楕円を描画（w=hで円）</td><td>中心座標(x,y)、幅w、高さh</td></tr>
+        <tr><td><code>py5.triangle(x1,y1, x2,y2, x3,y3)</code></td><td>三角形を描画</td><td>3つの頂点座標</td></tr>
+        <tr><td><code>py5.line(x1,y1, x2,y2)</code></td><td>線を描画</td><td>始点と終点</td></tr>
+        <tr><td><code>py5.stroke(r, g, b)</code></td><td>輪郭線の色</td><td>RGB値</td></tr>
+        <tr><td><code>py5.no_stroke()</code></td><td>輪郭線を消す</td><td>なし</td></tr>
+        <tr><td><code>py5.no_fill()</code></td><td>塗りつぶしを消す</td><td>なし</td></tr>
+      </table>
+
+      <div class="concept-box">
+        <h4>順次制御</h4>
+        <p>プログラムは<strong>上から下へ1行ずつ実行</strong>されます。後から描いた図形ほど<strong>前面</strong>に表示されます。これが「順次制御」です。</p>
+      </div>
+    </div>
+
+    <!-- py5 グループ口頭試問 -->
+    <div class="card group" id="py5-quiz" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <span class="tag tag-note">ノート</span>
+        <h3>py5 コード理解の口頭試問 <span class="exam-alert">ここでグループワーク</span></h3>
+      </div>
+
+      <p>上のコードと関数表を見ながら、グループ内で出題し合ってください。</p>
+
+      <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:0.4rem;padding:1rem;margin:1rem 0">
+        <p style="color:#FFB800;font-weight:700;font-size:0.9rem;margin-bottom:0.8rem">進め方（10分）</p>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2">
+          <li><strong>各自2問作成</strong>（3分）── 下の出題例を参考に</li>
+          <li><strong>出題 → 口頭で回答</strong>（7分）── コードを見ずに答える</li>
+        </ol>
+      </div>
+
+      <details>
+        <summary><strong>出題例</strong></summary>
+        <div class="answer-content">
+          <table>
+            <tr><th style="width:55%">問題</th><th style="width:45%">正解</th></tr>
+            <tr><td>py5.fill(255, 0, 0) は何色？</td><td>赤（R=255, G=0, B=0）</td></tr>
+            <tr><td>py5.rect(50, 50, 120, 80) の 50, 50 は何を意味する？</td><td>矩形の左上のx座標とy座標</td></tr>
+            <tr><td>py5.ellipse と py5.rect の座標指定の違いは？</td><td>ellipseは中心座標、rectは左上座標</td></tr>
+            <tr><td>fill(0, 0, 255) の後に rect と ellipse を描くとどちらも何色？</td><td>両方とも青。fill は次の fill まで有効</td></tr>
+            <tr><td>setup() 関数はいつ実行される？</td><td>プログラム開始時に1回だけ</td></tr>
+            <tr><td>2つの図形が重なったとき、どちらが前面に表示される？</td><td>後に書いた方（順次制御）</td></tr>
+          </table>
+        </div>
+      </details>
+
+      <p style="margin-top:1rem">結果をNotionに記録してください。</p>
+      <pre><code>## py5 コード理解の口頭試問
+
+| 出題者 | 問題（概要） | 回答者 | 結果 |
+|--------|-------------|--------|------|
+|        |             |        | ⭕/❌ |
+|        |             |        | ⭕/❌ |</code></pre>
+    </div>
+
+    <!-- std1-1 -->
+    <div class="card standard" id="std1-1">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題</span>
+        <h3>std1-1: 指定図形の描画</h3>
+      </div>
+      <p>以下の条件を<strong>すべて満たす</strong>py5プログラムを <code>std1-1.py</code> として作成し、実行してください。</p>
+
+      <div style="background:#1A1A1A;border:2px solid #4FC3F7;border-radius:0.4rem;padding:1rem;margin:1rem 0">
+        <p style="color:#4FC3F7;font-weight:700;font-size:0.9rem;margin-bottom:0.8rem">描画条件</p>
+        <table>
+          <tr><th style="width:5%">#</th><th style="width:25%">図形</th><th style="width:35%">パラメータ</th><th style="width:35%">色（RGB）</th></tr>
+          <tr><td>1</td><td>ウィンドウサイズ</td><td><code>py5.size(400, 300)</code></td><td>背景: 白 <code>(255, 255, 255)</code></td></tr>
+          <tr><td>2</td><td>矩形（rect）</td><td>左上 (50, 50)、幅 120、高さ 80</td><td>赤 <code>(255, 0, 0)</code></td></tr>
+          <tr><td>3</td><td>円（ellipse）</td><td>中心 (300, 100)、幅 100、高さ 100</td><td>青 <code>(0, 0, 255)</code></td></tr>
+          <tr><td>4</td><td>三角形（triangle）</td><td>頂点 (200, 250), (150, 280), (250, 280)</td><td>緑 <code>(0, 200, 0)</code></td></tr>
+        </table>
+      </div>
+
+      <p><strong>提出物（Notionに記録）</strong></p>
+      <ul class="point-list" style="margin-top:0.3rem">
+        <li><strong>コード:</strong> 完成した <code>std1-1.py</code> のコード全体</li>
+        <li><strong>実行結果:</strong> 実行画面のスクリーンショット</li>
+        <li><strong>説明文:</strong> コードの各行が何をしているか、1〜2行で説明（例: 「3行目: ウィンドウの幅400px、高さ300pxを設定」）</li>
+      </ul>
+      <div class="notion-submit">
+        <strong>Notionノートに記録</strong> ── コード / スクリーンショット / 各行の説明
+      </div>
+    </div>
+
+    <!-- adv1-1 -->
+    <div class="card advanced" id="adv1-1">
+      <div class="card-header">
+        <span class="tag tag-advanced">発展課題</span>
+        <h3>adv1-1: 応用図形の描画 <span class="exam-alert">音声説明あり</span></h3>
+      </div>
+      <p>3種類以上の図形（rect, ellipse, triangle, line など）を組み合わせて、1つの絵や模様を描画してください。</p>
+
+      <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:10px;padding:1.2rem;margin:1rem 0">
+        <p style="color:#FFB800;font-weight:700;font-size:1rem;margin-bottom:0.8rem">提出要件（3点セット）</p>
+        <table>
+          <tr><th style="width:30%">提出物</th><th>内容</th></tr>
+          <tr>
+            <td><strong style="color:#76B900">1. コード</strong></td>
+            <td>完成したコード全体をNotionノートに貼り付ける</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#76B900">2. 実行結果</strong></td>
+            <td>スクリーンショットをNotionに貼り付ける</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#FFB800">3. 音声説明</strong></td>
+            <td>以下の内容を<strong>1〜2分の音声</strong>で録音し、Notionノートに添付する<br>
+            <span style="color:#999;font-size:0.85rem">スマホの録音アプリやPCの機能で録音 → Notionに <code>/audio</code> で添付</span></td>
+          </tr>
+        </table>
+        <p style="margin-top:0.8rem;font-size:0.9rem;color:#E0E0E0"><strong>音声で説明すること：</strong></p>
+        <ul class="point-list" style="margin-top:0.3rem">
+          <li>どんな図形を組み合わせて何を表現したか</li>
+          <li>各図形の position（座標）をどう決めたか</li>
+          <li>fill / stroke の RGB 値をどう選んだか、その理由</li>
+        </ul>
+      </div>
+      <div class="notion-submit">
+        <strong>Notionノートに記録してください</strong> ── コード / 実行結果 / 音声ファイル の3点を添付
+      </div>
+    </div>
+
+    <!-- adv1-2 -->
+    <div class="card advanced" id="adv1-2">
+      <div class="card-header">
+        <span class="tag tag-advanced">発展課題</span>
+        <h3>adv1-2: 自由制作（テーマ: Minecraftのクリーパー） <span class="exam-alert">音声説明あり</span></h3>
+      </div>
+      <p>py5の基本図形（rect, ellipse など）を組み合わせて、Minecraftのクリーパーを描画してください。</p>
+
+      <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:10px;padding:1.2rem;margin:1rem 0">
+        <p style="color:#FFB800;font-weight:700;font-size:1rem;margin-bottom:0.8rem">提出要件（3点セット）</p>
+        <table>
+          <tr><th style="width:30%">提出物</th><th>内容</th></tr>
+          <tr>
+            <td><strong style="color:#76B900">1. コード</strong></td>
+            <td>完成したコード全体をNotionノートに貼り付ける</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#76B900">2. 実行結果</strong></td>
+            <td>スクリーンショットをNotionに貼り付ける</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#FFB800">3. 音声説明</strong></td>
+            <td>以下の内容を<strong>1〜2分の音声</strong>で録音し、Notionノートに添付する</td>
+          </tr>
+        </table>
+        <p style="margin-top:0.8rem;font-size:0.9rem;color:#E0E0E0"><strong>音声で説明すること：</strong></p>
+        <ul class="point-list" style="margin-top:0.3rem">
+          <li>クリーパーのどの部分をどの図形（rect? ellipse?）で表現したか</li>
+          <li>色の選び方 ── クリーパーの緑は RGB でいくつにしたか、なぜその値か</li>
+          <li>図形の重なり順（順次制御）を意識した点</li>
+        </ul>
+      </div>
+      <div class="notion-submit">
+        <strong>Notionノートに記録してください</strong> ── コード / 実行結果 / 音声ファイル の3点を添付
+      </div>
+    </div>
+
+    <!-- adv1-3 -->
+    <div class="card advanced" id="adv1-3">
+      <div class="card-header">
+        <span class="tag tag-advanced">発展課題</span>
+        <h3>adv1-3: オリジナル作品 <span class="exam-alert">音声説明あり</span></h3>
+      </div>
+      <p>テーマは自由。py5で好きな絵・キャラクター・模様・風景などを描いてください。</p>
+
+      <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:10px;padding:1.2rem;margin:1rem 0">
+        <p style="color:#FFB800;font-weight:700;font-size:1rem;margin-bottom:0.8rem">提出要件（3点セット）</p>
+        <table>
+          <tr><th style="width:30%">提出物</th><th>内容</th></tr>
+          <tr>
+            <td><strong style="color:#76B900">1. コード</strong></td>
+            <td>完成したコード全体をNotionノートに貼り付ける</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#76B900">2. 実行結果</strong></td>
+            <td>スクリーンショットをNotionに貼り付ける</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#FFB800">3. 音声説明</strong></td>
+            <td>以下の内容を<strong>1〜2分の音声</strong>で録音し、Notionノートに添付する</td>
+          </tr>
+        </table>
+        <p style="margin-top:0.8rem;font-size:0.9rem;color:#E0E0E0"><strong>音声で説明すること：</strong></p>
+        <ul class="point-list" style="margin-top:0.3rem">
+          <li>何をテーマにしたか、なぜそのテーマを選んだか</li>
+          <li>コードの中で一番工夫した部分はどこか（座標計算？色？重なり順？）</li>
+          <li>難しかった点と、どう解決したか</li>
+        </ul>
+      </div>
+
+      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1rem;margin:1rem 0">
+        <p style="font-size:0.9rem;font-weight:700;color:#93D500;margin-bottom:0.5rem">評価ポイント</p>
+        <table>
+          <tr><th style="width:30px">#</th><th>チェック項目</th></tr>
+          <tr><td>1</td><td><strong>3種類以上の図形</strong>を使っている（rect, ellipse, triangle, line など）</td></tr>
+          <tr><td>2</td><td><strong>position</strong> が意図的に設定されている（全部同じ座標にならない）</td></tr>
+          <tr><td>3</td><td><strong>fill / stroke の色</strong>が適切に使い分けられている</td></tr>
+          <tr><td>4</td><td><strong>テーマが明確</strong>で、見てわかる or 音声で説明されている</td></tr>
+          <tr><td>5</td><td><strong>音声説明</strong>でコードの意図・工夫が語られている</td></tr>
+        </table>
+      </div>
+
+      <div class="notion-submit">
+        <strong>Notionノートに記録してください</strong> ── コード / 実行結果 / 音声ファイル の3点を添付
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 5. APPENDIX ============ -->
+<section id="sec-appendix">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4A7A00">5</div>
+      <h2>予備知識</h2>
+    </div>
+
+    <div class="card" style="border-left:4px solid #4A7A00">
+      <div class="card-header"><h3>macOSとは</h3></div>
+      <p>AppleのPC「Mac」で使われているOS（オペレーティングシステム）。UNIXから派生したOSとしてターミナル操作やオープンソースソフトウェアのサポートが可能。</p>
+
+      <p style="margin-top:1rem"><strong>データサイエンティスト・AI/ソフトウェアエンジニアがMacを使う理由</strong></p>
+      <ul class="point-list">
+        <li>UNIXベースによるLinuxとの高い親和性</li>
+        <li>ターミナルの操作性</li>
+        <li>PythonやRなどの言語との相性</li>
+        <li>Homebrewによるパッケージ管理の簡便性</li>
+        <li>DockerやGitなどの開発ツールの互換性</li>
+        <li>高品質なハードウェア設計</li>
+        <li>安定した動作とセキュリティの高さ</li>
+        <li>Unixと同様のコマンドを使用可能</li>
+      </ul>
+
+      <div class="callout-info" style="margin-top:1rem">
+        <h4>補足</h4>
+        <p>Windowsにも優れた点（GPU環境、ゲーム開発、企業内システム対応など）はあるが、MacはとくにUNIX的環境とGUIの共存が強力であり、データサイエンス・AI・ソフトウェア開発の現場で好まれる。</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="container">
+    <div>MD1 ─ 2026年度前期 ─ 第1回</div>
+    <div style="margin-top:0.5rem;font-size:0.8rem;color:#666">&copy;2026 Ryota Nakamura.</div>
+  </div>
+</footer>
+
+<!-- ============ SCRIPTS ============ -->
+<script src="answer-gate.js"></script>
+<script>
+// Copy button for pre blocks
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var code = pre.textContent.replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|\.zshrc|Notion テンプレート)( ── [^\n]+)?\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+
+// Click-to-copy on inline code elements
+document.querySelectorAll(':not(pre) > code').forEach(function(code) {
+  code.title = 'クリックでコピー';
+  code.addEventListener('click', function() {
+    navigator.clipboard.writeText(code.textContent).then(function() {
+      code.classList.add('copied');
+      setTimeout(function() {
+        code.classList.remove('copied');
+      }, 1500);
+    });
+  });
+});
+</script>
+
+</body>
+</html>

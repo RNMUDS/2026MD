@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第7回: 最終課題制作 | MD1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET & BASE ============ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 32px; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #111111;
+  color: #e0e0e0;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============ LAYOUT ============ */
+.container { max-width: 1600px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+
+/* ============ HEADER ============ */
+.hero {
+  background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a);
+  color: white;
+  padding: clamp(3rem, 8vw, 6rem) 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(108,99,255,0.3), transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(155,89,182,0.2), transparent 50%);
+}
+.hero .container { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 100px;
+  padding: 0.35rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+}
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+
+/* ============ SUBMISSION BOX ============ */
+.submission-box {
+  background: linear-gradient(135deg, #1A1A1A, #1a2e0a);
+  border: 2px solid #76B900;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin: 2rem 0;
+}
+.submission-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #76B900;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.submission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.5rem;
+}
+.sub-item {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  gap: 0.3rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.4rem;
+  padding: 0.6rem 0.4rem;
+  font-size: 0.55rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.sub-item .sub-count {
+  margin-bottom: 0.1rem;
+}
+.sub-item .tag {
+  margin-bottom: 0.15rem;
+}
+.sub-count {
+  background: #76B900;
+  color: white;
+  border-radius: 0.2rem;
+  min-width: 1.5rem; height: 1.5rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700;
+}
+
+/* ============ TAGS ============ */
+.tag {
+  display: inline-flex; align-items: center; gap: 0.2rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 100px;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.tag-note      { background: #1a2e0a; color: #76B900; }
+.tag-standard  { background: #0a1a2e; color: #4FC3F7; }
+.tag-advanced  { background: #2e1a0a; color: #FFB800; }
+.tag-group     { background: #1a2e0a; color: #76B900; }
+
+/* ============ EXAM ALERT TAG ============ */
+.exam-alert {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  background: rgba(255, 82, 82, 0.15);
+  border: 1px solid #FFB800;
+  color: #FFB800;
+  padding: 0.2rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  animation: exam-pulse 2s ease-in-out 3;
+}
+@keyframes exam-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ============ SECTION HEADERS ============ */
+.section-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.section-num {
+  width: 2.5rem; height: 2.5rem;
+  border-radius: 0.4rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 900; color: white;
+  flex-shrink: 0;
+}
+.section-header h2 {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+/* ============ CARDS ============ */
+.card {
+  background: #141414;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  border: 1px solid #2a2a2a;
+}
+.card-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #222;
+}
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.standard  { border-left: 4px solid #76B900; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.card.group     { border-left: 4px solid #93D500; }
+
+/* ============ NOTION CALLOUT ============ */
+.notion-submit {
+  background: #1a2e0a;
+  border: 1px solid #76B900;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  display: flex; align-items: flex-start; gap: 0.5rem;
+}
+.notion-submit::before { content: '\1F4DD'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+
+/* ============ TABLES ============ */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem;
+  margin: 1rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+th {
+  background: rgba(108, 99, 255, 0.15);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  color: #76B900;
+  letter-spacing: 0.02em;
+}
+td {
+  padding: 0.55rem 0.8rem;
+  border-top: 1px solid #222;
+}
+tr:nth-child(even) td { background: #111; }
+
+/* ============ CODE ============ */
+pre {
+  background: #0A0A0A;
+  color: #E0E0E0;
+  border-radius: 12px;
+  padding: clamp(0.8rem, 2vw, 1.4rem);
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
+  font-size: clamp(0.75rem, 1.3vw, 0.88rem);
+  line-height: 1.7;
+  margin: 1rem 0;
+  position: relative;
+}
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #FFB800; }
+pre .op { color: #93D500; }
+.code-label {
+  position: absolute; top: 0; right: 0;
+  background: rgba(255,255,255,0.08);
+  color: #999999;
+  padding: 0.2rem 0.8rem;
+  border-radius: 0 12px 0 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+/* inline code */
+:not(pre) > code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(108,99,255,0.15);
+  padding: 0.15em 0.45em;
+  border-radius: 5px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+:not(pre) > code:hover { background: rgba(108,99,255,0.3); }
+:not(pre) > code.copied { background: rgba(108,99,255,0.5); }
+
+/* ============ EXPLANATION BLOCKS ============ */
+.concept-box {
+  background: rgba(108, 99, 255, 0.15);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  border: 1px solid #2a2a3a;
+}
+.concept-box h4 {
+  font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem;
+}
+.analogy {
+  background: #1a1a0a;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 0.75rem 0;
+  border-left: 3px solid #FFB800;
+  font-size: 0.95rem;
+}
+.analogy::before {
+  content: '\1F4A1 日常の例';
+  display: block;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #FFB800;
+  margin-bottom: 0.3rem;
+}
+.point-list {
+  list-style: none;
+  padding: 0;
+}
+.point-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+}
+.point-list li::before {
+  content: '\25B8';
+  position: absolute; left: 0;
+  color: #76B900;
+  font-weight: 700;
+}
+
+/* ============ ANSWERS (COLLAPSIBLE) ============ */
+details {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+details summary {
+  padding: 0.8rem 1.2rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 0.5rem;
+  background: #1a1a1a;
+  user-select: none;
+}
+details summary::marker { content: ''; }
+details summary::before {
+  content: '\25B6';
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+  color: #666;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
+
+/* ============ WARNING / DANGER CALLOUT ============ */
+.callout-danger {
+  background: rgba(255, 82, 82, 0.08);
+  border: 1px solid rgba(255, 82, 82, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-danger h4 {
+  color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-warning {
+  background: rgba(255, 184, 0, 0.08);
+  border: 1px solid rgba(255, 184, 0, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-warning h4 {
+  color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-info {
+  background: rgba(108, 99, 255, 0.08);
+  border: 1px solid rgba(108, 99, 255, 0.3);
+  border-left: 4px solid #76B900;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-info h4 {
+  color: #76B900; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-tip {
+  background: rgba(155, 89, 182, 0.08);
+  border: 1px solid rgba(155, 89, 182, 0.3);
+  border-left: 4px solid #93D500;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-tip h4 {
+  color: #93D500; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+
+/* ============ FOOTER ============ */
+footer {
+  background: #0A0A0A;
+  color: #999999;
+  padding: 2rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 640px) {
+  .submission-items { grid-template-columns: 1fr; }
+  .section-num { width: 2rem; height: 2rem; font-size: 0.85rem; }
+}
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
+/* ============ SUB-ITEM LINKS ============ */
+a.sub-item { transition: transform 0.15s, box-shadow 0.15s; }
+a.sub-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(118,185,0,0.3);
+  border-color: #76B900;
+}
+
+/* ============ SECTION NAV (sticky) ============ */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.5rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-exam { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3rem; }
+
+/* ============ REDUCED MOTION ============ */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  details summary::before { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SECTION NAV ============ -->
+<nav class="section-nav">
+  <a href="#sec-schedule">日程</a>
+  <a href="#sec-teacher">0. 説明</a>
+  <a href="#sec-summary">学んだこと</a>
+  <a href="#sec-csv">1. CSV読み込み</a>
+  <a href="#sec-final" class="nav-assignment">最終課題</a>
+  <a href="#sec-notion">Notion</a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">Media creation Data design 1（MD1）─ 2026年度前期</div>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.1rem;white-space:nowrap">武蔵野大学データサイエンス学部</p>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.3rem;white-space:nowrap">武蔵野大学国際データサイエンス学部（通信教育部）</p>
+    <p style="font-size:0.95rem;opacity:0.85;margin-bottom:1rem">中村 亮太</p>
+    <h1>MD1 第7回: 最終課題制作</h1>
+    <p style="white-space:nowrap">これまで学んだ技術を組み合わせて、データの可視化作品を制作する</p>
+    <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:0.3rem;padding:0.4rem 0.8rem;margin-top:1rem;font-size:0.7rem;display:inline-block">
+      <strong>対象環境:</strong> Apple M1 / M2 / M3 / M4 / M5 チップ搭載 Mac ｜ macOS Tahoe 26.4.1 (25E246)
+    </div>
+  </div>
+</header>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div class="submission-box">
+      <h3>提出ガイド（1つのNotionページにまとめ、PDF 1枚を提出）</h3>
+      <div class="submission-items">
+        <a href="#sec-notion" class="sub-item" style="text-decoration:none;color:inherit;border-color:#76B900"><span class="sub-count" style="background:#76B900">4</span><span class="tag" style="background:#1a2e0a;color:#76B900">ノート</span>穴埋め・記録</a>
+        <a href="#sec-final" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-advanced">最終課題</span>データの可視化</a>
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.85rem;color:#93D500">
+        <strong>提出方法:</strong> 下記の項目をすべて<strong>1つのNotionページにまとめて記録</strong> → PDFにエクスポート → Google Classroomに<strong>PDF 1ファイル</strong>を提出
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:0.5rem;font-size:0.85rem;color:#FFB800">
+        <strong>提出期限:</strong> 6/15(月) 13:10
+      </div>
+
+      <!-- Notionに書くべき項目チェックリスト -->
+      <div id="notion-checklist" style="background:#141414;border:1px solid #333;border-radius:0.4rem;padding:1rem;margin-top:1rem">
+        <p style="color:#76B900;font-weight:700;font-size:0.85rem;margin-bottom:0.3rem">ノート: Notionに記録する項目（提出前に確認）</p>
+        <p style="font-size:0.75rem;color:#999;margin-bottom:0.8rem">以下の項目を1つのNotionページに記録し、PDF化して提出します。</p>
+        <table style="font-size:0.8rem">
+          <tr><th style="width:5%"></th><th style="width:30%">セクション</th><th>記録する内容</th><th style="width:10%">リンク</th></tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> データ可視化の原則</td>
+            <td>穴埋め問題（可視化の原則、グラフの種類、グラフの嘘）</td>
+            <td><a href="#sec-teacher" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-advanced" style="font-size:0.65rem">最終課題</span> テーマ・コンセプト</td>
+            <td>50字程度の説明文</td>
+            <td><a href="#sec-final" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-advanced" style="font-size:0.65rem">最終課題</span> コード</td>
+            <td>完成したPythonコード全文</td>
+            <td><a href="#sec-final" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-advanced" style="font-size:0.65rem">最終課題</span> View</td>
+            <td>スクリーンショットまたは動画</td>
+            <td><a href="#sec-final" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-advanced" style="font-size:0.65rem">最終課題</span> 工夫した点・アウトカム</td>
+            <td>工夫した点＋この作品を見た人にどんな変化を期待するか</td>
+            <td><a href="#sec-final" style="color:#76B900">移動</a></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCHEDULE ============ -->
+<section id="sec-schedule" style="padding-top:1rem;padding-bottom:0">
+  <div class="container">
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>授業スケジュール（前期・月曜3・4限 13:10〜16:40）</h3></div>
+      <table>
+        <tr><th style="width:40px">回</th><th>日付</th><th>テーマ</th><th>提出期限</th></tr>
+        <tr><td>1</td><td>4/20(月)</td><td>グループディスカッション・ターミナル操作・環境構築</td><td>4/27 13:10</td></tr>
+        <tr><td>2</td><td>4/27(月)</td><td>順次制御・繰り返し処理・色の表現</td><td>5/11 13:10</td></tr>
+        <tr style="color:#616161"><td>-</td><td><s>5/4(月)</s></td><td colspan="2" style="color:#FFB800">休講（GW）</td></tr>
+        <tr><td>3</td><td>5/11(月)</td><td>条件分岐・アニメーション</td><td>5/18 13:10</td></tr>
+        <tr><td>4</td><td>5/18(月)</td><td>リスト・辞書・関数設計</td><td>5/25 13:10</td></tr>
+        <tr><td>5</td><td>5/25(月)</td><td>時系列データ・加速度センサ</td><td>6/1 13:10</td></tr>
+        <tr><td>6</td><td>6/1(月)</td><td>音のプログラミング・FFT和音解析</td><td>6/8 13:10</td></tr>
+        <tr style="background:rgba(118,185,0,0.1)"><td><strong>7</strong></td><td><strong>6/8(月)</strong></td><td><strong>最終課題制作</strong></td><td><strong>6/15 13:10</strong></td></tr>
+      </table>
+      <p style="font-size:0.85rem;color:#999;margin-top:0.5rem">※ 各回の提出期限は次回授業開始時刻（13:10）です。1秒でも遅れると未提出扱いになります。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TIME FLOW ============ -->
+<section style="padding-top:1rem;padding-bottom:0">
+  <div class="container">
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>本日の授業の流れ</h3></div>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin:0.5rem 0">
+        <div style="flex:1;min-width:8rem;background:#1A1A1A;border:2px solid #76B900;border-radius:0.4rem;padding:0.6rem;text-align:center">
+          <div style="font-size:1.2rem;font-weight:900;color:#76B900">13:10 - 13:30</div>
+          <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">教員による説明</div>
+          <div style="font-size:0.65rem;color:#999">最終課題の説明 / データ可視化の原則 / 評価基準 / CS・DS基礎</div>
+        </div>
+        <div style="flex:1;min-width:8rem;background:#1A1A1A;border:1px solid #333;border-radius:0.4rem;padding:0.6rem;text-align:center">
+          <div style="font-size:1.2rem;font-weight:900;color:#93D500">13:30 - 13:45</div>
+          <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">1. データの読み込み方</div>
+          <div style="font-size:0.65rem;color:#999">CSVファイルの読み込みサンプル3種</div>
+        </div>
+        <div style="flex:2;min-width:12rem;background:#1A1A1A;border:2px solid #FFB800;border-radius:0.4rem;padding:0.6rem;text-align:center">
+          <div style="font-size:1.2rem;font-weight:900;color:#FFB800">13:45 - 16:40</div>
+          <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">2. 最終課題制作</div>
+          <div style="font-size:0.65rem;color:#999">自由制作時間 / グループで相談OK / 教員に質問OK</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 0. TEACHER EXPLANATION ============ -->
+<section id="sec-teacher">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">0</div>
+      <h2>教員による説明 <span style="font-size:0.5rem;color:#999;font-weight:400">── 約20分</span></h2>
+    </div>
+
+    <div class="concept-box">
+      <h4>最終回: これまでの技術を組み合わせて作品を作る</h4>
+      <p>第1回〜第6回で学んだ技術（図形描画、テキスト表示、色彩、アニメーション、音の再生、CSV読み込み）を組み合わせて、Slackデータの可視化作品を制作します。今日のほとんどの時間は、自分で手を動かす制作時間です。</p>
+    </div>
+
+    <!-- CS/DS基礎: データ可視化の原則 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-note">ノート</span>
+        <h3>CS/DS基礎: データ可視化とリテラシー</h3>
+      </div>
+
+      <h4 style="color:#76B900;margin-bottom:0.5rem">データ可視化の原則</h4>
+      <p>データ可視化で最も大切なのは、<strong>「何を伝えたいか」を明確にしてから「どう見せるか」を決める</strong>ことです。目的のない可視化は、ただの飾りになってしまいます。</p>
+
+      <div class="analogy">
+        料理で例えると、「誰に食べてもらうか」（受け手）と「何を味わってほしいか」（伝えたいこと）を決めてからレシピ（見せ方）を考える。高級な食材を並べても、意図がなければ美味しい料理にはならない。
+      </div>
+
+      <h4 style="color:#76B900;margin-top:1.5rem;margin-bottom:0.5rem">グラフの種類と使い分け</h4>
+      <table>
+        <tr><th>グラフ</th><th>適している場面</th><th>例</th></tr>
+        <tr><td><strong>棒グラフ</strong></td><td>カテゴリ間の量の比較</td><td>曜日ごとのメッセージ数</td></tr>
+        <tr><td><strong>折れ線グラフ</strong></td><td>時間の経過に伴う変化</td><td>月ごとのアクティブメンバー数の推移</td></tr>
+        <tr><td><strong>散布図</strong></td><td>2つの数値の相関関係</td><td>メッセージ数 vs ファイル数</td></tr>
+      </table>
+
+      <h4 style="color:#76B900;margin-top:1.5rem;margin-bottom:0.5rem">グラフの嘘に騙されない</h4>
+      <div class="callout-warning">
+        <h4>グラフの嘘（データリテラシー）</h4>
+        <ul class="point-list">
+          <li><strong>Y軸の切り取り:</strong> 0から始めない棒グラフは差を誇張する</li>
+          <li><strong>スケール操作:</strong> 軸の間隔を変えると印象が変わる</li>
+          <li><strong>チェリーピッキング:</strong> 都合の良い期間だけを切り取る</li>
+          <li><strong>3Dグラフ:</strong> 奥行きで面積が歪み、正確な比較ができない</li>
+        </ul>
+        <p style="margin-top:0.5rem;font-size:0.9rem">データを見るとき、常に「このグラフは何を隠しているか」を考えるクセをつけましょう。</p>
+      </div>
+
+      <h4 style="color:#76B900;margin-top:1.5rem;margin-bottom:0.5rem">記述統計の基本</h4>
+      <p>CSVデータを集計するときに使う基本的な統計量です。Pythonでは組み込み関数だけで計算できます。</p>
+      <table>
+        <tr><th>統計量</th><th>意味</th><th>Python</th></tr>
+        <tr><td>平均（mean）</td><td>データの中心的な値</td><td><code>sum(data) / len(data)</code></td></tr>
+        <tr><td>最大値（max）</td><td>最も大きい値</td><td><code>max(data)</code></td></tr>
+        <tr><td>最小値（min）</td><td>最も小さい値</td><td><code>min(data)</code></td></tr>
+      </table>
+
+      <h4 style="color:#76B900;margin-top:1.5rem;margin-bottom:0.5rem">APIの概念（2学期への予告）</h4>
+      <div class="callout-info">
+        <h4>API（Application Programming Interface）</h4>
+        <p><strong>API</strong>とは、プログラム同士が情報をやり取りするための「通信口」です。たとえば天気予報APIに「東京の天気を教えて」とリクエストすると、JSONという形式でデータが返ってきます。</p>
+        <p style="margin-top:0.5rem">今学期はCSVファイルからデータを読みましたが、2学期ではAPIからリアルタイムデータを取得して可視化する方法を学びます。</p>
+      </div>
+
+      <pre><span class="code-label">Notion テンプレート</span>
+## データ可視化の原則
+- 可視化で最も大事なこと: ＿＿＿＿＿＿＿＿＿＿
+- 棒グラフが適している場面: ＿＿＿＿＿＿
+- 折れ線グラフが適している場面: ＿＿＿＿＿＿
+- グラフの嘘の例: ＿＿＿＿＿＿＿＿</pre>
+    </div>
+
+    <!-- 評価基準 -->
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <h3>最終課題の評価基準</h3>
+      </div>
+      <table>
+        <tr><th>観点</th><th>配点</th><th>内容</th></tr>
+        <tr><td><strong>技術的実装</strong></td><td style="color:#76B900;font-weight:700">40%</td><td>2つ以上の技術要素を組み合わせているか、正しく動作するか</td></tr>
+        <tr><td><strong>デザイン・創造性</strong></td><td style="color:#FFB800;font-weight:700">30%</td><td>見た目の工夫、独自のアイデア、ユーザの視点を考慮しているか</td></tr>
+        <tr><td><strong>データ表現の適切さ</strong></td><td style="color:#4FC3F7;font-weight:700">30%</td><td>データの特徴が視覚的に理解できるか、誤解を招かない表現か</td></tr>
+      </table>
+      <div class="callout-tip">
+        <h4>アウトカムを意識しよう（第1回の復習）</h4>
+        <p>第1回で学んだ「アウトカム」を思い出してください。単にコードが動くだけ（アウトプット）ではなく、<strong>この作品を見た人にどんな気づきや変化をもたらすか</strong>（アウトカム）が重要です。</p>
+        <table style="font-size:0.85rem;margin-top:0.5rem">
+          <tr><th>レベル</th><th>説明</th><th>例</th></tr>
+          <tr><td style="color:#999">① 提出した</td><td>アウトプットのみ</td><td>グラフを表示した</td></tr>
+          <tr><td style="color:#FFB800">② 自分が理解した</td><td>弱いアウトカム</td><td>データの傾向を読み取れた</td></tr>
+          <tr><td style="color:#76B900">③ 他人が理解した</td><td>典型的なアウトカム</td><td>見た人がSlackの利用傾向を理解できた</td></tr>
+          <tr><td style="color:#76B900">④ 行動が変わった</td><td>強いアウトカム</td><td>見た人がSlackの使い方を変えた</td></tr>
+        </table>
+        <p style="margin-top:0.5rem;font-size:0.9rem"><strong>今回の最終課題では、③④レベルのアウトカムを目指してください。</strong></p>
+      </div>
+    </div>
+
+    <!-- CSVファイルの説明 -->
+    <div class="card">
+      <div class="card-header">
+        <h3>使用するCSVファイル</h3>
+      </div>
+      <p>Google Classroomから以下の2つのCSVファイルをダウンロードして使用してください。どちらを使っても構いません。</p>
+      <table>
+        <tr><th>ファイル名</th><th>期間</th><th>内容</th></tr>
+        <tr><td><code>slack.csv</code></td><td>2025年4月〜6月</td><td>短期間のSlack利用データ</td></tr>
+        <tr><td><code>slack_time.csv</code></td><td>2024年5月〜2025年6月</td><td>長期間のSlack利用データ</td></tr>
+      </table>
+      <p style="font-size:0.85rem;color:#999;margin-top:0.5rem">※ 列の例: 日付、アクティブなメンバー数（日次）、投稿されたメッセージ数、アップロードファイル数 など</p>
+    </div>
+
+    <!-- この授業で学んだこと -->
+    <div id="sec-summary" class="card" style="border-left:4px solid #93D500">
+      <div class="card-header">
+        <h3>この授業で学んだこと（全7回のまとめ）</h3>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(10rem,1fr));gap:0.5rem;margin-top:0.5rem">
+        <div style="background:#1A1A1A;border:1px solid #333;border-radius:0.4rem;padding:0.6rem;text-align:center">
+          <div style="font-size:0.75rem;font-weight:700;color:#76B900">第1回</div>
+          <div style="font-size:0.7rem;color:#E0E0E0;margin:0.2rem 0">環境構築</div>
+          <div style="font-size:0.6rem;color:#999">uv / py5 / ターミナル</div>
+        </div>
+        <div style="background:#1A1A1A;border:1px solid #333;border-radius:0.4rem;padding:0.6rem;text-align:center">
+          <div style="font-size:0.75rem;font-weight:700;color:#76B900">第2回</div>
+          <div style="font-size:0.7rem;color:#E0E0E0;margin:0.2rem 0">図形描画・色彩</div>
+          <div style="font-size:0.6rem;color:#999">順次処理 / 繰り返し / RGB</div>
+        </div>
+        <div style="background:#1A1A1A;border:1px solid #333;border-radius:0.4rem;padding:0.6rem;text-align:center">
+          <div style="font-size:0.75rem;font-weight:700;color:#76B900">第3回</div>
+          <div style="font-size:0.7rem;color:#E0E0E0;margin:0.2rem 0">条件分岐・アニメーション</div>
+          <div style="font-size:0.6rem;color:#999">if / マウス連動 / 動き</div>
+        </div>
+        <div style="background:#1A1A1A;border:1px solid #333;border-radius:0.4rem;padding:0.6rem;text-align:center">
+          <div style="font-size:0.75rem;font-weight:700;color:#76B900">第4回</div>
+          <div style="font-size:0.7rem;color:#E0E0E0;margin:0.2rem 0">リスト・辞書・関数</div>
+          <div style="font-size:0.6rem;color:#999">データ構造 / コード整理</div>
+        </div>
+        <div style="background:#1A1A1A;border:1px solid #333;border-radius:0.4rem;padding:0.6rem;text-align:center">
+          <div style="font-size:0.75rem;font-weight:700;color:#76B900">第5回</div>
+          <div style="font-size:0.7rem;color:#E0E0E0;margin:0.2rem 0">時系列データ</div>
+          <div style="font-size:0.6rem;color:#999">CSV / 加速度センサ</div>
+        </div>
+        <div style="background:#1A1A1A;border:1px solid #333;border-radius:0.4rem;padding:0.6rem;text-align:center">
+          <div style="font-size:0.75rem;font-weight:700;color:#76B900">第6回</div>
+          <div style="font-size:0.7rem;color:#E0E0E0;margin:0.2rem 0">音・FFT解析</div>
+          <div style="font-size:0.6rem;color:#999">音の再生 / 周波数解析</div>
+        </div>
+        <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:0.4rem;padding:0.6rem;text-align:center">
+          <div style="font-size:0.75rem;font-weight:700;color:#FFB800">第7回（今日）</div>
+          <div style="font-size:0.7rem;color:#E0E0E0;margin:0.2rem 0">最終課題制作</div>
+          <div style="font-size:0.6rem;color:#999">すべてを組み合わせる</div>
+        </div>
+      </div>
+      <p style="font-size:0.85rem;color:#93D500;margin-top:1rem;text-align:center;font-weight:700">最終課題では、上記の技術から2つ以上を組み合わせて作品を制作します</p>
+    </div>
+
+    <!-- 環境準備 -->
+    <div class="card">
+      <div class="card-header">
+        <h3>環境準備</h3>
+      </div>
+      <p>第7回用のディレクトリを作成し、CSVファイルを配置します。</p>
+      <pre><span class="code-label">Bash</span>
+<span class="cmt"># 第7回のディレクトリを作成</span>
+<span class="fn">cd</span> ~/Documents/MD1
+<span class="fn">mkdir</span> -p no7
+<span class="fn">cd</span> no7
+
+<span class="cmt"># 仮想環境を作成・有効化</span>
+uv venv
+<span class="fn">source</span> .venv/bin/activate
+
+<span class="cmt"># py5をインストール</span>
+uv pip install py5
+
+<span class="cmt"># Google ClassroomからダウンロードしたCSVファイルをno7/に移動</span>
+<span class="cmt"># slack.csv または slack_time.csv</span></pre>
+      <div class="callout-danger">
+        <h4>CSVファイルの配置を忘れずに</h4>
+        <p>CSVファイルはPythonスクリプトと<strong>同じディレクトリ（no7/）</strong>に置いてください。パスが異なるとファイルが読み込めずエラーになります。</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ GROUP WORK DIVIDER ============ -->
+<section style="padding:2rem 0;background:linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a)">
+  <div class="container" style="text-align:center">
+    <div style="font-size:1.5rem;font-weight:900;color:#FFB800;margin-bottom:0.5rem">ここから先は最終課題の制作時間です</div>
+    <p style="font-size:0.85rem;color:#93D500;margin-bottom:1rem">まずCSVの読み込み方を確認してから、自由に制作を進めてください。グループで相談してOKです。</p>
+    <div style="display:inline-flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;font-size:0.7rem">
+      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
+        <div style="color:#76B900;font-weight:700">1. CSV読み込み</div>
+        <div style="color:#999">約15分</div>
+      </div>
+      <div style="color:#76B900;display:flex;align-items:center">&rarr;</div>
+      <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
+        <div style="color:#FFB800;font-weight:700">2. 最終課題制作</div>
+        <div style="color:#999">約120分+</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1. CSV READING ============ -->
+<section id="sec-csv">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>データの読み込み方 <span style="font-size:0.5rem;color:#999;font-weight:400">── 約15分</span></h2>
+    </div>
+
+    <p style="font-size:0.95rem;margin-bottom:1rem">最終課題のベースとなるCSV読み込みのサンプルコードを3つ紹介します。コピーして動かしてみてから、自分の作品に応用してください。</p>
+
+    <!-- Sample 1: Basic CSV -->
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-note">サンプル1</span>
+        <h3>基本的なCSV読み込み（テキスト表示）</h3>
+      </div>
+      <p>CSVファイルの先頭10行を読み込み、日付とアクティブメンバー数を画面に表示します。</p>
+      <pre><span class="code-label">Python ── sample1_basic.py</span>
+<span class="kw">import</span> py5
+<span class="kw">import</span> csv
+
+data = []
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">'slack_time.csv'</span>, <span class="str">'r'</span>, encoding=<span class="str">'utf-8'</span>) <span class="kw">as</span> file:
+    reader = csv.DictReader(file)
+    count = <span class="num">0</span>
+    <span class="kw">for</span> row <span class="kw">in</span> reader:
+        <span class="kw">if</span> count >= <span class="num">10</span>:
+            <span class="kw">break</span>
+        date = row[<span class="str">'日付'</span>]
+        active = <span class="fn">int</span>(row[<span class="str">'アクティブなメンバー数（日次）'</span>])
+        data.append({<span class="str">'日付'</span>: date, <span class="str">'アクティブ'</span>: active})
+        count += <span class="num">1</span>
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.size(<span class="num">600</span>, <span class="num">400</span>)
+    font = py5.create_font(<span class="str">'MS ゴシック'</span>, <span class="num">20</span>)
+    py5.text_font(font)
+
+<span class="kw">def</span> <span class="fn">draw</span>():
+    py5.background(<span class="num">255</span>)
+    py5.fill(<span class="num">0</span>)
+    py5.text_size(<span class="num">18</span>)
+    py5.text(<span class="str">"CSVデータ表示"</span>, <span class="num">50</span>, <span class="num">30</span>)
+    py5.text_size(<span class="num">14</span>)
+    <span class="kw">for</span> i, row <span class="kw">in</span> <span class="fn">enumerate</span>(data):
+        y = <span class="num">60</span> + i * <span class="num">25</span>
+        py5.text(<span class="str">f"{row['日付']}: {row['アクティブ']}人"</span>, <span class="num">50</span>, y)
+
+py5.run_sketch()</pre>
+      <div class="concept-box">
+        <h4>ポイント解説</h4>
+        <ul class="point-list">
+          <li><code>csv.DictReader</code> はCSVの1行目をキーとして辞書のリストを作る</li>
+          <li><code>int()</code> で文字列を整数に変換（CSVのデータはすべて文字列）</li>
+          <li><code>enumerate()</code> でインデックスとデータを同時に取得</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Sample 2: Multiple columns -->
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-note">サンプル2</span>
+        <h3>複数列のデータ表示 + 記述統計</h3>
+      </div>
+      <p>複数の列を読み込んで表形式で表示し、平均・最大・最小を計算します。</p>
+      <pre><span class="code-label">Python ── sample2_multi.py</span>
+<span class="kw">import</span> py5
+<span class="kw">import</span> csv
+
+data = []
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">'slack_time.csv'</span>, <span class="str">'r'</span>, encoding=<span class="str">'utf-8'</span>) <span class="kw">as</span> file:
+    reader = csv.DictReader(file)
+    count = <span class="num">0</span>
+    <span class="kw">for</span> row <span class="kw">in</span> reader:
+        <span class="kw">if</span> count >= <span class="num">8</span>:
+            <span class="kw">break</span>
+        data.append({
+            <span class="str">'日付'</span>: row[<span class="str">'日付'</span>],
+            <span class="str">'アクティブ'</span>: <span class="fn">int</span>(row[<span class="str">'アクティブなメンバー数（日次）'</span>]),
+            <span class="str">'メッセージ'</span>: <span class="fn">int</span>(row[<span class="str">'投稿されたメッセージ数'</span>]),
+            <span class="str">'ファイル'</span>: <span class="fn">int</span>(row[<span class="str">'アップロードファイル数'</span>])
+        })
+        count += <span class="num">1</span>
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.size(<span class="num">800</span>, <span class="num">500</span>)
+    font = py5.create_font(<span class="str">'MS ゴシック'</span>, <span class="num">20</span>)
+    py5.text_font(font)
+
+<span class="kw">def</span> <span class="fn">draw</span>():
+    py5.background(<span class="num">255</span>)
+    py5.fill(<span class="num">0</span>)
+    py5.text_size(<span class="num">20</span>)
+    py5.text(<span class="str">"複数列データ表示"</span>, <span class="num">50</span>, <span class="num">30</span>)
+
+    py5.text_size(<span class="num">14</span>)
+    py5.text(<span class="str">"日付"</span>, <span class="num">50</span>, <span class="num">70</span>)
+    py5.text(<span class="str">"アクティブ"</span>, <span class="num">200</span>, <span class="num">70</span>)
+    py5.text(<span class="str">"メッセージ"</span>, <span class="num">320</span>, <span class="num">70</span>)
+
+    <span class="kw">for</span> i, row <span class="kw">in</span> <span class="fn">enumerate</span>(data):
+        y = <span class="num">100</span> + i * <span class="num">25</span>
+        py5.text(row[<span class="str">'日付'</span>][-<span class="num">5</span>:], <span class="num">50</span>, y)
+        py5.text(<span class="str">f"{row['アクティブ']}人"</span>, <span class="num">200</span>, y)
+        py5.text(<span class="str">f"{row['メッセージ']}件"</span>, <span class="num">320</span>, y)
+
+    <span class="kw">if</span> data:
+        active_list = [r[<span class="str">'アクティブ'</span>] <span class="kw">for</span> r <span class="kw">in</span> data]
+        avg = <span class="fn">sum</span>(active_list) / <span class="fn">len</span>(active_list)
+        py5.text_size(<span class="num">16</span>)
+        py5.text(<span class="str">f"平均: {avg:.1f}人  最大: {max(active_list)}人  最小: {min(active_list)}人"</span>, <span class="num">50</span>, <span class="num">400</span>)
+
+py5.run_sketch()</pre>
+    </div>
+
+    <!-- Sample 3: Bar chart -->
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-note">サンプル3</span>
+        <h3>棒グラフの描画</h3>
+      </div>
+      <p>CSVデータを棒グラフとして可視化します。これを土台にして、自分なりの可視化を作りましょう。</p>
+      <pre><span class="code-label">Python ── sample3_bar.py</span>
+<span class="kw">import</span> py5
+<span class="kw">import</span> csv
+
+active_data = []
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">'slack_time.csv'</span>, <span class="str">'r'</span>, encoding=<span class="str">'utf-8'</span>) <span class="kw">as</span> file:
+    reader = csv.DictReader(file)
+    count = <span class="num">0</span>
+    <span class="kw">for</span> row <span class="kw">in</span> reader:
+        <span class="kw">if</span> count >= <span class="num">12</span>:
+            <span class="kw">break</span>
+        active_data.append(<span class="fn">int</span>(row[<span class="str">'アクティブなメンバー数（日次）'</span>]))
+        count += <span class="num">1</span>
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.size(<span class="num">700</span>, <span class="num">700</span>)
+    font = py5.create_font(<span class="str">'MS ゴシック'</span>, <span class="num">20</span>)
+    py5.text_font(font)
+
+<span class="kw">def</span> <span class="fn">draw</span>():
+    py5.background(<span class="num">255</span>)
+    py5.fill(<span class="num">0</span>)
+    py5.text_size(<span class="num">18</span>)
+    py5.text(<span class="str">"アクティブメンバー数の変化"</span>, <span class="num">50</span>, <span class="num">30</span>)
+
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(active_data)):
+        x = <span class="num">50</span> + i * <span class="num">50</span>
+        h = active_data[i]
+        py5.fill(<span class="num">100</span>, <span class="num">150</span>, <span class="num">255</span>)
+        py5.rect(x, <span class="num">600</span> - h, <span class="num">40</span>, h)
+        py5.fill(<span class="num">0</span>)
+        py5.text_size(<span class="num">12</span>)
+        py5.text(<span class="fn">str</span>(active_data[i]), x + <span class="num">15</span>, <span class="num">590</span> - h)
+
+py5.run_sketch()</pre>
+      <div class="concept-box">
+        <h4>カスタマイズのヒント</h4>
+        <ul class="point-list">
+          <li>色を変える: <code>py5.fill(R, G, B)</code> でバーの色を変更</li>
+          <li>アニメーションを追加: バーが下から伸びるアニメーション</li>
+          <li>マウス操作: マウスオーバーで値をハイライト表示</li>
+          <li>音を追加: バーをクリックしたときに音を鳴らす</li>
+          <li>複数系列: メッセージ数とファイル数を並べて比較</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 2. FINAL PROJECT ============ -->
+<section id="sec-final">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">2</div>
+      <h2>最終課題制作 <span style="font-size:0.5rem;color:#999;font-weight:400">── 約120分+</span></h2>
+    </div>
+
+    <div class="card advanced">
+      <div class="card-header">
+        <span class="tag tag-advanced">最終課題</span>
+        <h3>データの可視化</h3>
+      </div>
+
+      <h4 style="color:#FFB800;margin-bottom:0.5rem">課題内容</h4>
+      <p>配布された <code>slack.csv</code> または <code>slack_time.csv</code> のデータを使って、<strong>データの特徴が視覚的に理解できる作品</strong>を制作してください。</p>
+
+      <h4 style="color:#FFB800;margin-top:1.5rem;margin-bottom:0.5rem">必須条件</h4>
+      <ul class="point-list">
+        <li>配布されたCSVファイル（slack.csv または slack_time.csv）を使用すること</li>
+        <li>以下の技術要素から<strong>2つ以上</strong>を組み合わせること:</li>
+      </ul>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(7rem,1fr));gap:0.4rem;margin:1rem 0">
+        <div style="background:#1A1A1A;border:1px solid #333;border-radius:0.3rem;padding:0.5rem;text-align:center;font-size:0.8rem">
+          <div style="font-weight:700;color:#76B900">図形描画</div>
+          <div style="font-size:0.65rem;color:#999">rect, ellipse, line...</div>
+        </div>
+        <div style="background:#1A1A1A;border:1px solid #333;border-radius:0.3rem;padding:0.5rem;text-align:center;font-size:0.8rem">
+          <div style="font-weight:700;color:#76B900">テキスト表示</div>
+          <div style="font-size:0.65rem;color:#999">text, text_size...</div>
+        </div>
+        <div style="background:#1A1A1A;border:1px solid #333;border-radius:0.3rem;padding:0.5rem;text-align:center;font-size:0.8rem">
+          <div style="font-weight:700;color:#76B900">色彩</div>
+          <div style="font-size:0.65rem;color:#999">fill, stroke, RGB...</div>
+        </div>
+        <div style="background:#1A1A1A;border:1px solid #333;border-radius:0.3rem;padding:0.5rem;text-align:center;font-size:0.8rem">
+          <div style="font-weight:700;color:#76B900">アニメーション</div>
+          <div style="font-size:0.65rem;color:#999">draw()ループ, 変数更新...</div>
+        </div>
+        <div style="background:#1A1A1A;border:1px solid #333;border-radius:0.3rem;padding:0.5rem;text-align:center;font-size:0.8rem">
+          <div style="font-weight:700;color:#76B900">音の再生</div>
+          <div style="font-size:0.65rem;color:#999">sine, square, play...</div>
+        </div>
+      </div>
+      <ul class="point-list">
+        <li>データの特徴が視覚的に理解できること</li>
+        <li>インタラクティブな要素があるとなお良い（必須ではない）</li>
+      </ul>
+
+      <h4 style="color:#FFB800;margin-top:1.5rem;margin-bottom:0.5rem">提出物</h4>
+      <ul class="point-list">
+        <li><strong>コード:</strong> 完成したPythonコード全文をNotionに貼り付け</li>
+        <li><strong>View:</strong> スクリーンショットまたは画面収録動画をNotionに添付</li>
+        <li><strong>説明文:</strong> 50字程度で作品のテーマ・コンセプトを記述</li>
+        <li><strong>工夫した点:</strong> 自分なりに工夫したポイントを記述</li>
+        <li><strong>アウトカム:</strong> この作品を見た人にどんな変化を期待するか</li>
+      </ul>
+
+      <div class="callout-info">
+        <h4>制作のヒント</h4>
+        <ul class="point-list">
+          <li>まずサンプルコード3（棒グラフ）をコピーして動かしてみる</li>
+          <li>動いたら、色・サイズ・レイアウトを変えてみる</li>
+          <li>慣れてきたら、アニメーションやインタラクションを追加</li>
+          <li>困ったらグループのメンバーや教員に相談</li>
+          <li>完璧を目指さず、まず動くものを作ってから改良する</li>
+        </ul>
+      </div>
+
+      <div class="notion-submit">
+        <div>
+          <strong>Notionに記録:</strong> テーマ・コンセプト（50字程度）/ コード全文 / スクリーンショットまたは動画 / 工夫した点 / アウトカム → PDFにエクスポートして提出
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ NOTION TEMPLATE ============ -->
+<section id="sec-notion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">N</div>
+      <h2>Notion テンプレート <span style="font-size:0.5rem;color:#999;font-weight:400">── コピーして使ってください</span></h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3>Notionにコピーして使うテンプレート</h3>
+      </div>
+      <p>以下をNotionにコピーし、穴埋め・記録をしてからPDFにエクスポートして提出してください。</p>
+      <pre><span class="code-label">Notion テンプレート</span>
+# MD1 第7回: 最終課題
+
+名前:
+学籍番号:
+
+---
+
+## データ可視化の原則
+- 可視化で最も大事なこと: ＿＿＿＿＿＿＿＿＿＿
+- 棒グラフが適している場面: ＿＿＿＿＿＿
+- 折れ線グラフが適している場面: ＿＿＿＿＿＿
+- グラフの嘘の例: ＿＿＿＿＿＿＿＿
+
+---
+
+## 最終課題
+### テーマ・コンセプト（50字程度）
+
+
+### 使用した技術（該当するものにチェック）
+- [ ] 図形描画
+- [ ] テキスト表示
+- [ ] 色彩
+- [ ] アニメーション
+- [ ] 音の再生
+
+### Code
+（コードを貼り付け）
+
+### View
+（スクリーンショットまたは動画を添付）
+
+### 工夫した点
+
+
+### アウトカム（この作品を見た人にどんな変化を期待するか）
+</pre>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="container">
+    <div>MD1 ─ 2026年度前期 ─ 第7回</div>
+    <div style="margin-top:0.5rem;font-size:0.8rem;color:#666">&copy;2026 Ryota Nakamura.</div>
+  </div>
+</footer>
+
+<!-- ============ SCRIPTS ============ -->
+<script src="answer-gate.js"></script>
+<script>
+// Copy button for pre blocks
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var code = pre.textContent.replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|\.zshrc|Notion テンプレート)( ── [^\n]+)?\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+
+// Click-to-copy on inline code elements
+document.querySelectorAll(':not(pre) > code').forEach(function(code) {
+  code.title = 'クリックでコピー';
+  code.addEventListener('click', function() {
+    navigator.clipboard.writeText(code.textContent).then(function() {
+      code.classList.add('copied');
+      setTimeout(function() {
+        code.classList.remove('copied');
+      }, 1500);
+    });
+  });
+});
+</script>
+
+</body>
+</html>

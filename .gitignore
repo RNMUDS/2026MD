@@ -1,4 +1,5 @@
 .py5_env
+py5_env/
 __pycache__/
 *.pyc
 *.pyo
@@ -7,7 +8,7 @@ __pycache__/
 output.log
 .venv
 venv
-*
-!.py
-!.gitignore
-!README.md
+*.pdf
+slack-class-bot/
+docs/_template_*
+docs/week01-02.html

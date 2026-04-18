@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第4回: リスト・辞書・関数設計 | MD1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET & BASE ============ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 32px; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #111111;
+  color: #e0e0e0;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============ LAYOUT ============ */
+.container { max-width: 1600px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+
+/* ============ HEADER ============ */
+.hero {
+  background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a);
+  color: white;
+  padding: clamp(3rem, 8vw, 6rem) 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(108,99,255,0.3), transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(155,89,182,0.2), transparent 50%);
+}
+.hero .container { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 100px;
+  padding: 0.35rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+}
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+
+/* ============ SUBMISSION BOX ============ */
+.submission-box {
+  background: linear-gradient(135deg, #1A1A1A, #1a2e0a);
+  border: 2px solid #76B900;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin: 2rem 0;
+}
+.submission-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #76B900;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.submission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.5rem;
+}
+.sub-item {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  gap: 0.3rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.4rem;
+  padding: 0.6rem 0.4rem;
+  font-size: 0.55rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.sub-item .sub-count {
+  margin-bottom: 0.1rem;
+}
+.sub-item .tag {
+  margin-bottom: 0.15rem;
+}
+.sub-count {
+  background: #76B900;
+  color: white;
+  border-radius: 0.2rem;
+  min-width: 1.5rem; height: 1.5rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700;
+}
+
+/* ============ TAGS ============ */
+.tag {
+  display: inline-flex; align-items: center; gap: 0.2rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 100px;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.tag-note      { background: #1a2e0a; color: #76B900; }
+.tag-standard  { background: #0a1a2e; color: #4FC3F7; }
+.tag-advanced  { background: #2e1a0a; color: #FFB800; }
+.tag-group     { background: #1a2e0a; color: #76B900; }
+
+/* ============ EXAM ALERT TAG ============ */
+.exam-alert {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  background: rgba(255, 82, 82, 0.15);
+  border: 1px solid #FFB800;
+  color: #FFB800;
+  padding: 0.2rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  animation: exam-pulse 2s ease-in-out 3;
+}
+@keyframes exam-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ============ SECTION HEADERS ============ */
+.section-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.section-num {
+  width: 2.5rem; height: 2.5rem;
+  border-radius: 0.4rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 900; color: white;
+  flex-shrink: 0;
+}
+.section-header h2 {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+/* ============ CARDS ============ */
+.card {
+  background: #141414;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  border: 1px solid #2a2a2a;
+}
+.card-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #222;
+}
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.standard  { border-left: 4px solid #76B900; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.card.group     { border-left: 4px solid #93D500; }
+
+/* ============ NOTION CALLOUT ============ */
+.notion-submit {
+  background: #1a2e0a;
+  border: 1px solid #76B900;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  display: flex; align-items: flex-start; gap: 0.5rem;
+}
+.notion-submit::before { content: '\1F4DD'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+
+/* ============ TABLES ============ */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem;
+  margin: 1rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+th {
+  background: rgba(108, 99, 255, 0.15);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  color: #76B900;
+  letter-spacing: 0.02em;
+}
+td {
+  padding: 0.55rem 0.8rem;
+  border-top: 1px solid #222;
+}
+tr:nth-child(even) td { background: #111; }
+
+/* ============ CODE ============ */
+pre {
+  background: #0A0A0A;
+  color: #E0E0E0;
+  border-radius: 12px;
+  padding: clamp(0.8rem, 2vw, 1.4rem);
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
+  font-size: clamp(0.75rem, 1.3vw, 0.88rem);
+  line-height: 1.7;
+  margin: 1rem 0;
+  position: relative;
+}
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #FFB800; }
+pre .op { color: #93D500; }
+.code-label {
+  position: absolute; top: 0; right: 0;
+  background: rgba(255,255,255,0.08);
+  color: #999999;
+  padding: 0.2rem 0.8rem;
+  border-radius: 0 12px 0 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+/* inline code */
+:not(pre) > code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(108,99,255,0.15);
+  padding: 0.15em 0.45em;
+  border-radius: 5px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+:not(pre) > code:hover { background: rgba(108,99,255,0.3); }
+:not(pre) > code.copied { background: rgba(108,99,255,0.5); }
+
+/* ============ EXPLANATION BLOCKS ============ */
+.concept-box {
+  background: rgba(108, 99, 255, 0.15);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  border: 1px solid #2a2a3a;
+}
+.concept-box h4 {
+  font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem;
+}
+.analogy {
+  background: #1a1a0a;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 0.75rem 0;
+  border-left: 3px solid #FFB800;
+  font-size: 0.95rem;
+}
+.analogy::before {
+  content: '\1F4A1 日常の例';
+  display: block;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #FFB800;
+  margin-bottom: 0.3rem;
+}
+.point-list {
+  list-style: none;
+  padding: 0;
+}
+.point-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+}
+.point-list li::before {
+  content: '\25B8';
+  position: absolute; left: 0;
+  color: #76B900;
+  font-weight: 700;
+}
+
+/* ============ ANSWERS (COLLAPSIBLE) ============ */
+details {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+details summary {
+  padding: 0.8rem 1.2rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 0.5rem;
+  background: #1a1a1a;
+  user-select: none;
+}
+details summary::marker { content: ''; }
+details summary::before {
+  content: '\25B6';
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+  color: #666;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
+
+/* ============ WARNING / DANGER CALLOUT ============ */
+.callout-danger {
+  background: rgba(255, 82, 82, 0.08);
+  border: 1px solid rgba(255, 82, 82, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-danger h4 {
+  color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-warning {
+  background: rgba(255, 184, 0, 0.08);
+  border: 1px solid rgba(255, 184, 0, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-warning h4 {
+  color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-info {
+  background: rgba(108, 99, 255, 0.08);
+  border: 1px solid rgba(108, 99, 255, 0.3);
+  border-left: 4px solid #76B900;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-info h4 {
+  color: #76B900; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-tip {
+  background: rgba(155, 89, 182, 0.08);
+  border: 1px solid rgba(155, 89, 182, 0.3);
+  border-left: 4px solid #93D500;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-tip h4 {
+  color: #93D500; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+
+/* ============ FOOTER ============ */
+footer {
+  background: #0A0A0A;
+  color: #999999;
+  padding: 2rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 640px) {
+  .submission-items { grid-template-columns: 1fr; }
+  .section-num { width: 2rem; height: 2rem; font-size: 0.85rem; }
+}
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
+/* ============ SUB-ITEM LINKS ============ */
+a.sub-item { transition: transform 0.15s, box-shadow 0.15s; }
+a.sub-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(118,185,0,0.3);
+  border-color: #76B900;
+}
+
+/* ============ SECTION NAV (sticky) ============ */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.5rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-exam { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3rem; }
+
+/* ============ REDUCED MOTION ============ */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  details summary::before { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SECTION NAV ============ -->
+<nav class="section-nav">
+  <a href="#sec-schedule">日程</a>
+  <a href="#sec-teacher">0. 教員説明</a>
+  <a href="#sec-list">1. リスト</a>
+  <a href="#list-quiz" class="nav-exam">試問1</a>
+  <a href="#std4-1" class="nav-assignment">std4-1</a>
+  <a href="#sec-dict">2. 辞書</a>
+  <a href="#dict-quiz" class="nav-exam">試問2</a>
+  <a href="#std4-2" class="nav-assignment">std4-2</a>
+  <a href="#sec-func">3. 関数</a>
+  <a href="#func-quiz" class="nav-exam">試問3</a>
+  <a href="#std4-3" class="nav-assignment">std4-3</a>
+  <a href="#adv4-1" class="nav-assignment">adv4-1</a>
+  <a href="#sec-answers">解答例</a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">Media creation Data design 1（MD1）─ 2026年度前期</div>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.1rem;white-space:nowrap">武蔵野大学データサイエンス学部</p>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.3rem;white-space:nowrap">武蔵野大学国際データサイエンス学部（通信教育部）</p>
+    <p style="font-size:0.95rem;opacity:0.85;margin-bottom:1rem">中村 亮太</p>
+    <h1>MD1 第4回: リスト・辞書・関数設計</h1>
+    <p style="white-space:nowrap">データをまとめて扱い、コードを整理する力を身につける</p>
+    <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:0.3rem;padding:0.4rem 0.8rem;margin-top:1rem;font-size:0.7rem;display:inline-block">
+      <strong>対象環境:</strong> Apple M1 / M2 / M3 / M4 / M5 チップ搭載 Mac ｜ macOS Tahoe 26.4.1 (25E246)
+    </div>
+  </div>
+</header>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div class="submission-box">
+      <h3>提出ガイド（1つのNotionページにまとめ、PDF 1枚を提出）</h3>
+      <div class="submission-items">
+        <a href="#notion-checklist" class="sub-item" style="text-decoration:none;color:inherit;border-color:#76B900"><span class="sub-count" style="background:#76B900">6</span><span class="tag" style="background:#1a2e0a;color:#76B900">ノート</span>穴埋め・記録</a>
+        <a href="#std4-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std4-1</a>
+        <a href="#std4-2" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std4-2</a>
+        <a href="#std4-3" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std4-3</a>
+        <a href="#adv4-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv4-1 コード+音声</a>
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.85rem;color:#93D500">
+        <strong>提出方法:</strong> 下記の項目をすべて<strong>1つのNotionページにまとめて記録</strong> → PDFにエクスポート → Google Classroomに<strong>PDF 1ファイル</strong>を提出
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:0.5rem;font-size:0.85rem;color:#FFB800">
+        <strong>提出期限:</strong> 5/25(月) 13:10（第5回授業開始まで）
+      </div>
+
+      <!-- Notionに書くべき項目チェックリスト -->
+      <div id="notion-checklist" style="background:#141414;border:1px solid #333;border-radius:0.4rem;padding:1rem;margin-top:1rem">
+        <p style="color:#76B900;font-weight:700;font-size:0.85rem;margin-bottom:0.3rem">ノート: Notionに記録する項目（提出前に確認）</p>
+        <p style="font-size:0.75rem;color:#999;margin-bottom:0.8rem">以下の項目を1つのNotionページに記録し、PDF化して提出します。各項目は資料内の該当箇所にテンプレートがあります。</p>
+        <table style="font-size:0.8rem">
+          <tr><th style="width:5%"></th><th style="width:30%">セクション</th><th>記録する内容</th><th style="width:10%">リンク</th></tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> データ構造の基礎</td>
+            <td>リスト・辞書・関数の穴埋め問題</td>
+            <td><a href="#sec-teacher" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> リスト口頭試問</td>
+            <td>3問の作問＋全員分の出題・回答・正誤の記録</td>
+            <td><a href="#list-quiz" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> 辞書口頭試問</td>
+            <td>3問の作問＋全員分の出題・回答・正誤の記録</td>
+            <td><a href="#dict-quiz" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> 関数口頭試問</td>
+            <td>3問の作問＋全員分の出題・回答・正誤の記録</td>
+            <td><a href="#func-quiz" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std4-1</td>
+            <td>リスト操作の結果＋説明文</td>
+            <td><a href="#std4-1" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std4-2</td>
+            <td>コード＋実行結果（スクリーンショット）＋説明文</td>
+            <td><a href="#std4-2" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std4-3</td>
+            <td>コード＋実行結果（スクリーンショット）＋説明文</td>
+            <td><a href="#std4-3" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-advanced" style="font-size:0.65rem">発展課題</span> adv4-1</td>
+            <td>コード＋実行結果＋音声説明（1〜2分）</td>
+            <td><a href="#adv4-1" style="color:#76B900">移動</a></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCHEDULE ============ -->
+<section id="sec-schedule">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">0</div>
+      <h2>本日の流れ <span style="font-size:0.5rem;color:#999;font-weight:400">── 5/18（日）</span></h2>
+    </div>
+    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;font-size:0.7rem">
+      <div style="flex:1;min-width:8rem;background:#1A1A1A;border:2px solid #76B900;border-radius:0.4rem;padding:0.6rem;text-align:center">
+        <div style="font-size:1.2rem;font-weight:900;color:#76B900">13:10 - 13:40</div>
+        <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">教員による説明</div>
+        <div style="font-size:0.65rem;color:#999">データ構造 / リスト / 辞書 / 関数</div>
+      </div>
+      <div style="flex:1;min-width:8rem;background:#1A1A1A;border:1px solid #333;border-radius:0.4rem;padding:0.6rem;text-align:center">
+        <div style="font-size:1.2rem;font-weight:900;color:#93D500">13:40 - 14:05</div>
+        <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">1. リストの基本</div>
+        <div style="font-size:0.65rem;color:#999">リスト操作 + 口頭試問 + std4-1</div>
+      </div>
+      <div style="flex:1;min-width:8rem;background:#1A1A1A;border:1px solid #333;border-radius:0.4rem;padding:0.6rem;text-align:center">
+        <div style="font-size:1.2rem;font-weight:900;color:#93D500">14:05 - 14:30</div>
+        <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">2. 辞書の基本</div>
+        <div style="font-size:0.65rem;color:#999">辞書操作 + 口頭試問 + std4-2</div>
+      </div>
+      <div style="flex:1;min-width:8rem;background:#1A1A1A;border:1px solid #333;border-radius:0.4rem;padding:0.6rem;text-align:center">
+        <div style="font-size:1.2rem;font-weight:900;color:#93D500">14:30 - 14:55</div>
+        <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">3. 関数の設計</div>
+        <div style="font-size:0.65rem;color:#999">関数定義 + 口頭試問 + std4-3</div>
+      </div>
+      <div style="flex:1;min-width:8rem;background:#1A1A1A;border:1px solid #333;border-radius:0.4rem;padding:0.6rem;text-align:center">
+        <div style="font-size:1.2rem;font-weight:900;color:#FFB800">14:55 - 15:20</div>
+        <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">4. 発展課題</div>
+        <div style="font-size:0.65rem;color:#999">adv4-1 総合制作</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 0. TEACHER EXPLANATION ============ -->
+<section id="sec-teacher">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">0</div>
+      <h2>教員による説明 <span style="font-size:0.5rem;color:#999;font-weight:400">── 約30分</span></h2>
+    </div>
+
+    <div class="concept-box">
+      <h4>今日のテーマ: データをまとめて整理する</h4>
+      <p>第3回までで、変数・条件分岐・繰り返し・アニメーションを学びました。今回は「データの整理」と「コードの整理」を学びます。これが次回（第5回）のCSVデータ処理の土台になります。</p>
+    </div>
+
+    <div class="analogy">
+      変数が「1つの箱」だとすると、リストは「引き出しが並んだ棚」、辞書は「見出し付きの辞典」、関数は「レシピ（材料を入れると料理が出てくる）」です。
+    </div>
+
+    <!-- CS/DS基礎: データ構造と関数 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-note">ノート</span>
+        <h3>CS/DS基礎: データ構造と関数</h3>
+      </div>
+
+      <h4 style="color:#76B900;margin-bottom:0.5rem">データ構造とは</h4>
+      <p>プログラムで扱うデータの<strong>整理方法</strong>のことです。目的に応じて適切なデータ構造を選ぶことで、コードがシンプルで効率的になります。</p>
+
+      <table>
+        <tr><th>データ構造</th><th>特徴</th><th>日常の例</th><th>Python</th></tr>
+        <tr><td>リスト</td><td>順番のあるデータの集合</td><td>買い物リスト、出席番号</td><td><code>[1, 2, 3]</code></td></tr>
+        <tr><td>辞書</td><td>キーと値のペア</td><td>英和辞典、電話帳</td><td><code>{"名前": "太郎"}</code></td></tr>
+      </table>
+
+      <h4 style="color:#76B900;margin-top:1.5rem;margin-bottom:0.5rem">関数とは</h4>
+      <p>処理のまとまりに名前を付けたものです。<strong>引数</strong>（材料）を受け取り、<strong>処理</strong>（調理）をして、<strong>戻り値</strong>（料理）を返します。</p>
+
+      <div style="display:flex;gap:0.5rem;align-items:center;justify-content:center;margin:1rem 0;flex-wrap:wrap;font-size:0.8rem">
+        <span style="background:#1a2e0a;color:#76B900;padding:0.3rem 0.8rem;border-radius:0.3rem;font-weight:700">引数（入力）</span>
+        <span style="color:#76B900;font-size:1.2rem">&rarr;</span>
+        <span style="background:#0a1a2e;color:#4FC3F7;padding:0.3rem 0.8rem;border-radius:0.3rem;font-weight:700">関数（処理）</span>
+        <span style="color:#76B900;font-size:1.2rem">&rarr;</span>
+        <span style="background:#2e1a0a;color:#FFB800;padding:0.3rem 0.8rem;border-radius:0.3rem;font-weight:700">戻り値（出力）</span>
+      </div>
+
+      <h4 style="color:#76B900;margin-top:1.5rem;margin-bottom:0.5rem">なぜ関数に分割するか</h4>
+      <ul class="point-list">
+        <li><strong>再利用:</strong> 同じ処理を何度も書かなくてよい</li>
+        <li><strong>可読性:</strong> コードに名前がつくので読みやすい</li>
+        <li><strong>テスト容易性:</strong> 小さい単位でテストしやすい</li>
+        <li><strong>修正容易性:</strong> 1か所直せば全体に反映される</li>
+      </ul>
+
+      <div class="notion-submit">
+        <div><strong>Notionに記録:</strong> 以下の穴埋めを完成させてNotionに貼り付けてください。</div>
+      </div>
+      <pre><span class="code-label">Notion テンプレート</span>
+## データ構造の基礎
+
+1. リストは ＿＿＿＿ のあるデータの集合である
+2. 辞書は ＿＿＿＿ と ＿＿＿＿ のペアでデータを管理する
+3. 関数の3つの要素は ＿＿＿＿（入力）、＿＿＿＿（処理の内容）、＿＿＿＿（出力）
+4. 関数に分割する利点を2つ挙げよ: ＿＿＿＿、＿＿＿＿
+5. 次回（第5回）で扱うCSVデータは ＿＿＿＿ というデータ構造で表現できる</pre>
+    </div>
+
+    <!-- 環境準備 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-note">ノート</span>
+        <h3>環境準備（毎回の手順）</h3>
+      </div>
+      <p>第4回用のディレクトリを作成し、仮想環境を準備します。</p>
+      <pre><span class="code-label">Terminal</span>
+<span class="cmt"># 第4回のディレクトリを作成</span>
+<span class="fn">cd</span> ~/MD1
+<span class="fn">mkdir</span> no4
+<span class="fn">cd</span> no4
+
+<span class="cmt"># 仮想環境を作成・有効化・py5インストール</span>
+uv venv
+<span class="fn">source</span> .venv/bin/activate
+uv pip install py5</pre>
+
+      <div class="callout-info">
+        <h4>ディレクトリ構成の確認</h4>
+        <pre><span class="code-label">Directory Tree</span>
+~/MD1/
+├── no1/          <span class="cmt">← 第1回</span>
+├── no2/          <span class="cmt">← 第2回</span>
+├── no3/          <span class="cmt">← 第3回</span>
+└── no4/          <span class="cmt">← 今回ここで作業</span>
+    ├── .venv/    <span class="cmt">← 仮想環境（自動生成）</span>
+    ├── std4_1.py
+    ├── std4_2.py
+    ├── std4_3.py
+    └── adv4_1.py</pre>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ GROUP WORK DIVIDER ============ -->
+<section style="padding:2rem 0;background:linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a)">
+  <div class="container" style="text-align:center">
+    <div style="font-size:1.5rem;font-weight:900;color:#76B900;margin-bottom:0.5rem">ここから先はグループで進めてください</div>
+    <p style="font-size:0.85rem;color:#93D500;margin-bottom:1rem">この資料を上から順に読みながら、グループで協力して演習を進めましょう</p>
+    <div style="display:inline-flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;font-size:0.7rem">
+      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
+        <div style="color:#76B900;font-weight:700">1. リスト</div>
+        <div style="color:#999">約25分</div>
+      </div>
+      <div style="color:#76B900;display:flex;align-items:center">&rarr;</div>
+      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
+        <div style="color:#76B900;font-weight:700">2. 辞書</div>
+        <div style="color:#999">約25分</div>
+      </div>
+      <div style="color:#76B900;display:flex;align-items:center">&rarr;</div>
+      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
+        <div style="color:#76B900;font-weight:700">3. 関数</div>
+        <div style="color:#999">約25分</div>
+      </div>
+      <div style="color:#76B900;display:flex;align-items:center">&rarr;</div>
+      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
+        <div style="color:#76B900;font-weight:700">4. 発展課題</div>
+        <div style="color:#999">約25分</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1. LIST ============ -->
+<section id="sec-list">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>リストの基本 <span style="font-size:0.5rem;color:#999;font-weight:400">── グループ演習・約25分</span></h2>
+    </div>
+
+    <div class="concept-box">
+      <h4>リスト（list）とは</h4>
+      <p>複数のデータを<strong>順番に並べて1つの変数</strong>で管理できるデータ構造です。角カッコ <code>[ ]</code> で囲み、カンマ <code>,</code> で区切ります。</p>
+    </div>
+
+    <div class="analogy">
+      リストは「ロッカーの列」です。0番、1番、2番...と番号（インデックス）がついていて、番号を指定して中身を取り出せます。
+    </div>
+
+    <!-- リストの基本操作 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-note">ノート</span>
+        <h3>リストの基本操作</h3>
+      </div>
+
+      <h4 style="color:#76B900;margin-bottom:0.5rem">1. リストの作成</h4>
+      <pre><span class="code-label">Python</span>
+<span class="cmt"># リストの作成</span>
+fruits <span class="op">=</span> [<span class="str">"りんご"</span>, <span class="str">"バナナ"</span>, <span class="str">"みかん"</span>]
+numbers <span class="op">=</span> [<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>, <span class="num">40</span>, <span class="num">50</span>]
+colors <span class="op">=</span> [(<span class="num">255</span>, <span class="num">0</span>, <span class="num">0</span>), (<span class="num">0</span>, <span class="num">255</span>, <span class="num">0</span>), (<span class="num">0</span>, <span class="num">0</span>, <span class="num">255</span>)]  <span class="cmt"># タプルのリスト</span></pre>
+
+      <h4 style="color:#76B900;margin-top:1rem;margin-bottom:0.5rem">2. 要素の取得（インデックス）</h4>
+      <pre><span class="code-label">Python</span>
+fruits <span class="op">=</span> [<span class="str">"りんご"</span>, <span class="str">"バナナ"</span>, <span class="str">"みかん"</span>]
+<span class="fn">print</span>(fruits[<span class="num">0</span>])   <span class="cmt"># りんご（最初の要素は0番目）</span>
+<span class="fn">print</span>(fruits[<span class="num">1</span>])   <span class="cmt"># バナナ</span>
+<span class="fn">print</span>(fruits[<span class="num">-1</span>])  <span class="cmt"># みかん（末尾から1番目）</span></pre>
+
+      <div class="callout-warning">
+        <h4>インデックスは0から始まる</h4>
+        <p>Pythonでは最初の要素は <code>[0]</code> です。<code>[1]</code> ではありません。存在しないインデックスを指定すると <code>IndexError</code> が発生します。</p>
+      </div>
+
+      <h4 style="color:#76B900;margin-top:1rem;margin-bottom:0.5rem">3. 要素の追加・長さ</h4>
+      <pre><span class="code-label">Python</span>
+fruits <span class="op">=</span> [<span class="str">"りんご"</span>, <span class="str">"バナナ"</span>]
+fruits.<span class="fn">append</span>(<span class="str">"みかん"</span>)   <span class="cmt"># 末尾に追加</span>
+<span class="fn">print</span>(fruits)             <span class="cmt"># ['りんご', 'バナナ', 'みかん']</span>
+<span class="fn">print</span>(<span class="fn">len</span>(fruits))        <span class="cmt"># 3（要素の数）</span></pre>
+
+      <h4 style="color:#76B900;margin-top:1rem;margin-bottom:0.5rem">4. スライス</h4>
+      <pre><span class="code-label">Python</span>
+numbers <span class="op">=</span> [<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>, <span class="num">40</span>, <span class="num">50</span>]
+<span class="fn">print</span>(numbers[<span class="num">1</span>:<span class="num">3</span>])   <span class="cmt"># [20, 30]（1番目から3番目の手前まで）</span>
+<span class="fn">print</span>(numbers[:<span class="num">3</span>])    <span class="cmt"># [10, 20, 30]（最初から3番目の手前まで）</span>
+<span class="fn">print</span>(numbers[<span class="num">2</span>:])    <span class="cmt"># [30, 40, 50]（2番目から最後まで）</span></pre>
+
+      <h4 style="color:#76B900;margin-top:1rem;margin-bottom:0.5rem">5. for文との組み合わせ</h4>
+      <pre><span class="code-label">Python</span>
+fruits <span class="op">=</span> [<span class="str">"りんご"</span>, <span class="str">"バナナ"</span>, <span class="str">"みかん"</span>]
+<span class="kw">for</span> fruit <span class="kw">in</span> fruits:
+    <span class="fn">print</span>(fruit)
+<span class="cmt"># りんご</span>
+<span class="cmt"># バナナ</span>
+<span class="cmt"># みかん</span></pre>
+
+      <table>
+        <tr><th>操作</th><th>コード</th><th>説明</th></tr>
+        <tr><td>作成</td><td><code>[1, 2, 3]</code></td><td>角カッコで囲む</td></tr>
+        <tr><td>取得</td><td><code>list[0]</code></td><td>インデックスで取得</td></tr>
+        <tr><td>追加</td><td><code>list.append(x)</code></td><td>末尾に追加</td></tr>
+        <tr><td>長さ</td><td><code>len(list)</code></td><td>要素の数を返す</td></tr>
+        <tr><td>スライス</td><td><code>list[1:3]</code></td><td>範囲で取り出す</td></tr>
+        <tr><td>繰り返し</td><td><code>for x in list:</code></td><td>1つずつ取り出す</td></tr>
+      </table>
+    </div>
+
+    <!-- py5でリストを使う例 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-note">ノート</span>
+        <h3>py5でリストを使う: 座標リストから複数の円を描画</h3>
+      </div>
+
+      <p>リストに色情報（RGBタプル）を入れておき、for文で順番に描画します。</p>
+
+      <pre><span class="code-label">Python ── list_circles.py</span>
+<span class="cmt"># 5色の円をリストで描画する</span>
+colors <span class="op">=</span> [(<span class="num">255</span>, <span class="num">0</span>, <span class="num">0</span>), (<span class="num">0</span>, <span class="num">255</span>, <span class="num">0</span>), (<span class="num">0</span>, <span class="num">0</span>, <span class="num">255</span>), (<span class="num">255</span>, <span class="num">255</span>, <span class="num">0</span>), (<span class="num">255</span>, <span class="num">0</span>, <span class="num">255</span>)]
+
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">500</span>, <span class="num">300</span>)
+    py5.<span class="fn">background</span>(<span class="num">30</span>)
+    py5.<span class="fn">no_stroke</span>()
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(colors)):
+        r, g, b <span class="op">=</span> colors[i]
+        py5.<span class="fn">fill</span>(r, g, b)
+        py5.<span class="fn">circle</span>(<span class="num">50</span> <span class="op">+</span> i <span class="op">*</span> <span class="num">100</span>, <span class="num">150</span>, <span class="num">60</span>)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="callout-tip">
+        <h4>ポイント: range(len(list))</h4>
+        <p><code>range(len(colors))</code> は <code>range(5)</code> と同じで、<code>0, 1, 2, 3, 4</code> を生成します。<code>i</code> を使ってリストの要素にアクセスしつつ、座標の計算にも使えます。</p>
+      </div>
+    </div>
+
+    <!-- std4-1 -->
+    <div class="card standard" id="std4-1">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題</span>
+        <h3>std4-1: リスト操作</h3>
+      </div>
+
+      <p>以下のリスト操作をPythonで実行し、<strong>各操作の結果</strong>をNotionに記録してください。</p>
+
+      <div style="background:#1A1A1A;border:2px solid #4FC3F7;border-radius:0.4rem;padding:1rem;margin:1rem 0">
+        <p style="color:#4FC3F7;font-weight:700;font-size:0.9rem;margin-bottom:0.8rem">課題内容</p>
+        <p>以下のリストを使って操作してください:</p>
+        <pre><span class="code-label">Python</span>
+scores <span class="op">=</span> [<span class="num">85</span>, <span class="num">72</span>, <span class="num">90</span>, <span class="num">68</span>, <span class="num">95</span>, <span class="num">78</span>, <span class="num">88</span>]</pre>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2">
+          <li><code>scores</code> の長さ（要素数）を表示する</li>
+          <li>3番目の要素（インデックス2）を表示する</li>
+          <li>末尾に <code>82</code> を追加し、リスト全体を表示する</li>
+          <li>スライスで先頭3つの要素を表示する</li>
+          <li>for文を使って合計値を計算し、平均点を求めて表示する</li>
+          <li>for文とif文を組み合わせて、80点以上の要素だけを表示する</li>
+        </ol>
+      </div>
+
+      <div class="notion-submit">
+        <div><strong>Notionに記録:</strong> 各操作のコードと実行結果を記録してください。</div>
+      </div>
+    </div>
+
+    <!-- 口頭試問（リスト） -->
+    <div class="card group" id="list-quiz" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <span class="tag tag-group">グループワーク</span>
+        <h3>リスト口頭試問 <span class="exam-alert">ここで一度グループワーク</span></h3>
+      </div>
+
+      <p>ここまでに学んだリスト操作について、グループ内で口頭試問を行います。</p>
+
+      <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:0.4rem;padding:1rem;margin:1rem 0">
+        <p style="color:#FFB800;font-weight:700;font-size:0.9rem;margin-bottom:0.8rem">進め方（10分）</p>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2">
+          <li><strong>各自で3問作成する</strong>（3分）── リストに関する問題と正解を用意する</li>
+          <li><strong>出題 → 回答者が口頭で回答</strong>（7分）── 1人ずつ順番に出題し、回答者が答える</li>
+          <li><strong>出題者が正誤を判定</strong>し、必要なら正解を解説する</li>
+        </ol>
+      </div>
+
+      <div class="concept-box">
+        <h4>出題例</h4>
+        <pre><span class="code-label">Notion テンプレート</span>
+**問題:** fruits = ["apple", "banana", "cherry"] のとき、fruits[1] の値は何か？
+**回答:** "banana"（インデックスは0から始まるため）
+
+**問題:** numbers = [10, 20, 30] に 40 を追加するコードは？
+**回答:** numbers.append(40)
+
+**問題:** data = [1, 2, 3, 4, 5] のスライス data[1:4] の結果は？
+**回答:** [2, 3, 4]</pre>
+      </div>
+
+      <div class="notion-submit">
+        <div><strong>Notionに記録:</strong> 自分が作った3問と、全員分の出題・回答・正誤の記録を書いてください。</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 2. DICT ============ -->
+<section id="sec-dict">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">2</div>
+      <h2>辞書の基本 <span style="font-size:0.5rem;color:#999;font-weight:400">── グループ演習・約25分</span></h2>
+    </div>
+
+    <div class="concept-box">
+      <h4>辞書（dict）とは</h4>
+      <p><strong>キー（名前）と値（データ）のペア</strong>でデータを管理するデータ構造です。波カッコ <code>{ }</code> で囲み、<code>キー: 値</code> の形式で書きます。</p>
+    </div>
+
+    <div class="analogy">
+      辞書は「電話帳」です。「名前（キー）」を指定すると「電話番号（値）」がすぐに見つかります。リストとの違いは、番号（0, 1, 2...）ではなく名前で検索できることです。
+    </div>
+
+    <!-- 辞書の基本操作 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-note">ノート</span>
+        <h3>辞書の基本操作</h3>
+      </div>
+
+      <h4 style="color:#76B900;margin-bottom:0.5rem">1. 辞書の作成と値の取得</h4>
+      <pre><span class="code-label">Python</span>
+<span class="cmt"># 辞書の作成</span>
+student <span class="op">=</span> {
+    <span class="str">"name"</span>: <span class="str">"太郎"</span>,
+    <span class="str">"age"</span>: <span class="num">20</span>,
+    <span class="str">"grade"</span>: <span class="str">"B2"</span>,
+}
+
+<span class="cmt"># 値の取得</span>
+<span class="fn">print</span>(student[<span class="str">"name"</span>])   <span class="cmt"># 太郎</span>
+<span class="fn">print</span>(student[<span class="str">"age"</span>])    <span class="cmt"># 20</span></pre>
+
+      <h4 style="color:#76B900;margin-top:1rem;margin-bottom:0.5rem">2. 値の追加・変更</h4>
+      <pre><span class="code-label">Python</span>
+student[<span class="str">"email"</span>] <span class="op">=</span> <span class="str">"taro@example.com"</span>  <span class="cmt"># 新しいキーで追加</span>
+student[<span class="str">"age"</span>] <span class="op">=</span> <span class="num">21</span>                      <span class="cmt"># 既存のキーで上書き</span>
+<span class="fn">print</span>(student)</pre>
+
+      <h4 style="color:#76B900;margin-top:1rem;margin-bottom:0.5rem">3. keys() / values() / items()</h4>
+      <pre><span class="code-label">Python</span>
+student <span class="op">=</span> {<span class="str">"name"</span>: <span class="str">"太郎"</span>, <span class="str">"age"</span>: <span class="num">20</span>}
+
+<span class="fn">print</span>(student.<span class="fn">keys</span>())    <span class="cmt"># dict_keys(['name', 'age'])</span>
+<span class="fn">print</span>(student.<span class="fn">values</span>())  <span class="cmt"># dict_values(['太郎', 20])</span>
+
+<span class="kw">for</span> key, value <span class="kw">in</span> student.<span class="fn">items</span>():
+    <span class="fn">print</span>(f<span class="str">"{key}: {value}"</span>)
+<span class="cmt"># name: 太郎</span>
+<span class="cmt"># age: 20</span></pre>
+
+      <h4 style="color:#76B900;margin-top:1rem;margin-bottom:0.5rem">4. キーの存在確認（in）</h4>
+      <pre><span class="code-label">Python</span>
+<span class="kw">if</span> <span class="str">"name"</span> <span class="kw">in</span> student:
+    <span class="fn">print</span>(<span class="str">"名前が登録されています"</span>)
+
+<span class="kw">if</span> <span class="str">"phone"</span> <span class="kw">not</span> <span class="kw">in</span> student:
+    <span class="fn">print</span>(<span class="str">"電話番号は未登録です"</span>)</pre>
+
+      <table>
+        <tr><th>操作</th><th>コード</th><th>説明</th></tr>
+        <tr><td>作成</td><td><code>{"key": value}</code></td><td>波カッコで囲む</td></tr>
+        <tr><td>取得</td><td><code>dict["key"]</code></td><td>キーで値を取得</td></tr>
+        <tr><td>追加/変更</td><td><code>dict["key"] = value</code></td><td>代入で追加・上書き</td></tr>
+        <tr><td>全キー</td><td><code>dict.keys()</code></td><td>キーの一覧</td></tr>
+        <tr><td>全値</td><td><code>dict.values()</code></td><td>値の一覧</td></tr>
+        <tr><td>全ペア</td><td><code>dict.items()</code></td><td>キーと値のペア</td></tr>
+        <tr><td>存在確認</td><td><code>"key" in dict</code></td><td>キーがあるか判定</td></tr>
+      </table>
+    </div>
+
+    <!-- py5で辞書を使う例 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-note">ノート</span>
+        <h3>py5で辞書を使う: キー入力で色を変える</h3>
+      </div>
+
+      <p>色名をキー、RGB値を値とした辞書を作り、キーボード入力で円の色を変えるプログラムです。</p>
+
+      <pre><span class="code-label">Python ── dict_color.py</span>
+<span class="cmt"># 辞書を使ったキー入力色変更</span>
+color_dict <span class="op">=</span> {
+    <span class="str">'r'</span>: (<span class="num">255</span>, <span class="num">0</span>, <span class="num">0</span>),
+    <span class="str">'g'</span>: (<span class="num">0</span>, <span class="num">255</span>, <span class="num">0</span>),
+    <span class="str">'b'</span>: (<span class="num">0</span>, <span class="num">0</span>, <span class="num">255</span>),
+    <span class="str">'y'</span>: (<span class="num">255</span>, <span class="num">255</span>, <span class="num">0</span>),
+}
+
+<span class="kw">import</span> py5
+
+current_color <span class="op">=</span> (<span class="num">255</span>, <span class="num">255</span>, <span class="num">255</span>)
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">300</span>)
+
+<span class="kw">def</span> <span class="fn">draw</span>():
+    py5.<span class="fn">background</span>(<span class="num">200</span>)
+    py5.<span class="fn">fill</span>(<span class="op">*</span>current_color)
+    py5.<span class="fn">circle</span>(<span class="num">200</span>, <span class="num">150</span>, <span class="num">100</span>)
+
+<span class="kw">def</span> <span class="fn">key_pressed</span>():
+    <span class="kw">global</span> current_color
+    key <span class="op">=</span> <span class="fn">str</span>(py5.key)
+    <span class="kw">if</span> key <span class="kw">in</span> color_dict:
+        current_color <span class="op">=</span> color_dict[key]
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="callout-tip">
+        <h4>ポイント: in で存在確認してから取得</h4>
+        <p><code>if key in color_dict:</code> で辞書にそのキーがあるか確認してからアクセスしています。存在しないキーで <code>color_dict[key]</code> とすると <code>KeyError</code> になるため、この確認は重要です。</p>
+      </div>
+    </div>
+
+    <!-- std4-2 -->
+    <div class="card standard" id="std4-2">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題</span>
+        <h3>std4-2: 辞書を使ったデータ管理</h3>
+      </div>
+
+      <div style="background:#1A1A1A;border:2px solid #4FC3F7;border-radius:0.4rem;padding:1rem;margin:1rem 0">
+        <p style="color:#4FC3F7;font-weight:700;font-size:0.9rem;margin-bottom:0.8rem">課題内容</p>
+        <p>上の例を参考に、以下の要件を満たすpy5プログラム <code>std4_2.py</code> を作成してください:</p>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2">
+          <li>色名→RGB値の辞書を<strong>5色以上</strong>で作成する</li>
+          <li>キーボード入力で対応する色に円の塗り色を変更する</li>
+          <li>現在選択中の色のキー名を画面に<code>text()</code>で表示する</li>
+          <li>辞書に登録されていないキーが押された場合は何も起こらないようにする</li>
+        </ol>
+      </div>
+
+      <pre><span class="code-label">Terminal</span>
+<span class="fn">cd</span> ~/MD1/no4
+<span class="fn">source</span> .venv/bin/activate
+python std4_2.py</pre>
+
+      <div class="notion-submit">
+        <div><strong>Notionに記録:</strong> コード全文、実行結果のスクリーンショット（2色以上の状態）、辞書に登録した色の一覧を記録してください。</div>
+      </div>
+    </div>
+
+    <!-- 口頭試問（辞書） -->
+    <div class="card group" id="dict-quiz" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <span class="tag tag-group">グループワーク</span>
+        <h3>辞書口頭試問 <span class="exam-alert">ここで一度グループワーク</span></h3>
+      </div>
+
+      <p>辞書の操作について、グループ内で口頭試問を行います。</p>
+
+      <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:0.4rem;padding:1rem;margin:1rem 0">
+        <p style="color:#FFB800;font-weight:700;font-size:0.9rem;margin-bottom:0.8rem">進め方（10分）</p>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2">
+          <li><strong>各自で3問作成する</strong>（3分）── 辞書に関する問題と正解を用意する</li>
+          <li><strong>出題 → 回答者が口頭で回答</strong>（7分）── 1人ずつ順番に出題し、回答者が答える</li>
+          <li><strong>出題者が正誤を判定</strong>し、必要なら正解を解説する</li>
+        </ol>
+      </div>
+
+      <div class="concept-box">
+        <h4>出題例</h4>
+        <pre><span class="code-label">Notion テンプレート</span>
+**問題:** d = {"a": 1, "b": 2} のとき、d["b"] の値は何か？
+**回答:** 2
+
+**問題:** d = {"x": 10} に キー "y"、値 20 を追加するコードは？
+**回答:** d["y"] = 20
+
+**問題:** リストと辞書の違いを1文で説明せよ
+**回答:** リストは番号（インデックス）でアクセスし、辞書はキー（名前）でアクセスする</pre>
+      </div>
+
+      <div class="notion-submit">
+        <div><strong>Notionに記録:</strong> 自分が作った3問と、全員分の出題・回答・正誤の記録を書いてください。</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 3. FUNCTION ============ -->
+<section id="sec-func">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">3</div>
+      <h2>関数の設計 <span style="font-size:0.5rem;color:#999;font-weight:400">── グループ演習・約25分</span></h2>
+    </div>
+
+    <div class="concept-box">
+      <h4>自分で関数を作る</h4>
+      <p>これまで <code>py5.circle()</code> や <code>len()</code> など「誰かが作った関数」を使ってきました。今回は<strong>自分で関数を定義</strong>して、処理を整理します。</p>
+    </div>
+
+    <div class="analogy">
+      関数は「自動販売機」です。お金（引数）を入れてボタンを押すと、ジュース（戻り値）が出てきます。中の仕組み（処理）を知らなくても使えます。
+    </div>
+
+    <!-- 関数の基本 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-note">ノート</span>
+        <h3>関数の基本構文</h3>
+      </div>
+
+      <h4 style="color:#76B900;margin-bottom:0.5rem">1. 引数なし・戻り値なしの関数</h4>
+      <pre><span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">greet</span>():
+    <span class="fn">print</span>(<span class="str">"こんにちは！"</span>)
+
+<span class="fn">greet</span>()  <span class="cmt"># こんにちは！</span>
+<span class="fn">greet</span>()  <span class="cmt"># こんにちは！（何度でも呼べる）</span></pre>
+
+      <h4 style="color:#76B900;margin-top:1rem;margin-bottom:0.5rem">2. 引数ありの関数</h4>
+      <pre><span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">greet</span>(name):
+    <span class="fn">print</span>(f<span class="str">"こんにちは、{name}さん！"</span>)
+
+<span class="fn">greet</span>(<span class="str">"太郎"</span>)   <span class="cmt"># こんにちは、太郎さん！</span>
+<span class="fn">greet</span>(<span class="str">"花子"</span>)   <span class="cmt"># こんにちは、花子さん！</span></pre>
+
+      <h4 style="color:#76B900;margin-top:1rem;margin-bottom:0.5rem">3. 戻り値ありの関数（return）</h4>
+      <pre><span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">add</span>(a, b):
+    <span class="kw">return</span> a <span class="op">+</span> b
+
+result <span class="op">=</span> <span class="fn">add</span>(<span class="num">3</span>, <span class="num">5</span>)
+<span class="fn">print</span>(result)  <span class="cmt"># 8</span></pre>
+
+      <h4 style="color:#76B900;margin-top:1rem;margin-bottom:0.5rem">4. デフォルト引数</h4>
+      <pre><span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">greet</span>(name, greeting<span class="op">=</span><span class="str">"こんにちは"</span>):
+    <span class="fn">print</span>(f<span class="str">"{greeting}、{name}さん！"</span>)
+
+<span class="fn">greet</span>(<span class="str">"太郎"</span>)              <span class="cmt"># こんにちは、太郎さん！</span>
+<span class="fn">greet</span>(<span class="str">"花子"</span>, <span class="str">"おはよう"</span>)  <span class="cmt"># おはよう、花子さん！</span></pre>
+
+      <table>
+        <tr><th>要素</th><th>構文</th><th>説明</th></tr>
+        <tr><td>定義</td><td><code>def 関数名():</code></td><td>関数を定義する</td></tr>
+        <tr><td>引数</td><td><code>def f(x, y):</code></td><td>入力を受け取る</td></tr>
+        <tr><td>戻り値</td><td><code>return 値</code></td><td>結果を返す</td></tr>
+        <tr><td>デフォルト引数</td><td><code>def f(x=10):</code></td><td>省略時の初期値</td></tr>
+        <tr><td>呼び出し</td><td><code>f(1, 2)</code></td><td>関数を実行する</td></tr>
+      </table>
+    </div>
+
+    <!-- py5で関数を使う例 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-note">ノート</span>
+        <h3>py5で関数を使う: draw_house() で家を量産</h3>
+      </div>
+
+      <p>家を描く処理を関数にまとめると、座標と色を変えるだけで何軒でも描けます。</p>
+
+      <pre><span class="code-label">Python ── draw_houses.py</span>
+<span class="cmt"># 関数で家を量産する</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">draw_house</span>(x, y, wall_color, roof_color):
+    <span class="cmt"># 壁（四角形）</span>
+    py5.<span class="fn">fill</span>(<span class="op">*</span>wall_color)
+    py5.<span class="fn">rect</span>(x, y, <span class="num">80</span>, <span class="num">60</span>)
+    <span class="cmt"># 屋根（三角形）</span>
+    py5.<span class="fn">fill</span>(<span class="op">*</span>roof_color)
+    py5.<span class="fn">triangle</span>(x <span class="op">-</span> <span class="num">10</span>, y, x <span class="op">+</span> <span class="num">40</span>, y <span class="op">-</span> <span class="num">40</span>, x <span class="op">+</span> <span class="num">90</span>, y)
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">600</span>, <span class="num">300</span>)
+    py5.<span class="fn">background</span>(<span class="num">135</span>, <span class="num">206</span>, <span class="num">235</span>)  <span class="cmt"># 空色</span>
+    <span class="fn">draw_house</span>(<span class="num">50</span>, <span class="num">200</span>, (<span class="num">139</span>, <span class="num">69</span>, <span class="num">19</span>), (<span class="num">255</span>, <span class="num">0</span>, <span class="num">0</span>))
+    <span class="fn">draw_house</span>(<span class="num">200</span>, <span class="num">200</span>, (<span class="num">160</span>, <span class="num">82</span>, <span class="num">45</span>), (<span class="num">0</span>, <span class="num">100</span>, <span class="num">0</span>))
+    <span class="fn">draw_house</span>(<span class="num">350</span>, <span class="num">200</span>, (<span class="num">210</span>, <span class="num">180</span>, <span class="num">140</span>), (<span class="num">0</span>, <span class="num">0</span>, <span class="num">200</span>))
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="callout-info">
+        <h4>関数化のメリット</h4>
+        <p>もし関数を使わなかったら、壁と屋根の描画コードを3回コピー＆ペーストする必要があります。関数化すると:</p>
+        <ul class="point-list">
+          <li>コードが短くなる（DRY原則: Don't Repeat Yourself）</li>
+          <li>壁の幅を変えたいとき、1か所の修正で全ての家に反映される</li>
+          <li>「この関数は何をするか」が名前から分かる</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- リスト + 辞書 + 関数の組み合わせ -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-note">ノート</span>
+        <h3>応用: リスト + 辞書 + 関数の組み合わせ</h3>
+      </div>
+
+      <p>辞書のリストを関数で処理すると、データ管理が整理されます。次回（第5回）のCSVデータ処理はこのパターンの延長です。</p>
+
+      <pre><span class="code-label">Python ── combo_example.py</span>
+<span class="cmt"># リスト + 辞書 + 関数の組み合わせ</span>
+<span class="kw">import</span> py5
+
+<span class="cmt"># 辞書のリスト（データ）</span>
+circles_data <span class="op">=</span> [
+    {<span class="str">"x"</span>: <span class="num">100</span>, <span class="str">"y"</span>: <span class="num">150</span>, <span class="str">"size"</span>: <span class="num">60</span>, <span class="str">"color"</span>: (<span class="num">255</span>, <span class="num">0</span>, <span class="num">0</span>)},
+    {<span class="str">"x"</span>: <span class="num">250</span>, <span class="str">"y"</span>: <span class="num">150</span>, <span class="str">"size"</span>: <span class="num">80</span>, <span class="str">"color"</span>: (<span class="num">0</span>, <span class="num">255</span>, <span class="num">0</span>)},
+    {<span class="str">"x"</span>: <span class="num">400</span>, <span class="str">"y"</span>: <span class="num">150</span>, <span class="str">"size"</span>: <span class="num">50</span>, <span class="str">"color"</span>: (<span class="num">0</span>, <span class="num">0</span>, <span class="num">255</span>)},
+]
+
+<span class="kw">def</span> <span class="fn">draw_circle</span>(data):
+    <span class="str">"""辞書のデータから円を描画する"""</span>
+    py5.<span class="fn">fill</span>(<span class="op">*</span>data[<span class="str">"color"</span>])
+    py5.<span class="fn">circle</span>(data[<span class="str">"x"</span>], data[<span class="str">"y"</span>], data[<span class="str">"size"</span>])
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">500</span>, <span class="num">300</span>)
+    py5.<span class="fn">background</span>(<span class="num">30</span>)
+    py5.<span class="fn">no_stroke</span>()
+    <span class="kw">for</span> c <span class="kw">in</span> circles_data:
+        <span class="fn">draw_circle</span>(c)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="callout-tip">
+        <h4>第5回への橋渡し</h4>
+        <p>次回はCSVファイル（カンマ区切りのデータ）を読み込んで可視化します。CSVの各行は辞書に変換でき、全行をリストにまとめます。今回学んだ「辞書のリスト」がそのまま活きます。</p>
+      </div>
+    </div>
+
+    <!-- std4-3 -->
+    <div class="card standard" id="std4-3">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題</span>
+        <h3>std4-3: 関数設計</h3>
+      </div>
+
+      <div style="background:#1A1A1A;border:2px solid #4FC3F7;border-radius:0.4rem;padding:1rem;margin:1rem 0">
+        <p style="color:#4FC3F7;font-weight:700;font-size:0.9rem;margin-bottom:0.8rem">課題内容</p>
+        <p>繰り返し使う描画処理を<strong>関数に分割</strong>したpy5プログラム <code>std4_3.py</code> を作成してください:</p>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2">
+          <li>自分でオリジナルの描画関数を<strong>1つ以上</strong>定義する（例: <code>draw_tree(x, y, color)</code>、<code>draw_star(x, y, size)</code> など）</li>
+          <li>関数は<strong>引数</strong>を2つ以上受け取るようにする</li>
+          <li>関数を<strong>3回以上</strong>呼び出して、異なる引数で描画する</li>
+          <li>for文やリストと組み合わせても良い</li>
+        </ol>
+      </div>
+
+      <div class="concept-box">
+        <h4>アイデア例</h4>
+        <ul class="point-list">
+          <li><code>draw_tree(x, y, trunk_color, leaf_color)</code> ── 木を描く関数で森を作る</li>
+          <li><code>draw_flower(x, y, petal_color, size)</code> ── 花を描く関数で花畑を作る</li>
+          <li><code>draw_face(x, y, eye_color)</code> ── 顔を描く関数で集合写真を作る</li>
+        </ul>
+      </div>
+
+      <pre><span class="code-label">Terminal</span>
+<span class="fn">cd</span> ~/MD1/no4
+<span class="fn">source</span> .venv/bin/activate
+python std4_3.py</pre>
+
+      <div class="notion-submit">
+        <div><strong>Notionに記録:</strong> コード全文、実行結果のスクリーンショット、「なぜ関数に分けたか」の説明（2〜3文）を記録してください。</div>
+      </div>
+    </div>
+
+    <!-- 口頭試問（関数） -->
+    <div class="card group" id="func-quiz" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <span class="tag tag-group">グループワーク</span>
+        <h3>関数口頭試問 <span class="exam-alert">ここで一度グループワーク</span></h3>
+      </div>
+
+      <p>関数の定義と使い方について、グループ内で口頭試問を行います。</p>
+
+      <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:0.4rem;padding:1rem;margin:1rem 0">
+        <p style="color:#FFB800;font-weight:700;font-size:0.9rem;margin-bottom:0.8rem">進め方（10分）</p>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2">
+          <li><strong>各自で3問作成する</strong>（3分）── 関数に関する問題と正解を用意する</li>
+          <li><strong>出題 → 回答者が口頭で回答</strong>（7分）── 1人ずつ順番に出題し、回答者が答える</li>
+          <li><strong>出題者が正誤を判定</strong>し、必要なら正解を解説する</li>
+        </ol>
+      </div>
+
+      <div class="concept-box">
+        <h4>出題例</h4>
+        <pre><span class="code-label">Notion テンプレート</span>
+**問題:** def add(a, b): return a + b のとき、add(3, 7) の戻り値は？
+**回答:** 10
+
+**問題:** 引数にデフォルト値を設定するには、defの行にどう書くか？
+**回答:** def f(x=初期値): のように = で指定する
+
+**問題:** 同じ描画を5回繰り返すとき、関数を使う利点は何か？
+**回答:** コードの重複がなくなり、修正が1か所で済む（DRY原則）</pre>
+      </div>
+
+      <div class="notion-submit">
+        <div><strong>Notionに記録:</strong> 自分が作った3問と、全員分の出題・回答・正誤の記録を書いてください。</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 4. ADVANCED ============ -->
+<section id="sec-advanced">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">4</div>
+      <h2>発展課題 <span style="font-size:0.5rem;color:#999;font-weight:400">── 約25分</span></h2>
+    </div>
+
+    <div class="card advanced" id="adv4-1">
+      <div class="card-header">
+        <span class="tag tag-advanced">発展課題</span>
+        <h3>adv4-1: 総合制作</h3>
+      </div>
+
+      <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:0.4rem;padding:1rem;margin:1rem 0">
+        <p style="color:#FFB800;font-weight:700;font-size:0.9rem;margin-bottom:0.8rem">課題内容</p>
+        <p>今回学んだ<strong>リスト・辞書・関数・for文・if文</strong>を組み合わせたオリジナルのpy5作品 <code>adv4_1.py</code> を作成してください。</p>
+        <p style="margin-top:0.5rem"><strong>必須要件:</strong></p>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2">
+          <li><strong>リスト</strong>を1つ以上使用する</li>
+          <li><strong>辞書</strong>を1つ以上使用する</li>
+          <li><strong>自作関数</strong>を1つ以上定義して使用する</li>
+          <li><strong>for文</strong>を1つ以上使用する</li>
+          <li><strong>if文</strong>を1つ以上使用する</li>
+          <li><strong>音声説明</strong>（1〜2分）: 作品の工夫点・使った技術を説明する</li>
+        </ol>
+      </div>
+
+      <div class="concept-box">
+        <h4>作品のアイデア例</h4>
+        <ul class="point-list">
+          <li><strong>街並みジェネレーター:</strong> 家・木・車などの関数を作り、ランダムに配置して街を生成</li>
+          <li><strong>星座ビューワー:</strong> 星の座標リストと星座名の辞書から星座を描画</li>
+          <li><strong>カラーパレットツール:</strong> 色名辞書とキー入力で、画面にカラーパレットを表示</li>
+          <li><strong>ミニゲーム:</strong> リストで敵の座標を管理し、キー入力で操作するゲーム</li>
+        </ul>
+      </div>
+
+      <div class="callout-warning">
+        <h4>音声説明の録り方</h4>
+        <ul class="point-list">
+          <li>macOS の「ボイスメモ」アプリ、またはスマートフォンで録音</li>
+          <li>1〜2分で「何を作ったか」「どの技術を使ったか」「工夫した点」を説明</li>
+          <li>音声ファイルはGoogle Classroomに提出（PDFとは別ファイル）</li>
+        </ul>
+      </div>
+
+      <pre><span class="code-label">Terminal</span>
+<span class="fn">cd</span> ~/MD1/no4
+<span class="fn">source</span> .venv/bin/activate
+python adv4_1.py</pre>
+
+      <div class="notion-submit">
+        <div><strong>Notionに記録:</strong> コード全文、実行結果のスクリーンショット、使用した技術の一覧（リスト・辞書・関数・for文・if文のそれぞれがどこで使われているか）を記録してください。音声ファイルは別途Google Classroomに提出。</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 5. 解答例 ============ -->
+<section id="sec-answers" data-release="2026-05-25T13:10">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4A7A00">5</div>
+      <h2>解答例</h2>
+    </div>
+
+    <p style="font-size:0.9rem;color:#999;margin-bottom:1.5rem">解答例は提出期限後に公開されます。</p>
+
+    <!-- std4-1 解答例 -->
+    <details>
+      <summary>std4-1: リスト操作 ─ 解答例</summary>
+      <div class="answer-content">
+        <pre><span class="code-label">Python ── std4-1 解答</span>
+scores <span class="op">=</span> [<span class="num">85</span>, <span class="num">72</span>, <span class="num">90</span>, <span class="num">68</span>, <span class="num">95</span>, <span class="num">78</span>, <span class="num">88</span>]
+
+<span class="cmt"># 1. 長さ</span>
+<span class="fn">print</span>(<span class="fn">len</span>(scores))       <span class="cmt"># 7</span>
+
+<span class="cmt"># 2. 3番目の要素</span>
+<span class="fn">print</span>(scores[<span class="num">2</span>])         <span class="cmt"># 90</span>
+
+<span class="cmt"># 3. 末尾に追加</span>
+scores.<span class="fn">append</span>(<span class="num">82</span>)
+<span class="fn">print</span>(scores)             <span class="cmt"># [85, 72, 90, 68, 95, 78, 88, 82]</span>
+
+<span class="cmt"># 4. スライスで先頭3つ</span>
+<span class="fn">print</span>(scores[:<span class="num">3</span>])         <span class="cmt"># [85, 72, 90]</span>
+
+<span class="cmt"># 5. 合計と平均</span>
+total <span class="op">=</span> <span class="num">0</span>
+<span class="kw">for</span> s <span class="kw">in</span> scores:
+    total <span class="op">=</span> total <span class="op">+</span> s
+average <span class="op">=</span> total <span class="op">/</span> <span class="fn">len</span>(scores)
+<span class="fn">print</span>(f<span class="str">"合計: {total}, 平均: {average}"</span>)
+<span class="cmt"># 合計: 658, 平均: 82.25</span>
+
+<span class="cmt"># 6. 80点以上</span>
+<span class="kw">for</span> s <span class="kw">in</span> scores:
+    <span class="kw">if</span> s <span class="op">&gt;=</span> <span class="num">80</span>:
+        <span class="fn">print</span>(s)
+<span class="cmt"># 85, 90, 95, 88, 82</span></pre>
+      </div>
+    </details>
+
+    <!-- std4-2 解答例 -->
+    <details>
+      <summary>std4-2: 辞書を使ったデータ管理 ─ 解答例</summary>
+      <div class="answer-content">
+        <pre><span class="code-label">Python ── std4-2 解答</span>
+<span class="kw">import</span> py5
+
+color_dict <span class="op">=</span> {
+    <span class="str">'r'</span>: (<span class="num">255</span>, <span class="num">0</span>, <span class="num">0</span>),
+    <span class="str">'g'</span>: (<span class="num">0</span>, <span class="num">255</span>, <span class="num">0</span>),
+    <span class="str">'b'</span>: (<span class="num">0</span>, <span class="num">0</span>, <span class="num">255</span>),
+    <span class="str">'y'</span>: (<span class="num">255</span>, <span class="num">255</span>, <span class="num">0</span>),
+    <span class="str">'p'</span>: (<span class="num">200</span>, <span class="num">0</span>, <span class="num">200</span>),
+}
+
+current_color <span class="op">=</span> (<span class="num">255</span>, <span class="num">255</span>, <span class="num">255</span>)
+current_key <span class="op">=</span> <span class="str">"なし"</span>
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">300</span>)
+    py5.<span class="fn">text_size</span>(<span class="num">20</span>)
+
+<span class="kw">def</span> <span class="fn">draw</span>():
+    py5.<span class="fn">background</span>(<span class="num">200</span>)
+    py5.<span class="fn">fill</span>(<span class="op">*</span>current_color)
+    py5.<span class="fn">circle</span>(<span class="num">200</span>, <span class="num">150</span>, <span class="num">120</span>)
+    py5.<span class="fn">fill</span>(<span class="num">0</span>)
+    py5.<span class="fn">text</span>(f<span class="str">"色: {current_key}"</span>, <span class="num">20</span>, <span class="num">30</span>)
+
+<span class="kw">def</span> <span class="fn">key_pressed</span>():
+    <span class="kw">global</span> current_color, current_key
+    key <span class="op">=</span> <span class="fn">str</span>(py5.key)
+    <span class="kw">if</span> key <span class="kw">in</span> color_dict:
+        current_color <span class="op">=</span> color_dict[key]
+        current_key <span class="op">=</span> key
+
+py5.<span class="fn">run_sketch</span>()</pre>
+      </div>
+    </details>
+
+    <!-- std4-3 解答例 -->
+    <details>
+      <summary>std4-3: 関数設計 ─ 解答例</summary>
+      <div class="answer-content">
+        <pre><span class="code-label">Python ── std4-3 解答</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">draw_tree</span>(x, y, trunk_color, leaf_color):
+    <span class="str">"""木を描画する関数"""</span>
+    <span class="cmt"># 幹</span>
+    py5.<span class="fn">fill</span>(<span class="op">*</span>trunk_color)
+    py5.<span class="fn">rect</span>(x <span class="op">-</span> <span class="num">10</span>, y, <span class="num">20</span>, <span class="num">40</span>)
+    <span class="cmt"># 葉</span>
+    py5.<span class="fn">fill</span>(<span class="op">*</span>leaf_color)
+    py5.<span class="fn">circle</span>(x, y <span class="op">-</span> <span class="num">10</span>, <span class="num">60</span>)
+
+trees <span class="op">=</span> [
+    {<span class="str">"x"</span>: <span class="num">80</span>, <span class="str">"y"</span>: <span class="num">200</span>, <span class="str">"trunk"</span>: (<span class="num">101</span>, <span class="num">67</span>, <span class="num">33</span>), <span class="str">"leaf"</span>: (<span class="num">34</span>, <span class="num">139</span>, <span class="num">34</span>)},
+    {<span class="str">"x"</span>: <span class="num">200</span>, <span class="str">"y"</span>: <span class="num">200</span>, <span class="str">"trunk"</span>: (<span class="num">139</span>, <span class="num">90</span>, <span class="num">43</span>), <span class="str">"leaf"</span>: (<span class="num">0</span>, <span class="num">128</span>, <span class="num">0</span>)},
+    {<span class="str">"x"</span>: <span class="num">320</span>, <span class="str">"y"</span>: <span class="num">200</span>, <span class="str">"trunk"</span>: (<span class="num">160</span>, <span class="num">82</span>, <span class="num">45</span>), <span class="str">"leaf"</span>: (<span class="num">50</span>, <span class="num">205</span>, <span class="num">50</span>)},
+    {<span class="str">"x"</span>: <span class="num">440</span>, <span class="str">"y"</span>: <span class="num">200</span>, <span class="str">"trunk"</span>: (<span class="num">101</span>, <span class="num">67</span>, <span class="num">33</span>), <span class="str">"leaf"</span>: (<span class="num">34</span>, <span class="num">139</span>, <span class="num">34</span>)},
+]
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">520</span>, <span class="num">300</span>)
+    py5.<span class="fn">background</span>(<span class="num">135</span>, <span class="num">206</span>, <span class="num">235</span>)
+    py5.<span class="fn">no_stroke</span>()
+    <span class="kw">for</span> t <span class="kw">in</span> trees:
+        <span class="fn">draw_tree</span>(t[<span class="str">"x"</span>], t[<span class="str">"y"</span>], t[<span class="str">"trunk"</span>], t[<span class="str">"leaf"</span>])
+
+py5.<span class="fn">run_sketch</span>()</pre>
+      </div>
+    </details>
+
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="container">
+    <div>MD1 ─ 2026年度前期 ─ 第4回</div>
+    <div style="margin-top:0.5rem;font-size:0.8rem;color:#666">&copy;2026 Ryota Nakamura.</div>
+  </div>
+</footer>
+
+<!-- ============ SCRIPTS ============ -->
+<script src="answer-gate.js"></script>
+<script>
+// Copy button for pre blocks
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var code = pre.textContent.replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|\.zshrc|Notion テンプレート)( ── [^\n]+)?\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+
+// Click-to-copy on inline code elements
+document.querySelectorAll(':not(pre) > code').forEach(function(code) {
+  code.title = 'クリックでコピー';
+  code.addEventListener('click', function() {
+    navigator.clipboard.writeText(code.textContent).then(function() {
+      code.classList.add('copied');
+      setTimeout(function() {
+        code.classList.remove('copied');
+      }, 1500);
+    });
+  });
+});
+</script>
+
+</body>
+</html>

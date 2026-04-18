@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第2回: 順次制御・繰り返し処理・色の表現 | MD1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET & BASE ============ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 32px; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #111111;
+  color: #e0e0e0;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============ LAYOUT ============ */
+.container { max-width: 1600px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+
+/* ============ HEADER ============ */
+.hero {
+  background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a);
+  color: white;
+  padding: clamp(3rem, 8vw, 6rem) 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(108,99,255,0.3), transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(155,89,182,0.2), transparent 50%);
+}
+.hero .container { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 100px;
+  padding: 0.35rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+}
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+
+/* ============ SUBMISSION BOX ============ */
+.submission-box {
+  background: linear-gradient(135deg, #1A1A1A, #1a2e0a);
+  border: 2px solid #76B900;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin: 2rem 0;
+}
+.submission-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #76B900;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.submission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.5rem;
+}
+.sub-item {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  gap: 0.3rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.4rem;
+  padding: 0.6rem 0.4rem;
+  font-size: 0.55rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.sub-item .sub-count {
+  margin-bottom: 0.1rem;
+}
+.sub-item .tag {
+  margin-bottom: 0.15rem;
+}
+.sub-count {
+  background: #76B900;
+  color: white;
+  border-radius: 0.2rem;
+  min-width: 1.5rem; height: 1.5rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700;
+}
+
+/* ============ TAGS ============ */
+.tag {
+  display: inline-flex; align-items: center; gap: 0.2rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 100px;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.tag-note      { background: #1a2e0a; color: #76B900; }
+.tag-standard  { background: #0a1a2e; color: #4FC3F7; }
+.tag-advanced  { background: #2e1a0a; color: #FFB800; }
+.tag-group     { background: #1a2e0a; color: #76B900; }
+
+/* ============ EXAM ALERT TAG ============ */
+.exam-alert {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  background: rgba(255, 82, 82, 0.15);
+  border: 1px solid #FFB800;
+  color: #FFB800;
+  padding: 0.2rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  animation: exam-pulse 2s ease-in-out 3;
+}
+@keyframes exam-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ============ SECTION HEADERS ============ */
+.section-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.section-num {
+  width: 2.5rem; height: 2.5rem;
+  border-radius: 0.4rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 900; color: white;
+  flex-shrink: 0;
+}
+.section-header h2 {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+/* ============ CARDS ============ */
+.card {
+  background: #141414;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  border: 1px solid #2a2a2a;
+}
+.card-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #222;
+}
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.standard  { border-left: 4px solid #76B900; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.card.group     { border-left: 4px solid #93D500; }
+
+/* ============ NOTION CALLOUT ============ */
+.notion-submit {
+  background: #1a2e0a;
+  border: 1px solid #76B900;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  display: flex; align-items: flex-start; gap: 0.5rem;
+}
+.notion-submit::before { content: '\1F4DD'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+
+/* ============ TABLES ============ */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem;
+  margin: 1rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+th {
+  background: rgba(108, 99, 255, 0.15);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  color: #76B900;
+  letter-spacing: 0.02em;
+}
+td {
+  padding: 0.55rem 0.8rem;
+  border-top: 1px solid #222;
+}
+tr:nth-child(even) td { background: #111; }
+
+/* ============ CODE ============ */
+pre {
+  background: #0A0A0A;
+  color: #E0E0E0;
+  border-radius: 12px;
+  padding: clamp(0.8rem, 2vw, 1.4rem);
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
+  font-size: clamp(0.75rem, 1.3vw, 0.88rem);
+  line-height: 1.7;
+  margin: 1rem 0;
+  position: relative;
+}
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #FFB800; }
+pre .op { color: #93D500; }
+.code-label {
+  position: absolute; top: 0; right: 0;
+  background: rgba(255,255,255,0.08);
+  color: #999999;
+  padding: 0.2rem 0.8rem;
+  border-radius: 0 12px 0 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+/* inline code */
+:not(pre) > code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(108,99,255,0.15);
+  padding: 0.15em 0.45em;
+  border-radius: 5px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+:not(pre) > code:hover { background: rgba(108,99,255,0.3); }
+:not(pre) > code.copied { background: rgba(108,99,255,0.5); }
+
+/* ============ EXPLANATION BLOCKS ============ */
+.concept-box {
+  background: rgba(108, 99, 255, 0.15);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  border: 1px solid #2a2a3a;
+}
+.concept-box h4 {
+  font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem;
+}
+.analogy {
+  background: #1a1a0a;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 0.75rem 0;
+  border-left: 3px solid #FFB800;
+  font-size: 0.95rem;
+}
+.analogy::before {
+  content: '\1F4A1 日常の例';
+  display: block;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #FFB800;
+  margin-bottom: 0.3rem;
+}
+.point-list {
+  list-style: none;
+  padding: 0;
+}
+.point-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+}
+.point-list li::before {
+  content: '\25B8';
+  position: absolute; left: 0;
+  color: #76B900;
+  font-weight: 700;
+}
+
+/* ============ ANSWERS (COLLAPSIBLE) ============ */
+details {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+details summary {
+  padding: 0.8rem 1.2rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 0.5rem;
+  background: #1a1a1a;
+  user-select: none;
+}
+details summary::marker { content: ''; }
+details summary::before {
+  content: '\25B6';
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+  color: #666;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
+
+/* ============ WARNING / DANGER CALLOUT ============ */
+.callout-danger {
+  background: rgba(255, 82, 82, 0.08);
+  border: 1px solid rgba(255, 82, 82, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-danger h4 {
+  color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-warning {
+  background: rgba(255, 184, 0, 0.08);
+  border: 1px solid rgba(255, 184, 0, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-warning h4 {
+  color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-info {
+  background: rgba(108, 99, 255, 0.08);
+  border: 1px solid rgba(108, 99, 255, 0.3);
+  border-left: 4px solid #76B900;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-info h4 {
+  color: #76B900; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-tip {
+  background: rgba(155, 89, 182, 0.08);
+  border: 1px solid rgba(155, 89, 182, 0.3);
+  border-left: 4px solid #93D500;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-tip h4 {
+  color: #93D500; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+
+/* ============ FOOTER ============ */
+footer {
+  background: #0A0A0A;
+  color: #999999;
+  padding: 2rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 640px) {
+  .submission-items { grid-template-columns: 1fr; }
+  .section-num { width: 2rem; height: 2rem; font-size: 0.85rem; }
+}
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
+/* ============ SUB-ITEM LINKS ============ */
+a.sub-item { transition: transform 0.15s, box-shadow 0.15s; }
+a.sub-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(118,185,0,0.3);
+  border-color: #76B900;
+}
+
+/* ============ SECTION NAV (sticky) ============ */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.5rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-exam { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3rem; }
+
+/* ============ REDUCED MOTION ============ */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  details summary::before { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SECTION NAV ============ -->
+<nav class="section-nav">
+  <a href="#sec-schedule">日程</a>
+  <a href="#sec-teacher">0. 説明</a>
+  <a href="#sec-groupwork" class="nav-assignment">1. std2-1</a>
+  <a href="#sec-loop" class="nav-assignment">2. std2-2</a>
+  <a href="#sec-quiz" class="nav-exam">試問</a>
+  <a href="#sec-color" class="nav-assignment">3. std2-3</a>
+  <a href="#sec-free" class="nav-assignment">4. std2-4</a>
+  <a href="#sec-notion">Notion</a>
+  <a href="#sec-answers">解答</a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">Media creation Data design 1（MD1）─ 2026年度前期</div>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.1rem;white-space:nowrap">武蔵野大学データサイエンス学部</p>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.3rem;white-space:nowrap">武蔵野大学国際データサイエンス学部（通信教育部）</p>
+    <p style="font-size:0.95rem;opacity:0.85;margin-bottom:1rem">中村 亮太</p>
+    <h1>MD1 第2回: 順次制御・繰り返し処理・色の表現</h1>
+    <p style="white-space:nowrap">py5で図形を描画し、for文による繰り返しとRGB・HSBカラーを学ぶ</p>
+    <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:0.3rem;padding:0.4rem 0.8rem;margin-top:1rem;font-size:0.7rem;display:inline-block">
+      <strong>対象環境:</strong> Apple M1 / M2 / M3 / M4 / M5 チップ搭載 Mac ｜ macOS Tahoe 26.4.1 (25E246)
+    </div>
+  </div>
+</header>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div class="submission-box">
+      <h3>提出ガイド（1つのNotionページにまとめ、PDF 1枚を提出）</h3>
+      <div class="submission-items">
+        <a href="#sec-notion" class="sub-item" style="text-decoration:none;color:inherit;border-color:#76B900"><span class="sub-count" style="background:#76B900">4</span><span class="tag" style="background:#1a2e0a;color:#76B900">ノート</span>穴埋め・記録</a>
+        <a href="#std2-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std2-1</a>
+        <a href="#std2-2" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std2-2</a>
+        <a href="#std2-3" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std2-3</a>
+        <a href="#std2-4" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std2-4</a>
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.85rem;color:#93D500">
+        <strong>提出方法:</strong> 下記の項目をすべて<strong>1つのNotionページにまとめて記録</strong> → PDFにエクスポート → Google Classroomに<strong>PDF 1ファイル</strong>を提出
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:0.5rem;font-size:0.85rem;color:#FFB800">
+        <strong>提出期限:</strong> 5/11(月) 13:10（第3回授業開始まで）
+      </div>
+
+      <!-- Notionに書くべき項目チェックリスト -->
+      <div id="notion-checklist" style="background:#141414;border:1px solid #333;border-radius:0.4rem;padding:1rem;margin-top:1rem">
+        <p style="color:#76B900;font-weight:700;font-size:0.85rem;margin-bottom:0.3rem">ノート: Notionに記録する項目（提出前に確認）</p>
+        <p style="font-size:0.75rem;color:#999;margin-bottom:0.8rem">以下の項目を1つのNotionページに記録し、PDF化して提出します。</p>
+        <table style="font-size:0.8rem">
+          <tr><th style="width:5%"></th><th style="width:30%">セクション</th><th>記録する内容</th><th style="width:10%">リンク</th></tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> CS基礎穴埋め</td>
+            <td>CPU/GPU/メモリ/ストレージ/OS の穴埋め</td>
+            <td><a href="#sec-teacher" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> 繰り返し処理</td>
+            <td>step2-1〜step2-5 の実行結果とコメント</td>
+            <td><a href="#sec-loop" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> 色の表現</td>
+            <td>RGB/HSB実験の結果</td>
+            <td><a href="#sec-color" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> 口頭試問</td>
+            <td>3問の作問＋全員分の出題・回答・正誤の記録</td>
+            <td><a href="#sec-quiz" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std2-1</td>
+            <td>グループワーク成果物</td>
+            <td><a href="#std2-1" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std2-2</td>
+            <td>授業ノート（step2-1〜2-5のコメント付き記録）</td>
+            <td><a href="#std2-2" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std2-3</td>
+            <td>HSBカラー実験（虹色5つの円）</td>
+            <td><a href="#std2-3" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std2-4</td>
+            <td>自由制作コード＋実行結果＋説明</td>
+            <td><a href="#std2-4" style="color:#76B900">移動</a></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCHEDULE ============ -->
+<section id="sec-schedule" style="padding-top:1rem;padding-bottom:0">
+  <div class="container">
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>授業スケジュール（前期・月曜3・4限 13:10〜16:40）</h3></div>
+      <table>
+        <tr><th style="width:40px">回</th><th>日付</th><th>テーマ</th><th>提出期限</th></tr>
+        <tr><td>1</td><td>4/20(月)</td><td>グループディスカッション・ターミナル操作・環境構築</td><td>4/27 13:10</td></tr>
+        <tr style="background:rgba(118,185,0,0.1)"><td><strong>2</strong></td><td><strong>4/27(月)</strong></td><td>順次制御・繰り返し処理・色の表現</td><td><strong>5/11 13:10</strong></td></tr>
+        <tr style="color:#616161"><td>-</td><td><s>5/4(月)</s></td><td colspan="2" style="color:#FFB800">休講（GW）</td></tr>
+        <tr><td>3</td><td>5/11(月)</td><td>条件分岐・アニメーション</td><td>5/18 13:10</td></tr>
+        <tr><td>4</td><td>5/18(月)</td><td>リスト・辞書・関数設計</td><td>5/25 13:10</td></tr>
+        <tr><td>5</td><td>5/25(月)</td><td>時系列データ・加速度センサ</td><td>6/1 13:10</td></tr>
+        <tr><td>6</td><td>6/1(月)</td><td>音のプログラミング・FFT和音解析</td><td>6/8 13:10</td></tr>
+        <tr><td>7</td><td>6/8(月)</td><td>最終課題制作</td><td>6/15 13:10</td></tr>
+      </table>
+      <p style="font-size:0.85rem;color:#999;margin-top:0.5rem">※ 各回の提出期限は次回授業開始時刻（13:10）です。1秒でも遅れると未提出扱いになります。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TIME FLOW ============ -->
+<section style="padding-top:1rem;padding-bottom:0">
+  <div class="container">
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>本日の授業の流れ</h3></div>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin:0.5rem 0">
+        <div style="flex:1;min-width:8rem;background:#1A1A1A;border:2px solid #76B900;border-radius:0.4rem;padding:0.6rem;text-align:center">
+          <div style="font-size:1.2rem;font-weight:900;color:#76B900">13:10 - 13:40</div>
+          <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">教員による説明</div>
+          <div style="font-size:0.65rem;color:#999">プログラムの基本構造 / Python基礎構文 / CS基礎</div>
+        </div>
+        <div style="flex:2;min-width:12rem;background:#1A1A1A;border:2px solid #93D500;border-radius:0.4rem;padding:0.6rem;text-align:center">
+          <div style="font-size:1.2rem;font-weight:900;color:#93D500">13:40 - 16:40</div>
+          <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">グループ演習（この資料を上から順に進める）</div>
+          <div style="font-size:0.65rem;color:#999">グループワーク → 繰り返し処理 → 色の表現 → 自由制作<br>グループで協力し、資料を読みながら自分たちで進める</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 0. TEACHER EXPLANATION ============ -->
+<section id="sec-teacher">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">0</div>
+      <h2>教員による説明 <span style="font-size:0.6rem;color:#999;font-weight:400">── 約30分</span></h2>
+    </div>
+
+    <!-- プログラムの基本構造 -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>プログラムの3つの基本構造</h3></div>
+      <p>すべてのプログラムは、以下の3つの構造の組み合わせで作られています。</p>
+      <table>
+        <tr><th>構造</th><th>意味</th><th>Python での例</th></tr>
+        <tr><td><strong>順次（Sequential）</strong></td><td>上から順番に1行ずつ実行</td><td>命令を1行ずつ書く</td></tr>
+        <tr><td><strong>分岐（Selection）</strong></td><td>条件によって実行する命令を変える</td><td><code>if</code> / <code>else</code></td></tr>
+        <tr><td><strong>反復（Iteration）</strong></td><td>同じ処理を繰り返す</td><td><code>for</code> / <code>while</code></td></tr>
+      </table>
+      <p style="margin-top:0.5rem">今回は<strong>順次</strong>と<strong>反復（for文）</strong>を中心に学びます。分岐は第3回で扱います。</p>
+
+      <div class="analogy">
+        料理のレシピと同じです。「材料を切る → 炒める → 盛り付ける」は順次。「味が薄ければ塩を足す」は分岐。「5分間かき混ぜ続ける」は反復です。
+      </div>
+    </div>
+
+    <!-- Pythonの基本構文 -->
+    <div class="card" style="border-left:4px solid #93D500">
+      <div class="card-header"><h3>Pythonの基本構文（復習）</h3></div>
+
+      <div class="concept-box">
+        <h4>変数と型</h4>
+        <p>変数は「名前を付けた箱」。値を入れておき、後から使えます。</p>
+      </div>
+
+      <pre><span class="code-label">Python</span>
+<span class="cmt"># 変数に値を代入する</span>
+x <span class="op">=</span> <span class="num">100</span>        <span class="cmt"># 整数（int）</span>
+y <span class="op">=</span> <span class="num">3.14</span>       <span class="cmt"># 小数（float）</span>
+name <span class="op">=</span> <span class="str">"py5"</span>   <span class="cmt"># 文字列（str）</span>
+
+<span class="cmt"># for文の基本形</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):   <span class="cmt"># i = 0, 1, 2, 3, 4</span>
+    <span class="fn">print</span>(i)</pre>
+
+      <div class="concept-box">
+        <h4>range() の仕組み</h4>
+        <p><code>range(n)</code> は 0 から n-1 までの整数を順番に生成します。</p>
+        <table>
+          <tr><th>書き方</th><th>生成される値</th></tr>
+          <tr><td><code>range(5)</code></td><td>0, 1, 2, 3, 4</td></tr>
+          <tr><td><code>range(2, 7)</code></td><td>2, 3, 4, 5, 6</td></tr>
+          <tr><td><code>range(0, 10, 2)</code></td><td>0, 2, 4, 6, 8</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- CS基礎: コンピュータの構成要素 -->
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header"><h3>CS基礎: コンピュータの構成要素</h3></div>
+
+      <div class="concept-box">
+        <h4>コンピュータの5大装置</h4>
+        <table>
+          <tr><th>装置</th><th>役割</th><th>日常の例え</th></tr>
+          <tr><td><strong>CPU</strong>（Central Processing Unit）</td><td>計算・判断を行う「頭脳」</td><td>料理人の頭脳</td></tr>
+          <tr><td><strong>GPU</strong>（Graphics Processing Unit）</td><td>大量の並列計算を得意とするプロセッサ</td><td>たくさんの助手が同時に作業</td></tr>
+          <tr><td><strong>メモリ</strong>（RAM）</td><td>作業中のデータを一時的に保持</td><td>料理台（作業スペース）</td></tr>
+          <tr><td><strong>ストレージ</strong>（SSD/HDD）</td><td>データを永続的に保存</td><td>冷蔵庫（保管場所）</td></tr>
+          <tr><td><strong>入出力装置</strong></td><td>キーボード・マウス・ディスプレイなど</td><td>注文票と完成した料理</td></tr>
+        </table>
+      </div>
+
+      <div class="concept-box" style="margin-top:1rem">
+        <h4>OS（Operating System）の役割</h4>
+        <p>OSはハードウェアとアプリケーションの間を取り持つソフトウェアです。ファイル管理、メモリ管理、プロセス管理などを担当します。</p>
+        <p style="margin-top:0.5rem">代表例: <strong>macOS</strong>（Mac）、Windows（PC）、Linux（サーバ）、iOS/Android（スマホ）</p>
+      </div>
+
+      <p style="margin-top:1rem">以下をコピーしてNotionに貼り付け、空欄を埋めてください。</p>
+      <pre><span class="code-label">Notion テンプレート</span>
+【ノート】CS基礎: コンピュータの構成要素
+
+- CPUの役割: ＿＿＿＿＿＿＿＿＿＿
+- GPUの役割: ＿＿＿＿＿＿＿＿＿＿
+- GPUがAI/データサイエンスで重要な理由: ＿＿＿＿＿＿
+- メモリ（RAM）の役割: ＿＿＿＿＿＿＿＿
+- メモリとストレージの違い: ＿＿＿＿＿＿＿＿＿＿
+- OSの役割: ＿＿＿＿＿＿＿＿＿＿
+- 自分のMacのOS名: ＿＿＿＿＿＿</pre>
+    </div>
+
+    <!-- アルゴリズムと計算量 -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>アルゴリズムと計算量</h3></div>
+
+      <div class="concept-box">
+        <h4>アルゴリズムとは</h4>
+        <p>「問題を解くための手順」のこと。繰り返し（ループ）は最も基本的なアルゴリズムです。</p>
+      </div>
+
+      <div class="concept-box" style="margin-top:0.5rem">
+        <h4>計算量の直感</h4>
+        <p>ループの回数が増えると処理時間が増えます。特に<strong>二重ループ</strong>は要注意です。</p>
+        <table>
+          <tr><th>ループ</th><th>n=10 の処理回数</th><th>n=100 の処理回数</th><th>n=1000 の処理回数</th></tr>
+          <tr><td>1重ループ（O(n)）</td><td>10回</td><td>100回</td><td>1,000回</td></tr>
+          <tr><td>2重ループ（O(n<sup>2</sup>)）</td><td>100回</td><td>10,000回</td><td>1,000,000回</td></tr>
+        </table>
+        <p style="margin-top:0.5rem;color:#FFB800;font-weight:700">step2-5.py の二重ループで体感してみましょう。range の数を変えると描画時間がどう変わるか試してみてください。</p>
+      </div>
+
+      <div class="analogy">
+        1重ループは「教室の全員に1回ずつ握手する」（n回）。2重ループは「全員が全員と握手する」（n&times;n回）。人数が10人なら100回、100人なら10,000回になります。
+      </div>
+    </div>
+
+    <!-- データの表現 -->
+    <div class="card" style="border-left:4px solid #93D500">
+      <div class="card-header"><h3>データの表現と種類</h3></div>
+
+      <div class="concept-box">
+        <h4>色 = 数値3つで表現</h4>
+        <p>コンピュータでは、色を<strong>3つの数値の組み合わせ</strong>で表現します。すべての情報は数値化できる ── これがデータサイエンスの出発点です。</p>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li><strong>RGB</strong>: 赤(R)・緑(G)・青(B) の光の強さ（各 0〜255）</li>
+          <li><strong>HSB</strong>: 色相(H)・彩度(S)・明度(B) で色を指定</li>
+        </ul>
+      </div>
+
+      <div class="concept-box" style="margin-top:0.5rem">
+        <h4>データの種類</h4>
+        <table>
+          <tr><th>分類</th><th>種類</th><th>例</th></tr>
+          <tr><td rowspan="2"><strong>量的データ</strong><br><span style="color:#999;font-size:0.8rem">数値で表現</span></td><td>連続データ</td><td>身長、体重、気温</td></tr>
+          <tr><td>離散データ</td><td>人数、回数、個数</td></tr>
+          <tr><td rowspan="2"><strong>質的データ</strong><br><span style="color:#999;font-size:0.8rem">カテゴリで表現</span></td><td>名義尺度</td><td>血液型、性別、都道府県</td></tr>
+          <tr><td>順序尺度</td><td>成績（A/B/C）、満足度</td></tr>
+        </table>
+        <p style="margin-top:0.5rem">色のRGB値（0〜255の整数）は<strong>離散的な量的データ</strong>です。</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ GROUP WORK DIVIDER ============ -->
+<section style="padding:2rem 0;background:linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a)">
+  <div class="container" style="text-align:center">
+    <div style="font-size:1.5rem;font-weight:900;color:#76B900;margin-bottom:0.5rem">ここから先はグループで進めてください</div>
+    <p style="font-size:0.85rem;color:#93D500;margin-bottom:1rem">この資料を上から順に読みながら、グループで協力して演習を進めましょう</p>
+    <div style="display:inline-flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;font-size:0.7rem">
+      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
+        <div style="color:#76B900;font-weight:700">1. グループワーク</div>
+        <div style="color:#999">約20分</div>
+      </div>
+      <div style="color:#76B900;display:flex;align-items:center">&rarr;</div>
+      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
+        <div style="color:#76B900;font-weight:700">2. 繰り返し処理</div>
+        <div style="color:#999">約40分</div>
+      </div>
+      <div style="color:#76B900;display:flex;align-items:center">&rarr;</div>
+      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
+        <div style="color:#76B900;font-weight:700">3. 色の表現</div>
+        <div style="color:#999">約30分</div>
+      </div>
+      <div style="color:#76B900;display:flex;align-items:center">&rarr;</div>
+      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
+        <div style="color:#76B900;font-weight:700">4. 自由制作</div>
+        <div style="color:#999">約30分</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1. GROUP WORK ============ -->
+<section id="sec-groupwork">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#93D500">1</div>
+      <h2>グループワーク <span style="font-size:0.5rem;color:#999;font-weight:400">── 約20分</span></h2>
+    </div>
+
+    <div class="card group" id="std2-1">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題</span>
+        <h3>std2-1: py5の使い方をグループでまとめる <span class="exam-alert">指名プレゼンあり</span></h3>
+      </div>
+      <p>第1回で学んだpy5の基本をグループで振り返り、<strong>「py5の使い方まとめ」</strong>をNotionにまとめてください。</p>
+
+      <div style="background:#1A1A1A;border:2px solid #93D500;border-radius:10px;padding:1.2rem;margin:1rem 0">
+        <p style="color:#93D500;font-weight:700;font-size:1rem;margin-bottom:0.8rem">まとめる内容</p>
+        <ul class="point-list">
+          <li>py5でよく使う関数一覧（<code>size</code>, <code>rect</code>, <code>ellipse</code>, <code>fill</code>, <code>stroke</code>, <code>background</code> など）</li>
+          <li>各関数の引数の意味（座標・サイズ・色の指定方法）</li>
+          <li>座標系の説明（左上が原点、x は右方向、y は下方向）</li>
+          <li>第1回で自分たちが苦戦したポイントとその解決方法</li>
+        </ul>
+      </div>
+
+      <div class="callout-warning">
+        <h4>指名プレゼン</h4>
+        <p>教員が<strong>2グループを指名</strong>します。指名されたグループは、まとめた内容を全体に向けてプレゼンしてください（3〜5分程度）。</p>
+      </div>
+
+      <div class="notion-submit">
+        <strong>Notionノートに記録してください</strong> ── グループでまとめた「py5の使い方まとめ」を記録
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 2. LOOP PRACTICE ============ -->
+<section id="sec-loop">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">2</div>
+      <h2>繰り返し処理の練習 <span style="font-size:0.5rem;color:#999;font-weight:400">── 約40分</span></h2>
+    </div>
+
+    <div class="card standard" id="std2-2">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題</span>
+        <h3>std2-2: 授業ノート</h3>
+      </div>
+      <p>以下のstep2-1〜step2-5のコードをすべて実行し、<strong>各コードにコメントを追加</strong>してNotionに記録してください。</p>
+      <p style="margin-top:0.5rem;color:#FFB800;font-weight:700">この授業を知らない人が読んでも分かる文書にすること。</p>
+
+      <div class="callout-info" style="margin-top:1rem">
+        <h4>作業ディレクトリの準備</h4>
+        <p>ターミナルで以下を実行して、今回の作業ディレクトリに移動してください。</p>
+      </div>
+
+      <pre><span class="code-label">Terminal</span>
+<span class="fn">cd</span> ~/MD1/no2
+<span class="fn">source</span> .venv/bin/activate</pre>
+
+      <div class="callout-warning">
+        <h4>仮想環境の確認</h4>
+        <p>プロンプトの先頭に <code>(.venv)</code> が表示されていることを確認してください。表示されていない場合は <code>source .venv/bin/activate</code> を実行してください。</p>
+      </div>
+    </div>
+
+    <!-- step2-1 -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">step2-1</span>
+        <h3>横一列に5つの四角形</h3>
+      </div>
+      <p>for文を使って、5つの四角形を横に並べて描画します。</p>
+
+      <pre><span class="code-label">Python ── step2-1.py</span>
+<span class="cmt"># step2-1.py - 横一列に5つの四角形</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">300</span>)
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):
+        py5.<span class="fn">rect</span>(<span class="num">50</span> + i*<span class="num">70</span>, <span class="num">100</span>, <span class="num">50</span>, <span class="num">50</span>)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="concept-box">
+        <h4>解説: i の値と座標の関係</h4>
+        <table>
+          <tr><th>i</th><th>50 + i*70</th><th>描画位置（x座標）</th></tr>
+          <tr><td>0</td><td>50 + 0 = 50</td><td>左端</td></tr>
+          <tr><td>1</td><td>50 + 70 = 120</td><td></td></tr>
+          <tr><td>2</td><td>50 + 140 = 190</td><td>中央</td></tr>
+          <tr><td>3</td><td>50 + 210 = 260</td><td></td></tr>
+          <tr><td>4</td><td>50 + 280 = 330</td><td>右端</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- step2-2 -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">step2-2</span>
+        <h3>色の変化</h3>
+      </div>
+      <p>ループ変数 <code>i</code> を使って、四角形の色を段階的に変化させます。</p>
+
+      <pre><span class="code-label">Python ── step2-2.py</span>
+<span class="cmt"># step2-2.py - 色の変化</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">300</span>)
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):
+        py5.<span class="fn">fill</span>(<span class="num">50</span> * i, <span class="num">0</span>, <span class="num">0</span>)
+        py5.<span class="fn">rect</span>(<span class="num">50</span> + i*<span class="num">70</span>, <span class="num">100</span>, <span class="num">50</span>, <span class="num">50</span>)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="concept-box">
+        <h4>考えてみよう</h4>
+        <p><code>fill(50 * i, 0, 0)</code> で i が 0 のときは <code>fill(0, 0, 0)</code> = 黒、i が 4 のときは <code>fill(200, 0, 0)</code> = 濃い赤になります。</p>
+        <p style="margin-top:0.3rem">ループ変数を使って色を計算式で指定する ── これが「データで色を表現する」第一歩です。</p>
+      </div>
+    </div>
+
+    <!-- step2-3 -->
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <span class="tag" style="background:#2e1a0a;color:#FFB800">step2-3</span>
+        <h3>同心円（意図通り表示されない ── どう直す？）</h3>
+      </div>
+      <p>このコードは「同心円」を描こうとしていますが、実行すると意図通りに見えません。<strong>なぜうまくいかないのか、どう直せばよいか</strong>をグループで考えてください。</p>
+
+      <pre><span class="code-label">Python ── step2-3.py</span>
+<span class="cmt"># step2-3.py - 同心円（意図通り表示されない、どう直す？）</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">300</span>)
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):
+        size <span class="op">=</span> <span class="num">20</span> + i*<span class="num">10</span>
+        py5.<span class="fn">ellipse</span>(<span class="num">200</span>, <span class="num">150</span>, size, size)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="callout-tip">
+        <h4>ヒント</h4>
+        <p>py5では後から描いた図形が上に重なります（<strong>順次制御</strong>の性質）。小さい円の上に大きい円を描くと、小さい円が隠れてしまいます。</p>
+      </div>
+    </div>
+
+    <!-- step2-4 -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">step2-4</span>
+        <h3>位置とサイズ両方変える</h3>
+      </div>
+      <p>ループ変数 <code>i</code> を使って、位置・サイズの両方を同時に変化させます。</p>
+
+      <pre><span class="code-label">Python ── step2-4.py</span>
+<span class="cmt"># step2-4.py - 位置とサイズ両方変える</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">300</span>)
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">8</span>):
+        py5.<span class="fn">ellipse</span>(<span class="num">50</span> + i*<span class="num">40</span>, <span class="num">50</span> + i*<span class="num">30</span>, <span class="num">40</span> - i*<span class="num">3</span>, <span class="num">40</span> - i*<span class="num">3</span>)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="concept-box">
+        <h4>観察してみよう</h4>
+        <ul class="point-list">
+          <li>x 座標: 50 → 90 → 130 → ... （右に移動）</li>
+          <li>y 座標: 50 → 80 → 110 → ... （下に移動）</li>
+          <li>サイズ: 40 → 37 → 34 → ... （だんだん小さく）</li>
+        </ul>
+        <p style="margin-top:0.3rem">1つのループ変数 <code>i</code> で複数のパラメータを同時に制御できます。</p>
+      </div>
+    </div>
+
+    <!-- step2-5 -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">step2-5</span>
+        <h3>二重ループで格子状に配置</h3>
+      </div>
+      <p>for文を2つ入れ子にすると、<strong>格子状（グリッド）</strong>に図形を配置できます。</p>
+
+      <pre><span class="code-label">Python ── step2-5.py</span>
+<span class="cmt"># step2-5.py - 二重ループ格子状</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">400</span>)
+    <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):
+        <span class="kw">for</span> y <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):
+            py5.<span class="fn">rect</span>(<span class="num">50</span> + x*<span class="num">70</span>, <span class="num">50</span> + y*<span class="num">70</span>, <span class="num">50</span>, <span class="num">50</span>)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="concept-box">
+        <h4>二重ループの仕組み</h4>
+        <p>外側のループ（x）が1回進むごとに、内側のループ（y）が5回実行されます。合計 5 &times; 5 = <strong>25個</strong>の四角形が描画されます。</p>
+        <p style="margin-top:0.5rem;color:#FFB800;font-weight:700">実験: range(5) を range(20) に変えてみよう。描画数は 20&times;20 = 400個になります。さらに range(50) にすると？</p>
+      </div>
+    </div>
+
+    <!-- 口頭試問 -->
+    <div class="card" style="border-left:4px solid #FFB800" id="sec-quiz">
+      <div class="card-header">
+        <span class="tag tag-note">ノート</span>
+        <h3>口頭試問 <span class="exam-alert">全員参加</span></h3>
+      </div>
+      <p>グループ内で口頭試問を行います。1人3問ずつ出題し、他のメンバーが回答します。</p>
+
+      <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:10px;padding:1rem;margin:1rem 0">
+        <p style="color:#FFB800;font-weight:700;margin-bottom:0.5rem">出題範囲</p>
+        <ul class="point-list">
+          <li>for文の動作（range の引数を変えるとどうなるか）</li>
+          <li>py5の座標系（x, y がどの方向に増えるか）</li>
+          <li>step2-1〜step2-5 のコードを変更したらどうなるか</li>
+          <li>CS基礎（CPU, GPU, メモリ, ストレージの役割）</li>
+        </ul>
+      </div>
+
+      <details style="margin-top:1rem">
+        <summary><strong>出題例</strong>（参考にしてOK。ただし3問中2問は自分で考えること）</summary>
+        <div class="answer-content">
+          <table>
+            <tr><th style="width:50%">問題</th><th style="width:50%">正解</th></tr>
+            <tr><td>range(3) で i はどの値をとる？</td><td>0, 1, 2</td></tr>
+            <tr><td>py5の座標系で y が増えるとどの方向に動く？</td><td>下方向</td></tr>
+            <tr><td>step2-5.py で range(5) を range(10) にすると四角形は何個？</td><td>10 &times; 10 = 100個</td></tr>
+            <tr><td>CPUとGPUの違いは？</td><td>CPUは汎用的な計算、GPUは大量の並列計算が得意</td></tr>
+            <tr><td>メモリとストレージの違いは？</td><td>メモリは一時的（電源を切ると消える）、ストレージは永続的</td></tr>
+          </table>
+        </div>
+      </details>
+
+      <div class="notion-submit">
+        <strong>Notionノートに記録してください</strong> ── 出題者・問題・回答者・結果を下の表形式で記録
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 3. COLOR ============ -->
+<section id="sec-color">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">3</div>
+      <h2>色の表現 RGB・HSB <span style="font-size:0.5rem;color:#999;font-weight:400">── 約30分</span></h2>
+    </div>
+
+    <!-- RGB vs HSB -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>RGBとHSBの違い</h3></div>
+
+      <div class="concept-box">
+        <h4>RGB（Red, Green, Blue）</h4>
+        <p>光の三原色。各色 0〜255 で指定します。py5のデフォルトのカラーモードです。</p>
+        <table>
+          <tr><th>色</th><th>R</th><th>G</th><th>B</th></tr>
+          <tr><td style="color:#FF5252">赤</td><td>255</td><td>0</td><td>0</td></tr>
+          <tr><td style="color:#76B900">緑</td><td>0</td><td>255</td><td>0</td></tr>
+          <tr><td style="color:#4FC3F7">青</td><td>0</td><td>0</td><td>255</td></tr>
+          <tr><td style="color:#FFB800">黄</td><td>255</td><td>255</td><td>0</td></tr>
+          <tr><td>白</td><td>255</td><td>255</td><td>255</td></tr>
+          <tr><td style="color:#666">黒</td><td>0</td><td>0</td><td>0</td></tr>
+        </table>
+      </div>
+
+      <div class="concept-box" style="margin-top:1rem">
+        <h4>HSB（Hue, Saturation, Brightness）</h4>
+        <p>人間の感覚に近い色指定方法。「虹のどの色か」「どれくらい鮮やかか」「どれくらい明るいか」で指定します。</p>
+        <table>
+          <tr><th>パラメータ</th><th>範囲</th><th>意味</th></tr>
+          <tr><td><strong>H</strong>（色相）</td><td>0〜360</td><td>色の種類（0=赤, 60=黄, 120=緑, 180=シアン, 240=青, 300=紫）</td></tr>
+          <tr><td><strong>S</strong>（彩度）</td><td>0〜100</td><td>鮮やかさ（0=灰色, 100=最も鮮やか）</td></tr>
+          <tr><td><strong>B</strong>（明度）</td><td>0〜100</td><td>明るさ（0=黒, 100=最も明るい）</td></tr>
+        </table>
+        <p style="margin-top:0.5rem;color:#93D500"><strong>HSBの利点:</strong> 「虹色のグラデーション」を作りたいとき、Hの値を変えるだけでよい。RGBでは3つの値を同時に調整する必要があり複雑。</p>
+      </div>
+    </div>
+
+    <!-- 実験1 -->
+    <div class="card" style="border-left:4px solid #93D500">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#93D500">実験1</span>
+        <h3>RGB vs HSB の比較</h3>
+      </div>
+      <p>以下のコードを実行して、RGBとHSBで同じ「赤」を表現できることを確認してください。</p>
+
+      <pre><span class="code-label">Python ── experiment1.py</span>
+<span class="cmt"># 実験1 RGB vs HSB comparison</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">200</span>)
+    py5.<span class="fn">background</span>(<span class="num">255</span>)
+    py5.<span class="fn">no_stroke</span>()
+
+    <span class="cmt"># RGB モード（デフォルト）</span>
+    py5.<span class="fn">color_mode</span>(py5.RGB, <span class="num">255</span>)
+    py5.<span class="fn">fill</span>(<span class="num">255</span>, <span class="num">0</span>, <span class="num">0</span>)
+    py5.<span class="fn">circle</span>(<span class="num">100</span>, <span class="num">100</span>, <span class="num">80</span>)
+
+    <span class="cmt"># HSB モード</span>
+    py5.<span class="fn">color_mode</span>(py5.HSB, <span class="num">360</span>, <span class="num">100</span>, <span class="num">100</span>)
+    py5.<span class="fn">fill</span>(<span class="num">0</span>, <span class="num">100</span>, <span class="num">100</span>)
+    py5.<span class="fn">circle</span>(<span class="num">300</span>, <span class="num">100</span>, <span class="num">80</span>)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="concept-box">
+        <h4>確認ポイント</h4>
+        <ul class="point-list">
+          <li>左の円（RGB: 255, 0, 0）と右の円（HSB: 0, 100, 100）は同じ赤色になる</li>
+          <li><code>color_mode</code> でカラーモードを切り替えられる</li>
+          <li>HSBの H=0 は赤（色相環の開始位置）</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 実験2 / std2-3 -->
+    <div class="card standard" id="std2-3">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題</span>
+        <h3>std2-3: HSBカラー実験（虹色5つの円）</h3>
+      </div>
+      <p>以下のコードの <code>?</code> を埋めて、<strong>虹色（赤・黄〜オレンジ・緑・青〜シアン・紫）の5つの円</strong>を描いてください。</p>
+
+      <pre><span class="code-label">Python ── std2-3.py</span>
+<span class="cmt"># 実験2 HSB rainbow (std2-3 - ?を埋めよう)</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">200</span>)
+    py5.<span class="fn">background</span>(<span class="num">255</span>)
+    py5.<span class="fn">no_stroke</span>()
+    py5.<span class="fn">color_mode</span>(py5.HSB, <span class="num">360</span>, <span class="num">100</span>, <span class="num">100</span>)
+
+    py5.<span class="fn">fill</span>(?, ?, ?)  <span class="cmt"># 赤</span>
+    py5.<span class="fn">circle</span>(<span class="num">80</span>, <span class="num">100</span>, <span class="num">50</span>)
+
+    py5.<span class="fn">fill</span>(?, ?, ?)  <span class="cmt"># オレンジ〜黄</span>
+    py5.<span class="fn">circle</span>(<span class="num">140</span>, <span class="num">100</span>, <span class="num">50</span>)
+
+    py5.<span class="fn">fill</span>(?, ?, ?)  <span class="cmt"># 緑</span>
+    py5.<span class="fn">circle</span>(<span class="num">200</span>, <span class="num">100</span>, <span class="num">50</span>)
+
+    py5.<span class="fn">fill</span>(?, ?, ?)  <span class="cmt"># 青〜シアン</span>
+    py5.<span class="fn">circle</span>(<span class="num">260</span>, <span class="num">100</span>, <span class="num">50</span>)
+
+    py5.<span class="fn">fill</span>(?, ?, ?)  <span class="cmt"># 紫</span>
+    py5.<span class="fn">circle</span>(<span class="num">320</span>, <span class="num">100</span>, <span class="num">50</span>)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="callout-tip">
+        <h4>ヒント</h4>
+        <p>HSBモードでは H（色相）を 0〜360 の範囲で変えると虹色になります。5色を均等に配置するには、360 &divide; 5 = 72 ずつ H を変えていけばよいです。S（彩度）と B（明度）は両方とも 100 にしておきましょう。</p>
+      </div>
+
+      <div class="notion-submit">
+        <strong>Notionノートに記録してください</strong> ── 完成したコード（?を埋めたもの）＋実行結果のスクリーンショット
+      </div>
+    </div>
+
+    <!-- インタラクティブ例 -->
+    <div class="card" style="border-left:4px solid #93D500">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#93D500">発展</span>
+        <h3>マウスで色を操作する（参考例）</h3>
+      </div>
+      <p><code>draw()</code> 関数を使うとアニメーションが作れます。マウスの位置で色が変わるインタラクティブな例を試してみましょう。</p>
+
+      <pre><span class="code-label">Python ── interactive_hsb.py</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">800</span>, <span class="num">800</span>)
+    py5.<span class="fn">color_mode</span>(py5.HSB, <span class="num">360</span>, <span class="num">100</span>, <span class="num">100</span>)
+    py5.<span class="fn">no_stroke</span>()
+
+<span class="kw">def</span> <span class="fn">draw</span>():
+    py5.<span class="fn">background</span>(<span class="num">0</span>)
+    hue <span class="op">=</span> py5.<span class="fn">remap</span>(py5.mouse_x, <span class="num">0</span>, py5.width, <span class="num">0</span>, <span class="num">360</span>)
+    brightness <span class="op">=</span> py5.<span class="fn">remap</span>(py5.mouse_y, <span class="num">0</span>, py5.height, <span class="num">100</span>, <span class="num">0</span>)
+    py5.<span class="fn">fill</span>(hue, <span class="num">100</span>, brightness)
+    py5.<span class="fn">ellipse</span>(py5.width / <span class="num">2</span>, py5.height / <span class="num">2</span>, <span class="num">200</span>, <span class="num">200</span>)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="concept-box">
+        <h4>setup() と draw() の違い</h4>
+        <table>
+          <tr><th>関数</th><th>実行回数</th><th>用途</th></tr>
+          <tr><td><code>setup()</code></td><td>1回だけ</td><td>初期設定（ウィンドウサイズ、背景色など）</td></tr>
+          <tr><td><code>draw()</code></td><td>毎フレーム繰り返し（約60fps）</td><td>アニメーション、ユーザー操作への反応</td></tr>
+        </table>
+        <p style="margin-top:0.5rem"><code>remap()</code> は値の範囲を変換する関数です。マウスのx座標（0〜800）を色相（0〜360）に変換しています。</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 4. FREE CREATION ============ -->
+<section id="sec-free">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">4</div>
+      <h2>自由制作 <span style="font-size:0.5rem;color:#999;font-weight:400">── 約30分</span></h2>
+    </div>
+
+    <div class="card standard" id="std2-4">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題</span>
+        <h3>std2-4: 自由制作 <span class="exam-alert">5/11にプレゼン</span></h3>
+      </div>
+      <p>今回学んだ<strong>順次制御・繰り返し処理（for文）・RGB/HSBカラー</strong>を活用して、視覚的に美しいコンテンツを制作してください。</p>
+
+      <div style="background:#1A1A1A;border:2px solid #76B900;border-radius:10px;padding:1.2rem;margin:1rem 0">
+        <p style="color:#76B900;font-weight:700;font-size:1rem;margin-bottom:0.8rem">制作のルール</p>
+        <ul class="point-list">
+          <li><strong>for文を最低1つ</strong>使うこと</li>
+          <li><strong>色（RGB または HSB）</strong>を意図的に使うこと</li>
+          <li>テーマは自由（幾何学模様、自然の表現、キャラクター、抽象アートなど）</li>
+        </ul>
+      </div>
+
+      <div style="background:#1A1A1A;border:2px solid #93D500;border-radius:10px;padding:1.2rem;margin:1rem 0">
+        <p style="color:#93D500;font-weight:700;font-size:1rem;margin-bottom:0.8rem">提出要件</p>
+        <table>
+          <tr><th style="width:30%">提出物</th><th>内容</th></tr>
+          <tr>
+            <td><strong style="color:#76B900">1. コード</strong></td>
+            <td>完成したコード全体をNotionノートに貼り付ける</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#76B900">2. 実行結果</strong></td>
+            <td>スクリーンショットをNotionに貼り付ける</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#76B900">3. 説明</strong></td>
+            <td>テーマ・工夫した点・for文の使い方・色の選び方を文章で説明</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="callout-warning">
+        <h4>5/11（第3回）にプレゼン</h4>
+        <p>次回の授業でグループ内発表を行います。作品のテーマ、工夫した点、苦労した点を説明できるようにしておいてください。</p>
+      </div>
+
+      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1rem;margin:1rem 0">
+        <p style="font-size:0.9rem;font-weight:700;color:#93D500;margin-bottom:0.5rem">アイデア例</p>
+        <table>
+          <tr><th style="width:30%">テーマ</th><th>使う技術</th></tr>
+          <tr><td>虹色の同心円</td><td>for文 + HSBカラー + ellipse</td></tr>
+          <tr><td>市松模様</td><td>二重for文 + if文（条件で色を変える）</td></tr>
+          <tr><td>星空</td><td>for文 + random + 小さな circle</td></tr>
+          <tr><td>グラデーション背景</td><td>for文 + line + RGBの段階的変化</td></tr>
+          <tr><td>花の模様</td><td>for文 + 角度計算 + ellipse</td></tr>
+        </table>
+      </div>
+
+      <div class="notion-submit">
+        <strong>Notionノートに記録してください</strong> ── コード / 実行結果 / 説明文 の3点を記録
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ NOTION TEMPLATE ============ -->
+<section id="sec-notion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">N</div>
+      <h2>Notionテンプレート</h2>
+    </div>
+
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">テンプレート</span>
+        <h3>課題ノートのテンプレート</h3>
+      </div>
+      <p>以下をコピーしてNotionに貼り付け、各セクションを埋めていってください。これが提出するPDFの元になります。</p>
+
+      <pre><span class="code-label">Notion テンプレート</span>
+# MD1 第2回
+
+名前:
+学籍番号:
+
+---
+
+## CS基礎: コンピュータの構成要素
+- CPUの役割: ＿＿＿＿＿＿＿＿＿＿
+- GPUの役割: ＿＿＿＿＿＿＿＿＿＿
+- GPUがAI/データサイエンスで重要な理由: ＿＿＿＿＿＿
+- メモリ（RAM）の役割: ＿＿＿＿＿＿＿＿
+- メモリとストレージの違い: ＿＿＿＿＿＿＿＿＿＿
+- OSの役割: ＿＿＿＿＿＿＿＿＿＿
+- 自分のMacのOS名: ＿＿＿＿＿＿
+
+---
+
+## step2-1: 横一列に5つの四角形
+### 実行結果
+（スクリーンショットを貼り付け）
+### コメント
+（このコードが何をしているか、自分の言葉で説明）
+
+## step2-2: 色の変化
+### 実行結果
+（スクリーンショットを貼り付け）
+### コメント
+（fill(50*i, 0, 0) でどのように色が変わるか説明）
+
+## step2-3: 同心円（修正前と修正後）
+### 修正前の実行結果
+（スクリーンショットを貼り付け）
+### 問題点
+（なぜ意図通りに表示されないか説明）
+### 修正後のコード
+（修正したコードを貼り付け）
+### 修正後の実行結果
+（スクリーンショットを貼り付け）
+
+## step2-4: 位置とサイズ両方変える
+### 実行結果
+（スクリーンショットを貼り付け）
+### コメント
+（i の値が変わると位置とサイズがどう変化するか説明）
+
+## step2-5: 二重ループ格子状
+### 実行結果
+（スクリーンショットを貼り付け）
+### コメント
+（二重ループがどのように動くか説明。range の数を変えた実験結果も記録）
+
+---
+
+## 口頭試問
+| 出題者 | 問題（概要） | 回答者 | 結果 |
+|--------|-------------|--------|------|
+|        |             |        | ⭕/❌ |
+|        |             |        | ⭕/❌ |
+|        |             |        | ⭕/❌ |
+
+---
+
+## 標準課題 std2-1: グループワーク
+（グループでまとめた「py5の使い方まとめ」を記録）
+
+---
+
+## 標準課題 std2-2: 授業ノート
+（上記の step2-1〜step2-5 の記録がこれに該当します）
+
+---
+
+## 標準課題 std2-3: HSBカラー実験
+### Code
+（?を埋めた完成コードを貼り付け）
+### View
+（実行結果のスクリーンショットを貼り付け）
+
+---
+
+## 標準課題 std2-4: 自由制作
+### テーマ
+（何をテーマにしたか）
+### Code
+（完成コードを貼り付け）
+### View
+（実行結果のスクリーンショットを貼り付け）
+### 説明
+（工夫した点・for文の使い方・色の選び方を説明）</pre>
+
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
+        <strong>Notionに書いただけでは提出にならない。</strong>必ずPDFにエクスポートし、Google Classroomに提出すること。
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ ANSWERS ============ -->
+<section id="sec-answers">
+  <div class="container" id="answers-section" data-release="2026-05-11T13:10">
+    <div class="section-header">
+      <div class="section-num" style="background:#4A7A00">A</div>
+      <h2>解答例</h2>
+    </div>
+
+    <div id="answers-locked" style="display:none;background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:2rem;margin-bottom:1rem"></div>
+
+    <div id="answers-content">
+
+      <!-- std2-3 解答 -->
+      <div class="card" style="border-left:4px solid #76B900">
+        <div class="card-header"><h3>std2-3: HSBカラー実験 解答</h3></div>
+        <p>HSBモードで色相(H)を 72 ずつ変化させると、虹色の5色が均等に得られます。</p>
+
+        <pre><span class="code-label">Python ── std2-3 解答</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">200</span>)
+    py5.<span class="fn">background</span>(<span class="num">255</span>)
+    py5.<span class="fn">no_stroke</span>()
+    py5.<span class="fn">color_mode</span>(py5.HSB, <span class="num">360</span>, <span class="num">100</span>, <span class="num">100</span>)
+
+    py5.<span class="fn">fill</span>(<span class="num">0</span>, <span class="num">100</span>, <span class="num">100</span>)      <span class="cmt"># 赤 (H=0)</span>
+    py5.<span class="fn">circle</span>(<span class="num">80</span>, <span class="num">100</span>, <span class="num">50</span>)
+
+    py5.<span class="fn">fill</span>(<span class="num">72</span>, <span class="num">100</span>, <span class="num">100</span>)     <span class="cmt"># オレンジ〜黄 (H=72)</span>
+    py5.<span class="fn">circle</span>(<span class="num">140</span>, <span class="num">100</span>, <span class="num">50</span>)
+
+    py5.<span class="fn">fill</span>(<span class="num">144</span>, <span class="num">100</span>, <span class="num">100</span>)    <span class="cmt"># 緑 (H=144)</span>
+    py5.<span class="fn">circle</span>(<span class="num">200</span>, <span class="num">100</span>, <span class="num">50</span>)
+
+    py5.<span class="fn">fill</span>(<span class="num">216</span>, <span class="num">100</span>, <span class="num">100</span>)    <span class="cmt"># 青〜シアン (H=216)</span>
+    py5.<span class="fn">circle</span>(<span class="num">260</span>, <span class="num">100</span>, <span class="num">50</span>)
+
+    py5.<span class="fn">fill</span>(<span class="num">288</span>, <span class="num">100</span>, <span class="num">100</span>)    <span class="cmt"># 紫 (H=288)</span>
+    py5.<span class="fn">circle</span>(<span class="num">320</span>, <span class="num">100</span>, <span class="num">50</span>)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+        <div class="concept-box">
+          <h4>ポイント</h4>
+          <ul class="point-list">
+            <li>H の値: 0, 72, 144, 216, 288（360 &divide; 5 = 72 ずつ）</li>
+            <li>S（彩度）= 100: 最も鮮やかな色</li>
+            <li>B（明度）= 100: 最も明るい色</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- step2-3 解答 -->
+      <div class="card" style="border-left:4px solid #76B900">
+        <div class="card-header"><h3>step2-3: 同心円の修正方法</h3></div>
+        <p><strong>問題:</strong> 小さい円から大きい円の順に描画しているため、大きい円が小さい円を覆い隠してしまう。</p>
+        <p style="margin-top:0.5rem"><strong>解決:</strong> 大きい円から小さい円の順に描画する。ループを逆順にするか、サイズの計算式を変更する。</p>
+
+        <pre><span class="code-label">Python ── step2-3 修正版</span>
+<span class="cmt"># step2-3.py 修正版 - 大きい円から描く</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">300</span>)
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):
+        size <span class="op">=</span> <span class="num">60</span> - i*<span class="num">10</span>   <span class="cmt"># 60, 50, 40, 30, 20 と小さくなる</span>
+        py5.<span class="fn">ellipse</span>(<span class="num">200</span>, <span class="num">150</span>, size, size)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="container">
+    <div>MD1 ─ 2026年度前期 ─ 第2回</div>
+    <div style="margin-top:0.5rem;font-size:0.8rem;color:#666">&copy;2026 Ryota Nakamura.</div>
+  </div>
+</footer>
+
+<!-- ============ SCRIPTS ============ -->
+<script src="answer-gate.js"></script>
+<script>
+// Copy button for pre blocks
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var code = pre.textContent.replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|\.zshrc|Notion テンプレート)( ── [^\n]+)?\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+
+// Click-to-copy on inline code elements
+document.querySelectorAll(':not(pre) > code').forEach(function(code) {
+  code.title = 'クリックでコピー';
+  code.addEventListener('click', function() {
+    navigator.clipboard.writeText(code.textContent).then(function() {
+      code.classList.add('copied');
+      setTimeout(function() {
+        code.classList.remove('copied');
+      }, 1500);
+    });
+  });
+});
+</script>
+
+</body>
+</html>
