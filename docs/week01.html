@@ -9,14 +9,19 @@
 <style>
 /* ============ RESET & BASE ============ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; font-size: 32px; }
+html { scroll-behavior: smooth; font-size: clamp(13px, 1.6vw, 28px); }
+html, body { overflow-x: hidden; max-width: 100%; }
 body {
   font-family: 'Noto Sans JP', sans-serif;
   background: #111111;
   color: #e0e0e0;
   line-height: 1.8;
   -webkit-font-smoothing: antialiased;
+  overflow-wrap: anywhere;
+  word-break: normal;
 }
+/* Media and embeds should never overflow their container */
+img, video, iframe, svg, canvas { max-width: 100%; height: auto; }
 
 /* ============ LAYOUT ============ */
 .container { max-width: 1600px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
@@ -387,9 +392,135 @@ footer {
 }
 
 /* ============ RESPONSIVE ============ */
+/* Root font-size is fluid (see `html` rule). Breakpoints below adjust layout
+   (nav overflow, grids, tables, padding) for tablet and phone viewports. */
+
+/* Tablet and below: sticky nav needs to stay one row to avoid eating screen height */
+@media (max-width: 900px) {
+  .section-nav {
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    padding: 0.3rem 0.5rem;
+    -webkit-overflow-scrolling: touch;
+  }
+  .section-nav > * { flex-shrink: 0; }
+  .section-nav::-webkit-scrollbar { height: 3px; }
+  .section-nav::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+}
+
+/* Phone: tighten layout, wrap long content, make tables & pre scroll */
 @media (max-width: 640px) {
+  body { line-height: 1.7; }
+  .container { padding: 0 0.75rem; overflow-x: hidden; }
+  section { padding: 1.5rem 0; }
+
+  /* Hero */
+  .hero { padding: 1.6rem 0; }
+  .hero h1 { font-size: 1.15rem !important; line-height: 1.4; margin-bottom: 0.5rem; }
+  .hero p { font-size: 0.82rem !important; line-height: 1.55; }
+  .hero-badge { font-size: 0.7rem; padding: 0.25rem 0.75rem; line-height: 1.4; margin-bottom: 1rem; }
+  .hero .container > div[style*="padding:0.4rem"] { font-size: 0.65rem !important; padding: 0.35rem 0.6rem !important; }
+  .hero p,
+  .hero-badge,
+  header.hero p,
+  header.hero h1,
+  header.hero div { white-space: normal !important; overflow-wrap: anywhere; word-break: break-word; }
+
+  /* Section / cards — contain overflow so children never push the page */
+  .section-header { gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  .section-header h2 { font-size: 1.1rem; line-height: 1.35; }
+  .section-num { width: 1.9rem; height: 1.9rem; font-size: 0.85rem; border-radius: 0.35rem; }
+  .card { padding: 1rem; border-radius: 12px; overflow-x: auto; max-width: 100%; }
+  .card-header { gap: 0.5rem; flex-wrap: wrap; padding-bottom: 0.5rem; }
+  .card-header h3 { font-size: 1rem; line-height: 1.4; }
+
+  /* Submission box */
+  .submission-box { padding: 1rem; border-radius: 12px; overflow-x: hidden; }
+  .submission-box h3 { font-size: 0.95rem; flex-wrap: wrap; }
+  .submission-items { grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+  .sub-item { font-size: 0.65rem; padding: 0.5rem 0.3rem; }
+
+  /* Code / pre */
+  pre {
+    font-size: 0.72rem;
+    padding: 0.7rem;
+    border-radius: 8px;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  pre code { white-space: pre; word-break: normal; }
+  .code-label { font-size: 0.6rem; padding: 0.15rem 0.5rem; }
+  .copy-btn { font-size: 0.6rem; padding: 0.18rem 0.4rem; top: 4px; right: 4px; }
+
+  /* Tables — scroll inside their container, never push the page */
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+    font-size: 0.78rem;
+  }
+  th, td { padding: 0.4rem 0.5rem; white-space: normal; }
+  th { font-size: 0.72rem; }
+  th[style*="width"], td[style*="width"] { width: auto !important; min-width: 3rem; }
+
+  /* Flex containers with min-width — clamp to fit mobile */
+  [style*="min-width:8rem"] { min-width: 0 !important; }
+  [style*="min-width:12rem"] { min-width: 0 !important; }
+  [style*="min-width: 8rem"] { min-width: 0 !important; }
+  [style*="min-width: 12rem"] { min-width: 0 !important; }
+
+  /* Inline-block / inline-flex containers must not exceed viewport */
+  [style*="display:inline-block"],
+  [style*="display: inline-block"],
+  [style*="display:inline-flex"],
+  [style*="display: inline-flex"] { max-width: 100%; overflow-wrap: anywhere; }
+
+  /* Any div with inline styles inside cards must respect boundaries */
+  .card > div, .card div[style] { max-width: 100%; overflow-wrap: anywhere; }
+  div[style*="border-radius"] { max-width: 100%; overflow-wrap: anywhere; }
+
+  /* Callouts / details */
+  .callout-danger, .callout-warning, .callout-info, .callout-tip,
+  .concept-box, .analogy, .notion-submit { padding: 0.8rem 0.9rem; border-radius: 10px; font-size: 0.88rem; overflow-x: hidden; }
+  details summary { padding: 0.7rem 0.9rem; font-size: 0.9rem; }
+  details .answer-content { padding: 0.8rem 0.9rem; overflow-x: auto; }
+
+  /* Long strings (URLs, commands in prose, paths) must wrap */
+  p, li, td, th, summary, .card, .callout-info, .callout-tip,
+  .callout-warning, .callout-danger, div { overflow-wrap: anywhere; }
+  :not(pre) > code { white-space: normal; overflow-wrap: anywhere; word-break: break-all; }
+
+  /* Neutralize inline nowrap that would force horizontal scroll */
+  [style*="white-space:nowrap"],
+  [style*="white-space: nowrap"] { white-space: normal !important; }
+
+  /* Scroll-target offset needs to account for sticky nav height */
+  [id] { scroll-margin-top: 2.5rem; }
+}
+
+/* Small phone */
+@media (max-width: 420px) {
+  .container { padding: 0 0.6rem; }
   .submission-items { grid-template-columns: 1fr; }
-  .section-num { width: 2rem; height: 2rem; font-size: 0.85rem; }
+  .hero { padding: 1.3rem 0; }
+  .hero h1 { font-size: 1rem !important; }
+  .hero p { font-size: 0.78rem !important; }
+  .hero-badge { font-size: 0.65rem; padding: 0.22rem 0.65rem; }
+  .section-header h2 { font-size: 0.95rem; }
+  .section-num { width: 1.7rem; height: 1.7rem; font-size: 0.78rem; }
+  .card { padding: 0.75rem; }
+  .card-header h3 { font-size: 0.92rem; }
+  th, td { padding: 0.3rem 0.35rem; font-size: 0.7rem; }
+  th[style*="width"], td[style*="width"] { min-width: 2rem !important; }
+  pre { font-size: 0.65rem; padding: 0.55rem; }
+  .section-nav a { font-size: 0.6rem !important; padding: 0.2rem 0.4rem !important; }
+  .submission-box { padding: 0.8rem; }
+  .submission-box h3 { font-size: 0.88rem; }
+  .sub-item { font-size: 0.62rem; }
 }
 
 /* ============ COPY BUTTON ============ */
@@ -480,12 +611,12 @@ a.sub-item:hover {
 <header class="hero">
   <div class="container">
     <div class="hero-badge">Media creation Data design 1（MD1）─ 2026年度前期</div>
-    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.1rem;white-space:nowrap">武蔵野大学データサイエンス学部</p>
-    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.3rem;white-space:nowrap">武蔵野大学国際データサイエンス学部（通信教育部）</p>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.1rem">武蔵野大学データサイエンス学部</p>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.3rem">武蔵野大学国際データサイエンス学部（通信教育部）</p>
     <p style="font-size:0.95rem;opacity:0.85;margin-bottom:1rem">中村 亮太</p>
     <h1>MD1 第1回: グループディスカッション・ターミナル操作・環境構築</h1>
-    <p style="white-space:nowrap">開発環境を構築し、ターミナルの基本操作を身につける</p>
-    <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:0.3rem;padding:0.4rem 0.8rem;margin-top:1rem;font-size:0.7rem;display:inline-block">
+    <p>開発環境を構築し、ターミナルの基本操作を身につける</p>
+    <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:0.3rem;padding:0.4rem 0.8rem;margin-top:1rem;font-size:0.7rem;display:inline-block;max-width:100%;overflow-wrap:anywhere">
       <strong>対象環境:</strong> Apple M1 / M2 / M3 / M4 / M5 チップ搭載 Mac ｜ macOS Tahoe 26.4.1 (25E246)
     </div>
   </div>
@@ -515,8 +646,8 @@ a.sub-item:hover {
       <div id="notion-checklist" style="background:#141414;border:1px solid #333;border-radius:0.4rem;padding:1rem;margin-top:1rem">
         <p style="color:#76B900;font-weight:700;font-size:0.85rem;margin-bottom:0.3rem">ノート: Notionに記録する項目（提出前に確認）</p>
         <p style="font-size:0.75rem;color:#999;margin-bottom:0.8rem">以下の6項目を1つのNotionページに記録し、PDF化して提出します。各項目は資料内の該当箇所にテンプレートがあります。</p>
-        <table style="font-size:0.8rem">
-          <tr><th style="width:5%"></th><th style="width:30%">セクション</th><th>記録する内容</th><th style="width:10%">リンク</th></tr>
+        <table style="font-size:0.8rem;width:100%;table-layout:fixed">
+          <tr><th style="width:5%"></th><th style="width:28%">セクション</th><th>記録する内容</th><th style="width:8%">リンク</th></tr>
           <tr>
             <td><input type="checkbox"></td>
             <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> 確認事項</td>
@@ -1363,7 +1494,8 @@ rm -rf Challenge                  <span class="cmt"># ディレクトリごと�
       <h2>プログラミング環境構築確認 <span style="font-size:0.5rem;color:#999;font-weight:400">── グループ演習・約30分</span></h2>
     </div>
 
-    <p style="margin-bottom:1rem">以下の Work 1〜5 を順番に進めてください。課題で py5 を使うため、<strong>全員がここまで完了する必要があります</strong>。</p>
+    <p style="margin-bottom:0.5rem">以下の Work 1〜5 を順番に進めてください。課題で py5 を使うため、<strong>全員がここまで完了する必要があります</strong>。</p>
+    <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.5rem 0.8rem;margin-bottom:1rem;font-size:0.8rem"><a href="https://www.notion.so/Preparation-for-1st-class-346919598f268186b036e02ec85ec715?v=1ce919598f268051ba02000c0456d625" target="_blank" style="color:#76B900;font-weight:700">第1回授業準備（Notion）→</a></div>
 
     <!-- 環境の全体像 -->
     <div class="card" style="border-left:4px solid #FFB800">

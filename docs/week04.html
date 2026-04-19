@@ -9,14 +9,19 @@
 <style>
 /* ============ RESET & BASE ============ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; font-size: 32px; }
+html { scroll-behavior: smooth; font-size: clamp(13px, 1.6vw, 28px); }
+html, body { overflow-x: hidden; max-width: 100%; }
 body {
   font-family: 'Noto Sans JP', sans-serif;
   background: #111111;
   color: #e0e0e0;
   line-height: 1.8;
   -webkit-font-smoothing: antialiased;
+  overflow-wrap: anywhere;
+  word-break: normal;
 }
+/* Media and embeds should never overflow their container */
+img, video, iframe, svg, canvas { max-width: 100%; height: auto; }
 
 /* ============ LAYOUT ============ */
 .container { max-width: 1600px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
