@@ -10,13 +10,18 @@
 /* ============ RESET & BASE ============ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; font-size: clamp(13px, 1.6vw, 28px); }
+html, body { overflow-x: hidden; max-width: 100%; }
 body {
   font-family: 'Noto Sans JP', sans-serif;
   background: #111111;
   color: #e0e0e0;
   line-height: 1.8;
   -webkit-font-smoothing: antialiased;
+  overflow-wrap: anywhere;
+  word-break: normal;
 }
+/* Media and embeds should never overflow their container */
+img, video, iframe, svg, canvas { max-width: 100%; height: auto; }
 
 /* ============ LAYOUT ============ */
 .container { max-width: 1600px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
@@ -387,46 +392,109 @@ footer {
 }
 
 /* ============ RESPONSIVE ============ */
-/* Root font-size is fluid (see `html` rule) — it scales with viewport width.
-   The breakpoints below only adjust layout (grids, nav overflow, table scroll). */
+/* Root font-size is fluid (see `html` rule). Breakpoints below adjust layout
+   (nav overflow, grids, tables, padding) for tablet and phone viewports. */
+
+/* Tablet and below: sticky nav needs to stay one row to avoid eating screen height */
 @media (max-width: 900px) {
   .section-nav {
     overflow-x: auto;
+    overflow-y: hidden;
     flex-wrap: nowrap;
     justify-content: flex-start;
     padding: 0.3rem 0.5rem;
     -webkit-overflow-scrolling: touch;
   }
+  .section-nav > * { flex-shrink: 0; }
   .section-nav::-webkit-scrollbar { height: 3px; }
   .section-nav::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
 }
+
+/* Phone: tighten layout, wrap long content, make tables & pre scroll */
 @media (max-width: 640px) {
   body { line-height: 1.7; }
-  .container { padding: 0 0.9rem; }
-  .submission-items { grid-template-columns: 1fr 1fr; }
-  .section-num { width: 2rem; height: 2rem; font-size: 0.85rem; }
-  .section-header { gap: 0.5rem; margin-bottom: 1rem; }
-  .card-header { gap: 0.5rem; flex-wrap: wrap; }
+  .container { padding: 0 0.75rem; }
+  section { padding: 1.5rem 0; }
+
+  /* Hero */
+  .hero { padding: 2rem 0; }
+  .hero h1 { font-size: clamp(1.25rem, 5vw, 1.8rem); line-height: 1.35; }
+  .hero p { font-size: 0.9rem; }
+  .hero-badge { font-size: 0.75rem; padding: 0.3rem 0.85rem; line-height: 1.4; }
   .hero p,
   .hero-badge,
-  header.hero p[style*="nowrap"] { white-space: normal !important; word-break: break-word; }
-  /* Tables scroll horizontally when content is too wide */
-  .card > table,
-  .card table,
-  details .answer-content > table,
-  .submission-box table {
+  header.hero p { white-space: normal !important; overflow-wrap: anywhere; }
+
+  /* Section / cards */
+  .section-header { gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  .section-header h2 { font-size: 1.1rem; line-height: 1.35; }
+  .section-num { width: 1.9rem; height: 1.9rem; font-size: 0.85rem; border-radius: 0.35rem; }
+  .card { padding: 1rem; border-radius: 12px; }
+  .card-header { gap: 0.5rem; flex-wrap: wrap; padding-bottom: 0.5rem; }
+  .card-header h3 { font-size: 1rem; line-height: 1.4; }
+
+  /* Submission box */
+  .submission-box { padding: 1rem; border-radius: 12px; }
+  .submission-box h3 { font-size: 0.95rem; }
+  .submission-items { grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+  .sub-item { font-size: 0.65rem; padding: 0.5rem 0.3rem; }
+
+  /* Code / pre */
+  pre {
+    font-size: 0.72rem;
+    padding: 0.7rem;
+    border-radius: 8px;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  pre code { white-space: pre; word-break: normal; }
+  .code-label { font-size: 0.6rem; padding: 0.15rem 0.5rem; }
+  .copy-btn { font-size: 0.6rem; padding: 0.18rem 0.4rem; top: 4px; right: 4px; }
+
+  /* Tables — wrap them so layout cannot push past the card */
+  table {
     display: block;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     max-width: 100%;
+    font-size: 0.78rem;
   }
-  img, video, iframe { max-width: 100%; height: auto; }
-  /* Prevent nowrap inline styles from forcing horizontal scroll */
+  th, td { padding: 0.4rem 0.5rem; white-space: normal; }
+  th { font-size: 0.72rem; }
+  /* Inline style widths (e.g. width:5%) are meaningless in display:block;
+     let cell content determine width and allow horizontal scroll instead. */
+  th[style*="width"], td[style*="width"] { width: auto !important; min-width: 4rem; }
+
+  /* Callouts / details */
+  .callout-danger, .callout-warning, .callout-info, .callout-tip,
+  .concept-box, .analogy, .notion-submit { padding: 0.8rem 0.9rem; border-radius: 10px; font-size: 0.88rem; }
+  details summary { padding: 0.7rem 0.9rem; font-size: 0.9rem; }
+  details .answer-content { padding: 0.8rem 0.9rem; }
+
+  /* Long strings (URLs, commands in prose, paths) must wrap */
+  p, li, td, th, summary, .card, .callout-info, .callout-tip,
+  .callout-warning, .callout-danger { overflow-wrap: anywhere; }
+  :not(pre) > code { white-space: normal; overflow-wrap: anywhere; word-break: break-all; }
+
+  /* Neutralize inline nowrap that would force horizontal scroll */
   [style*="white-space:nowrap"],
   [style*="white-space: nowrap"] { white-space: normal !important; }
+
+  /* Scroll-target offset needs to account for sticky nav height */
+  [id] { scroll-margin-top: 2.5rem; }
 }
+
+/* Small phone */
 @media (max-width: 420px) {
+  .container { padding: 0 0.6rem; }
   .submission-items { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 1.1rem; }
+  .section-header h2 { font-size: 0.98rem; }
+  .card { padding: 0.85rem; }
+  th, td { padding: 0.35rem 0.4rem; font-size: 0.72rem; }
+  pre { font-size: 0.68rem; padding: 0.6rem; }
+  .section-nav a { font-size: 0.62rem !important; padding: 0.2rem 0.45rem !important; }
 }
 
 /* ============ COPY BUTTON ============ */
