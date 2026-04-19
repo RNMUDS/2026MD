@@ -417,13 +417,16 @@ footer {
   section { padding: 1.5rem 0; }
 
   /* Hero */
-  .hero { padding: 2rem 0; }
-  .hero h1 { font-size: clamp(1.25rem, 5vw, 1.8rem); line-height: 1.35; }
-  .hero p { font-size: 0.9rem; }
-  .hero-badge { font-size: 0.75rem; padding: 0.3rem 0.85rem; line-height: 1.4; }
+  .hero { padding: 1.6rem 0; }
+  .hero h1 { font-size: 1.15rem !important; line-height: 1.4; margin-bottom: 0.5rem; }
+  .hero p { font-size: 0.82rem !important; line-height: 1.55; }
+  .hero-badge { font-size: 0.7rem; padding: 0.25rem 0.75rem; line-height: 1.4; margin-bottom: 1rem; }
+  .hero .container > div[style*="padding:0.4rem"] { font-size: 0.65rem !important; padding: 0.35rem 0.6rem !important; }
   .hero p,
   .hero-badge,
-  header.hero p { white-space: normal !important; overflow-wrap: anywhere; }
+  header.hero p,
+  header.hero h1,
+  header.hero div { white-space: normal !important; overflow-wrap: anywhere; word-break: break-word; }
 
   /* Section / cards */
   .section-header { gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
@@ -489,12 +492,20 @@ footer {
 @media (max-width: 420px) {
   .container { padding: 0 0.6rem; }
   .submission-items { grid-template-columns: 1fr; }
-  .hero h1 { font-size: 1.1rem; }
-  .section-header h2 { font-size: 0.98rem; }
-  .card { padding: 0.85rem; }
-  th, td { padding: 0.35rem 0.4rem; font-size: 0.72rem; }
-  pre { font-size: 0.68rem; padding: 0.6rem; }
-  .section-nav a { font-size: 0.62rem !important; padding: 0.2rem 0.45rem !important; }
+  .hero { padding: 1.3rem 0; }
+  .hero h1 { font-size: 1rem !important; }
+  .hero p { font-size: 0.78rem !important; }
+  .hero-badge { font-size: 0.65rem; padding: 0.22rem 0.65rem; }
+  .section-header h2 { font-size: 0.95rem; }
+  .section-num { width: 1.7rem; height: 1.7rem; font-size: 0.78rem; }
+  .card { padding: 0.75rem; }
+  .card-header h3 { font-size: 0.92rem; }
+  th, td { padding: 0.3rem 0.35rem; font-size: 0.7rem; }
+  pre { font-size: 0.65rem; padding: 0.55rem; }
+  .section-nav a { font-size: 0.6rem !important; padding: 0.2rem 0.4rem !important; }
+  .submission-box { padding: 0.8rem; }
+  .submission-box h3 { font-size: 0.88rem; }
+  .sub-item { font-size: 0.62rem; }
 }
 
 /* ============ COPY BUTTON ============ */
@@ -585,12 +596,12 @@ a.sub-item:hover {
 <header class="hero">
   <div class="container">
     <div class="hero-badge">Media creation Data design 1（MD1）─ 2026年度前期</div>
-    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.1rem;white-space:nowrap">武蔵野大学データサイエンス学部</p>
-    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.3rem;white-space:nowrap">武蔵野大学国際データサイエンス学部（通信教育部）</p>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.1rem">武蔵野大学データサイエンス学部</p>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.3rem">武蔵野大学国際データサイエンス学部（通信教育部）</p>
     <p style="font-size:0.95rem;opacity:0.85;margin-bottom:1rem">中村 亮太</p>
     <h1>MD1 第1回: グループディスカッション・ターミナル操作・環境構築</h1>
-    <p style="white-space:nowrap">開発環境を構築し、ターミナルの基本操作を身につける</p>
-    <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:0.3rem;padding:0.4rem 0.8rem;margin-top:1rem;font-size:0.7rem;display:inline-block">
+    <p>開発環境を構築し、ターミナルの基本操作を身につける</p>
+    <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:0.3rem;padding:0.4rem 0.8rem;margin-top:1rem;font-size:0.7rem;display:inline-block;max-width:100%;overflow-wrap:anywhere">
       <strong>対象環境:</strong> Apple M1 / M2 / M3 / M4 / M5 チップ搭載 Mac ｜ macOS Tahoe 26.4.1 (25E246)
     </div>
   </div>
