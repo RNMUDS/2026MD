@@ -1809,9 +1809,13 @@ cd MD1/no1</code></pre>
       <pre><span class="code-label">今回作るディレクトリ構成</span>
 ~/
 └── MD1/
-    └── no1/          <span class="cmt">← 今ここに仮想環境を作る</span>
-        ├── .venv/    <span class="cmt">← 仮想環境（自動生成）</span>
-        └── step1.py  <span class="cmt">← これから作るファイル</span></pre>
+    └── no1/          <span class="cmt">← 作業ディレクトリ</span>
+        ├── .venv/    <span class="cmt">← 仮想環境（自動生成、中身を触らない）</span>
+        └── step1.py  <span class="cmt">← ここにファイルを作る（no1直下）</span></pre>
+
+      <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:0.3rem;padding:0.5rem 0.8rem;margin:0.8rem 0;font-size:0.8rem;color:#FFB800">
+        <strong>.venv の中にファイルを作らないこと。</strong> .venv は仮想環境を管理するための専用ディレクトリです。自分のコード（step1.py など）は <strong>no1 の直下</strong>に作成してください。
+      </div>
 
       <p style="margin-top:0.8rem"><strong>(2)</strong> 仮想環境を作成</p>
       <pre><code>uv venv</code></pre>
@@ -1838,7 +1842,7 @@ cd MD1/no1</code></pre>
         <li><strong>Python</strong> ── Python 開発サポート</li>
       </ul>
 
-      <p style="margin-top:0.8rem"><strong>(6)</strong> <code>step1.py</code> を作成し、以下のコードを入力して実行（右上の ▶ ボタン）</p>
+      <p style="margin-top:0.8rem"><strong>(6)</strong> <code>no1</code> の直下に <code>step1.py</code> を作成し（.venv の中ではない）、以下のコードを入力して実行（右上の ▶ ボタン）</p>
       <pre><code><span class="kw">import</span> py5
 
 <span class="kw">def</span> <span class="fn">setup</span>():
