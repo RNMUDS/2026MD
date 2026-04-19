@@ -1744,57 +1744,56 @@ py5.run_sketch()</code></pre>
       <div style="margin:1.5rem 0">
 
         <!-- 図1: 全体の流れ（クライアント→DNS→サーバ→レスポンス） -->
-        <svg viewBox="0 0 1200 450" style="width:100%;max-width:100%;background:#141414;border-radius:0.4rem;border:1px solid #333;padding:0.5rem;margin-bottom:1rem">
+        <svg viewBox="0 0 1000 400" style="width:100%;max-width:100%;background:#141414;border-radius:0.4rem;border:1px solid #333;padding:0.5rem;margin-bottom:1rem">
           <!-- クライアント -->
-          <rect x="20" y="100" width="140" height="90" rx="12" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
-          <text x="90" y="135" text-anchor="middle" fill="#76B900" font-size="22" font-weight="700">あなたのPC</text>
-          <text x="90" y="155" text-anchor="middle" fill="#93D500" font-size="18">（クライアント）</text>
-          <text x="90" y="175" text-anchor="middle" fill="#999" font-size="16">uv pip install py5</text>
+          <rect x="20" y="80" width="200" height="110" rx="12" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+          <text x="120" y="115" text-anchor="middle" fill="#76B900" font-size="20" font-weight="700">あなたのPC</text>
+          <text x="120" y="140" text-anchor="middle" fill="#93D500" font-size="16">（クライアント）</text>
+          <text x="120" y="165" text-anchor="middle" fill="#999" font-size="14">uv pip install py5</text>
 
           <!-- 矢印1: PC → DNS -->
-          <line x1="160" y1="130" x2="230" y2="80" stroke="#76B900" stroke-width="2" marker-end="url(#arrow1)"/>
-          <text x="185" y="95" fill="#999" font-size="22">①名前解決</text>
+          <line x1="220" y1="110" x2="310" y2="65" stroke="#76B900" stroke-width="2" marker-end="url(#arrow1)"/>
+          <text x="235" y="75" fill="#999" font-size="14">①名前解決</text>
 
           <!-- DNS -->
-          <rect x="230" y="40" width="130" height="70" rx="12" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
-          <text x="295" y="68" text-anchor="middle" fill="#FFB800" font-size="28" font-weight="700">DNS</text>
-          <text x="295" y="85" text-anchor="middle" fill="#999" font-size="16">pypi.org → IP変換</text>
-          <text x="295" y="100" text-anchor="middle" fill="#666" font-size="22">（電話帳の役割）</text>
+          <rect x="310" y="20" width="200" height="90" rx="12" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+          <text x="410" y="50" text-anchor="middle" fill="#FFB800" font-size="22" font-weight="700">DNS</text>
+          <text x="410" y="72" text-anchor="middle" fill="#999" font-size="14">pypi.org → IP変換</text>
+          <text x="410" y="92" text-anchor="middle" fill="#666" font-size="13">（電話帳の役割）</text>
 
-          <!-- 矢印2: DNS → サーバ方向（IPアドレス取得） -->
-          <line x1="360" y1="75" x2="430" y2="130" stroke="#FFB800" stroke-width="2" marker-end="url(#arrow1)"/>
-          <text x="385" y="95" fill="#999" font-size="22">②IP取得</text>
+          <!-- 矢印2: DNS → サーバ方向 -->
+          <line x1="510" y1="65" x2="620" y2="110" stroke="#FFB800" stroke-width="2" marker-end="url(#arrow1)"/>
+          <text x="540" y="75" fill="#999" font-size="14">②IP取得</text>
 
           <!-- IPアドレス表示 -->
-          <rect x="370" y="20" width="180" height="30" rx="6" fill="#0A0A0A" stroke="#333" stroke-width="1"/>
-          <text x="460" y="40" text-anchor="middle" fill="#93D500" font-size="18" font-family="monospace">151.101.128.223</text>
+          <rect x="530" y="15" width="230" height="35" rx="6" fill="#0A0A0A" stroke="#333" stroke-width="1"/>
+          <text x="645" y="38" text-anchor="middle" fill="#93D500" font-size="16" font-family="monospace">151.101.128.223</text>
 
           <!-- HTTPS暗号化トンネル -->
-          <rect x="190" y="200" width="480" height="45" rx="10" fill="none" stroke="#76B900" stroke-width="2" stroke-dasharray="8,4"/>
-          <text x="430" y="220" text-anchor="middle" fill="#76B900" font-size="18" font-weight="700">HTTPS 暗号化通信</text>
-          <text x="430" y="235" text-anchor="middle" fill="#666" font-size="22">中身が見えない封筒で配送</text>
+          <rect x="230" y="230" width="540" height="50" rx="10" fill="none" stroke="#76B900" stroke-width="2" stroke-dasharray="8,4"/>
+          <text x="500" y="255" text-anchor="middle" fill="#76B900" font-size="16" font-weight="700">HTTPS 暗号化通信</text>
+          <text x="500" y="272" text-anchor="middle" fill="#666" font-size="13">中身が見えない封筒で配送</text>
 
           <!-- 矢印3: PC → サーバ（リクエスト） -->
-          <line x1="160" y1="160" x2="580" y2="130" stroke="#93D500" stroke-width="2" marker-end="url(#arrow1)"/>
-          <text x="370" y="140" fill="#93D500" font-size="16">③ リクエスト「py5をください」</text>
+          <line x1="220" y1="150" x2="620" y2="130" stroke="#93D500" stroke-width="2" marker-end="url(#arrow1)"/>
+          <text x="380" y="125" fill="#93D500" font-size="14">③ リクエスト「py5をください」</text>
 
           <!-- サーバ -->
-          <rect x="580" y="80" width="160" height="100" rx="12" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
-          <text x="660" y="115" text-anchor="middle" fill="#76B900" font-size="22" font-weight="700">PyPI サーバ</text>
-          <text x="660" y="135" text-anchor="middle" fill="#999" font-size="16">pypi.org</text>
-          <text x="660" y="155" text-anchor="middle" fill="#666" font-size="22">ポート :443 (HTTPS)</text>
-          <text x="660" y="170" text-anchor="middle" fill="#666" font-size="22">パッケージを保管</text>
+          <rect x="620" y="80" width="240" height="130" rx="12" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+          <text x="740" y="115" text-anchor="middle" fill="#76B900" font-size="20" font-weight="700">PyPI サーバ</text>
+          <text x="740" y="140" text-anchor="middle" fill="#999" font-size="14">pypi.org</text>
+          <text x="740" y="163" text-anchor="middle" fill="#666" font-size="13">ポート :443 (HTTPS)</text>
+          <text x="740" y="183" text-anchor="middle" fill="#666" font-size="13">パッケージを保管</text>
 
           <!-- 矢印4: サーバ → PC（レスポンス） -->
-          <path d="M580,180 Q400,280 160,180" fill="none" stroke="#FFB800" stroke-width="2" marker-end="url(#arrow2)"/>
-          <text x="370" y="270" fill="#FFB800" font-size="16">④ レスポンス（py5のファイル）</text>
+          <path d="M620,210 Q420,330 220,190" fill="none" stroke="#FFB800" stroke-width="2" marker-end="url(#arrow2)"/>
+          <text x="400" y="310" fill="#FFB800" font-size="14">④ レスポンス（py5のファイル）</text>
 
           <!-- .venv -->
-          <rect x="20" y="250" width="140" height="50" rx="8" fill="#1a2e0a" stroke="#4A7A00" stroke-width="1"/>
-          <text x="90" y="275" text-anchor="middle" fill="#93D500" font-size="18">.venv/ に保存</text>
-          <line x1="90" y1="190" x2="90" y2="250" stroke="#4A7A00" stroke-width="1" stroke-dasharray="4,3"/>
+          <rect x="20" y="290" width="200" height="55" rx="8" fill="#1a2e0a" stroke="#4A7A00" stroke-width="1"/>
+          <text x="120" y="322" text-anchor="middle" fill="#93D500" font-size="16">.venv/ に保存</text>
+          <line x1="120" y1="190" x2="120" y2="290" stroke="#4A7A00" stroke-width="1" stroke-dasharray="4,3"/>
 
-          <!-- 矢印マーカー定義 -->
           <defs>
             <marker id="arrow1" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#76B900"/></marker>
             <marker id="arrow2" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#FFB800"/></marker>
@@ -1802,84 +1801,86 @@ py5.run_sketch()</code></pre>
         </svg>
 
         <!-- 図2: IPアドレスとポート番号 -->
-        <svg viewBox="0 0 1200 250" style="width:100%;max-width:100%;background:#141414;border-radius:0.4rem;border:1px solid #333;padding:0.5rem;margin-bottom:1rem">
-          <text x="20" y="25" fill="#FFB800" font-size="28" font-weight="700">IPアドレスとポート番号</text>
+        <svg viewBox="0 0 1000 240" style="width:100%;max-width:100%;background:#141414;border-radius:0.4rem;border:1px solid #333;padding:0.5rem;margin-bottom:1rem">
+          <text x="20" y="28" fill="#FFB800" font-size="20" font-weight="700">IPアドレスとポート番号</text>
 
           <!-- ビルのメタファ -->
-          <rect x="60" y="50" width="200" height="110" rx="8" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
-          <text x="160" y="75" text-anchor="middle" fill="#76B900" font-size="19" font-weight="700">サーバ（ビル）</text>
-          <text x="160" y="93" text-anchor="middle" fill="#93D500" font-size="18" font-family="monospace">151.101.128.223</text>
-          <text x="160" y="108" text-anchor="middle" fill="#999" font-size="22">↑ IPアドレス = ビルの住所</text>
+          <rect x="30" y="50" width="320" height="170" rx="8" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+          <text x="190" y="78" text-anchor="middle" fill="#76B900" font-size="18" font-weight="700">サーバ（ビル）</text>
+          <text x="190" y="100" text-anchor="middle" fill="#93D500" font-size="16" font-family="monospace">151.101.128.223</text>
+          <text x="190" y="120" text-anchor="middle" fill="#999" font-size="13">↑ IPアドレス = ビルの住所</text>
 
           <!-- ポート（部屋） -->
-          <rect x="75" y="118" width="50" height="35" rx="4" fill="#2e1a0a" stroke="#FFB800" stroke-width="1"/>
-          <text x="100" y="135" text-anchor="middle" fill="#FFB800" font-size="22" font-weight="700">:80</text>
-          <text x="100" y="148" text-anchor="middle" fill="#999" font-size="19">HTTP</text>
+          <rect x="50" y="135" width="80" height="55" rx="4" fill="#2e1a0a" stroke="#FFB800" stroke-width="1"/>
+          <text x="90" y="158" text-anchor="middle" fill="#FFB800" font-size="16" font-weight="700">:80</text>
+          <text x="90" y="178" text-anchor="middle" fill="#999" font-size="13">HTTP</text>
 
-          <rect x="135" y="118" width="50" height="35" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
-          <text x="160" y="135" text-anchor="middle" fill="#76B900" font-size="22" font-weight="700">:443</text>
-          <text x="160" y="148" text-anchor="middle" fill="#93D500" font-size="19">HTTPS</text>
+          <rect x="145" y="135" width="80" height="55" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+          <text x="185" y="158" text-anchor="middle" fill="#76B900" font-size="16" font-weight="700">:443</text>
+          <text x="185" y="178" text-anchor="middle" fill="#93D500" font-size="13">HTTPS</text>
 
-          <rect x="195" y="118" width="50" height="35" rx="4" fill="#1A1A1A" stroke="#333" stroke-width="1"/>
-          <text x="220" y="135" text-anchor="middle" fill="#666" font-size="22">:22</text>
-          <text x="220" y="148" text-anchor="middle" fill="#666" font-size="19">SSH</text>
+          <rect x="240" y="135" width="80" height="55" rx="4" fill="#1A1A1A" stroke="#333" stroke-width="1"/>
+          <text x="280" y="158" text-anchor="middle" fill="#666" font-size="16">:22</text>
+          <text x="280" y="178" text-anchor="middle" fill="#666" font-size="13">SSH</text>
 
-          <text x="160" y="170" text-anchor="middle" fill="#999" font-size="22">↑ ポート番号 = ビル内の部屋番号</text>
+          <text x="190" y="210" text-anchor="middle" fill="#999" font-size="13">↑ ポート番号 = ビル内の部屋番号</text>
 
           <!-- 説明テキスト -->
-          <text x="340" y="70" fill="#E0E0E0" font-size="18">IPアドレス = インターネット上の住所（どのビルか）</text>
-          <text x="340" y="95" fill="#E0E0E0" font-size="18">ポート番号 = そのビルの何号室か</text>
-          <text x="340" y="125" fill="#93D500" font-size="18">例: 151.101.128.223<tspan fill="#FFB800">:443</tspan></text>
-          <text x="340" y="145" fill="#999" font-size="16">→ このビルの443号室（HTTPS）に接続</text>
+          <text x="400" y="80" fill="#E0E0E0" font-size="16">IPアドレス = インターネット上の住所（どのビルか）</text>
+          <text x="400" y="110" fill="#E0E0E0" font-size="16">ポート番号 = そのビルの何号室か</text>
+          <text x="400" y="150" fill="#93D500" font-size="16">例: 151.101.128.223<tspan fill="#FFB800">:443</tspan></text>
+          <text x="400" y="175" fill="#999" font-size="14">→ このビルの443号室（HTTPS）に接続</text>
         </svg>
 
         <!-- 図3: DNS -->
-        <svg viewBox="0 0 1200 200" style="width:100%;max-width:100%;background:#141414;border-radius:0.4rem;border:1px solid #333;padding:0.5rem;margin-bottom:1rem">
-          <text x="20" y="25" fill="#FFB800" font-size="28" font-weight="700">DNS（Domain Name System）= インターネットの電話帳</text>
+        <svg viewBox="0 0 1000 160" style="width:100%;max-width:100%;background:#141414;border-radius:0.4rem;border:1px solid #333;padding:0.5rem;margin-bottom:1rem">
+          <text x="20" y="25" fill="#FFB800" font-size="20" font-weight="700">DNS（Domain Name System）= インターネットの電話帳</text>
 
-          <rect x="40" y="50" width="160" height="60" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
-          <text x="120" y="75" text-anchor="middle" fill="#76B900" font-size="28" font-weight="700">pypi.org</text>
-          <text x="120" y="93" text-anchor="middle" fill="#999" font-size="16">人間が読める名前</text>
+          <rect x="30" y="50" width="210" height="80" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+          <text x="135" y="80" text-anchor="middle" fill="#76B900" font-size="20" font-weight="700">pypi.org</text>
+          <text x="135" y="105" text-anchor="middle" fill="#999" font-size="14">人間が読める名前</text>
 
-          <text x="230" y="82" fill="#76B900" font-size="28">→</text>
-          <rect x="260" y="55" width="100" height="45" rx="8" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
-          <text x="310" y="78" text-anchor="middle" fill="#FFB800" font-size="18" font-weight="700">DNS</text>
-          <text x="310" y="93" text-anchor="middle" fill="#999" font-size="28">名前→IP変換</text>
-          <text x="390" y="82" fill="#FFB800" font-size="28">→</text>
+          <line x1="240" y1="90" x2="290" y2="90" stroke="#76B900" stroke-width="2" marker-end="url(#arrow1)"/>
 
-          <rect x="420" y="50" width="220" height="60" rx="8" fill="#1A1A1A" stroke="#93D500" stroke-width="2"/>
-          <text x="530" y="75" text-anchor="middle" fill="#93D500" font-size="28" font-family="monospace">151.101.128.223</text>
-          <text x="530" y="93" text-anchor="middle" fill="#999" font-size="16">コンピュータが使うアドレス</text>
+          <rect x="290" y="55" width="150" height="70" rx="8" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+          <text x="365" y="82" text-anchor="middle" fill="#FFB800" font-size="18" font-weight="700">DNS</text>
+          <text x="365" y="102" text-anchor="middle" fill="#999" font-size="13">名前→IP変換</text>
 
-          <text x="700" y="80" fill="#999" font-size="16">電話帳で名前から</text>
-          <text x="700" y="95" fill="#999" font-size="16">番号を調べるのと同じ</text>
+          <line x1="440" y1="90" x2="490" y2="90" stroke="#FFB800" stroke-width="2" marker-end="url(#arrow1)"/>
+
+          <rect x="490" y="50" width="280" height="80" rx="8" fill="#1A1A1A" stroke="#93D500" stroke-width="2"/>
+          <text x="630" y="80" text-anchor="middle" fill="#93D500" font-size="20" font-family="monospace">151.101.128.223</text>
+          <text x="630" y="105" text-anchor="middle" fill="#999" font-size="14">コンピュータが使うアドレス</text>
+
+          <text x="810" y="85" fill="#999" font-size="14">電話帳で名前から</text>
+          <text x="810" y="105" fill="#999" font-size="14">番号を調べるのと同じ</text>
         </svg>
 
         <!-- 図4: HTTP vs HTTPS -->
-        <svg viewBox="0 0 1200 230" style="width:100%;max-width:100%;background:#141414;border-radius:0.4rem;border:1px solid #333;padding:0.5rem">
-          <text x="20" y="25" fill="#FFB800" font-size="28" font-weight="700">HTTP vs HTTPS</text>
+        <svg viewBox="0 0 1000 210" style="width:100%;max-width:100%;background:#141414;border-radius:0.4rem;border:1px solid #333;padding:0.5rem">
+          <text x="20" y="25" fill="#FFB800" font-size="20" font-weight="700">HTTP vs HTTPS</text>
 
-          <!-- HTTP（危険） -->
-          <rect x="40" y="45" width="380" height="50" rx="8" fill="#1A1A1A" stroke="#666" stroke-width="1"/>
-          <rect x="50" y="55" width="80" height="30" rx="4" fill="#2e1a0a" stroke="#FFB800" stroke-width="1"/>
-          <text x="90" y="74" text-anchor="middle" fill="#FFB800" font-size="16" font-weight="700">HTTP</text>
-          <text x="145" y="68" fill="#999" font-size="22">パスワード: abc123</text>
-          <text x="145" y="82" fill="#999" font-size="22">→ 中身が丸見え（はがき）</text>
-          <text x="355" y="74" fill="#FFB800" font-size="18">⚠</text>
+          <!-- HTTP -->
+          <rect x="30" y="45" width="450" height="65" rx="8" fill="#1A1A1A" stroke="#666" stroke-width="1"/>
+          <rect x="40" y="53" width="100" height="45" rx="4" fill="#2e1a0a" stroke="#FFB800" stroke-width="1"/>
+          <text x="90" y="80" text-anchor="middle" fill="#FFB800" font-size="16" font-weight="700">HTTP</text>
+          <text x="160" y="72" fill="#999" font-size="14">パスワード: abc123</text>
+          <text x="160" y="92" fill="#999" font-size="14">→ 中身が丸見え（はがき）</text>
+          <text x="450" y="82" fill="#FFB800" font-size="18">⚠</text>
 
-          <!-- HTTPS（安全） -->
-          <rect x="40" y="110" width="380" height="50" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
-          <rect x="50" y="120" width="80" height="30" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
-          <text x="90" y="139" text-anchor="middle" fill="#76B900" font-size="16" font-weight="700">HTTPS</text>
-          <text x="145" y="133" fill="#93D500" font-size="22">🔒 ****暗号化****</text>
-          <text x="145" y="147" fill="#93D500" font-size="22">→ 中身が見えない（封筒）</text>
-          <text x="355" y="139" fill="#76B900" font-size="18">✓</text>
+          <!-- HTTPS -->
+          <rect x="30" y="125" width="450" height="65" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+          <rect x="40" y="133" width="100" height="45" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+          <text x="90" y="160" text-anchor="middle" fill="#76B900" font-size="16" font-weight="700">HTTPS</text>
+          <text x="160" y="152" fill="#93D500" font-size="14">🔒 ****暗号化****</text>
+          <text x="160" y="172" fill="#93D500" font-size="14">→ 中身が見えない（封筒）</text>
+          <text x="450" y="162" fill="#76B900" font-size="18">✓</text>
 
           <!-- 説明 -->
-          <text x="480" y="65" fill="#E0E0E0" font-size="18">HTTP: 通信内容がそのまま流れる</text>
-          <text x="480" y="85" fill="#FFB800" font-size="16">→ パスワードが盗まれる危険</text>
-          <text x="480" y="130" fill="#E0E0E0" font-size="18">HTTPS: TLS暗号化で通信を保護</text>
-          <text x="480" y="150" fill="#93D500" font-size="16">→ S = Secure（安全）の意味</text>
+          <text x="530" y="68" fill="#E0E0E0" font-size="16">HTTP: 通信内容がそのまま流れる</text>
+          <text x="530" y="92" fill="#FFB800" font-size="14">→ パスワードが盗まれる危険</text>
+          <text x="530" y="148" fill="#E0E0E0" font-size="16">HTTPS: TLS暗号化で通信を保護</text>
+          <text x="530" y="172" fill="#93D500" font-size="14">→ S = Secure（安全）の意味</text>
         </svg>
 
       </div>
