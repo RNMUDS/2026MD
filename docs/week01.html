@@ -2279,7 +2279,97 @@ py5.run_sketch()           <span class="cmt"># プログラムを実行する</s
   </div>
 </section>
 
-<!-- ============ 5. APPENDIX ============ -->
+<!-- ============ ANSWERS ============ -->
+<section style="background:#0A0A0A" id="answers-section" data-release="2026-04-27T13:10">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4A7A00">5</div>
+      <h2>解答例</h2>
+    </div>
+
+    <p id="answers-locked" style="display:none;background:#1a1a1a;border:1px solid #333;border-radius:0.4rem;padding:1rem;text-align:center;color:#999;font-size:0.85rem"></p>
+    <div id="answers-content">
+
+    <details>
+      <summary><span class="tag tag-standard" style="font-size:0.5rem">標準課題</span> std1-1 解答例</summary>
+      <div class="answer-content">
+        <pre><code><span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.size(<span class="num">400</span>, <span class="num">300</span>)
+    py5.background(<span class="num">255</span>, <span class="num">255</span>, <span class="num">255</span>)   <span class="cmt"># 白背景</span>
+
+    <span class="cmt"># 赤い矩形</span>
+    py5.fill(<span class="num">255</span>, <span class="num">0</span>, <span class="num">0</span>)
+    py5.rect(<span class="num">50</span>, <span class="num">50</span>, <span class="num">120</span>, <span class="num">80</span>)
+
+    <span class="cmt"># 青い円</span>
+    py5.fill(<span class="num">0</span>, <span class="num">0</span>, <span class="num">255</span>)
+    py5.ellipse(<span class="num">300</span>, <span class="num">100</span>, <span class="num">100</span>, <span class="num">100</span>)
+
+    <span class="cmt"># 緑の三角形</span>
+    py5.fill(<span class="num">0</span>, <span class="num">200</span>, <span class="num">0</span>)
+    py5.triangle(<span class="num">200</span>, <span class="num">250</span>, <span class="num">150</span>, <span class="num">280</span>, <span class="num">250</span>, <span class="num">280</span>)
+
+py5.run_sketch()</code></pre>
+        <p style="margin-top:0.8rem"><strong>各行の説明例:</strong></p>
+        <ul class="point-list">
+          <li>1行目: py5ライブラリを読み込む</li>
+          <li>3行目: setup関数を定義（プログラム開始時に1回だけ実行される）</li>
+          <li>4行目: ウィンドウサイズを幅400px、高さ300pxに設定</li>
+          <li>5行目: 背景色を白(255,255,255)に設定</li>
+          <li>7-8行目: 塗りつぶし色を赤に設定し、左上(50,50)の位置に幅120、高さ80の矩形を描画</li>
+          <li>10-11行目: 塗りつぶし色を青に変え、中心(300,100)に直径100の円を描画</li>
+          <li>13-14行目: 塗りつぶし色を緑に変え、3つの頂点を指定して三角形を描画</li>
+          <li>16行目: スケッチを実行する</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-note" style="font-size:0.5rem">ノート</span> CS基礎 穴埋め解答</summary>
+      <div class="answer-content">
+        <p><strong>ファイルシステムと木構造:</strong></p>
+        <ul class="point-list">
+          <li>コンピュータのファイルは <strong>木</strong>構造（<strong>ツリー</strong>構造）で整理されている</li>
+          <li>ディレクトリとは <strong>ファイルやデータを整理して保存する場所</strong> のこと（Windowsでは<strong>フォルダ</strong>と呼ぶ）</li>
+          <li>「/」は <strong>階層の区切り</strong> を意味する</li>
+          <li>「~」は <strong>ホーム</strong>ディレクトリを意味する</li>
+          <li>木構造はファイルシステム以外にも <strong>Webページ（HTML）</strong> や <strong>AI・機械学習（決定木）</strong> で使われている</li>
+        </ul>
+        <p style="margin-top:1rem"><strong>ネットワークの仕組み:</strong></p>
+        <ul class="point-list">
+          <li>サービスを要求する側を <strong>クライアント</strong>、提供する側を <strong>サーバ</strong> と呼ぶ</li>
+          <li>uv pip install py5 を実行すると、PCは <strong>PyPI</strong> というサーバに接続する</li>
+          <li>IPアドレスとは <strong>インターネット上のコンピュータの住所</strong> のこと</li>
+          <li>DNSの役割は <strong>ドメイン名</strong> を <strong>IPアドレス</strong> に変換すること</li>
+          <li>HTTPSの「S」は <strong>Secure</strong> の意味で、通信内容が <strong>暗号化</strong> される</li>
+          <li>ネットワーク通信はすべて <strong>リクエスト</strong>（要求）と <strong>レスポンス</strong>（応答）の繰り返し</li>
+        </ul>
+        <p style="margin-top:1rem"><strong>google.comにアクセスしたとき:</strong></p>
+        <ol style="padding-left:1.5rem">
+          <li>ブラウザがDNSに問い合わせて google.com のIPアドレスを取得する</li>
+          <li>そのIPアドレスにHTTPSリクエストを送る</li>
+          <li>Googleのサーバがレスポンス（HTMLファイル）を返し、ブラウザが画面に表示する</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-note" style="font-size:0.5rem">ノート</span> アウトカム穴埋め解答</summary>
+      <div class="answer-content">
+        <ul class="point-list">
+          <li>ものづくりにおいて今後重要なキーワード: <strong>アウトカム</strong></li>
+          <li>そのキーワードの意味: <strong>作ったものによって誰かの状態・行動が変わること。アプリを作っただけ（アウトプット）ではなく、それを使った人に変化が起きて初めて価値が証明される。</strong></li>
+        </ul>
+      </div>
+    </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. APPENDIX ============ -->
 <section id="sec-appendix">
   <div class="container">
     <div class="section-header">
