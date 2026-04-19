@@ -1517,69 +1517,7 @@ py5.<span class="fn">run_sketch</span>()</pre>
 
     <div id="answers-locked" style="display:none;background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:2rem;margin-bottom:1rem"></div>
 
-    <div id="answers-content">
-
-      <!-- std2-3 解答 -->
-      <div class="card" style="border-left:4px solid #76B900">
-        <div class="card-header"><h3>std2-3: HSBカラー実験 解答</h3></div>
-        <p>HSBモードで色相(H)を 72 ずつ変化させると、虹色の5色が均等に得られます。</p>
-
-        <pre><span class="code-label">Python ── std2-3 解答</span>
-<span class="kw">import</span> py5
-
-<span class="kw">def</span> <span class="fn">setup</span>():
-    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">200</span>)
-    py5.<span class="fn">background</span>(<span class="num">255</span>)
-    py5.<span class="fn">no_stroke</span>()
-    py5.<span class="fn">color_mode</span>(py5.HSB, <span class="num">360</span>, <span class="num">100</span>, <span class="num">100</span>)
-
-    py5.<span class="fn">fill</span>(<span class="num">0</span>, <span class="num">100</span>, <span class="num">100</span>)      <span class="cmt"># 赤 (H=0)</span>
-    py5.<span class="fn">circle</span>(<span class="num">80</span>, <span class="num">100</span>, <span class="num">50</span>)
-
-    py5.<span class="fn">fill</span>(<span class="num">72</span>, <span class="num">100</span>, <span class="num">100</span>)     <span class="cmt"># オレンジ〜黄 (H=72)</span>
-    py5.<span class="fn">circle</span>(<span class="num">140</span>, <span class="num">100</span>, <span class="num">50</span>)
-
-    py5.<span class="fn">fill</span>(<span class="num">144</span>, <span class="num">100</span>, <span class="num">100</span>)    <span class="cmt"># 緑 (H=144)</span>
-    py5.<span class="fn">circle</span>(<span class="num">200</span>, <span class="num">100</span>, <span class="num">50</span>)
-
-    py5.<span class="fn">fill</span>(<span class="num">216</span>, <span class="num">100</span>, <span class="num">100</span>)    <span class="cmt"># 青〜シアン (H=216)</span>
-    py5.<span class="fn">circle</span>(<span class="num">260</span>, <span class="num">100</span>, <span class="num">50</span>)
-
-    py5.<span class="fn">fill</span>(<span class="num">288</span>, <span class="num">100</span>, <span class="num">100</span>)    <span class="cmt"># 紫 (H=288)</span>
-    py5.<span class="fn">circle</span>(<span class="num">320</span>, <span class="num">100</span>, <span class="num">50</span>)
-
-py5.<span class="fn">run_sketch</span>()</pre>
-
-        <div class="concept-box">
-          <h4>ポイント</h4>
-          <ul class="point-list">
-            <li>H の値: 0, 72, 144, 216, 288（360 &divide; 5 = 72 ずつ）</li>
-            <li>S（彩度）= 100: 最も鮮やかな色</li>
-            <li>B（明度）= 100: 最も明るい色</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- step2-3 解答 -->
-      <div class="card" style="border-left:4px solid #76B900">
-        <div class="card-header"><h3>step2-3: 同心円の修正方法</h3></div>
-        <p><strong>問題:</strong> 小さい円から大きい円の順に描画しているため、大きい円が小さい円を覆い隠してしまう。</p>
-        <p style="margin-top:0.5rem"><strong>解決:</strong> 大きい円から小さい円の順に描画する。ループを逆順にするか、サイズの計算式を変更する。</p>
-
-        <pre><span class="code-label">Python ── step2-3 修正版</span>
-<span class="cmt"># step2-3.py 修正版 - 大きい円から描く</span>
-<span class="kw">import</span> py5
-
-<span class="kw">def</span> <span class="fn">setup</span>():
-    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">300</span>)
-    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):
-        size <span class="op">=</span> <span class="num">60</span> - i*<span class="num">10</span>   <span class="cmt"># 60, 50, 40, 30, 20 と小さくなる</span>
-        py5.<span class="fn">ellipse</span>(<span class="num">200</span>, <span class="num">150</span>, size, size)
-
-py5.<span class="fn">run_sketch</span>()</pre>
-      </div>
-
-    </div>
+    <div id="answers-encrypted" data-cipher="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"></div>
   </div>
 </section>
 
