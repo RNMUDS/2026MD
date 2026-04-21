@@ -454,6 +454,36 @@ a.sub-item:hover {
 /* ============ SCROLL TARGET OFFSET ============ */
 [id] { scroll-margin-top: 3rem; }
 
+/* ============ TRY-IT BOX ============ */
+.try-it {
+  background: rgba(118,185,0,0.06);
+  border: 2px solid #76B900;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.try-it h4 {
+  color: #76B900; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.try-it h4::before { content: '\270F\FE0F '; }
+
+/* ============ KEYWORD BOX ============ */
+.keyword-box {
+  display: inline-flex; align-items: baseline; gap: 0.4rem;
+  background: rgba(118,185,0,0.08);
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 0.3rem 0.7rem;
+  margin: 0.3rem 0.2rem;
+  font-size: 0.85rem;
+}
+.keyword-box .kw-term {
+  color: #76B900; font-weight: 700; white-space: nowrap;
+}
+.keyword-box .kw-desc {
+  color: #ccc; font-size: 0.8rem;
+}
+
 /* ============ REDUCED MOTION ============ */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -518,7 +548,7 @@ a.sub-item:hover {
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">0</div>
-      <h2>先生の説明（約30分）</h2>
+      <h2>教員による説明 <span style="font-size:0.5rem;color:#999;font-weight:400">── 約30分</span></h2>
     </div>
 
     <div class="card" style="border-left:4px solid #76B900">
@@ -530,7 +560,7 @@ a.sub-item:hover {
       <div class="concept-box">
         <h4>本日の流れ</h4>
         <ol style="padding-left:1.5rem;font-size:0.95rem;margin-top:0.5rem">
-          <li style="margin-bottom:0.4rem"><strong>先生の説明（30分）:</strong> AD/DA変換、音のデジタル表現、FFTの概念紹介</li>
+          <li style="margin-bottom:0.4rem"><strong>教員による説明（30分）:</strong> AD/DA変換、音のデジタル表現、FFTの概念紹介</li>
           <li style="margin-bottom:0.4rem"><strong>グループディスカッション:</strong>「音をコンピュータで扱うためにはどうすればいいか？」</li>
           <li style="margin-bottom:0.4rem"><strong>Step 1〜2:</strong> pydubでMP3再生、正弦波で音を生成</li>
           <li style="margin-bottom:0.4rem"><strong>Step 3:</strong> キーボードピアノ（std6-1）</li>
@@ -552,6 +582,53 @@ a.sub-item:hover {
 
       <div class="analogy">
         音のデジタル化は「パラパラ漫画」と同じです。連続的な動きを1コマずつ描いて記録し（AD変換）、高速でめくると動いて見える（DA変換）。コマ数が多いほど滑らかになります。
+      </div>
+
+      <!-- キーワード解説 -->
+      <div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin:0.5rem 0">
+        <span class="keyword-box"><span class="kw-term">AD変換</span><span class="kw-desc">アナログ信号をデジタル数値に変換</span></span>
+        <span class="keyword-box"><span class="kw-term">サンプリングレート</span><span class="kw-desc">1秒間の測定回数 (CD: 44,100Hz)</span></span>
+        <span class="keyword-box"><span class="kw-term">ビット深度</span><span class="kw-desc">音量の段階数 (CD: 16bit = 65,536段階)</span></span>
+        <span class="keyword-box"><span class="kw-term">FFT</span><span class="kw-desc">高速フーリエ変換: 波形を周波数成分に分解</span></span>
+        <span class="keyword-box"><span class="kw-term">周波数 (Hz)</span><span class="kw-desc">1秒間の振動回数。高いほど高い音</span></span>
+      </div>
+
+      <!-- SVG: キーボード入力 → 音の生成 → 可視化フロー -->
+      <div style="margin:1.5rem 0;text-align:center">
+        <svg viewBox="0 0 600 160" xmlns="http://www.w3.org/2000/svg" style="max-width:600px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
+          <text x="300" y="22" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" font-family="sans-serif">キーボード入力 → 音の生成 → FFT可視化フロー</text>
+          <!-- keyboard input -->
+          <rect x="20" y="45" width="120" height="50" rx="8" fill="none" stroke="#76B900" stroke-width="2"/>
+          <text x="80" y="65" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700" font-family="sans-serif">キーボード入力</text>
+          <text x="80" y="82" text-anchor="middle" fill="#ccc" font-size="10" font-family="monospace">key_pressed()</text>
+          <!-- arrow 1 -->
+          <line x1="145" y1="70" x2="175" y2="70" stroke="#76B900" stroke-width="1.5" marker-end="url(#arr6)"/>
+          <!-- freq lookup -->
+          <rect x="180" y="45" width="120" height="50" rx="8" fill="none" stroke="#FFB800" stroke-width="2"/>
+          <text x="240" y="65" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="700" font-family="sans-serif">周波数を決定</text>
+          <text x="240" y="82" text-anchor="middle" fill="#ccc" font-size="10" font-family="monospace">NOTES[key]</text>
+          <!-- arrow 2 -->
+          <line x1="305" y1="70" x2="335" y2="70" stroke="#FFB800" stroke-width="1.5" marker-end="url(#arr6b)"/>
+          <!-- sine wave generation -->
+          <rect x="340" y="45" width="120" height="50" rx="8" fill="none" stroke="#93D500" stroke-width="2"/>
+          <text x="400" y="65" text-anchor="middle" fill="#93D500" font-size="11" font-weight="700" font-family="sans-serif">正弦波を生成</text>
+          <text x="400" y="82" text-anchor="middle" fill="#ccc" font-size="10" font-family="monospace">np.sin(2*pi*f*t)</text>
+          <!-- arrow 3 -->
+          <line x1="465" y1="70" x2="495" y2="70" stroke="#93D500" stroke-width="1.5" marker-end="url(#arr6c)"/>
+          <!-- speaker -->
+          <rect x="500" y="45" width="80" height="50" rx="8" fill="none" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="540" y="65" text-anchor="middle" fill="#4FC3F7" font-size="11" font-weight="700" font-family="sans-serif">再生</text>
+          <text x="540" y="82" text-anchor="middle" fill="#ccc" font-size="10" font-family="monospace">play_buffer</text>
+          <!-- FFT branch -->
+          <line x1="400" y1="98" x2="400" y2="118" stroke="#555" stroke-width="1" stroke-dasharray="4"/>
+          <rect x="330" y="120" width="140" height="28" rx="6" fill="none" stroke="#555" stroke-width="1"/>
+          <text x="400" y="139" text-anchor="middle" fill="#ccc" font-size="10" font-family="sans-serif">FFTで周波数スペクトルを可視化</text>
+          <defs>
+            <marker id="arr6" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#76B900"/></marker>
+            <marker id="arr6b" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#FFB800"/></marker>
+            <marker id="arr6c" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#93D500"/></marker>
+          </defs>
+        </svg>
       </div>
 
       <div class="concept-box" style="margin-top:1rem">
@@ -664,6 +741,11 @@ reversed_clip <span class="op">=</span> clip.<span class="fn">reverse</span>()
 combined <span class="op">=</span> clip <span class="op">+</span> reversed_clip
 
 <span class="fn">play</span>(combined)</pre>
+
+      <div class="try-it">
+        <h4>やってみよう</h4>
+        <p>MP3ファイルの読み込みと加工を試しましょう。切り出す長さや音量 (<code>apply_gain</code>) を変えてみてください。結果の音声情報をNotionに記録してください。</p>
+      </div>
     </div>
   </div>
 </section>
@@ -735,6 +817,11 @@ melody <span class="op">=</span> AudioSegment.<span class="fn">silent</span>(dur
     melody <span class="op">=</span> melody <span class="op">+</span> note
 
 <span class="fn">play</span>(melody)</pre>
+
+      <div class="try-it">
+        <h4>やってみよう</h4>
+        <p>ドレミの周波数リストを変更して、自分のメロディを作ってみましょう。各音の長さ (<code>duration</code>) も変えてみてください。どんなメロディを作ったかNotionに記録してください。</p>
+      </div>
     </div>
   </div>
 </section>
@@ -922,6 +1009,11 @@ py5.<span class="fn">run_sketch</span>()</pre>
           <li><code>fft[:WINDOW // 2]</code> → FFT結果の前半だけ取る（後半は対称なので不要）</li>
           <li><code>remap()</code> → 値の範囲を別の範囲に変換する（py5の便利関数）</li>
         </ul>
+      </div>
+
+      <div class="try-it">
+        <h4>やってみよう</h4>
+        <p>FFTスペクトル描画コードを実行し、異なるMP3ファイルで結果を比較してみましょう。どの周波数帯が強いかをNotionに記録してください。</p>
       </div>
     </div>
   </div>

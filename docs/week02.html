@@ -1010,6 +1010,32 @@ py5.<span class="fn">run_sketch</span>()</pre>
           <tr><td>4</td><td>50 + 280 = 330</td><td>右端</td></tr>
         </table>
       </div>
+
+      <!-- for ループの反復過程（SVG） -->
+      <svg viewBox="0 0 900 200" style="width:100%;max-width:100%;background:#0A0A0A;border-radius:0.4rem;border:1px solid #333;padding:0.5rem;margin:1rem 0">
+        <text x="450" y="22" text-anchor="middle" fill="#76B900" font-size="16" font-weight="700">for i in range(5): 各反復で rect が描画される</text>
+        <rect x="30" y="45" width="150" height="65" rx="6" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+        <text x="105" y="68" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700">i=0 &#x2192; x=50</text>
+        <rect x="55" y="80" width="20" height="20" rx="2" fill="#333" stroke="#76B900" stroke-width="1"/>
+        <text x="190" y="78" fill="#76B900" font-size="14">&rarr;</text>
+        <rect x="200" y="45" width="150" height="65" rx="6" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+        <text x="275" y="68" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700">i=1 &#x2192; x=120</text>
+        <rect x="225" y="80" width="20" height="20" rx="2" fill="#555" stroke="#76B900" stroke-width="1"/>
+        <text x="360" y="78" fill="#76B900" font-size="14">&rarr;</text>
+        <rect x="370" y="45" width="150" height="65" rx="6" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+        <text x="445" y="68" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700">i=2 &#x2192; x=190</text>
+        <rect x="395" y="80" width="20" height="20" rx="2" fill="#777" stroke="#76B900" stroke-width="1"/>
+        <text x="530" y="78" fill="#76B900" font-size="14">&rarr;</text>
+        <text x="550" y="78" fill="#999" font-size="14">... i=3, i=4 と続く</text>
+        <rect x="30" y="130" width="840" height="50" rx="6" fill="#141414" stroke="#333" stroke-width="1"/>
+        <text x="450" y="160" text-anchor="middle" fill="#999" font-size="13">range(5) なので i は 0,1,2,3,4 の5回ループし、5つの四角形が描かれる。i=5 になった時点でループ終了。</text>
+      </svg>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">&#x1F590; やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem"><code>range(5)</code> を <code>range(8)</code> に変えて実行してみよう。四角形はいくつ表示される？ 右端の四角形はウィンドウに収まる？</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> range の数を変えた結果をメモ</div></div>
+      </div>
     </div>
 
     <!-- step2-2 -->
@@ -1036,6 +1062,12 @@ py5.<span class="fn">run_sketch</span>()</pre>
         <h4>考えてみよう</h4>
         <p><code>fill(50 * i, 0, 0)</code> で i が 0 のときは <code>fill(0, 0, 0)</code> = 黒、i が 4 のときは <code>fill(200, 0, 0)</code> = 濃い赤になります。</p>
         <p style="margin-top:0.3rem">ループ変数を使って色を計算式で指定する ── これが「データで色を表現する」第一歩です。</p>
+      </div>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">&#x1F590; やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem"><code>fill(50 * i, 0, 0)</code> を <code>fill(0, 50 * i, 0)</code> に変えてみよう。何色のグラデーションになる？</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 変更後の色の変化を記録</div></div>
       </div>
     </div>
 
@@ -1120,6 +1152,12 @@ py5.<span class="fn">run_sketch</span>()</pre>
         <p>外側のループ（x）が1回進むごとに、内側のループ（y）が5回実行されます。合計 5 &times; 5 = <strong>25個</strong>の四角形が描画されます。</p>
         <p style="margin-top:0.5rem;color:#FFB800;font-weight:700">実験: range(5) を range(20) に変えてみよう。描画数は 20&times;20 = 400個になります。さらに range(50) にすると？</p>
       </div>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">&#x1F590; やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem"><code>range(5)</code> を <code>range(10)</code> に変えて実行し、描画にかかる時間を体感しよう。次に <code>range(50)</code> でも試してみよう。計算量 O(n<sup>2</sup>) の意味が体感できる。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> range(5), range(10), range(50) それぞれの描画数と体感速度をメモ</div></div>
+      </div>
     </div>
 
     <!-- 口頭試問 -->
@@ -1171,6 +1209,58 @@ py5.<span class="fn">run_sketch</span>()</pre>
       <div class="section-num" style="background:#76B900">3</div>
       <h2>色の表現 RGB・HSB <span style="font-size:0.5rem;color:#999;font-weight:400">── 約30分</span></h2>
     </div>
+
+    <!-- RGB vs HSB カラーモデル（SVG） -->
+    <svg viewBox="0 0 900 340" style="width:100%;max-width:100%;background:#0A0A0A;border-radius:0.4rem;border:1px solid #333;padding:0.5rem;margin:1rem 0">
+      <text x="450" y="25" text-anchor="middle" fill="#76B900" font-size="17" font-weight="700">2つのカラーモデル: RGB vs HSB</text>
+
+      <!-- RGB側 -->
+      <rect x="20" y="45" width="410" height="270" rx="10" fill="#141414" stroke="#76B900" stroke-width="2"/>
+      <text x="225" y="72" text-anchor="middle" fill="#76B900" font-size="16" font-weight="700">RGB（光の三原色）</text>
+      <text x="225" y="92" text-anchor="middle" fill="#999" font-size="12">各色 0〜255 の強さで指定</text>
+
+      <!-- RGB circles -->
+      <circle cx="130" cy="170" r="55" fill="rgba(255,0,0,0.6)"/>
+      <circle cx="185" cy="230" r="55" fill="rgba(0,0,255,0.6)"/>
+      <circle cx="75" cy="230" r="55" fill="rgba(0,255,0,0.6)"/>
+      <text x="130" y="175" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">R</text>
+      <text x="75" y="235" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">G</text>
+      <text x="185" y="235" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">B</text>
+
+      <!-- RGB examples -->
+      <text x="270" y="135" fill="#E0E0E0" font-size="13">fill(255,0,0)</text>
+      <rect x="370" y="122" width="40" height="18" rx="3" fill="#FF0000"/>
+      <text x="270" y="160" fill="#E0E0E0" font-size="13">fill(0,255,0)</text>
+      <rect x="370" y="147" width="40" height="18" rx="3" fill="#00FF00"/>
+      <text x="270" y="185" fill="#E0E0E0" font-size="13">fill(0,0,255)</text>
+      <rect x="370" y="172" width="40" height="18" rx="3" fill="#0000FF"/>
+      <text x="270" y="210" fill="#E0E0E0" font-size="13">fill(255,255,0)</text>
+      <rect x="370" y="197" width="40" height="18" rx="3" fill="#FFFF00"/>
+      <text x="270" y="240" fill="#999" font-size="12">3つの値を同時に操作</text>
+      <text x="270" y="258" fill="#999" font-size="12">&#x2192; 直感的ではない</text>
+
+      <!-- HSB側 -->
+      <rect x="470" y="45" width="410" height="270" rx="10" fill="#141414" stroke="#FFB800" stroke-width="2"/>
+      <text x="675" y="72" text-anchor="middle" fill="#FFB800" font-size="16" font-weight="700">HSB（色相・彩度・明度）</text>
+      <text x="675" y="92" text-anchor="middle" fill="#999" font-size="12">H=0~360, S=0~100, B=0~100</text>
+
+      <!-- Color wheel simplified -->
+      <circle cx="570" cy="200" r="65" fill="none" stroke="#FF0000" stroke-width="8" stroke-dasharray="34 170"/>
+      <circle cx="570" cy="200" r="65" fill="none" stroke="#FFFF00" stroke-width="8" stroke-dasharray="34 170" stroke-dashoffset="-34"/>
+      <circle cx="570" cy="200" r="65" fill="none" stroke="#00FF00" stroke-width="8" stroke-dasharray="34 170" stroke-dashoffset="-68"/>
+      <circle cx="570" cy="200" r="65" fill="none" stroke="#00FFFF" stroke-width="8" stroke-dasharray="34 170" stroke-dashoffset="-102"/>
+      <circle cx="570" cy="200" r="65" fill="none" stroke="#0000FF" stroke-width="8" stroke-dasharray="34 170" stroke-dashoffset="-136"/>
+      <circle cx="570" cy="200" r="65" fill="none" stroke="#FF00FF" stroke-width="8" stroke-dasharray="34 170" stroke-dashoffset="-170"/>
+      <text x="570" y="205" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">H: 色相環</text>
+
+      <!-- HSB examples -->
+      <text x="670" y="135" fill="#E0E0E0" font-size="13">H=0: 赤</text>
+      <text x="670" y="160" fill="#E0E0E0" font-size="13">H=120: 緑</text>
+      <text x="670" y="185" fill="#E0E0E0" font-size="13">H=240: 青</text>
+      <text x="670" y="215" fill="#93D500" font-size="12" font-weight="700">虹色を作るなら</text>
+      <text x="670" y="235" fill="#93D500" font-size="12">H を変えるだけでOK</text>
+      <text x="670" y="258" fill="#93D500" font-size="12">&#x2192; 直感的で使いやすい</text>
+    </svg>
 
     <!-- RGB vs HSB -->
     <div class="card" style="border-left:4px solid #76B900">
@@ -1312,6 +1402,11 @@ py5.<span class="fn">run_sketch</span>()</pre>
     py5.<span class="fn">ellipse</span>(py5.width / <span class="num">2</span>, py5.height / <span class="num">2</span>, <span class="num">200</span>, <span class="num">200</span>)
 
 py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="concept-box">
+        <h4>py5 座標系のルール</h4>
+        <p>py5のウィンドウでは<strong>左上が原点 (0, 0)</strong> です。x軸は右方向が正、y軸は<strong>下方向が正</strong>（数学の座標系とは逆）。<code>py5.width</code> がウィンドウの幅、<code>py5.height</code> が高さを返します。</p>
+      </div>
 
       <div class="concept-box">
         <h4>setup() と draw() の違い</h4>

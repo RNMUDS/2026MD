@@ -454,6 +454,36 @@ a.sub-item:hover {
 /* ============ SCROLL TARGET OFFSET ============ */
 [id] { scroll-margin-top: 3rem; }
 
+/* ============ TRY-IT BOX ============ */
+.try-it {
+  background: rgba(118,185,0,0.06);
+  border: 2px solid #76B900;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.try-it h4 {
+  color: #76B900; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.try-it h4::before { content: '\270F\FE0F '; }
+
+/* ============ KEYWORD BOX ============ */
+.keyword-box {
+  display: inline-flex; align-items: baseline; gap: 0.4rem;
+  background: rgba(118,185,0,0.08);
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 0.3rem 0.7rem;
+  margin: 0.3rem 0.2rem;
+  font-size: 0.85rem;
+}
+.keyword-box .kw-term {
+  color: #76B900; font-weight: 700; white-space: nowrap;
+}
+.keyword-box .kw-desc {
+  color: #ccc; font-size: 0.8rem;
+}
+
 /* ============ REDUCED MOTION ============ */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -616,8 +646,60 @@ a.sub-item:hover {
       <h4 style="color:#76B900;margin-bottom:0.5rem">データ可視化の原則</h4>
       <p>データ可視化で最も大切なのは、<strong>「何を伝えたいか」を明確にしてから「どう見せるか」を決める</strong>ことです。目的のない可視化は、ただの飾りになってしまいます。</p>
 
+      <!-- キーワード解説 -->
+      <div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin:0.5rem 0">
+        <span class="keyword-box"><span class="kw-term">可視化</span><span class="kw-desc">データを視覚的に表現して理解しやすくすること</span></span>
+        <span class="keyword-box"><span class="kw-term">csv.DictReader</span><span class="kw-desc">CSVの各行を辞書として読み込むPython標準ライブラリ</span></span>
+        <span class="keyword-box"><span class="kw-term">アウトカム</span><span class="kw-desc">作品を見た人に生まれる気づきや行動変化</span></span>
+        <span class="keyword-box"><span class="kw-term">記述統計</span><span class="kw-desc">平均・最大・最小などデータの基本的な要約</span></span>
+      </div>
+
       <div class="analogy">
         料理で例えると、「誰に食べてもらうか」（受け手）と「何を味わってほしいか」（伝えたいこと）を決めてからレシピ（見せ方）を考える。高級な食材を並べても、意図がなければ美味しい料理にはならない。
+      </div>
+
+      <!-- SVG: データ可視化のプロセス -->
+      <div style="margin:1.5rem 0;text-align:center">
+        <svg viewBox="0 0 620 180" xmlns="http://www.w3.org/2000/svg" style="max-width:620px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
+          <text x="310" y="22" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" font-family="sans-serif">データ可視化の全体フロー</text>
+          <!-- Step 1: CSV -->
+          <rect x="15" y="45" width="110" height="55" rx="8" fill="none" stroke="#76B900" stroke-width="2"/>
+          <text x="70" y="65" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700" font-family="sans-serif">1. データ取得</text>
+          <text x="70" y="82" text-anchor="middle" fill="#ccc" font-size="9" font-family="monospace">csv.DictReader</text>
+          <text x="70" y="94" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">slack.csv</text>
+          <!-- Arrow -->
+          <line x1="128" y1="72" x2="148" y2="72" stroke="#76B900" stroke-width="1.5" marker-end="url(#arr7)"/>
+          <!-- Step 2: Process -->
+          <rect x="152" y="45" width="110" height="55" rx="8" fill="none" stroke="#FFB800" stroke-width="2"/>
+          <text x="207" y="65" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="700" font-family="sans-serif">2. 集計・変換</text>
+          <text x="207" y="82" text-anchor="middle" fill="#ccc" font-size="9" font-family="monospace">sum/max/min</text>
+          <text x="207" y="94" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">int(), float()</text>
+          <!-- Arrow -->
+          <line x1="265" y1="72" x2="285" y2="72" stroke="#FFB800" stroke-width="1.5" marker-end="url(#arr7b)"/>
+          <!-- Step 3: Visualize -->
+          <rect x="289" y="45" width="110" height="55" rx="8" fill="none" stroke="#93D500" stroke-width="2"/>
+          <text x="344" y="65" text-anchor="middle" fill="#93D500" font-size="11" font-weight="700" font-family="sans-serif">3. 可視化</text>
+          <text x="344" y="82" text-anchor="middle" fill="#ccc" font-size="9" font-family="monospace">rect/text/fill</text>
+          <text x="344" y="94" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">棒グラフ・色・テキスト</text>
+          <!-- Arrow -->
+          <line x1="402" y1="72" x2="422" y2="72" stroke="#93D500" stroke-width="1.5" marker-end="url(#arr7c)"/>
+          <!-- Step 4: Outcome -->
+          <rect x="426" y="45" width="110" height="55" rx="8" fill="none" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="481" y="65" text-anchor="middle" fill="#4FC3F7" font-size="11" font-weight="700" font-family="sans-serif">4. アウトカム</text>
+          <text x="481" y="82" text-anchor="middle" fill="#ccc" font-size="9" font-family="sans-serif">見た人が理解する</text>
+          <text x="481" y="94" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">行動が変わる</text>
+          <!-- Optional: animation/sound branch -->
+          <line x1="344" y1="103" x2="344" y2="125" stroke="#555" stroke-width="1" stroke-dasharray="3"/>
+          <rect x="260" y="128" width="170" height="24" rx="6" fill="none" stroke="#555" stroke-width="1"/>
+          <text x="345" y="145" text-anchor="middle" fill="#ccc" font-size="9" font-family="sans-serif">+ アニメーション / 音 / インタラクション</text>
+          <!-- Optional badge -->
+          <text x="557" y="145" fill="#999" font-size="8" font-family="sans-serif">(加点要素)</text>
+          <defs>
+            <marker id="arr7" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#76B900"/></marker>
+            <marker id="arr7b" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#FFB800"/></marker>
+            <marker id="arr7c" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#93D500"/></marker>
+          </defs>
+        </svg>
       </div>
 
       <h4 style="color:#76B900;margin-top:1.5rem;margin-bottom:0.5rem">グラフの種類と使い分け</h4>
@@ -854,6 +936,11 @@ py5.run_sketch()</pre>
           <li><code>enumerate()</code> でインデックスとデータを同時に取得</li>
         </ul>
       </div>
+
+      <div class="try-it">
+        <h4>やってみよう</h4>
+        <p>サンプル1のコードをコピーして実行し、CSVのデータが表示されることを確認しましょう。表示行数を変えてみてください。動作確認できたらNotionに記録してください。</p>
+      </div>
     </div>
 
     <!-- Sample 2: Multiple columns -->
@@ -911,6 +998,11 @@ data = []
         py5.text(<span class="str">f"平均: {avg:.1f}人  最大: {max(active_list)}人  最小: {min(active_list)}人"</span>, <span class="num">50</span>, <span class="num">400</span>)
 
 py5.run_sketch()</pre>
+
+      <div class="try-it">
+        <h4>やってみよう</h4>
+        <p>サンプル2を実行し、平均・最大・最小が正しく表示されるか確認しましょう。列名を変えて別のデータを表示してみてください。結果をNotionに記録してください。</p>
+      </div>
     </div>
 
     <!-- Sample 3: Bar chart -->
@@ -964,6 +1056,11 @@ py5.run_sketch()</pre>
           <li>音を追加: バーをクリックしたときに音を鳴らす</li>
           <li>複数系列: メッセージ数とファイル数を並べて比較</li>
         </ul>
+      </div>
+
+      <div class="try-it">
+        <h4>やってみよう</h4>
+        <p>サンプル3の棒グラフを実行し、バーの色や表示するデータ列を変えてみましょう。ここから自分の最終課題の出発点にしてください。動��確認できたらNotionに記録してください。</p>
       </div>
     </div>
 

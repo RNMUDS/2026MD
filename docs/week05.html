@@ -454,6 +454,36 @@ a.sub-item:hover {
 /* ============ SCROLL TARGET OFFSET ============ */
 [id] { scroll-margin-top: 3rem; }
 
+/* ============ TRY-IT BOX ============ */
+.try-it {
+  background: rgba(118,185,0,0.06);
+  border: 2px solid #76B900;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.try-it h4 {
+  color: #76B900; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.try-it h4::before { content: '\270F\FE0F '; }
+
+/* ============ KEYWORD BOX ============ */
+.keyword-box {
+  display: inline-flex; align-items: baseline; gap: 0.4rem;
+  background: rgba(118,185,0,0.08);
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 0.3rem 0.7rem;
+  margin: 0.3rem 0.2rem;
+  font-size: 0.85rem;
+}
+.keyword-box .kw-term {
+  color: #76B900; font-weight: 700; white-space: nowrap;
+}
+.keyword-box .kw-desc {
+  color: #ccc; font-size: 0.8rem;
+}
+
 /* ============ REDUCED MOTION ============ */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -514,7 +544,7 @@ a.sub-item:hover {
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">0</div>
-      <h2>先生の説明（約30分）</h2>
+      <h2>教員による説明 <span style="font-size:0.5rem;color:#999;font-weight:400">── 約30分</span></h2>
     </div>
 
     <div class="card" style="border-left:4px solid #76B900">
@@ -565,6 +595,60 @@ a.sub-item:hover {
           <tr><td>可読性</td><td>シンプル、Excelで開ける</td><td>構造化されたデータに適する</td></tr>
           <tr><td>用途</td><td>センサデータ、統計データ</td><td>API通信、設定ファイル</td></tr>
         </table>
+      </div>
+
+      <!-- SVG: CSV → 2D配列の視覚化 -->
+      <div style="margin:1.5rem 0;text-align:center">
+        <svg viewBox="0 0 620 200" xmlns="http://www.w3.org/2000/svg" style="max-width:620px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
+          <text x="310" y="24" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" font-family="sans-serif">CSVファイル → 2D配列（表形式）への変換</text>
+          <!-- CSV text side -->
+          <text x="30" y="52" fill="#ccc" font-size="11" font-family="monospace">timestamp,AccY</text>
+          <text x="30" y="70" fill="#e0e0e0" font-size="11" font-family="monospace">0.00,-0.12</text>
+          <text x="30" y="88" fill="#e0e0e0" font-size="11" font-family="monospace">0.01,0.34</text>
+          <text x="30" y="106" fill="#e0e0e0" font-size="11" font-family="monospace">0.02,1.56</text>
+          <text x="30" y="124" fill="#616161" font-size="11" font-family="monospace">...</text>
+          <text x="80" y="150" fill="#ccc" font-size="10" font-family="sans-serif">CSVファイル（テキスト）</text>
+          <!-- arrow -->
+          <line x1="195" y1="88" x2="240" y2="88" stroke="#76B900" stroke-width="2" marker-end="url(#arr5)"/>
+          <text x="218" y="80" text-anchor="middle" fill="#76B900" font-size="10" font-family="sans-serif">split(",")</text>
+          <!-- table side -->
+          <rect x="260" y="38" width="130" height="24" rx="4" fill="rgba(118,185,0,0.15)" stroke="#76B900" stroke-width="1"/>
+          <text x="295" y="55" fill="#76B900" font-size="10" font-weight="700" font-family="monospace">timestamp</text>
+          <text x="370" y="55" fill="#76B900" font-size="10" font-weight="700" font-family="monospace">AccY</text>
+          <rect x="260" y="64" width="130" height="22" rx="0" fill="none" stroke="#555" stroke-width="1"/>
+          <rect x="260" y="88" width="130" height="22" rx="0" fill="none" stroke="#555" stroke-width="1"/>
+          <rect x="260" y="112" width="130" height="22" rx="0" fill="none" stroke="#555" stroke-width="1"/>
+          <text x="295" y="80" fill="#e0e0e0" font-size="10" font-family="monospace">0.00</text>
+          <text x="370" y="80" fill="#FFB800" font-size="10" font-family="monospace">-0.12</text>
+          <text x="295" y="104" fill="#e0e0e0" font-size="10" font-family="monospace">0.01</text>
+          <text x="370" y="104" fill="#FFB800" font-size="10" font-family="monospace">0.34</text>
+          <text x="295" y="128" fill="#e0e0e0" font-size="10" font-family="monospace">0.02</text>
+          <text x="370" y="128" fill="#FFB800" font-size="10" font-family="monospace">1.56</text>
+          <text x="325" y="150" fill="#ccc" font-size="10" font-family="sans-serif">表形式データ</text>
+          <!-- remap arrow -->
+          <line x1="410" y1="88" x2="450" y2="88" stroke="#FFB800" stroke-width="2" marker-end="url(#arr5b)"/>
+          <text x="430" y="80" text-anchor="middle" fill="#FFB800" font-size="9" font-family="sans-serif">remap</text>
+          <!-- screen coords -->
+          <rect x="465" y="55" width="130" height="100" rx="8" fill="none" stroke="#93D500" stroke-width="1.5"/>
+          <text x="530" y="48" text-anchor="middle" fill="#93D500" font-size="10" font-family="sans-serif">py5 画面 (400x400)</text>
+          <circle cx="490" cy="120" r="5" fill="#4FC3F7"/>
+          <circle cx="510" cy="95" r="5" fill="#4FC3F7"/>
+          <circle cx="530" cy="72" r="5" fill="#4FC3F7"/>
+          <text x="530" y="170" text-anchor="middle" fill="#ccc" font-size="10" font-family="sans-serif">可視化（円の座標）</text>
+          <defs>
+            <marker id="arr5" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#76B900"/></marker>
+            <marker id="arr5b" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#FFB800"/></marker>
+          </defs>
+        </svg>
+      </div>
+
+      <!-- キーワード解説 -->
+      <div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin:0.5rem 0">
+        <span class="keyword-box"><span class="kw-term">CSV</span><span class="kw-desc">Comma-Separated Values: カンマ区切りの表形式データ</span></span>
+        <span class="keyword-box"><span class="kw-term">サンプリングレート</span><span class="kw-desc">1秒間にデータを取得する回数 (Hz)</span></span>
+        <span class="keyword-box"><span class="kw-term">remap()</span><span class="kw-desc">値の範囲を別の範囲に線形変換する関数</span></span>
+        <span class="keyword-box"><span class="kw-term">欠損値</span><span class="kw-desc">記録されなかったデータ。CSVでは空セル</span></span>
+        <span class="keyword-box"><span class="kw-term">外れ値</span><span class="kw-desc">他と比べて極端に大きい/小さい異常な値</span></span>
       </div>
 
       <pre><span class="code-label">CSV ── acc_y.csv の例</span>
@@ -731,6 +815,11 @@ lines <span class="op">=</span> []
         py5.<span class="fn">text</span>(text, margin, margin <span class="op">+</span> i <span class="op">*</span> line_height)
 
 py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="try-it">
+        <h4>やってみよう</h4>
+        <p>上のベースコードを <code>step5.ipynb</code> にコピーして実行してみましょう。表示結果のスクリーンショットをNotionに記録してください。</p>
+      </div>
 
       <div class="callout-danger">
         <h4>問題点に気づきましたか？</h4>
@@ -903,6 +992,11 @@ py5.<span class="fn">ellipse</span>(screen_x, screen_y, <span class="num">10</sp
       <div class="callout-tip">
         <h4>軌跡を残すには？</h4>
         <p><code>py5.background(255)</code> を <code>draw()</code> の先頭から削除するか、<code>py5.background(255, 20)</code>（半透明の白）に変えると、これまでの軌跡が薄く残ります。</p>
+      </div>
+
+      <div class="try-it">
+        <h4>やってみよう</h4>
+        <p>remap の範囲を変えて円の動きがどう変わるか試しましょう。また <code>background(255, 20)</code> に変えて軌跡表示も試してみてください。変更前後をNotionに記録してください。</p>
       </div>
     </div>
 

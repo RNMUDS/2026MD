@@ -529,7 +529,7 @@ a.sub-item:hover {
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">0</div>
-      <h2>先生の説明（約30分）</h2>
+      <h2>教員による説明（約30分）</h2>
     </div>
 
     <div class="card" style="border-left:4px solid #76B900">
@@ -627,6 +627,12 @@ score <span class="op">=</span> <span class="num">75</span>
         <h4>インデント（字下げ）が重要</h4>
         <p>Pythonでは<strong>インデント（半角スペース4つ）</strong>で処理のブロックを表します。インデントがずれるとエラーになります。</p>
       </div>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">&#x1F590; やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem"><code>score = 75</code> を <code>score = 95</code> に変えて実行してみよう。次に <code>score = 40</code> でも試そう。どの分岐が実行されるか予想してから実行すること。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> score の値と、表示されたメッセージの対応をメモ</div></div>
+      </div>
     </div>
 
     <!-- 比較演算子 -->
@@ -700,6 +706,12 @@ n <span class="op">=</span> <span class="op">-</span><span class="num">7</span>
     <span class="fn">print</span>(<span class="str">"ゼロです"</span>)
 <span class="kw">else</span>:
     <span class="fn">print</span>(<span class="str">"負の数です"</span>)</pre>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">&#x1F590; やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem"><code>n = -7</code> を <code>n = 0</code> に変えて実行し、「ゼロです」が表示されることを確認しよう。次に <code>n = 42</code> でも試そう。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 3つの値で試した結果を記録</div></div>
+      </div>
 
       <h4 style="color:#76B900;margin-top:1rem;margin-bottom:0.5rem">練習2: FizzBuzz</h4>
       <p>変数 <code>n</code> が3の倍数なら "Fizz"、5の倍数なら "Buzz"、両方の倍数なら "FizzBuzz"、それ以外はそのまま表示するプログラムを書きましょう。</p>
@@ -824,7 +836,13 @@ py5.<span class="fn">run_sketch</span>()</pre>
 
       <div class="concept-box">
         <h4>なぜ跳ね返るのか？</h4>
-        <p><code>dx = -dx</code> で速度の正負を反転しています。<code>dx = 5</code> が <code>dx = -5</code> になると、x座標が減少する＝左に移動します。再び左端に到達すると <code>dx = 5</code> に戻り、右に移動します。</p>
+        <p><code>dx = -dx</code> で速度の正��を反転しています。<code>dx = 5</code> が <code>dx = -5</code> になると、x座標が減少する＝左に移動します。��び左端に到達すると <code>dx = 5</code> に戻り、右に移動します。</p>
+      </div>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">&#x1F590; やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem"><code>dx = 5</code> を <code>dx = 10</code> に変えてみよう。ボールの速度はどう変わる？ 次に <code>dx = 1</code> も試してみよ��。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> dx の値と速度の関係をメモ</div></div>
       </div>
     </div>
 
@@ -846,6 +864,7 @@ py5.<span class="fn">run_sketch</span>()</pre>
       <div class="concept-box">
         <h4>イベント駆動プログラミング</h4>
         <p>py5では、キーが押されたときに自動的に呼ばれる関数 <code>key_pressed()</code> を定義できます。どのキーが押されたかは <code>py5.key</code>（文字キー）や <code>py5.key_code</code>（特殊キー）で取得します。</p>
+        <p style="margin-top:0.5rem">これまでの「上から順に実行」とは異なり、<strong>ユーザの操作（イベント）をきっかけに処理が動く</strong>設計パターンです。Webアプリやゲームの基礎にもなる考え方です。</p>
       </div>
 
       <table>
@@ -897,6 +916,12 @@ py5.<span class="fn">run_sketch</span>()</pre>
       <div class="callout-tip">
         <h4>拡張してみよう</h4>
         <p>マウスクリックでも色を変えたい場合、<code>mouse_pressed()</code> 関数を追加しましょう。<code>py5.mouse_button == py5.LEFT</code> で左クリック、<code>py5.mouse_button == py5.RIGHT</code> で右クリックを判定できます。</p>
+      </div>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">&#x1F590; やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem">上のコードを実行し、<code>r</code>、<code>g</code>、<code>b</code> キーを押して円の色が変わることを確認しよう。その後、<code>'w'</code> キーで白 (255,255,255) になる分岐を自分で追加してみよう。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 追加した elif 文をメモ</div></div>
       </div>
     </div>
 
@@ -1024,7 +1049,7 @@ py5.<span class="fn">run_sketch</span>()</pre>
       <ul class="point-list">
         <li>複数のボールが跳ね返る + クリックでボール追加</li>
         <li>キー操作で色や大きさが変わるアニメーション</li>
-        <li>簡単なゲーム（避けゲー、キャッチゲームなど）</li>
+        <li>ミニゲーム（避けゲー、���ャッチゲームなど）</li>
         <li>マウスで絵を描けるお絵かきツール</li>
       </ul>
 
@@ -1111,7 +1136,40 @@ message <span class="op">=</span> <span class="str">"こんにちは"</span>  <s
 
 <span class="fn">greet</span>()          <span class="cmt"># → こんにちは 太郎</span>
 <span class="fn">print</span>(message)  <span class="cmt"># → こんにちは</span>
-<span class="cmt"># print(name)  → NameError（ローカル変数は外から参照不可）</span></pre>
+<span class="cmt"># print(name)  → NameError（ローカル変数は外から参��不可）</span></pre>
+
+      <!-- スコープの可視化（SVG） -->
+      <svg viewBox="0 0 900 280" style="width:100%;max-width:100%;background:#0A0A0A;border-radius:0.4rem;border:1px solid #333;padding:0.5rem;margin:1rem 0">
+        <text x="450" y="25" text-anchor="middle" fill="#76B900" font-size="17" font-weight="700">変数のスコープ（有効範囲）</text>
+
+        <!-- グローバルスコープ -->
+        <rect x="20" y="45" width="860" height="210" rx="12" fill="rgba(118,185,0,0.05)" stroke="#76B900" stroke-width="2" stroke-dasharray="8,4"/>
+        <text x="40" y="70" fill="#76B900" font-size="14" font-weight="700">グローバルスコープ（どこからでも参照可能）</text>
+
+        <!-- グローバル変数 -->
+        <rect x="40" y="85" width="220" height="40" rx="6" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+        <text x="150" y="110" text-anchor="middle" fill="#93D500" font-size="14" font-family="monospace">message = "こ��にちは"</text>
+
+        <!-- setup() scope -->
+        <rect x="40" y="140" width="370" height="100" rx="10" fill="rgba(255,184,0,0.05)" stroke="#FFB800" stroke-width="2"/>
+        <text x="60" y="165" fill="#FFB800" font-size="14" font-weight="700">def greet() のローカルスコー���</text>
+        <rect x="60" y="180" width="180" height="35" rx="6" fill="#2e1a0a" stroke="#FFB800" stroke-width="1"/>
+        <text x="150" y="202" text-anchor="middle" fill="#FFB800" font-size="13" font-family="monospace">name = "太郎"</text>
+        <text x="260" y="202" fill="#999" font-size="12">&#x2190; ここでしか使えない</text>
+
+        <!-- draw() scope -->
+        <rect x="450" y="140" width="410" height="100" rx="10" fill="rgba(147,213,0,0.05)" stroke="#93D500" stroke-width="2"/>
+        <text x="470" y="165" fill="#93D500" font-size="14" font-weight="700">グローバルから��参照</text>
+        <text x="470" y="195" fill="#999" font-size="13">message は参照OK (グローバル)</text>
+        <text x="470" y="215" fill="#FFB800" font-size="13">name は参照NG (greetのロー���ル)</text>
+
+        <!-- 矢印: message accessible -->
+        <line x1="260" y1="105" x2="460" y2="180" stroke="#76B900" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="370" y="140" fill="#76B900" font-size="11">参照OK</text>
+
+        <!-- X mark: name not accessible -->
+        <text x="430" y="205" fill="#FF5252" font-size="18" font-weight="700">&#x2717;</text>
+      </svg>
     </div>
 
     <!-- 関数 -->
@@ -1132,6 +1190,47 @@ result <span class="op">=</span> <span class="fn">add</span>(<span class="num">3
 
       <div class="analogy">
         電子レンジ（関数）と同じです。食材（引数）を入れて、温かい料理（戻り値）が出てきます。電子レンジの中身（処理の詳細）を知らなくても使えます。
+      </div>
+
+      <!-- 関数呼び出しの流れ（SVG） -->
+      <svg viewBox="0 0 900 220" style="width:100%;max-width:100%;background:#0A0A0A;border-radius:0.4rem;border:1px solid #333;padding:0.5rem;margin:1rem 0">
+        <text x="450" y="22" text-anchor="middle" fill="#76B900" font-size="16" font-weight="700">関数の呼び出しと戻り値の流れ</text>
+
+        <!-- 呼び出し元 -->
+        <rect x="20" y="45" width="250" height="70" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+        <text x="145" y="72" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700">呼び出し元</text>
+        <text x="145" y="100" text-anchor="middle" fill="#93D500" font-size="13" font-family="monospace">result = add(3, 5)</text>
+
+        <!-- 矢印: 引数を渡す -->
+        <line x1="270" y1="65" x2="370" y2="65" stroke="#FFB800" stroke-width="2" marker-end="url(#arrF)"/>
+        <text x="320" y="55" text-anchor="middle" fill="#FFB800" font-size="12">引数: a=3, b=5</text>
+
+        <!-- 関数の中身 -->
+        <rect x="370" y="40" width="280" height="80" rx="8" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+        <text x="510" y="65" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">def add(a, b):</text>
+        <text x="510" y="90" text-anchor="middle" fill="#E0E0E0" font-size="13" font-family="monospace">return a + b</text>
+        <text x="510" y="110" text-anchor="middle" fill="#999" font-size="12">3 + 5 = 8 を計算</text>
+
+        <!-- 矢印: 戻り値を返す -->
+        <path d="M510,120 Q510,170 270,100" fill="none" stroke="#93D500" stroke-width="2" marker-end="url(#arrF2)"/>
+        <text x="390" y="165" text-anchor="middle" fill="#93D500" font-size="12">戻り値: 8</text>
+
+        <!-- 結果 -->
+        <rect x="700" y="45" width="180" height="70" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+        <text x="790" y="72" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700">結果</text>
+        <text x="790" y="100" text-anchor="middle" fill="#93D500" font-size="13" font-family="monospace">result = 8</text>
+
+        <line x1="650" y1="80" x2="700" y2="80" stroke="#76B900" stroke-width="2" marker-end="url(#arrF)"/>
+
+        <defs>
+          <marker id="arrF" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#76B900"/></marker>
+          <marker id="arrF2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#93D500"/></marker>
+        </defs>
+      </svg>
+
+      <div class="concept-box">
+        <h4>引数（ひきすう）と戻り値（もどりち）</h4>
+        <p><strong>引数</strong>は関数に渡す入力データ。<strong>戻り値</strong>は関数が処理した結果として返す出力データ。<code>return</code> がない関数は <code>None</code> を返します。py5 の <code>setup()</code> や <code>draw()</code> も引数なし・戻り値なしの関数です。</p>
       </div>
     </div>
 
