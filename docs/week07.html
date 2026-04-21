@@ -703,6 +703,49 @@ a.sub-item:hover {
       </div>
 
       <h4 style="color:#76B900;margin-top:1.5rem;margin-bottom:0.5rem">グラフの種類と使い分け</h4>
+
+      <!-- SVG: グラフの種類比較 -->
+      <div style="margin:1.5rem 0;text-align:center">
+        <svg viewBox="0 0 620 170" xmlns="http://www.w3.org/2000/svg" style="max-width:620px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
+          <text x="310" y="22" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" font-family="sans-serif">3種類のグラフと適した場面</text>
+          <!-- Bar chart -->
+          <rect x="20" y="38" width="185" height="115" rx="8" fill="none" stroke="#76B900" stroke-width="2"/>
+          <text x="112" y="55" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700" font-family="sans-serif">棒グラフ</text>
+          <rect x="45" y="100" width="22" height="40" rx="2" fill="#76B900" opacity="0.7"/>
+          <rect x="75" y="80" width="22" height="60" rx="2" fill="#76B900" opacity="0.85"/>
+          <rect x="105" y="65" width="22" height="75" rx="2" fill="#76B900"/>
+          <rect x="135" y="90" width="22" height="50" rx="2" fill="#76B900" opacity="0.75"/>
+          <rect x="165" y="75" width="22" height="65" rx="2" fill="#76B900" opacity="0.9"/>
+          <line x1="40" y1="142" x2="192" y2="142" stroke="#555" stroke-width="1"/>
+          <text x="112" y="153" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">カテゴリ間の量を比較</text>
+          <!-- Line chart -->
+          <rect x="218" y="38" width="185" height="115" rx="8" fill="none" stroke="#FFB800" stroke-width="2"/>
+          <text x="310" y="55" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="700" font-family="sans-serif">折れ線グラフ</text>
+          <polyline points="240,120 260,100 280,105 300,85 320,90 340,70 360,75 380,65" fill="none" stroke="#FFB800" stroke-width="2"/>
+          <circle cx="240" cy="120" r="3" fill="#FFB800"/><circle cx="260" cy="100" r="3" fill="#FFB800"/>
+          <circle cx="280" cy="105" r="3" fill="#FFB800"/><circle cx="300" cy="85" r="3" fill="#FFB800"/>
+          <circle cx="320" cy="90" r="3" fill="#FFB800"/><circle cx="340" cy="70" r="3" fill="#FFB800"/>
+          <circle cx="360" cy="75" r="3" fill="#FFB800"/><circle cx="380" cy="65" r="3" fill="#FFB800"/>
+          <line x1="235" y1="142" x2="390" y2="142" stroke="#555" stroke-width="1"/>
+          <text x="310" y="153" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">時間経過に伴う変化</text>
+          <!-- Scatter plot -->
+          <rect x="416" y="38" width="185" height="115" rx="8" fill="none" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="508" y="55" text-anchor="middle" fill="#4FC3F7" font-size="11" font-weight="700" font-family="sans-serif">散布図</text>
+          <circle cx="440" cy="125" r="4" fill="#4FC3F7" opacity="0.7"/>
+          <circle cx="455" cy="115" r="4" fill="#4FC3F7" opacity="0.7"/>
+          <circle cx="470" cy="100" r="4" fill="#4FC3F7" opacity="0.7"/>
+          <circle cx="485" cy="108" r="4" fill="#4FC3F7" opacity="0.7"/>
+          <circle cx="500" cy="90" r="4" fill="#4FC3F7" opacity="0.7"/>
+          <circle cx="515" cy="95" r="4" fill="#4FC3F7" opacity="0.7"/>
+          <circle cx="530" cy="80" r="4" fill="#4FC3F7" opacity="0.7"/>
+          <circle cx="545" cy="75" r="4" fill="#4FC3F7" opacity="0.7"/>
+          <circle cx="560" cy="70" r="4" fill="#4FC3F7" opacity="0.7"/>
+          <circle cx="575" cy="65" r="4" fill="#4FC3F7" opacity="0.7"/>
+          <line x1="435" y1="142" x2="590" y2="142" stroke="#555" stroke-width="1"/>
+          <text x="508" y="153" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">2つの数値の相関関係</text>
+        </svg>
+      </div>
+
       <table>
         <tr><th>グラフ</th><th>適している場面</th><th>例</th></tr>
         <tr><td><strong>棒グラフ</strong></td><td>カテゴリ間の量の比較</td><td>曜日ごとのメッセージ数</td></tr>
@@ -730,6 +773,39 @@ a.sub-item:hover {
         <tr><td>最大値（max）</td><td>最も大きい値</td><td><code>max(data)</code></td></tr>
         <tr><td>最小値（min）</td><td>最も小さい値</td><td><code>min(data)</code></td></tr>
       </table>
+
+      <!-- SVG: 記述統計のイメージ -->
+      <div style="margin:1.5rem 0;text-align:center">
+        <svg viewBox="0 0 620 160" xmlns="http://www.w3.org/2000/svg" style="max-width:620px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
+          <text x="310" y="22" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" font-family="sans-serif">記述統計: データの全体像をつかむ</text>
+          <!-- Data points visualization -->
+          <line x1="50" y1="110" x2="570" y2="110" stroke="#555" stroke-width="1"/>
+          <!-- Data bars representing values -->
+          <rect x="70" y="75" width="30" height="35" rx="2" fill="#76B900" opacity="0.6"/>
+          <rect x="115" y="55" width="30" height="55" rx="2" fill="#76B900" opacity="0.6"/>
+          <rect x="160" y="85" width="30" height="25" rx="2" fill="#76B900" opacity="0.6"/>
+          <rect x="205" y="65" width="30" height="45" rx="2" fill="#76B900" opacity="0.6"/>
+          <rect x="250" y="42" width="30" height="68" rx="2" fill="#FFB800" opacity="0.8"/>
+          <rect x="295" y="80" width="30" height="30" rx="2" fill="#76B900" opacity="0.6"/>
+          <rect x="340" y="70" width="30" height="40" rx="2" fill="#76B900" opacity="0.6"/>
+          <rect x="385" y="95" width="30" height="15" rx="2" fill="#FF5252" opacity="0.8"/>
+          <rect x="430" y="60" width="30" height="50" rx="2" fill="#76B900" opacity="0.6"/>
+          <rect x="475" y="78" width="30" height="32" rx="2" fill="#76B900" opacity="0.6"/>
+          <!-- Max line -->
+          <line x1="45" y1="42" x2="520" y2="42" stroke="#FFB800" stroke-width="1" stroke-dasharray="5,3"/>
+          <text x="535" y="46" fill="#FFB800" font-size="9" font-weight="700" font-family="sans-serif">max</text>
+          <!-- Min line -->
+          <line x1="45" y1="95" x2="520" y2="95" stroke="#FF5252" stroke-width="1" stroke-dasharray="5,3"/>
+          <text x="535" y="99" fill="#FF5252" font-size="9" font-weight="700" font-family="sans-serif">min</text>
+          <!-- Mean line -->
+          <line x1="45" y1="70" x2="520" y2="70" stroke="#4FC3F7" stroke-width="1.5" stroke-dasharray="3,3"/>
+          <text x="535" y="74" fill="#4FC3F7" font-size="9" font-weight="700" font-family="sans-serif">mean</text>
+          <!-- Python code references -->
+          <text x="120" y="140" text-anchor="middle" fill="#4FC3F7" font-size="9" font-family="monospace">sum(data)/len(data)</text>
+          <text x="310" y="140" text-anchor="middle" fill="#FFB800" font-size="9" font-family="monospace">max(data)</text>
+          <text x="480" y="140" text-anchor="middle" fill="#FF5252" font-size="9" font-family="monospace">min(data)</text>
+        </svg>
+      </div>
 
       <h4 style="color:#76B900;margin-top:1.5rem;margin-bottom:0.5rem">APIの概念（2学期への予告）</h4>
       <div class="callout-info">
@@ -888,6 +964,51 @@ uv pip install py5
     </div>
 
     <p style="font-size:0.95rem;margin-bottom:1rem">最終課題のベースとなるCSV読み込みのサンプルコードを3つ紹介します。コピーして動かしてみてから、自分の作品に応用してください。</p>
+
+    <!-- SVG: CSVからの可視化パイプライン -->
+    <div style="margin:1.5rem 0;text-align:center">
+      <svg viewBox="0 0 620 160" xmlns="http://www.w3.org/2000/svg" style="max-width:620px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
+        <text x="310" y="22" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" font-family="sans-serif">CSV読み込みから可視化までの流れ</text>
+        <!-- Step 1: CSV file -->
+        <rect x="15" y="42" width="115" height="55" rx="8" fill="none" stroke="#76B900" stroke-width="2"/>
+        <text x="72" y="62" text-anchor="middle" fill="#76B900" font-size="10" font-weight="700" font-family="sans-serif">CSVファイル</text>
+        <text x="72" y="78" text-anchor="middle" fill="#ccc" font-size="9" font-family="monospace">slack.csv</text>
+        <text x="72" y="90" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">日付,メンバー,...</text>
+        <!-- Arrow -->
+        <line x1="135" y1="70" x2="155" y2="70" stroke="#76B900" stroke-width="1.5" marker-end="url(#arr7csv)"/>
+        <!-- Step 2: DictReader -->
+        <rect x="160" y="42" width="115" height="55" rx="8" fill="none" stroke="#FFB800" stroke-width="2"/>
+        <text x="217" y="62" text-anchor="middle" fill="#FFB800" font-size="10" font-weight="700" font-family="sans-serif">読み込み</text>
+        <text x="217" y="78" text-anchor="middle" fill="#ccc" font-size="9" font-family="monospace">DictReader</text>
+        <text x="217" y="90" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">辞書のリスト化</text>
+        <!-- Arrow -->
+        <line x1="280" y1="70" x2="300" y2="70" stroke="#FFB800" stroke-width="1.5" marker-end="url(#arr7csvb)"/>
+        <!-- Step 3: Processing -->
+        <rect x="305" y="42" width="115" height="55" rx="8" fill="none" stroke="#93D500" stroke-width="2"/>
+        <text x="362" y="62" text-anchor="middle" fill="#93D500" font-size="10" font-weight="700" font-family="sans-serif">集計・変換</text>
+        <text x="362" y="78" text-anchor="middle" fill="#ccc" font-size="9" font-family="monospace">int() / sum()</text>
+        <text x="362" y="90" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">平均・最大・最小</text>
+        <!-- Arrow -->
+        <line x1="425" y1="70" x2="445" y2="70" stroke="#93D500" stroke-width="1.5" marker-end="url(#arr7csvc)"/>
+        <!-- Step 4: Draw -->
+        <rect x="450" y="42" width="155" height="55" rx="8" fill="none" stroke="#4FC3F7" stroke-width="2"/>
+        <text x="527" y="62" text-anchor="middle" fill="#4FC3F7" font-size="10" font-weight="700" font-family="sans-serif">py5で描画</text>
+        <text x="527" y="78" text-anchor="middle" fill="#ccc" font-size="9" font-family="monospace">rect() / text()</text>
+        <text x="527" y="90" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">棒グラフ・テキスト表示</text>
+        <!-- Bottom: サンプル対応 -->
+        <text x="72" y="118" text-anchor="middle" fill="#76B900" font-size="8" font-weight="700" font-family="sans-serif">slack.csv</text>
+        <text x="217" y="118" text-anchor="middle" fill="#FFB800" font-size="8" font-weight="700" font-family="sans-serif">サンプル1</text>
+        <text x="362" y="118" text-anchor="middle" fill="#93D500" font-size="8" font-weight="700" font-family="sans-serif">サンプル2</text>
+        <text x="527" y="118" text-anchor="middle" fill="#4FC3F7" font-size="8" font-weight="700" font-family="sans-serif">サンプル3</text>
+        <!-- Bottom note -->
+        <text x="310" y="145" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">各サンプルは前のステップの上に機能を追加している</text>
+        <defs>
+          <marker id="arr7csv" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#76B900"/></marker>
+          <marker id="arr7csvb" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#FFB800"/></marker>
+          <marker id="arr7csvc" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#93D500"/></marker>
+        </defs>
+      </svg>
+    </div>
 
     <!-- Sample 1: Basic CSV -->
     <div class="card standard">

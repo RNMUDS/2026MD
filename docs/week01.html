@@ -1040,6 +1040,35 @@ google.com にアクセスしたとき裏で何が起きるか:
         </tr>
       </table>
 
+      <!-- SVG: アウトプットとアウトカムのピラミッド図 -->
+      <div style="margin:1.5rem 0;text-align:center">
+        <svg viewBox="0 0 620 220" style="max-width:620px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" font-family="sans-serif">
+          <!-- Level 4 (top) -->
+          <polygon points="310,18 230,68 390,68" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+          <text x="310" y="52" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700">④ 行動・社会が変わった</text>
+          <text x="490" y="52" text-anchor="start" fill="#76B900" font-size="10">強いアウトカム</text>
+          <!-- Level 3 -->
+          <polygon points="220,74 160,118 460,118 400,74" fill="#1a2e0a" stroke="#76B900" stroke-width="1.5"/>
+          <text x="310" y="102" text-anchor="middle" fill="#93D500" font-size="11" font-weight="700">③ 他者が理解した・使った</text>
+          <text x="490" y="102" text-anchor="start" fill="#93D500" font-size="10">アウトカム</text>
+          <!-- Level 2 -->
+          <polygon points="150,124 100,168 520,168 470,124" fill="#2e1a0a" stroke="#FFB800" stroke-width="1.5"/>
+          <text x="310" y="152" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="700">② 自分が学べた・理解した</text>
+          <text x="490" y="152" text-anchor="start" fill="#FFB800" font-size="10">弱いアウトカム</text>
+          <!-- Level 1 (bottom) -->
+          <rect x="70" y="174" width="480" height="34" rx="4" fill="#1a1a2a" stroke="#999" stroke-width="1.5"/>
+          <text x="310" y="196" text-anchor="middle" fill="#999" font-size="11" font-weight="700">① 作品を完成させた（アウトプット）</text>
+          <!-- Arrow label -->
+          <line x1="570" y1="195" x2="570" y2="40" stroke="#4FC3F7" stroke-width="1.5" marker-end="url(#arrowUp1)"/>
+          <text x="585" y="120" fill="#4FC3F7" font-size="10" transform="rotate(-90,585,120)">価値が高い</text>
+          <defs>
+            <marker id="arrowUp1" markerWidth="8" markerHeight="8" refX="4" refY="8" orient="auto">
+              <path d="M0,8 L4,0 L8,8" fill="#4FC3F7"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+
       <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:0.4rem;padding:1rem;margin-top:1rem">
         <p style="color:#FFB800;font-weight:700;font-size:0.9rem;margin-bottom:0.5rem">最も重要なライン</p>
         <p><strong>「誰かの状態・行動が変わったか？」</strong></p>
@@ -1095,6 +1124,60 @@ google.com にアクセスしたとき裏で何が起きるか:
 
       <div class="analogy">
         <strong>社会人の仕事も同じ：</strong>いきなり上司に聞くのではなく、自分で調べる → 同僚に聞く → チームで相談 → 上司に相談、という段階を踏みます。この練習を大学で始めましょう。
+      </div>
+
+      <!-- SVG: 相談フローチャート -->
+      <div style="margin:1.5rem 0;text-align:center">
+        <svg viewBox="0 0 620 180" style="max-width:620px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" font-family="sans-serif">
+          <defs>
+            <marker id="arrowFlow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6" fill="#76B900"/>
+            </marker>
+          </defs>
+          <!-- Step 1 -->
+          <rect x="10" y="50" width="100" height="60" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+          <text x="60" y="72" text-anchor="middle" fill="#76B900" font-size="10" font-weight="700">Step 1</text>
+          <text x="60" y="90" text-anchor="middle" fill="#ccc" font-size="9">自分で調べる</text>
+          <text x="60" y="103" text-anchor="middle" fill="#999" font-size="7">Google / AI検索</text>
+          <!-- Arrow 1-2 -->
+          <line x1="112" y1="80" x2="130" y2="80" stroke="#76B900" stroke-width="1.5" marker-end="url(#arrowFlow)"/>
+          <!-- Step 2 -->
+          <rect x="132" y="50" width="100" height="60" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="1.5"/>
+          <text x="182" y="72" text-anchor="middle" fill="#76B900" font-size="10" font-weight="700">Step 2</text>
+          <text x="182" y="90" text-anchor="middle" fill="#ccc" font-size="9">グループで相談</text>
+          <text x="182" y="103" text-anchor="middle" fill="#999" font-size="7">隣の仲間に聞く</text>
+          <!-- Arrow 2-3 -->
+          <line x1="234" y1="80" x2="252" y2="80" stroke="#76B900" stroke-width="1.5" marker-end="url(#arrowFlow)"/>
+          <!-- Step 3 -->
+          <rect x="254" y="50" width="100" height="60" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="1.5"/>
+          <text x="304" y="72" text-anchor="middle" fill="#76B900" font-size="10" font-weight="700">Step 3</text>
+          <text x="304" y="90" text-anchor="middle" fill="#ccc" font-size="9">Slackで質問</text>
+          <text x="304" y="103" text-anchor="middle" fill="#999" font-size="7">2026雑談ch</text>
+          <!-- Arrow 3-4 -->
+          <line x1="356" y1="80" x2="374" y2="80" stroke="#76B900" stroke-width="1.5" marker-end="url(#arrowFlow)"/>
+          <!-- Step 4 -->
+          <rect x="376" y="50" width="100" height="60" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="1.5"/>
+          <text x="426" y="72" text-anchor="middle" fill="#76B900" font-size="10" font-weight="700">Step 4</text>
+          <text x="426" y="90" text-anchor="middle" fill="#ccc" font-size="9">先輩に聞く</text>
+          <text x="426" y="103" text-anchor="middle" fill="#999" font-size="7">2年生以上</text>
+          <!-- Arrow 4-5 -->
+          <line x1="478" y1="80" x2="496" y2="80" stroke="#FFB800" stroke-width="1.5" marker-end="url(#arrowFlow5)"/>
+          <defs>
+            <marker id="arrowFlow5" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6" fill="#FFB800"/>
+            </marker>
+          </defs>
+          <!-- Step 5 -->
+          <rect x="498" y="50" width="110" height="60" rx="8" fill="#2e1a0a" stroke="#FFB800" stroke-width="2"/>
+          <text x="553" y="72" text-anchor="middle" fill="#FFB800" font-size="10" font-weight="700">Step 5</text>
+          <text x="553" y="90" text-anchor="middle" fill="#FFB800" font-size="9">教員に相談</text>
+          <text x="553" y="103" text-anchor="middle" fill="#999" font-size="7">最終手段</text>
+          <!-- Bottom label -->
+          <text x="60" y="140" text-anchor="middle" fill="#76B900" font-size="9">自力解決</text>
+          <line x1="10" y1="145" x2="608" y2="145" stroke="#333" stroke-width="1" stroke-dasharray="4,4"/>
+          <text x="310" y="165" text-anchor="middle" fill="#999" font-size="9">左ほど自立的 ── 右ほど他者に頼る（まず左から試す）</text>
+          <text x="553" y="140" text-anchor="middle" fill="#FFB800" font-size="9">最終手段</text>
+        </svg>
       </div>
     </div>
 
@@ -1311,6 +1394,60 @@ google.com にアクセスしたとき裏で何が起きるか:
 ├── Applications/
 └── System/</pre>
 
+      <!-- SVG: ファイルシステム木構造の図 -->
+      <div style="margin:1.5rem 0;text-align:center">
+        <svg viewBox="0 0 620 220" style="max-width:620px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" font-family="sans-serif">
+          <defs>
+            <marker id="arrowTree" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6" fill="#76B900"/>
+            </marker>
+          </defs>
+          <!-- Root -->
+          <rect x="260" y="10" width="100" height="30" rx="6" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+          <text x="310" y="30" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700" font-family="monospace">/ (root)</text>
+          <!-- HOME node -->
+          <rect x="120" y="65" width="120" height="28" rx="6" fill="#1a2e0a" stroke="#76B900" stroke-width="1.5"/>
+          <text x="180" y="84" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700" font-family="monospace">~ (HOME)</text>
+          <line x1="280" y1="40" x2="200" y2="65" stroke="#76B900" stroke-width="1.5"/>
+          <!-- Applications node -->
+          <rect x="380" y="65" width="120" height="28" rx="6" fill="#1a1a2a" stroke="#4FC3F7" stroke-width="1.5"/>
+          <text x="440" y="84" text-anchor="middle" fill="#4FC3F7" font-size="11" font-family="monospace">Applications/</text>
+          <line x1="340" y1="40" x2="420" y2="65" stroke="#4FC3F7" stroke-width="1.5"/>
+          <!-- Documents -->
+          <rect x="20" y="120" width="100" height="26" rx="5" fill="#111" stroke="#93D500" stroke-width="1.5"/>
+          <text x="70" y="138" text-anchor="middle" fill="#93D500" font-size="10" font-family="monospace">Documents/</text>
+          <line x1="150" y1="93" x2="80" y2="120" stroke="#93D500" stroke-width="1"/>
+          <!-- Downloads -->
+          <rect x="135" y="120" width="100" height="26" rx="5" fill="#111" stroke="#93D500" stroke-width="1.5"/>
+          <text x="185" y="138" text-anchor="middle" fill="#93D500" font-size="10" font-family="monospace">Downloads/</text>
+          <line x1="175" y1="93" x2="185" y2="120" stroke="#93D500" stroke-width="1"/>
+          <!-- Desktop -->
+          <rect x="250" y="120" width="90" height="26" rx="5" fill="#111" stroke="#93D500" stroke-width="1.5"/>
+          <text x="295" y="138" text-anchor="middle" fill="#93D500" font-size="10" font-family="monospace">Desktop/</text>
+          <line x1="200" y1="93" x2="290" y2="120" stroke="#93D500" stroke-width="1"/>
+          <!-- Sub-items under Documents -->
+          <rect x="5" y="172" width="60" height="22" rx="4" fill="#1A1A1A" stroke="#FFB800" stroke-width="1"/>
+          <text x="35" y="187" text-anchor="middle" fill="#FFB800" font-size="8" font-family="monospace">work/</text>
+          <line x1="55" y1="146" x2="35" y2="172" stroke="#FFB800" stroke-width="1"/>
+          <rect x="75" y="172" width="70" height="22" rx="4" fill="#1A1A1A" stroke="#FFB800" stroke-width="1"/>
+          <text x="110" y="187" text-anchor="middle" fill="#FFB800" font-size="8" font-family="monospace">personal/</text>
+          <line x1="75" y1="146" x2="100" y2="172" stroke="#FFB800" stroke-width="1"/>
+          <!-- Sub-items under Desktop -->
+          <rect x="255" y="172" width="80" height="22" rx="4" fill="#1A1A1A" stroke="#FFB800" stroke-width="1"/>
+          <text x="295" y="187" text-anchor="middle" fill="#FFB800" font-size="8" font-family="monospace">report.pdf</text>
+          <line x1="290" y1="146" x2="290" y2="172" stroke="#FFB800" stroke-width="1"/>
+          <!-- App sub-items -->
+          <rect x="395" y="120" width="90" height="26" rx="5" fill="#111" stroke="#4FC3F7" stroke-width="1"/>
+          <text x="440" y="138" text-anchor="middle" fill="#4FC3F7" font-size="9" font-family="monospace">Safari.app</text>
+          <line x1="440" y1="93" x2="440" y2="120" stroke="#4FC3F7" stroke-width="1"/>
+          <!-- Legend -->
+          <rect x="460" y="170" width="12" height="12" rx="2" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+          <text x="478" y="181" fill="#ccc" font-size="9">ディレクトリ</text>
+          <rect x="540" y="170" width="12" height="12" rx="2" fill="#1A1A1A" stroke="#FFB800" stroke-width="1"/>
+          <text x="558" y="181" fill="#ccc" font-size="9">ファイル</text>
+        </svg>
+      </div>
+
       <div class="concept-box">
         <h4>なぜ木構造が重要か</h4>
         <ul class="point-list">
@@ -1339,6 +1476,49 @@ google.com にアクセスしたとき裏で何が起きるか:
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.5rem 0.8rem;margin-bottom:1rem;font-size:0.8rem;color:#93D500">
         <strong>Tips:</strong> ターミナルでコマンドやファイル名を入力するとき、途中まで打って <kbd>Tab</kbd> キーを押すと<strong>自動補完</strong>されます。例: <code>cd Lec</code> → Tab → <code>cd Lecture/</code>。素早く、間違えずに入力するために常に活用しましょう。<br>
         また、<kbd>↑</kbd><kbd>↓</kbd> 矢印キーで<strong>過去に入力したコマンドの履歴</strong>を呼び出せます。同じコマンドを何度も打ち直す必要はありません。
+      </div>
+
+      <!-- SVG: pwd/ls/cd コマンドの関係図 -->
+      <div style="margin:1.5rem 0;text-align:center">
+        <svg viewBox="0 0 620 200" style="max-width:620px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" font-family="sans-serif">
+          <defs>
+            <marker id="arrowNav" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6" fill="#4FC3F7"/>
+            </marker>
+          </defs>
+          <!-- Current directory box -->
+          <rect x="220" y="60" width="180" height="50" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+          <text x="310" y="82" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" font-family="monospace">~/Documents</text>
+          <text x="310" y="100" text-anchor="middle" fill="#999" font-size="9">現在のディレクトリ</text>
+          <!-- pwd label -->
+          <rect x="250" y="15" width="120" height="30" rx="6" fill="#111" stroke="#FFB800" stroke-width="1.5"/>
+          <text x="310" y="35" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700" font-family="monospace">pwd</text>
+          <line x1="310" y1="45" x2="310" y2="60" stroke="#FFB800" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <text x="370" y="35" fill="#999" font-size="9">今どこ?</text>
+          <!-- ls label -->
+          <rect x="460" y="62" width="90" height="30" rx="6" fill="#111" stroke="#93D500" stroke-width="1.5"/>
+          <text x="505" y="82" text-anchor="middle" fill="#93D500" font-size="12" font-weight="700" font-family="monospace">ls</text>
+          <line x1="400" y1="80" x2="460" y2="80" stroke="#93D500" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <text x="555" y="82" fill="#999" font-size="9">中身は?</text>
+          <!-- cd .. (go up) -->
+          <rect x="30" y="30" width="120" height="35" rx="6" fill="#111" stroke="#4FC3F7" stroke-width="1.5"/>
+          <text x="90" y="47" text-anchor="middle" fill="#4FC3F7" font-size="11" font-weight="700" font-family="monospace">~ (HOME)</text>
+          <text x="90" y="60" text-anchor="middle" fill="#999" font-size="8">親ディレクトリ</text>
+          <path d="M220,70 Q180,50 152,55" fill="none" stroke="#4FC3F7" stroke-width="1.5" marker-end="url(#arrowNav)"/>
+          <text x="170" y="45" fill="#4FC3F7" font-size="10" font-family="monospace">cd ..</text>
+          <!-- cd subdir (go down) -->
+          <rect x="140" y="145" width="120" height="35" rx="6" fill="#111" stroke="#4FC3F7" stroke-width="1.5"/>
+          <text x="200" y="163" text-anchor="middle" fill="#4FC3F7" font-size="11" font-weight="700" font-family="monospace">work/</text>
+          <text x="200" y="175" text-anchor="middle" fill="#999" font-size="8">子ディレクトリ</text>
+          <path d="M280,110 Q250,130 245,143" fill="none" stroke="#4FC3F7" stroke-width="1.5" marker-end="url(#arrowNav)"/>
+          <text x="230" y="125" fill="#4FC3F7" font-size="10" font-family="monospace">cd work</text>
+          <!-- Another subdir -->
+          <rect x="340" y="145" width="120" height="35" rx="6" fill="#111" stroke="#4FC3F7" stroke-width="1.5"/>
+          <text x="400" y="163" text-anchor="middle" fill="#4FC3F7" font-size="11" font-weight="700" font-family="monospace">personal/</text>
+          <text x="400" y="175" text-anchor="middle" fill="#999" font-size="8">子ディレクトリ</text>
+          <path d="M340,110 Q360,130 365,143" fill="none" stroke="#4FC3F7" stroke-width="1.5" marker-end="url(#arrowNav)"/>
+          <text x="370" y="125" fill="#4FC3F7" font-size="10" font-family="monospace">cd personal</text>
+        </svg>
       </div>
 
       <p><strong>1. 今どこにいるかを確認</strong></p>
@@ -1391,6 +1571,63 @@ pwd</pre>
     <!-- ステップ2 -->
     <div class="card" style="border-left:4px solid #93D500">
       <div class="card-header"><h3>ステップ2: ディレクトリとファイルの操作</h3></div>
+
+      <!-- SVG: mkdir/rm によるディレクトリ変化の図 -->
+      <div style="margin:1.5rem 0;text-align:center">
+        <svg viewBox="0 0 620 200" style="max-width:620px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" font-family="sans-serif">
+          <defs>
+            <marker id="arrowChange" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto">
+              <path d="M0,0 L10,4 L0,8" fill="#93D500"/>
+            </marker>
+            <marker id="arrowRemove" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto">
+              <path d="M0,0 L10,4 L0,8" fill="#FF5252"/>
+            </marker>
+          </defs>
+          <!-- BEFORE state -->
+          <text x="100" y="22" text-anchor="middle" fill="#ccc" font-size="12" font-weight="700">Before</text>
+          <rect x="55" y="32" width="90" height="26" rx="5" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+          <text x="100" y="50" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700" font-family="monospace">~ (HOME)</text>
+          <rect x="30" y="75" width="80" height="22" rx="4" fill="#111" stroke="#93D500" stroke-width="1"/>
+          <text x="70" y="90" text-anchor="middle" fill="#93D500" font-size="9" font-family="monospace">Documents/</text>
+          <line x1="85" y1="58" x2="70" y2="75" stroke="#93D500" stroke-width="1"/>
+          <rect x="120" y="75" width="80" height="22" rx="4" fill="#111" stroke="#93D500" stroke-width="1"/>
+          <text x="160" y="90" text-anchor="middle" fill="#93D500" font-size="9" font-family="monospace">Desktop/</text>
+          <line x1="115" y1="58" x2="150" y2="75" stroke="#93D500" stroke-width="1"/>
+          <!-- Arrow: mkdir Lecture -->
+          <line x1="210" y1="60" x2="270" y2="60" stroke="#93D500" stroke-width="2" marker-end="url(#arrowChange)"/>
+          <text x="240" y="52" text-anchor="middle" fill="#93D500" font-size="10" font-weight="700" font-family="monospace">mkdir Lecture</text>
+          <!-- AFTER mkdir state -->
+          <text x="400" y="22" text-anchor="middle" fill="#ccc" font-size="12" font-weight="700">After mkdir</text>
+          <rect x="355" y="32" width="90" height="26" rx="5" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+          <text x="400" y="50" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700" font-family="monospace">~ (HOME)</text>
+          <rect x="310" y="75" width="75" height="22" rx="4" fill="#111" stroke="#93D500" stroke-width="1"/>
+          <text x="347" y="90" text-anchor="middle" fill="#93D500" font-size="8" font-family="monospace">Documents/</text>
+          <line x1="380" y1="58" x2="347" y2="75" stroke="#93D500" stroke-width="1"/>
+          <rect x="395" y="75" width="70" height="22" rx="4" fill="#111" stroke="#93D500" stroke-width="1"/>
+          <text x="430" y="90" text-anchor="middle" fill="#93D500" font-size="8" font-family="monospace">Desktop/</text>
+          <line x1="400" y1="58" x2="425" y2="75" stroke="#93D500" stroke-width="1"/>
+          <!-- New Lecture directory highlighted -->
+          <rect x="475" y="75" width="75" height="22" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+          <text x="512" y="90" text-anchor="middle" fill="#76B900" font-size="8" font-weight="700" font-family="monospace">Lecture/</text>
+          <line x1="420" y1="58" x2="505" y2="75" stroke="#76B900" stroke-width="1.5"/>
+          <text x="512" y="108" text-anchor="middle" fill="#76B900" font-size="8">NEW!</text>
+          <!-- Sub-directories inside Lecture -->
+          <text x="310" y="140" text-anchor="middle" fill="#ccc" font-size="11" font-weight="700">mkdir MD1 MD2 SI DS</text>
+          <line x1="310" y1="145" x2="310" y2="155" stroke="#93D500" stroke-width="1" marker-end="url(#arrowChange)"/>
+          <rect x="180" y="160" width="55" height="22" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.5"/>
+          <text x="207" y="175" text-anchor="middle" fill="#76B900" font-size="9" font-weight="700" font-family="monospace">MD1</text>
+          <rect x="245" y="160" width="55" height="22" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.5"/>
+          <text x="272" y="175" text-anchor="middle" fill="#76B900" font-size="9" font-weight="700" font-family="monospace">MD2</text>
+          <rect x="310" y="160" width="55" height="22" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.5"/>
+          <text x="337" y="175" text-anchor="middle" fill="#76B900" font-size="9" font-weight="700" font-family="monospace">SI</text>
+          <rect x="375" y="160" width="55" height="22" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.5"/>
+          <text x="402" y="175" text-anchor="middle" fill="#76B900" font-size="9" font-weight="700" font-family="monospace">DS</text>
+          <!-- rm example -->
+          <rect x="480" y="155" width="125" height="30" rx="6" fill="#1a0a0a" stroke="#FF5252" stroke-width="1.5"/>
+          <text x="542" y="168" text-anchor="middle" fill="#FF5252" font-size="9" font-weight="700" font-family="monospace">rm note.txt</text>
+          <text x="542" y="180" text-anchor="middle" fill="#999" font-size="8">ファイルを削除</text>
+        </svg>
+      </div>
 
       <p><strong>1. Lecture ディレクトリを作成</strong></p>
       <pre><span class="code-label">Terminal</span>

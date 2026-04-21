@@ -759,6 +759,64 @@ a.sub-item:hover {
       <div class="analogy">
         料理のレシピと同じです。「材料を切る → 炒める → 盛り付ける」は順次。「味が薄ければ塩を足す」は分岐。「5分間かき混ぜ続ける」は反復です。
       </div>
+
+      <div style="margin:1.5rem 0;text-align:center">
+        <svg viewBox="0 0 620 320" style="max-width:620px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrow-g" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#76B900"/></marker>
+            <marker id="arrow-o" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#FFB800"/></marker>
+            <marker id="arrow-c" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#4FC3F7"/></marker>
+          </defs>
+          <!-- Title -->
+          <text x="310" y="30" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="14" font-weight="bold">プログラムの3つの基本構造</text>
+          <!-- Sequential -->
+          <text x="110" y="58" text-anchor="middle" fill="#76B900" font-family="sans-serif" font-size="13" font-weight="bold">順次</text>
+          <rect x="60" y="70" width="100" height="36" rx="6" fill="none" stroke="#76B900" stroke-width="2"/>
+          <text x="110" y="93" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="12">処理 A</text>
+          <line x1="110" y1="106" x2="110" y2="130" stroke="#76B900" stroke-width="2" marker-end="url(#arrow-g)"/>
+          <rect x="60" y="134" width="100" height="36" rx="6" fill="none" stroke="#76B900" stroke-width="2"/>
+          <text x="110" y="157" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="12">処理 B</text>
+          <line x1="110" y1="170" x2="110" y2="194" stroke="#76B900" stroke-width="2" marker-end="url(#arrow-g)"/>
+          <rect x="60" y="198" width="100" height="36" rx="6" fill="none" stroke="#76B900" stroke-width="2"/>
+          <text x="110" y="221" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="12">処理 C</text>
+          <text x="110" y="260" text-anchor="middle" fill="#999" font-family="monospace" font-size="11">A → B → C</text>
+          <!-- Selection -->
+          <text x="310" y="58" text-anchor="middle" fill="#FFB800" font-family="sans-serif" font-size="13" font-weight="bold">分岐</text>
+          <polygon points="310,70 370,108 310,146 250,108" fill="none" stroke="#FFB800" stroke-width="2"/>
+          <text x="310" y="112" text-anchor="middle" fill="#FFB800" font-family="sans-serif" font-size="11">条件?</text>
+          <line x1="250" y1="108" x2="220" y2="108" stroke="#FFB800" stroke-width="2"/>
+          <line x1="220" y1="108" x2="220" y2="174" stroke="#FFB800" stroke-width="2" marker-end="url(#arrow-o)"/>
+          <text x="232" y="100" fill="#93D500" font-family="sans-serif" font-size="10">Yes</text>
+          <rect x="180" y="178" width="80" height="32" rx="6" fill="none" stroke="#FFB800" stroke-width="2"/>
+          <text x="220" y="199" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="11">処理 X</text>
+          <line x1="370" y1="108" x2="400" y2="108" stroke="#FFB800" stroke-width="2"/>
+          <line x1="400" y1="108" x2="400" y2="174" stroke="#FFB800" stroke-width="2" marker-end="url(#arrow-o)"/>
+          <text x="382" y="100" fill="#FF5252" font-family="sans-serif" font-size="10">No</text>
+          <rect x="360" y="178" width="80" height="32" rx="6" fill="none" stroke="#FFB800" stroke-width="2"/>
+          <text x="400" y="199" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="11">処理 Y</text>
+          <line x1="220" y1="210" x2="220" y2="240" stroke="#FFB800" stroke-width="1.5"/>
+          <line x1="400" y1="210" x2="400" y2="240" stroke="#FFB800" stroke-width="1.5"/>
+          <line x1="220" y1="240" x2="400" y2="240" stroke="#FFB800" stroke-width="1.5"/>
+          <line x1="310" y1="240" x2="310" y2="258" stroke="#FFB800" stroke-width="2" marker-end="url(#arrow-o)"/>
+          <text x="310" y="280" text-anchor="middle" fill="#999" font-family="monospace" font-size="11">if / else</text>
+          <!-- Iteration -->
+          <text x="530" y="58" text-anchor="middle" fill="#4FC3F7" font-family="sans-serif" font-size="13" font-weight="bold">反復</text>
+          <polygon points="530,70 590,108 530,146 470,108" fill="none" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="530" y="112" text-anchor="middle" fill="#4FC3F7" font-family="sans-serif" font-size="11">条件?</text>
+          <line x1="530" y1="146" x2="530" y2="174" stroke="#4FC3F7" stroke-width="2" marker-end="url(#arrow-c)"/>
+          <text x="540" y="162" fill="#93D500" font-family="sans-serif" font-size="10">Yes</text>
+          <rect x="480" y="178" width="100" height="32" rx="6" fill="none" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="530" y="199" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="11">処理</text>
+          <line x1="480" y1="194" x2="456" y2="194" stroke="#4FC3F7" stroke-width="2"/>
+          <line x1="456" y1="194" x2="456" y2="90" stroke="#4FC3F7" stroke-width="2"/>
+          <line x1="456" y1="90" x2="470" y2="108" stroke="#4FC3F7" stroke-width="2" marker-end="url(#arrow-c)"/>
+          <line x1="590" y1="108" x2="610" y2="108" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="598" y="100" fill="#FF5252" font-family="sans-serif" font-size="10">No</text>
+          <line x1="610" y1="108" x2="610" y2="258" stroke="#4FC3F7" stroke-width="1.5"/>
+          <line x1="610" y1="258" x2="540" y2="258" stroke="#4FC3F7" stroke-width="2" marker-end="url(#arrow-c)"/>
+          <text x="530" y="280" text-anchor="middle" fill="#999" font-family="monospace" font-size="11">for / while</text>
+        </svg>
+      </div>
     </div>
 
     <!-- Pythonの基本構文 -->
@@ -808,6 +866,44 @@ name <span class="op">=</span> <span class="str">"py5"</span>   <span class="cmt
         </table>
       </div>
 
+      <div style="margin:1.5rem 0;text-align:center">
+        <svg viewBox="0 0 620 300" style="max-width:620px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrow-arch" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#76B900"/></marker>
+          </defs>
+          <text x="310" y="28" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="14" font-weight="bold">コンピュータの構成要素</text>
+          <!-- CPU center -->
+          <rect x="235" y="105" width="150" height="60" rx="10" fill="#76B900" fill-opacity="0.15" stroke="#76B900" stroke-width="2.5"/>
+          <text x="310" y="133" text-anchor="middle" fill="#76B900" font-family="sans-serif" font-size="16" font-weight="bold">CPU</text>
+          <text x="310" y="153" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="10">計算・判断（頭脳）</text>
+          <!-- GPU -->
+          <rect x="30" y="50" width="130" height="50" rx="8" fill="#93D500" fill-opacity="0.1" stroke="#93D500" stroke-width="2"/>
+          <text x="95" y="73" text-anchor="middle" fill="#93D500" font-family="sans-serif" font-size="13" font-weight="bold">GPU</text>
+          <text x="95" y="90" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="9">並列計算</text>
+          <line x1="160" y1="80" x2="230" y2="120" stroke="#76B900" stroke-width="1.5" marker-end="url(#arrow-arch)"/>
+          <!-- Memory -->
+          <rect x="460" y="50" width="130" height="50" rx="8" fill="#4FC3F7" fill-opacity="0.1" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="525" y="73" text-anchor="middle" fill="#4FC3F7" font-family="sans-serif" font-size="13" font-weight="bold">メモリ（RAM）</text>
+          <text x="525" y="90" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="9">一時記憶</text>
+          <line x1="460" y1="80" x2="390" y2="120" stroke="#76B900" stroke-width="1.5" marker-end="url(#arrow-arch)"/>
+          <!-- Storage -->
+          <rect x="460" y="170" width="130" height="50" rx="8" fill="#FFB800" fill-opacity="0.1" stroke="#FFB800" stroke-width="2"/>
+          <text x="525" y="193" text-anchor="middle" fill="#FFB800" font-family="sans-serif" font-size="13" font-weight="bold">ストレージ</text>
+          <text x="525" y="210" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="9">永続保存（SSD）</text>
+          <line x1="460" y1="190" x2="390" y2="150" stroke="#76B900" stroke-width="1.5" marker-end="url(#arrow-arch)"/>
+          <!-- Input -->
+          <rect x="30" y="170" width="130" height="50" rx="8" fill="#FF5252" fill-opacity="0.1" stroke="#FF5252" stroke-width="2"/>
+          <text x="95" y="190" text-anchor="middle" fill="#FF5252" font-family="sans-serif" font-size="12" font-weight="bold">入力装置</text>
+          <text x="95" y="210" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="9">キーボード / マウス</text>
+          <line x1="160" y1="190" x2="230" y2="150" stroke="#76B900" stroke-width="1.5" marker-end="url(#arrow-arch)"/>
+          <!-- Output -->
+          <rect x="210" y="230" width="200" height="50" rx="8" fill="#ccc" fill-opacity="0.08" stroke="#999" stroke-width="2"/>
+          <text x="310" y="253" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="12" font-weight="bold">出力装置</text>
+          <text x="310" y="270" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="9">ディスプレイ / スピーカー</text>
+          <line x1="310" y1="165" x2="310" y2="226" stroke="#76B900" stroke-width="1.5" marker-end="url(#arrow-arch)"/>
+        </svg>
+      </div>
+
       <div class="concept-box" style="margin-top:1rem">
         <h4>OS（Operating System）の役割</h4>
         <p>OSはハードウェアとアプリケーションの間を取り持つソフトウェアです。ファイル管理、メモリ管理、プロセス管理などを担当します。</p>
@@ -850,6 +946,50 @@ name <span class="op">=</span> <span class="str">"py5"</span>   <span class="cmt
       <div class="analogy">
         1重ループは「教室の全員に1回ずつ握手する」（n回）。2重ループは「全員が全員と握手する」（n&times;n回）。人数が10人なら100回、100人なら10,000回になります。
       </div>
+
+      <div style="margin:1.5rem 0;text-align:center">
+        <svg viewBox="0 0 620 320" style="max-width:620px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" xmlns="http://www.w3.org/2000/svg">
+          <text x="310" y="28" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="14" font-weight="bold">計算量の比較: O(n) vs O(n²)</text>
+          <!-- Axes -->
+          <line x1="80" y1="270" x2="570" y2="270" stroke="#666" stroke-width="2"/>
+          <line x1="80" y1="270" x2="80" y2="50" stroke="#666" stroke-width="2"/>
+          <!-- Axis labels -->
+          <text x="330" y="298" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="12">n（データサイズ）</text>
+          <text x="30" y="160" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="12" transform="rotate(-90,30,160)">処理回数</text>
+          <!-- Grid lines -->
+          <line x1="80" y1="220" x2="570" y2="220" stroke="#333" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="80" y1="170" x2="570" y2="170" stroke="#333" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="80" y1="120" x2="570" y2="120" stroke="#333" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="80" y1="70" x2="570" y2="70" stroke="#333" stroke-width="1" stroke-dasharray="4,4"/>
+          <!-- X-axis ticks -->
+          <line x1="180" y1="270" x2="180" y2="275" stroke="#666" stroke-width="2"/>
+          <text x="180" y="288" text-anchor="middle" fill="#999" font-family="monospace" font-size="11">10</text>
+          <line x1="480" y1="270" x2="480" y2="275" stroke="#666" stroke-width="2"/>
+          <text x="480" y="288" text-anchor="middle" fill="#999" font-family="monospace" font-size="11">100</text>
+          <!-- Y-axis ticks -->
+          <text x="72" y="224" text-anchor="end" fill="#999" font-family="monospace" font-size="10">100</text>
+          <text x="72" y="174" text-anchor="end" fill="#999" font-family="monospace" font-size="10">1K</text>
+          <text x="72" y="124" text-anchor="end" fill="#999" font-family="monospace" font-size="10">5K</text>
+          <text x="72" y="74" text-anchor="end" fill="#999" font-family="monospace" font-size="10">10K</text>
+          <!-- O(n) line -->
+          <line x1="80" y1="268" x2="480" y2="250" stroke="#76B900" stroke-width="3"/>
+          <circle cx="180" cy="263" r="5" fill="#76B900"/>
+          <text x="190" y="258" fill="#76B900" font-family="monospace" font-size="10">10</text>
+          <circle cx="480" cy="250" r="5" fill="#76B900"/>
+          <text x="490" y="245" fill="#76B900" font-family="monospace" font-size="10">100</text>
+          <!-- O(n²) curve -->
+          <path d="M80,269 Q180,266 180,220 Q250,170 320,130 Q400,85 480,60" fill="none" stroke="#FF5252" stroke-width="3"/>
+          <circle cx="180" cy="220" r="5" fill="#FF5252"/>
+          <text x="190" y="215" fill="#FF5252" font-family="monospace" font-size="10">100</text>
+          <circle cx="480" cy="60" r="5" fill="#FF5252"/>
+          <text x="490" y="55" fill="#FF5252" font-family="monospace" font-size="10">10,000</text>
+          <!-- Legend -->
+          <line x1="380" y1="40" x2="410" y2="40" stroke="#76B900" stroke-width="3"/>
+          <text x="415" y="44" fill="#76B900" font-family="sans-serif" font-size="12">O(n) 1重ループ</text>
+          <line x1="160" y1="40" x2="190" y2="40" stroke="#FF5252" stroke-width="3"/>
+          <text x="195" y="44" fill="#FF5252" font-family="sans-serif" font-size="12">O(n²) 2重ループ</text>
+        </svg>
+      </div>
     </div>
 
     <!-- データの表現 -->
@@ -875,6 +1015,48 @@ name <span class="op">=</span> <span class="str">"py5"</span>   <span class="cmt
           <tr><td>順序尺度</td><td>成績（A/B/C）、満足度</td></tr>
         </table>
         <p style="margin-top:0.5rem">色のRGB値（0〜255の整数）は<strong>離散的な量的データ</strong>です。</p>
+      </div>
+
+      <div style="margin:1.5rem 0;text-align:center">
+        <svg viewBox="0 0 620 240" style="max-width:620px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" xmlns="http://www.w3.org/2000/svg">
+          <text x="310" y="28" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="14" font-weight="bold">データの分類</text>
+          <!-- Root -->
+          <rect x="245" y="45" width="130" height="36" rx="8" fill="#76B900" fill-opacity="0.2" stroke="#76B900" stroke-width="2"/>
+          <text x="310" y="68" text-anchor="middle" fill="#76B900" font-family="sans-serif" font-size="14" font-weight="bold">データ</text>
+          <!-- Branches from root -->
+          <line x1="250" y1="81" x2="155" y2="110" stroke="#76B900" stroke-width="1.5"/>
+          <line x1="370" y1="81" x2="465" y2="110" stroke="#76B900" stroke-width="1.5"/>
+          <!-- Quantitative -->
+          <rect x="70" y="110" width="170" height="36" rx="8" fill="#4FC3F7" fill-opacity="0.15" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="155" y="128" text-anchor="middle" fill="#4FC3F7" font-family="sans-serif" font-size="12" font-weight="bold">量的データ</text>
+          <text x="155" y="142" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="9">（数値で表現）</text>
+          <!-- Qualitative -->
+          <rect x="380" y="110" width="170" height="36" rx="8" fill="#FFB800" fill-opacity="0.15" stroke="#FFB800" stroke-width="2"/>
+          <text x="465" y="128" text-anchor="middle" fill="#FFB800" font-family="sans-serif" font-size="12" font-weight="bold">質的データ</text>
+          <text x="465" y="142" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="9">（カテゴリで表現）</text>
+          <!-- Branches from Quantitative -->
+          <line x1="110" y1="146" x2="85" y2="175" stroke="#4FC3F7" stroke-width="1.5"/>
+          <line x1="200" y1="146" x2="225" y2="175" stroke="#4FC3F7" stroke-width="1.5"/>
+          <!-- Continuous -->
+          <rect x="20" y="175" width="130" height="42" rx="6" fill="none" stroke="#4FC3F7" stroke-width="1.5"/>
+          <text x="85" y="193" text-anchor="middle" fill="#4FC3F7" font-family="sans-serif" font-size="11" font-weight="bold">連続データ</text>
+          <text x="85" y="210" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="9">身長, 体重, 気温</text>
+          <!-- Discrete -->
+          <rect x="160" y="175" width="130" height="42" rx="6" fill="none" stroke="#4FC3F7" stroke-width="1.5"/>
+          <text x="225" y="193" text-anchor="middle" fill="#4FC3F7" font-family="sans-serif" font-size="11" font-weight="bold">離散データ</text>
+          <text x="225" y="210" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="9">人数, 回数, 個数</text>
+          <!-- Branches from Qualitative -->
+          <line x1="420" y1="146" x2="395" y2="175" stroke="#FFB800" stroke-width="1.5"/>
+          <line x1="510" y1="146" x2="535" y2="175" stroke="#FFB800" stroke-width="1.5"/>
+          <!-- Nominal -->
+          <rect x="330" y="175" width="130" height="42" rx="6" fill="none" stroke="#FFB800" stroke-width="1.5"/>
+          <text x="395" y="193" text-anchor="middle" fill="#FFB800" font-family="sans-serif" font-size="11" font-weight="bold">名義尺度</text>
+          <text x="395" y="210" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="9">血液型, 性別, 都道府県</text>
+          <!-- Ordinal -->
+          <rect x="470" y="175" width="130" height="42" rx="6" fill="none" stroke="#FFB800" stroke-width="1.5"/>
+          <text x="535" y="193" text-anchor="middle" fill="#FFB800" font-family="sans-serif" font-size="11" font-weight="bold">順序尺度</text>
+          <text x="535" y="210" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="9">成績(A/B/C), 満足度</text>
+        </svg>
       </div>
     </div>
 

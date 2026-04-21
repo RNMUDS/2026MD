@@ -584,6 +584,77 @@ a.sub-item:hover {
         音のデジタル化は「パラパラ漫画」と同じです。連続的な動きを1コマずつ描いて記録し（AD変換）、高速でめくると動いて見える（DA変換）。コマ数が多いほど滑らかになります。
       </div>
 
+      <!-- SVG: AD変換プロセス -->
+      <div style="margin:1.5rem 0;text-align:center">
+        <svg viewBox="0 0 620 210" xmlns="http://www.w3.org/2000/svg" style="max-width:620px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
+          <text x="310" y="22" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" font-family="sans-serif">AD変換のプロセス: アナログ → デジタル</text>
+          <!-- Step 1: Continuous sine wave -->
+          <rect x="15" y="40" width="135" height="90" rx="8" fill="none" stroke="#76B900" stroke-width="2"/>
+          <text x="82" y="56" text-anchor="middle" fill="#76B900" font-size="10" font-weight="700" font-family="sans-serif">アナログ信号</text>
+          <!-- Sine wave -->
+          <path d="M25,90 Q40,65 55,90 Q70,115 85,90 Q100,65 115,90 Q130,115 140,90" fill="none" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="82" y="122" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">連続的な波</text>
+          <!-- Arrow 1 -->
+          <line x1="155" y1="85" x2="175" y2="85" stroke="#76B900" stroke-width="1.5" marker-end="url(#arr6ad)"/>
+          <!-- Step 2: Sampling -->
+          <rect x="180" y="40" width="135" height="90" rx="8" fill="none" stroke="#FFB800" stroke-width="2"/>
+          <text x="247" y="56" text-anchor="middle" fill="#FFB800" font-size="10" font-weight="700" font-family="sans-serif">サンプリング</text>
+          <!-- Sampled points on sine -->
+          <path d="M190,90 Q205,65 220,90 Q235,115 250,90 Q265,65 280,90 Q295,115 305,90" fill="none" stroke="#4FC3F7" stroke-width="1" opacity="0.3"/>
+          <line x1="198" y1="82" x2="198" y2="90" stroke="#FFB800" stroke-width="2"/><circle cx="198" cy="82" r="3" fill="#FFB800"/>
+          <line x1="220" y1="90" x2="220" y2="90" stroke="#FFB800" stroke-width="2"/><circle cx="220" cy="90" r="3" fill="#FFB800"/>
+          <line x1="235" y1="108" x2="235" y2="108" stroke="#FFB800" stroke-width="2"/><circle cx="235" cy="108" r="3" fill="#FFB800"/>
+          <line x1="250" y1="90" x2="250" y2="90" stroke="#FFB800" stroke-width="2"/><circle cx="250" cy="90" r="3" fill="#FFB800"/>
+          <line x1="265" y1="72" x2="265" y2="72" stroke="#FFB800" stroke-width="2"/><circle cx="265" cy="72" r="3" fill="#FFB800"/>
+          <line x1="280" y1="90" x2="280" y2="90" stroke="#FFB800" stroke-width="2"/><circle cx="280" cy="90" r="3" fill="#FFB800"/>
+          <line x1="298" y1="105" x2="298" y2="105" stroke="#FFB800" stroke-width="2"/><circle cx="298" cy="105" r="3" fill="#FFB800"/>
+          <text x="247" y="122" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">一定間隔で測定</text>
+          <!-- Arrow 2 -->
+          <line x1="320" y1="85" x2="340" y2="85" stroke="#FFB800" stroke-width="1.5" marker-end="url(#arr6adb)"/>
+          <!-- Step 3: Quantization -->
+          <rect x="345" y="40" width="135" height="90" rx="8" fill="none" stroke="#93D500" stroke-width="2"/>
+          <text x="412" y="56" text-anchor="middle" fill="#93D500" font-size="10" font-weight="700" font-family="sans-serif">量子化</text>
+          <!-- Staircase/quantized -->
+          <line x1="355" y1="108" x2="365" y2="108" stroke="#93D500" stroke-width="2"/>
+          <line x1="365" y1="108" x2="365" y2="96" stroke="#93D500" stroke-width="1" stroke-dasharray="2"/>
+          <line x1="365" y1="96" x2="380" y2="96" stroke="#93D500" stroke-width="2"/>
+          <line x1="380" y1="96" x2="380" y2="84" stroke="#93D500" stroke-width="1" stroke-dasharray="2"/>
+          <line x1="380" y1="84" x2="395" y2="84" stroke="#93D500" stroke-width="2"/>
+          <line x1="395" y1="84" x2="395" y2="72" stroke="#93D500" stroke-width="1" stroke-dasharray="2"/>
+          <line x1="395" y1="72" x2="410" y2="72" stroke="#93D500" stroke-width="2"/>
+          <line x1="410" y1="72" x2="410" y2="84" stroke="#93D500" stroke-width="1" stroke-dasharray="2"/>
+          <line x1="410" y1="84" x2="425" y2="84" stroke="#93D500" stroke-width="2"/>
+          <line x1="425" y1="84" x2="425" y2="96" stroke="#93D500" stroke-width="1" stroke-dasharray="2"/>
+          <line x1="425" y1="96" x2="440" y2="96" stroke="#93D500" stroke-width="2"/>
+          <line x1="440" y1="96" x2="440" y2="108" stroke="#93D500" stroke-width="1" stroke-dasharray="2"/>
+          <line x1="440" y1="108" x2="455" y2="108" stroke="#93D500" stroke-width="2"/>
+          <line x1="455" y1="108" x2="455" y2="96" stroke="#93D500" stroke-width="1" stroke-dasharray="2"/>
+          <line x1="455" y1="96" x2="470" y2="96" stroke="#93D500" stroke-width="2"/>
+          <text x="412" y="122" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">離散値に丸める</text>
+          <!-- Arrow 3 -->
+          <line x1="485" y1="85" x2="505" y2="85" stroke="#93D500" stroke-width="1.5" marker-end="url(#arr6adc)"/>
+          <!-- Step 4: Digital -->
+          <rect x="510" y="40" width="95" height="90" rx="8" fill="none" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="557" y="56" text-anchor="middle" fill="#4FC3F7" font-size="10" font-weight="700" font-family="sans-serif">デジタル</text>
+          <text x="557" y="76" text-anchor="middle" fill="#ccc" font-size="9" font-family="monospace">0110</text>
+          <text x="557" y="90" text-anchor="middle" fill="#ccc" font-size="9" font-family="monospace">1001</text>
+          <text x="557" y="104" text-anchor="middle" fill="#ccc" font-size="9" font-family="monospace">1100</text>
+          <text x="557" y="122" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">数値列</text>
+          <!-- Bottom labels -->
+          <rect x="100" y="148" width="140" height="22" rx="4" fill="none" stroke="#FFB800" stroke-width="1"/>
+          <text x="170" y="163" text-anchor="middle" fill="#FFB800" font-size="9" font-weight="700" font-family="sans-serif">サンプリングレート: 44,100Hz</text>
+          <rect x="280" y="148" width="140" height="22" rx="4" fill="none" stroke="#93D500" stroke-width="1"/>
+          <text x="350" y="163" text-anchor="middle" fill="#93D500" font-size="9" font-weight="700" font-family="sans-serif">ビット深度: 16bit = 65,536段階</text>
+          <!-- Bottom summary -->
+          <text x="310" y="195" text-anchor="middle" fill="#ccc" font-size="9" font-family="sans-serif">AD変換 = サンプリング + 量子化 → デジタルデータとして保存</text>
+          <defs>
+            <marker id="arr6ad" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#76B900"/></marker>
+            <marker id="arr6adb" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#FFB800"/></marker>
+            <marker id="arr6adc" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#93D500"/></marker>
+          </defs>
+        </svg>
+      </div>
+
       <!-- キーワード解説 -->
       <div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin:0.5rem 0">
         <span class="keyword-box"><span class="kw-term">AD変換</span><span class="kw-desc">アナログ信号をデジタル数値に変換</span></span>
@@ -714,6 +785,60 @@ audio <span class="op">=</span> AudioSegment.<span class="fn">from_file</span>(<
           <li><code>audio.overlay(audio2)</code> → 2つの音声を重ねる</li>
           <li><code>audio.export("output.wav", format="wav")</code> → ファイルに保存</li>
         </ul>
+      </div>
+
+      <!-- SVG: 音声データの構造 -->
+      <div style="margin:1.5rem 0;text-align:center">
+        <svg viewBox="0 0 620 220" xmlns="http://www.w3.org/2000/svg" style="max-width:620px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
+          <text x="310" y="22" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" font-family="sans-serif">音声データの3つのプロパティ</text>
+          <!-- Sample Rate section -->
+          <rect x="15" y="40" width="190" height="80" rx="8" fill="none" stroke="#FFB800" stroke-width="2"/>
+          <text x="110" y="58" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="700" font-family="sans-serif">サンプルレート</text>
+          <!-- Timeline with sample dots -->
+          <line x1="30" y1="85" x2="190" y2="85" stroke="#555" stroke-width="1"/>
+          <circle cx="35" cy="78" r="3" fill="#FFB800"/><circle cx="50" cy="88" r="3" fill="#FFB800"/>
+          <circle cx="65" cy="75" r="3" fill="#FFB800"/><circle cx="80" cy="92" r="3" fill="#FFB800"/>
+          <circle cx="95" cy="76" r="3" fill="#FFB800"/><circle cx="110" cy="90" r="3" fill="#FFB800"/>
+          <circle cx="125" cy="74" r="3" fill="#FFB800"/><circle cx="140" cy="88" r="3" fill="#FFB800"/>
+          <circle cx="155" cy="80" r="3" fill="#FFB800"/><circle cx="170" cy="86" r="3" fill="#FFB800"/>
+          <circle cx="185" cy="78" r="3" fill="#FFB800"/>
+          <text x="110" y="108" text-anchor="middle" fill="#ccc" font-size="9" font-family="monospace">44,100Hz</text>
+          <text x="110" y="118" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">= 1秒に44,100回測定</text>
+          <!-- Bit Depth section -->
+          <rect x="215" y="40" width="190" height="80" rx="8" fill="none" stroke="#93D500" stroke-width="2"/>
+          <text x="310" y="58" text-anchor="middle" fill="#93D500" font-size="11" font-weight="700" font-family="sans-serif">ビット深度</text>
+          <!-- Vertical scale with levels -->
+          <line x1="240" y1="67" x2="240" y2="107" stroke="#555" stroke-width="1"/>
+          <line x1="237" y1="67" x2="243" y2="67" stroke="#93D500" stroke-width="1"/>
+          <line x1="237" y1="77" x2="243" y2="77" stroke="#93D500" stroke-width="1"/>
+          <line x1="237" y1="87" x2="243" y2="87" stroke="#93D500" stroke-width="1"/>
+          <line x1="237" y1="97" x2="243" y2="97" stroke="#93D500" stroke-width="1"/>
+          <line x1="237" y1="107" x2="243" y2="107" stroke="#93D500" stroke-width="1"/>
+          <text x="255" y="72" fill="#ccc" font-size="8" font-family="sans-serif">段階が多い</text>
+          <text x="255" y="82" fill="#ccc" font-size="8" font-family="sans-serif">= 精細な音量</text>
+          <text x="310" y="108" text-anchor="middle" fill="#ccc" font-size="9" font-family="monospace">16bit</text>
+          <text x="310" y="118" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">= 65,536段階の音量精度</text>
+          <!-- Channel section -->
+          <rect x="415" y="40" width="190" height="80" rx="8" fill="none" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="510" y="58" text-anchor="middle" fill="#4FC3F7" font-size="11" font-weight="700" font-family="sans-serif">チャンネル</text>
+          <!-- Mono -->
+          <rect x="430" y="68" width="70" height="20" rx="4" fill="none" stroke="#4FC3F7" stroke-width="1"/>
+          <text x="465" y="82" text-anchor="middle" fill="#ccc" font-size="9" font-family="sans-serif">モノラル 1ch</text>
+          <!-- Stereo -->
+          <rect x="510" y="68" width="80" height="20" rx="4" fill="none" stroke="#4FC3F7" stroke-width="1"/>
+          <text x="550" y="82" text-anchor="middle" fill="#ccc" font-size="9" font-family="sans-serif">ステレオ 2ch</text>
+          <!-- Stereo L/R -->
+          <text x="530" y="100" fill="#4FC3F7" font-size="8" font-family="sans-serif">L</text>
+          <line x1="540" y1="97" x2="580" y2="97" stroke="#4FC3F7" stroke-width="1.5"/>
+          <text x="530" y="112" fill="#4FC3F7" font-size="8" font-family="sans-serif">R</text>
+          <line x1="540" y1="109" x2="580" y2="109" stroke="#4FC3F7" stroke-width="1.5" stroke-dasharray="4"/>
+          <text x="510" y="118" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">左右独立の音声データ</text>
+          <!-- Python code reference -->
+          <rect x="30" y="140" width="560" height="65" rx="8" fill="#0A0A0A" stroke="#333" stroke-width="1"/>
+          <text x="50" y="160" fill="#999" font-size="9" font-family="monospace">audio.frame_rate   <tspan fill="#FFB800">→ 44100</tspan>        <tspan fill="#999">サンプルレート</tspan></text>
+          <text x="50" y="176" fill="#999" font-size="9" font-family="monospace">audio.sample_width  <tspan fill="#93D500">→ 2 (=16bit)</tspan>   <tspan fill="#999">ビット深度 (バイト数)</tspan></text>
+          <text x="50" y="192" fill="#999" font-size="9" font-family="monospace">audio.channels      <tspan fill="#4FC3F7">→ 2</tspan>             <tspan fill="#999">チャンネル数 (ステレオ)</tspan></text>
+        </svg>
       </div>
     </div>
 

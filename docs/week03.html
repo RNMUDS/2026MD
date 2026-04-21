@@ -613,6 +613,52 @@ a.sub-item:hover {
         信号機と同じです。「青なら進む、黄色なら止まる準備、赤なら止まる」。条件に応じて行動が変わります。
       </div>
 
+      <div style="margin:1.5rem 0;text-align:center">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 420" style="max-width:520px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px">
+          <defs>
+            <marker id="ah1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#76B900"/></marker>
+          </defs>
+          <!-- Start -->
+          <rect x="210" y="16" width="100" height="32" rx="16" fill="#76B900"/>
+          <text x="260" y="37" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1A1A1A" font-weight="bold">Start</text>
+          <line x1="260" y1="48" x2="260" y2="72" stroke="#76B900" stroke-width="2" marker-end="url(#ah1)"/>
+          <!-- Diamond 1 -->
+          <polygon points="260,76 370,126 260,176 150,126" fill="none" stroke="#FFB800" stroke-width="2"/>
+          <text x="260" y="122" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#FFB800">条件1?</text>
+          <text x="260" y="137" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#999">(score&gt;=90)</text>
+          <!-- True → 処理A -->
+          <line x1="370" y1="126" x2="440" y2="126" stroke="#76B900" stroke-width="2" marker-end="url(#ah1)"/>
+          <text x="400" y="118" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#93D500">True</text>
+          <rect x="448" y="110" width="60" height="32" rx="4" fill="#76B900" opacity="0.2" stroke="#76B900"/>
+          <text x="478" y="130" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#ccc">処理A</text>
+          <!-- False ↓ -->
+          <line x1="260" y1="176" x2="260" y2="208" stroke="#76B900" stroke-width="2" marker-end="url(#ah1)"/>
+          <text x="272" y="196" font-family="sans-serif" font-size="11" fill="#FF5252">False</text>
+          <!-- Diamond 2 -->
+          <polygon points="260,212 370,262 260,312 150,262" fill="none" stroke="#FFB800" stroke-width="2"/>
+          <text x="260" y="258" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#FFB800">条件2?</text>
+          <text x="260" y="273" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#999">(score&gt;=60)</text>
+          <!-- True → 処理B -->
+          <line x1="370" y1="262" x2="440" y2="262" stroke="#76B900" stroke-width="2" marker-end="url(#ah1)"/>
+          <text x="400" y="254" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#93D500">True</text>
+          <rect x="448" y="246" width="60" height="32" rx="4" fill="#76B900" opacity="0.2" stroke="#76B900"/>
+          <text x="478" y="266" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#ccc">処理B</text>
+          <!-- False ↓ -->
+          <line x1="260" y1="312" x2="260" y2="340" stroke="#76B900" stroke-width="2" marker-end="url(#ah1)"/>
+          <text x="272" y="330" font-family="sans-serif" font-size="11" fill="#FF5252">False</text>
+          <!-- else 処理C -->
+          <rect x="220" y="344" width="80" height="32" rx="4" fill="#4FC3F7" opacity="0.2" stroke="#4FC3F7"/>
+          <text x="260" y="364" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#ccc">else: 処理C</text>
+          <!-- End connections -->
+          <line x1="478" y1="142" x2="478" y2="400" stroke="#76B900" stroke-width="1.5" stroke-dasharray="4"/>
+          <line x1="478" y1="278" x2="478" y2="400" stroke="#76B900" stroke-width="1.5" stroke-dasharray="4"/>
+          <line x1="260" y1="376" x2="260" y2="400" stroke="#76B900" stroke-width="1.5" stroke-dasharray="4"/>
+          <line x1="260" y1="400" x2="478" y2="400" stroke="#76B900" stroke-width="1.5"/>
+          <rect x="340" y="392" width="50" height="22" rx="11" fill="#76B900"/>
+          <text x="365" y="407" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1A1A1A" font-weight="bold">End</text>
+        </svg>
+      </div>
+
       <pre><span class="code-label">Python ── if/elif/else の基本</span>
 score <span class="op">=</span> <span class="num">75</span>
 
@@ -752,6 +798,51 @@ n <span class="op">=</span> <span class="op">-</span><span class="num">7</span>
         パラパラ漫画と同じです。<code>draw()</code> が1ページ分の絵を描き、毎秒60回（60fps）新しいページを描くことで、動いているように見えます。
       </div>
 
+      <div style="margin:1.5rem 0;text-align:center">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 240" style="max-width:620px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px">
+          <defs>
+            <marker id="ah2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#76B900"/></marker>
+            <marker id="ah2c" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4FC3F7"/></marker>
+          </defs>
+          <!-- setup box -->
+          <rect x="30" y="30" width="120" height="50" rx="8" fill="#76B900" opacity="0.2" stroke="#76B900" stroke-width="2"/>
+          <text x="90" y="52" text-anchor="middle" font-family="monospace" font-size="14" fill="#76B900" font-weight="bold">setup()</text>
+          <text x="90" y="70" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#999">1回だけ実行</text>
+          <!-- Arrow to draw -->
+          <line x1="150" y1="55" x2="188" y2="55" stroke="#76B900" stroke-width="2" marker-end="url(#ah2)"/>
+          <!-- draw box -->
+          <rect x="196" y="30" width="120" height="50" rx="8" fill="#4FC3F7" opacity="0.15" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="256" y="52" text-anchor="middle" font-family="monospace" font-size="14" fill="#4FC3F7" font-weight="bold">draw()</text>
+          <text x="256" y="70" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#999">繰り返し実行</text>
+          <!-- Loop arrow -->
+          <path d="M316,55 Q346,55 346,30 Q346,10 256,10 Q196,10 196,30 L196,30" fill="none" stroke="#4FC3F7" stroke-width="2" marker-end="url(#ah2c)"/>
+          <text x="346" y="8" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#FFB800" font-weight="bold">60回/秒</text>
+          <!-- Timeline frames -->
+          <text x="30" y="120" font-family="sans-serif" font-size="11" fill="#999">タイムライン:</text>
+          <rect x="30" y="132" width="70" height="36" rx="4" fill="#76B900" opacity="0.15" stroke="#76B900"/>
+          <text x="65" y="154" text-anchor="middle" font-family="monospace" font-size="10" fill="#76B900">setup()</text>
+          <line x1="100" y1="150" x2="118" y2="150" stroke="#76B900" stroke-width="2" marker-end="url(#ah2)"/>
+          <rect x="126" y="132" width="80" height="36" rx="4" fill="#4FC3F7" opacity="0.1" stroke="#4FC3F7"/>
+          <text x="166" y="148" text-anchor="middle" font-family="monospace" font-size="10" fill="#4FC3F7">draw()</text>
+          <text x="166" y="162" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#999">Frame 1</text>
+          <line x1="206" y1="150" x2="224" y2="150" stroke="#4FC3F7" stroke-width="1.5" marker-end="url(#ah2c)"/>
+          <rect x="232" y="132" width="80" height="36" rx="4" fill="#4FC3F7" opacity="0.1" stroke="#4FC3F7"/>
+          <text x="272" y="148" text-anchor="middle" font-family="monospace" font-size="10" fill="#4FC3F7">draw()</text>
+          <text x="272" y="162" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#999">Frame 2</text>
+          <line x1="312" y1="150" x2="330" y2="150" stroke="#4FC3F7" stroke-width="1.5" marker-end="url(#ah2c)"/>
+          <rect x="338" y="132" width="80" height="36" rx="4" fill="#4FC3F7" opacity="0.1" stroke="#4FC3F7"/>
+          <text x="378" y="148" text-anchor="middle" font-family="monospace" font-size="10" fill="#4FC3F7">draw()</text>
+          <text x="378" y="162" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#999">Frame 3</text>
+          <line x1="418" y1="150" x2="436" y2="150" stroke="#4FC3F7" stroke-width="1.5" marker-end="url(#ah2c)"/>
+          <text x="460" y="154" font-family="sans-serif" font-size="14" fill="#999">...</text>
+          <!-- Labels -->
+          <rect x="30" y="190" width="14" height="14" rx="3" fill="#76B900" opacity="0.3" stroke="#76B900"/>
+          <text x="52" y="202" font-family="sans-serif" font-size="11" fill="#ccc">= 1回だけ</text>
+          <rect x="140" y="190" width="14" height="14" rx="3" fill="#4FC3F7" opacity="0.2" stroke="#4FC3F7"/>
+          <text x="162" y="202" font-family="sans-serif" font-size="11" fill="#ccc">= 毎フレーム繰り返し</text>
+        </svg>
+      </div>
+
       <pre><span class="code-label">Python ── アクティブモードの基本構造</span>
 <span class="kw">import</span> py5
 
@@ -775,6 +866,46 @@ py5.<span class="fn">run_sketch</span>()</pre>
       <div class="concept-box">
         <h4>なぜ global が必要なのか</h4>
         <p>関数の中で定義した変数は<strong>ローカル変数</strong>で、その関数の中でしか使えません。<code>setup()</code> で作った変数を <code>draw()</code> で使うには、関数の外（グローバルスコープ）で変数を定義し、関数内で <code>global</code> 宣言をして「この変数はグローバル変数ですよ」と伝えます。</p>
+      </div>
+
+      <div style="margin:1.5rem 0;text-align:center">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 280" style="max-width:540px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px">
+          <defs>
+            <marker id="ah3r" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#93D500"/></marker>
+            <marker id="ah3w" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#FF5252"/></marker>
+          </defs>
+          <!-- Global scope outer box -->
+          <rect x="20" y="16" width="500" height="248" rx="10" fill="none" stroke="#76B900" stroke-width="2" stroke-dasharray="6"/>
+          <text x="36" y="40" font-family="sans-serif" font-size="13" fill="#76B900" font-weight="bold">グローバルスコープ</text>
+          <!-- Global vars -->
+          <rect x="40" y="52" width="100" height="30" rx="5" fill="#76B900" opacity="0.15" stroke="#76B900"/>
+          <text x="90" y="72" text-anchor="middle" font-family="monospace" font-size="13" fill="#93D500">x = 0</text>
+          <rect x="160" y="52" width="100" height="30" rx="5" fill="#76B900" opacity="0.15" stroke="#76B900"/>
+          <text x="210" y="72" text-anchor="middle" font-family="monospace" font-size="13" fill="#93D500">dx = 5</text>
+          <!-- setup() box -->
+          <rect x="40" y="104" width="200" height="68" rx="8" fill="#4FC3F7" opacity="0.08" stroke="#4FC3F7" stroke-width="1.5"/>
+          <text x="56" y="124" font-family="monospace" font-size="13" fill="#4FC3F7" font-weight="bold">setup()</text>
+          <text x="56" y="146" font-family="sans-serif" font-size="11" fill="#ccc">x, dx を読み取れる</text>
+          <text x="56" y="162" font-family="sans-serif" font-size="10" fill="#999">(global 不要)</text>
+          <!-- Arrow: setup reads -->
+          <line x1="140" y1="104" x2="140" y2="88" stroke="#93D500" stroke-width="1.5" marker-end="url(#ah3r)"/>
+          <text x="152" y="98" font-family="sans-serif" font-size="9" fill="#93D500">読取</text>
+          <!-- draw() box -->
+          <rect x="280" y="104" width="220" height="100" rx="8" fill="#FFB800" opacity="0.08" stroke="#FFB800" stroke-width="1.5"/>
+          <text x="296" y="124" font-family="monospace" font-size="13" fill="#FFB800" font-weight="bold">draw()</text>
+          <rect x="296" y="134" width="188" height="24" rx="4" fill="#FF5252" opacity="0.1" stroke="#FF5252"/>
+          <text x="390" y="151" text-anchor="middle" font-family="monospace" font-size="11" fill="#FF5252">global x, dx</text>
+          <text x="296" y="178" font-family="sans-serif" font-size="11" fill="#ccc">x, dx を読み書きできる</text>
+          <text x="296" y="194" font-family="sans-serif" font-size="10" fill="#999">(global 必須 = 変更するため)</text>
+          <!-- Arrow: draw writes -->
+          <line x1="390" y1="104" x2="210" y2="88" stroke="#FF5252" stroke-width="1.5" marker-end="url(#ah3w)"/>
+          <text x="310" y="92" font-family="sans-serif" font-size="9" fill="#FF5252">読取+書込</text>
+          <!-- Legend -->
+          <line x1="40" y1="240" x2="60" y2="240" stroke="#93D500" stroke-width="2"/>
+          <text x="66" y="244" font-family="sans-serif" font-size="10" fill="#ccc">読み取り（global不要）</text>
+          <line x1="240" y1="240" x2="260" y2="240" stroke="#FF5252" stroke-width="2"/>
+          <text x="266" y="244" font-family="sans-serif" font-size="10" fill="#ccc">読み書き（global必須）</text>
+        </svg>
       </div>
 
       <pre><span class="code-label">Python ── global 宣言の例</span>
@@ -865,6 +996,51 @@ py5.<span class="fn">run_sketch</span>()</pre>
         <h4>イベント駆動プログラミング</h4>
         <p>py5では、キーが押されたときに自動的に呼ばれる関数 <code>key_pressed()</code> を定義できます。どのキーが押されたかは <code>py5.key</code>（文字キー）や <code>py5.key_code</code>（特殊キー）で取得します。</p>
         <p style="margin-top:0.5rem">これまでの「上から順に実行」とは異なり、<strong>ユーザの操作（イベント）をきっかけに処理が動く</strong>設計パターンです。Webアプリやゲームの基礎にもなる考え方です。</p>
+      </div>
+
+      <div style="margin:1.5rem 0;text-align:center">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 180" style="max-width:620px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px">
+          <defs>
+            <marker id="ah4" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#76B900"/></marker>
+            <marker id="ah4o" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#FFB800"/></marker>
+          </defs>
+          <!-- Timeline label -->
+          <text x="20" y="30" font-family="sans-serif" font-size="11" fill="#999">時間 →</text>
+          <!-- draw() loop boxes -->
+          <rect x="20" y="42" width="60" height="32" rx="4" fill="#4FC3F7" opacity="0.12" stroke="#4FC3F7"/>
+          <text x="50" y="62" text-anchor="middle" font-family="monospace" font-size="10" fill="#4FC3F7">draw()</text>
+          <line x1="80" y1="58" x2="96" y2="58" stroke="#76B900" stroke-width="1.5" marker-end="url(#ah4)"/>
+          <rect x="104" y="42" width="60" height="32" rx="4" fill="#4FC3F7" opacity="0.12" stroke="#4FC3F7"/>
+          <text x="134" y="62" text-anchor="middle" font-family="monospace" font-size="10" fill="#4FC3F7">draw()</text>
+          <line x1="164" y1="58" x2="180" y2="58" stroke="#76B900" stroke-width="1.5" marker-end="url(#ah4)"/>
+          <rect x="188" y="42" width="60" height="32" rx="4" fill="#4FC3F7" opacity="0.12" stroke="#4FC3F7"/>
+          <text x="218" y="62" text-anchor="middle" font-family="monospace" font-size="10" fill="#4FC3F7">draw()</text>
+          <!-- Key press event -->
+          <line x1="248" y1="58" x2="264" y2="58" stroke="#999" stroke-width="1" stroke-dasharray="3"/>
+          <line x1="280" y1="18" x2="280" y2="42" stroke="#FFB800" stroke-width="2" marker-end="url(#ah4o)"/>
+          <text x="280" y="14" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#FFB800" font-weight="bold">キー押下!</text>
+          <!-- key_pressed box -->
+          <rect x="256" y="42" width="110" height="32" rx="4" fill="#FFB800" opacity="0.15" stroke="#FFB800" stroke-width="2"/>
+          <text x="311" y="62" text-anchor="middle" font-family="monospace" font-size="10" fill="#FFB800">key_pressed()</text>
+          <!-- Resume draw loop -->
+          <line x1="366" y1="58" x2="382" y2="58" stroke="#76B900" stroke-width="1.5" marker-end="url(#ah4)"/>
+          <rect x="390" y="42" width="60" height="32" rx="4" fill="#4FC3F7" opacity="0.12" stroke="#4FC3F7"/>
+          <text x="420" y="62" text-anchor="middle" font-family="monospace" font-size="10" fill="#4FC3F7">draw()</text>
+          <line x1="450" y1="58" x2="466" y2="58" stroke="#76B900" stroke-width="1.5" marker-end="url(#ah4)"/>
+          <rect x="474" y="42" width="60" height="32" rx="4" fill="#4FC3F7" opacity="0.12" stroke="#4FC3F7"/>
+          <text x="504" y="62" text-anchor="middle" font-family="monospace" font-size="10" fill="#4FC3F7">draw()</text>
+          <line x1="534" y1="58" x2="550" y2="58" stroke="#999" stroke-width="1" stroke-dasharray="3"/>
+          <text x="566" y="62" font-family="sans-serif" font-size="14" fill="#999">...</text>
+          <!-- Explanation -->
+          <text x="20" y="108" font-family="sans-serif" font-size="11" fill="#ccc">draw() ループ実行中にキーが押されると、</text>
+          <text x="20" y="124" font-family="sans-serif" font-size="11" fill="#ccc">割り込みで key_pressed() が呼ばれ、</text>
+          <text x="20" y="140" font-family="sans-serif" font-size="11" fill="#ccc">処理後に draw() ループに戻ります。</text>
+          <!-- Legend -->
+          <rect x="360" y="100" width="14" height="14" rx="3" fill="#4FC3F7" opacity="0.2" stroke="#4FC3F7"/>
+          <text x="380" y="112" font-family="sans-serif" font-size="10" fill="#ccc">= 通常ループ</text>
+          <rect x="360" y="122" width="14" height="14" rx="3" fill="#FFB800" opacity="0.2" stroke="#FFB800"/>
+          <text x="380" y="134" font-family="sans-serif" font-size="10" fill="#ccc">= イベントハンドラ</text>
+        </svg>
       </div>
 
       <table>
@@ -1082,6 +1258,31 @@ py5.<span class="fn">run_sketch</span>()</pre>
       <div class="analogy">
         自動販売機と同じです。「待機中」→ お金投入 →「選択待ち」→ ボタン押す →「払い出し中」→「待機中」と状態が遷移します。
       </div>
+
+      <div style="margin:1.5rem 0;text-align:center">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 200" style="max-width:520px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px">
+          <defs>
+            <marker id="ah5" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#76B900"/></marker>
+            <marker id="ah5r" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#FF5252"/></marker>
+          </defs>
+          <!-- State: 右に移動中 -->
+          <circle cx="140" cy="100" r="56" fill="#76B900" opacity="0.12" stroke="#76B900" stroke-width="2"/>
+          <text x="140" y="96" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#93D500" font-weight="bold">右に移動中</text>
+          <text x="140" y="112" text-anchor="middle" font-family="monospace" font-size="10" fill="#999">dx = +5</text>
+          <!-- State: 左に移動中 -->
+          <circle cx="380" cy="100" r="56" fill="#4FC3F7" opacity="0.12" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="380" y="96" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#4FC3F7" font-weight="bold">左に移動中</text>
+          <text x="380" y="112" text-anchor="middle" font-family="monospace" font-size="10" fill="#999">dx = -5</text>
+          <!-- Arrow: right to left (top) -->
+          <path d="M200,72 Q260,28 320,72" fill="none" stroke="#FF5252" stroke-width="2" marker-end="url(#ah5r)"/>
+          <text x="260" y="38" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#FF5252">x &gt;= width</text>
+          <text x="260" y="52" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#999">(右端に到達)</text>
+          <!-- Arrow: left to right (bottom) -->
+          <path d="M320,128 Q260,172 200,128" fill="none" stroke="#76B900" stroke-width="2" marker-end="url(#ah5)"/>
+          <text x="260" y="168" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#76B900">x &lt;= 0</text>
+          <text x="260" y="182" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#999">(左端に到達)</text>
+        </svg>
+      </div>
     </div>
 
     <!-- CPU と条件分岐 -->
@@ -1095,6 +1296,40 @@ py5.<span class="fn">run_sketch</span>()</pre>
           <li><strong>比較（CMP）:</strong> 2つの値を比較してフラグをセット</li>
           <li><strong>分岐（JMP/BEQ/BNE）:</strong> フラグに応じて実行する命令のアドレスを変更</li>
         </ul>
+      </div>
+
+      <div style="margin:1.5rem 0;text-align:center">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 130" style="max-width:580px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px">
+          <defs>
+            <marker id="ah6" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#76B900"/></marker>
+          </defs>
+          <!-- CMP box -->
+          <rect x="20" y="36" width="110" height="48" rx="6" fill="#FFB800" opacity="0.15" stroke="#FFB800" stroke-width="2"/>
+          <text x="75" y="56" text-anchor="middle" font-family="monospace" font-size="13" fill="#FFB800" font-weight="bold">CMP</text>
+          <text x="75" y="72" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#999">比較命令</text>
+          <!-- Arrow -->
+          <line x1="130" y1="60" x2="158" y2="60" stroke="#76B900" stroke-width="2" marker-end="url(#ah6)"/>
+          <!-- Flag box -->
+          <rect x="166" y="36" width="110" height="48" rx="6" fill="#4FC3F7" opacity="0.15" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="221" y="56" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#4FC3F7" font-weight="bold">フラグセット</text>
+          <text x="221" y="72" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#999">Z=1 / Z=0</text>
+          <!-- Arrow -->
+          <line x1="276" y1="60" x2="304" y2="60" stroke="#76B900" stroke-width="2" marker-end="url(#ah6)"/>
+          <!-- Branch box -->
+          <rect x="312" y="36" width="120" height="48" rx="6" fill="#FF5252" opacity="0.15" stroke="#FF5252" stroke-width="2"/>
+          <text x="372" y="56" text-anchor="middle" font-family="monospace" font-size="13" fill="#FF5252" font-weight="bold">BEQ / JMP</text>
+          <text x="372" y="72" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#999">条件分岐命令</text>
+          <!-- Arrow -->
+          <line x1="432" y1="60" x2="460" y2="60" stroke="#76B900" stroke-width="2" marker-end="url(#ah6)"/>
+          <!-- Next instruction -->
+          <rect x="468" y="36" width="96" height="48" rx="6" fill="#76B900" opacity="0.15" stroke="#76B900" stroke-width="2"/>
+          <text x="516" y="54" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#93D500" font-weight="bold">次の命令</text>
+          <text x="516" y="70" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#999">アドレスへ</text>
+          <!-- Top label -->
+          <text x="290" y="22" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#ccc">CPU命令の流れ: if x &gt;= 90 → ...</text>
+          <!-- Bottom label -->
+          <text x="290" y="110" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#999">Pythonの if 文は最終的にこのCPU命令列に変換される</text>
+        </svg>
       </div>
     </div>
 
