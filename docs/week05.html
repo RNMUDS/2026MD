@@ -423,13 +423,16 @@ a.sub-item:hover {
   border-color: #76B900;
 }
 
-/* ============ SECTION NAV (sticky) ============ */
-.section-nav { 
-  position: sticky;
+/* ============ SECTION NAV (always visible at top) ============ */
+.section-nav {
+  position: fixed;
   top: 0;
-  z-index: 100;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   background: rgba(17,17,17,0.95);
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid #222;
   padding: 0.2rem 0;
   display: flex;
@@ -437,6 +440,8 @@ a.sub-item:hover {
   gap: 0.3rem;
   flex-wrap: wrap;
 }
+/* Push body content down to make room for fixed nav */
+body { padding-top: 2.2rem; }
 .section-nav a { 
   color: #999;
   text-decoration: none;
@@ -452,7 +457,8 @@ a.sub-item:hover {
 .section-nav a.nav-exam { color: #FFB800; }
 
 /* ============ SCROLL TARGET OFFSET ============ */
-[id] { scroll-margin-top: 3rem; }
+/* Account for fixed nav (~2.2rem) so anchor jumps land below it */
+[id] { scroll-margin-top: 3.5rem; }
 
 /* ============ TRY-IT BOX ============ */
 .try-it {

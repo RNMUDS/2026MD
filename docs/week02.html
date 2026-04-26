@@ -547,13 +547,16 @@ a.sub-item:hover {
   border-color: #76B900;
 }
 
-/* ============ SECTION NAV (sticky) ============ */
-.section-nav { 
-  position: sticky;
+/* ============ SECTION NAV (always visible at top) ============ */
+.section-nav {
+  position: fixed;
   top: 0;
-  z-index: 100;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   background: rgba(17,17,17,0.95);
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid #222;
   padding: 0.2rem 0;
   display: flex;
@@ -561,6 +564,8 @@ a.sub-item:hover {
   gap: 0.3rem;
   flex-wrap: wrap;
 }
+/* Push body content down to make room for fixed nav */
+body { padding-top: 2.2rem; }
 .section-nav a { 
   color: #999;
   text-decoration: none;
@@ -576,7 +581,8 @@ a.sub-item:hover {
 .section-nav a.nav-exam { color: #FFB800; }
 
 /* ============ SCROLL TARGET OFFSET ============ */
-[id] { scroll-margin-top: 3rem; }
+/* Account for fixed nav (~2.2rem) so anchor jumps land below it */
+[id] { scroll-margin-top: 3.5rem; }
 
 /* ============ REDUCED MOTION ============ */
 @media (prefers-reduced-motion: reduce) {
@@ -596,6 +602,7 @@ a.sub-item:hover {
   <a href="#sec-quiz" class="nav-exam">試問</a>
   <a href="#sec-color" class="nav-assignment">3. std2-3</a>
   <a href="#sec-free" class="nav-assignment">4. std2-4</a>
+  <a href="#adv2-1" style="color:#FFB800">adv2-1</a>
   <a href="#sec-notion">Notion</a>
   <a href="#sec-answers">解答</a>
 </nav>
@@ -621,11 +628,12 @@ a.sub-item:hover {
     <div class="submission-box">
       <h3>提出ガイド（1つのNotionページにまとめ、PDF 1枚を提出）</h3>
       <div class="submission-items">
-        <a href="#sec-notion" class="sub-item" style="text-decoration:none;color:inherit;border-color:#76B900"><span class="sub-count" style="background:#76B900">4</span><span class="tag" style="background:#1a2e0a;color:#76B900">ノート</span>穴埋め・記録</a>
+        <a href="#sec-notion" class="sub-item" style="text-decoration:none;color:inherit;border-color:#76B900"><span class="sub-count" style="background:#76B900">3</span><span class="tag" style="background:#1a2e0a;color:#76B900">ノート</span>穴埋め・記録</a>
         <a href="#std2-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std2-1</a>
         <a href="#std2-2" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std2-2</a>
         <a href="#std2-3" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std2-3</a>
         <a href="#std2-4" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std2-4</a>
+        <a href="#adv2-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count" style="background:#FFB800">1</span><span class="tag tag-advanced">発展課題</span>adv2-1 コード+音声</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.85rem;color:#93D500">
         <strong>提出方法:</strong> 下記の項目をすべて<strong>1つのNotionページにまとめて記録</strong> → PDFにエクスポート → Google Classroomに<strong>PDF 1ファイル</strong>を提出
@@ -643,19 +651,13 @@ a.sub-item:hover {
           <tr>
             <td><input type="checkbox"></td>
             <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> CS基礎穴埋め</td>
-            <td>CPU/GPU/メモリ/ストレージ/OS の穴埋め</td>
+            <td>CPU / GPU / GPUがAI/DSで重要な理由 / メモリ / メモリとストレージの違い / OS / 自分のMacのOS名（計7項目）</td>
             <td><a href="#sec-teacher" style="color:#76B900">移動</a></td>
           </tr>
           <tr>
             <td><input type="checkbox"></td>
-            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> 繰り返し処理</td>
-            <td>step2-1〜step2-5 の実行結果とコメント</td>
-            <td><a href="#sec-loop" style="color:#76B900">移動</a></td>
-          </tr>
-          <tr>
-            <td><input type="checkbox"></td>
-            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> 色の表現</td>
-            <td>RGB/HSB実験の結果</td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> 色の表現（実験1）</td>
+            <td>RGB vs HSB 比較実験（experiment1.py）の実行結果＋確認できたこと</td>
             <td><a href="#sec-color" style="color:#76B900">移動</a></td>
           </tr>
           <tr>
@@ -673,7 +675,7 @@ a.sub-item:hover {
           <tr>
             <td><input type="checkbox"></td>
             <td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std2-2</td>
-            <td>授業ノート（step2-1〜2-5のコメント付き記録）</td>
+            <td>授業ノート ── step2-1〜step2-5 のコード実行結果＋各コードへのコメント</td>
             <td><a href="#std2-2" style="color:#76B900">移動</a></td>
           </tr>
           <tr>
@@ -688,7 +690,14 @@ a.sub-item:hover {
             <td>自由制作コード＋実行結果＋説明</td>
             <td><a href="#std2-4" style="color:#76B900">移動</a></td>
           </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-advanced" style="font-size:0.65rem">発展課題</span> adv2-1 <span style="font-size:0.7rem;color:#999">（任意）</span></td>
+            <td>オリジナル作品（自由テーマ）── コード＋実行結果＋音声説明</td>
+            <td><a href="#adv2-1" style="color:#FFB800">移動</a></td>
+          </tr>
         </table>
+        <p style="font-size:0.75rem;color:#999;margin-top:0.5rem">※ 発展課題は任意。標準課題が完了してから取り組んでください。</p>
       </div>
     </div>
   </div>
@@ -729,7 +738,7 @@ a.sub-item:hover {
         <div style="flex:2;min-width:12rem;background:#1A1A1A;border:2px solid #93D500;border-radius:0.4rem;padding:0.6rem;text-align:center">
           <div style="font-size:1.2rem;font-weight:900;color:#93D500">13:40 - 16:40</div>
           <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">グループ演習（この資料を上から順に進める）</div>
-          <div style="font-size:0.65rem;color:#999">グループワーク → 繰り返し処理 → 色の表現 → 自由制作<br>グループで協力し、資料を読みながら自分たちで進める</div>
+          <div style="font-size:0.65rem;color:#999">グループワーク → 繰り返し処理 → 口頭試問 → 色の表現 → 自由制作<br>グループで協力し、資料を読みながら自分たちで進める</div>
         </div>
       </div>
     </div>
@@ -848,6 +857,53 @@ name <span class="op">=</span> <span class="str">"py5"</span>   <span class="cmt
           <tr><td><code>range(0, 10, 2)</code></td><td>0, 2, 4, 6, 8</td></tr>
         </table>
       </div>
+
+      <div class="concept-box">
+        <h4>練習問題</h4>
+        <p>次の <code>range()</code> はどんな値を順に生成するでしょうか？頭の中で考えてみましょう。</p>
+        <ol>
+          <li><code>range(3)</code></li>
+          <li><code>range(1, 5)</code></li>
+          <li><code>range(1, 6, 2)</code></li>
+        </ol>
+        <details style="margin-top:0.8rem">
+          <summary><strong>答えを見る</strong></summary>
+          <div class="answer-content">
+            <table>
+              <tr><th>書き方</th><th>生成される値</th></tr>
+              <tr><td><code>range(3)</code></td><td>0, 1, 2</td></tr>
+              <tr><td><code>range(1, 5)</code></td><td>1, 2, 3, 4</td></tr>
+              <tr><td><code>range(1, 6, 2)</code></td><td>1, 3, 5</td></tr>
+            </table>
+          </div>
+        </details>
+      </div>
+
+      <div class="callout-tip">
+        <h4>確かめてみよう ── Pythonインタラクティブモード</h4>
+        <p>「本当にこの値になる？」と思ったら、Pythonの<strong>インタラクティブモード</strong>ですぐ確かめられます。コードを書いてファイルに保存しなくても、1行ずつ実行して結果を見られる便利なモードです。</p>
+
+        <p style="margin-top:0.8rem"><strong>起動のしかた</strong> ── ターミナル（macOSなら「ターミナル.app」、Windowsなら「コマンドプロンプト」）を開いて：</p>
+        <pre><span class="code-label">Terminal</span>
+uv run python</pre>
+        <p>すると <code>&gt;&gt;&gt;</code> というプロンプトが表示されます。ここに直接Pythonの式を打ち込めます。</p>
+        <p style="font-size:0.85rem;color:#999;margin-top:0.3rem">※ 第1回でインストールした <code>uv</code> 経由で起動します。<code>python3</code> でも動きますが、本授業では <code>uv run python</code> に統一します。</p>
+
+        <p style="margin-top:0.8rem"><strong>range の中身を確かめる</strong> ── <code>range</code> はそのまま <code>print</code> しても中身が見えないので、<code>list()</code> でリストに変換して表示します：</p>
+        <pre><span class="code-label">Interactive</span>
+&gt;&gt;&gt; <span class="fn">list</span>(<span class="fn">range</span>(<span class="num">3</span>))
+[0, 1, 2]
+&gt;&gt;&gt; <span class="fn">list</span>(<span class="fn">range</span>(<span class="num">1</span>, <span class="num">6</span>, <span class="num">2</span>))
+[1, 3, 5]
+&gt;&gt;&gt; <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">3</span>):
+...     <span class="fn">print</span>(i)
+...
+0
+1
+2</pre>
+        <p style="margin-top:0.8rem"><strong>抜けるときは</strong> <code>exit()</code> と打つか <code>Ctrl + D</code>（Windowsは <code>Ctrl + Z</code> → Enter）を押します。</p>
+        <p style="font-size:0.85rem;color:#999;margin-top:0.5rem">※ for文のように複数行を書くときは、インデント行のあとに<strong>空のEnter</strong>を1回押すとブロックが完了して実行されます。</p>
+      </div>
     </div>
 
     <!-- CS基礎: コンピュータの構成要素 -->
@@ -933,6 +989,42 @@ name <span class="op">=</span> <span class="str">"py5"</span>   <span class="cmt
       </div>
 
       <div class="concept-box" style="margin-top:0.5rem">
+        <h4>O(n) ってなに？ ── 計算量の表し方</h4>
+        <p><code>O(n)</code> は「<strong>オーダー・エヌ</strong>」と読みます。これは「アルゴリズムの速さを表す記号」で、<strong>データの量 n が増えたときに、処理回数（=かかる時間）がどう増えるか</strong>を表します。</p>
+
+        <p style="margin-top:0.6rem"><strong>n（エヌ）とは？</strong> ── 扱うデータの個数です。たとえば：</p>
+        <ul class="point-list">
+          <li>名簿に載っている学生の人数 → n</li>
+          <li>画面に描く四角形の数 → n</li>
+          <li>リストの要素数 → n</li>
+        </ul>
+
+        <p style="margin-top:0.6rem"><strong>O(n) の意味</strong> ── 「n が10倍になったら、処理回数もだいたい10倍になる」ということ。<u>n に比例して増える</u>と覚えてOK。</p>
+
+        <pre><span class="code-label">Python</span>
+<span class="cmt"># これは O(n) ── n回ループするだけ</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    <span class="fn">print</span>(i)</pre>
+
+        <p style="margin-top:0.6rem"><strong>なぜ「だいたい」でいいの？</strong> ── 細かい定数（+5回とか ×2倍とか）は無視して、<strong>増え方の「形」だけ</strong>に注目するのが O 記法の考え方です。n が大きくなればなるほど、定数の差は誤差レベルになるからです。</p>
+
+        <table style="margin-top:0.6rem">
+          <tr><th>記号</th><th>読み方</th><th>増え方のイメージ</th><th>例</th></tr>
+          <tr><td><code>O(1)</code></td><td>オーダー・1</td><td>n が増えても変わらない</td><td>リストの先頭を取り出す</td></tr>
+          <tr><td><code>O(n)</code></td><td>オーダー・エヌ</td><td>n に比例して増える</td><td>1重ループ</td></tr>
+          <tr><td><code>O(n<sup>2</sup>)</code></td><td>オーダー・エヌ二乗</td><td>n の二乗で爆発的に増える</td><td>2重ループ</td></tr>
+          <tr><td><code>O(log n)</code></td><td>オーダー・ログn</td><td>n が増えても少ししか増えない</td><td>二分探索</td></tr>
+        </table>
+
+        <div class="analogy" style="margin-top:0.6rem">
+          <code>O(n)</code> = 「教室の全員に1回ずつ出席を取る」── 30人なら30回、300人なら300回。人数に<strong>比例</strong>して時間がかかる。<br>
+          <code>O(n<sup>2</sup>)</code> = 「全員が全員と握手する」── 30人なら900回、300人なら90,000回。人数の<strong>二乗</strong>で増える。
+        </div>
+
+        <p style="margin-top:0.6rem;font-size:0.85rem;color:#999">※「O」は <strong>O</strong>rder（オーダー、増え方の「位」）の頭文字。アルゴリズムの良し悪しを比較するときの共通言語です。</p>
+      </div>
+
+      <div class="concept-box" style="margin-top:0.5rem">
         <h4>計算量の直感</h4>
         <p>ループの回数が増えると処理時間が増えます。特に<strong>二重ループ</strong>は要注意です。</p>
         <table>
@@ -947,48 +1039,349 @@ name <span class="op">=</span> <span class="str">"py5"</span>   <span class="cmt
         1重ループは「教室の全員に1回ずつ握手する」（n回）。2重ループは「全員が全員と握手する」（n&times;n回）。人数が10人なら100回、100人なら10,000回になります。
       </div>
 
+      <!-- 2重ループの仕組みを図で説明 -->
       <div style="margin:1.5rem 0;text-align:center">
-        <svg viewBox="0 0 620 320" style="max-width:620px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" xmlns="http://www.w3.org/2000/svg">
-          <text x="310" y="28" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="14" font-weight="bold">計算量の比較: O(n) vs O(n²)</text>
-          <!-- Axes -->
-          <line x1="80" y1="270" x2="570" y2="270" stroke="#666" stroke-width="2"/>
-          <line x1="80" y1="270" x2="80" y2="50" stroke="#666" stroke-width="2"/>
-          <!-- Axis labels -->
-          <text x="330" y="298" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="12">n（データサイズ）</text>
-          <text x="30" y="160" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="12" transform="rotate(-90,30,160)">処理回数</text>
-          <!-- Grid lines -->
-          <line x1="80" y1="220" x2="570" y2="220" stroke="#333" stroke-width="1" stroke-dasharray="4,4"/>
-          <line x1="80" y1="170" x2="570" y2="170" stroke="#333" stroke-width="1" stroke-dasharray="4,4"/>
-          <line x1="80" y1="120" x2="570" y2="120" stroke="#333" stroke-width="1" stroke-dasharray="4,4"/>
-          <line x1="80" y1="70" x2="570" y2="70" stroke="#333" stroke-width="1" stroke-dasharray="4,4"/>
-          <!-- X-axis ticks -->
-          <line x1="180" y1="270" x2="180" y2="275" stroke="#666" stroke-width="2"/>
-          <text x="180" y="288" text-anchor="middle" fill="#999" font-family="monospace" font-size="11">10</text>
-          <line x1="480" y1="270" x2="480" y2="275" stroke="#666" stroke-width="2"/>
-          <text x="480" y="288" text-anchor="middle" fill="#999" font-family="monospace" font-size="11">100</text>
-          <!-- Y-axis ticks -->
-          <text x="72" y="224" text-anchor="end" fill="#999" font-family="monospace" font-size="10">100</text>
-          <text x="72" y="174" text-anchor="end" fill="#999" font-family="monospace" font-size="10">1K</text>
-          <text x="72" y="124" text-anchor="end" fill="#999" font-family="monospace" font-size="10">5K</text>
-          <text x="72" y="74" text-anchor="end" fill="#999" font-family="monospace" font-size="10">10K</text>
-          <!-- O(n) line -->
-          <line x1="80" y1="268" x2="480" y2="250" stroke="#76B900" stroke-width="3"/>
-          <circle cx="180" cy="263" r="5" fill="#76B900"/>
-          <text x="190" y="258" fill="#76B900" font-family="monospace" font-size="10">10</text>
-          <circle cx="480" cy="250" r="5" fill="#76B900"/>
-          <text x="490" y="245" fill="#76B900" font-family="monospace" font-size="10">100</text>
-          <!-- O(n²) curve -->
-          <path d="M80,269 Q180,266 180,220 Q250,170 320,130 Q400,85 480,60" fill="none" stroke="#FF5252" stroke-width="3"/>
-          <circle cx="180" cy="220" r="5" fill="#FF5252"/>
-          <text x="190" y="215" fill="#FF5252" font-family="monospace" font-size="10">100</text>
-          <circle cx="480" cy="60" r="5" fill="#FF5252"/>
-          <text x="490" y="55" fill="#FF5252" font-family="monospace" font-size="10">10,000</text>
-          <!-- Legend -->
-          <line x1="380" y1="40" x2="410" y2="40" stroke="#76B900" stroke-width="3"/>
-          <text x="415" y="44" fill="#76B900" font-family="sans-serif" font-size="12">O(n) 1重ループ</text>
-          <line x1="160" y1="40" x2="190" y2="40" stroke="#FF5252" stroke-width="3"/>
-          <text x="195" y="44" fill="#FF5252" font-family="sans-serif" font-size="12">O(n²) 2重ループ</text>
+        <svg viewBox="0 0 640 380" style="max-width:640px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" xmlns="http://www.w3.org/2000/svg">
+          <text x="320" y="26" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="14" font-weight="bold">2重ループの仕組み（n=5 の場合）</text>
+
+          <!-- Left: 1重ループ -->
+          <text x="140" y="58" text-anchor="middle" fill="#76B900" font-family="sans-serif" font-size="13" font-weight="bold">1重ループ ── O(n) = 5回</text>
+          <text x="140" y="78" text-anchor="middle" fill="#999" font-family="monospace" font-size="11">for i in range(5):</text>
+          <!-- Single loop cells -->
+          <g>
+            <rect x="40" y="95" width="40" height="40" rx="4" fill="#76B900" fill-opacity="0.25" stroke="#76B900" stroke-width="1.5"/>
+            <text x="60" y="120" text-anchor="middle" fill="#76B900" font-family="monospace" font-size="13" font-weight="bold">0</text>
+            <rect x="82" y="95" width="40" height="40" rx="4" fill="#76B900" fill-opacity="0.25" stroke="#76B900" stroke-width="1.5"/>
+            <text x="102" y="120" text-anchor="middle" fill="#76B900" font-family="monospace" font-size="13" font-weight="bold">1</text>
+            <rect x="124" y="95" width="40" height="40" rx="4" fill="#76B900" fill-opacity="0.25" stroke="#76B900" stroke-width="1.5"/>
+            <text x="144" y="120" text-anchor="middle" fill="#76B900" font-family="monospace" font-size="13" font-weight="bold">2</text>
+            <rect x="166" y="95" width="40" height="40" rx="4" fill="#76B900" fill-opacity="0.25" stroke="#76B900" stroke-width="1.5"/>
+            <text x="186" y="120" text-anchor="middle" fill="#76B900" font-family="monospace" font-size="13" font-weight="bold">3</text>
+            <rect x="208" y="95" width="40" height="40" rx="4" fill="#76B900" fill-opacity="0.25" stroke="#76B900" stroke-width="1.5"/>
+            <text x="228" y="120" text-anchor="middle" fill="#76B900" font-family="monospace" font-size="13" font-weight="bold">4</text>
+          </g>
+          <text x="140" y="158" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="11">i が 0→4 まで 5回実行</text>
+          <text x="140" y="178" text-anchor="middle" fill="#76B900" font-family="sans-serif" font-size="13" font-weight="bold">合計 5マス</text>
+
+          <!-- Divider -->
+          <line x1="305" y1="50" x2="305" y2="360" stroke="#444" stroke-width="1" stroke-dasharray="4,4"/>
+
+          <!-- Right: 2重ループ -->
+          <text x="490" y="58" text-anchor="middle" fill="#FF5252" font-family="sans-serif" font-size="13" font-weight="bold">2重ループ ── O(n²) = 25回</text>
+          <text x="490" y="78" text-anchor="middle" fill="#999" font-family="monospace" font-size="11">for i in range(5):</text>
+          <text x="490" y="92" text-anchor="middle" fill="#999" font-family="monospace" font-size="11">    for j in range(5):</text>
+
+          <!-- 5x5 grid -->
+          <g transform="translate(360, 110)">
+            <!-- j label (top) -->
+            <text x="130" y="-4" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="10">j（内側ループ）→</text>
+            <text x="0" y="14" text-anchor="middle" fill="#999" font-family="monospace" font-size="10">0</text>
+            <text x="32" y="14" text-anchor="middle" fill="#999" font-family="monospace" font-size="10">1</text>
+            <text x="64" y="14" text-anchor="middle" fill="#999" font-family="monospace" font-size="10">2</text>
+            <text x="96" y="14" text-anchor="middle" fill="#999" font-family="monospace" font-size="10">3</text>
+            <text x="128" y="14" text-anchor="middle" fill="#999" font-family="monospace" font-size="10">4</text>
+            <!-- i label (left) -->
+            <text x="-30" y="80" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="10" transform="rotate(-90,-30,80)">i（外側ループ）↓</text>
+            <text x="-12" y="34" text-anchor="middle" fill="#999" font-family="monospace" font-size="10">0</text>
+            <text x="-12" y="62" text-anchor="middle" fill="#999" font-family="monospace" font-size="10">1</text>
+            <text x="-12" y="90" text-anchor="middle" fill="#999" font-family="monospace" font-size="10">2</text>
+            <text x="-12" y="118" text-anchor="middle" fill="#999" font-family="monospace" font-size="10">3</text>
+            <text x="-12" y="146" text-anchor="middle" fill="#999" font-family="monospace" font-size="10">4</text>
+            <!-- Row 0 -->
+            <rect x="-14" y="20" width="28" height="28" rx="3" fill="#FF5252" fill-opacity="0.25" stroke="#FF5252" stroke-width="1"/>
+            <rect x="18" y="20" width="28" height="28" rx="3" fill="#FF5252" fill-opacity="0.25" stroke="#FF5252" stroke-width="1"/>
+            <rect x="50" y="20" width="28" height="28" rx="3" fill="#FF5252" fill-opacity="0.25" stroke="#FF5252" stroke-width="1"/>
+            <rect x="82" y="20" width="28" height="28" rx="3" fill="#FF5252" fill-opacity="0.25" stroke="#FF5252" stroke-width="1"/>
+            <rect x="114" y="20" width="28" height="28" rx="3" fill="#FF5252" fill-opacity="0.25" stroke="#FF5252" stroke-width="1"/>
+            <!-- Row 1 -->
+            <rect x="-14" y="48" width="28" height="28" rx="3" fill="#FF5252" fill-opacity="0.25" stroke="#FF5252" stroke-width="1"/>
+            <rect x="18" y="48" width="28" height="28" rx="3" fill="#FF5252" fill-opacity="0.25" stroke="#FF5252" stroke-width="1"/>
+            <rect x="50" y="48" width="28" height="28" rx="3" fill="#FF5252" fill-opacity="0.25" stroke="#FF5252" stroke-width="1"/>
+            <rect x="82" y="48" width="28" height="28" rx="3" fill="#FF5252" fill-opacity="0.25" stroke="#FF5252" stroke-width="1"/>
+            <rect x="114" y="48" width="28" height="28" rx="3" fill="#FF5252" fill-opacity="0.25" stroke="#FF5252" stroke-width="1"/>
+            <!-- Row 2 -->
+            <rect x="-14" y="76" width="28" height="28" rx="3" fill="#FF5252" fill-opacity="0.25" stroke="#FF5252" stroke-width="1"/>
+            <rect x="18" y="76" width="28" height="28" rx="3" fill="#FF5252" fill-opacity="0.25" stroke="#FF5252" stroke-width="1"/>
+            <rect x="50" y="76" width="28" height="28" rx="3" fill="#FF5252" fill-opacity="0.25" stroke="#FF5252" stroke-width="1"/>
+            <rect x="82" y="76" width="28" height="28" rx="3" fill="#FF5252" fill-opacity="0.25" stroke="#FF5252" stroke-width="1"/>
+            <rect x="114" y="76" width="28" height="28" rx="3" fill="#FF5252" fill-opacity="0.25" stroke="#FF5252" stroke-width="1"/>
+            <!-- Row 3 -->
+            <rect x="-14" y="104" width="28" height="28" rx="3" fill="#FF5252" fill-opacity="0.25" stroke="#FF5252" stroke-width="1"/>
+            <rect x="18" y="104" width="28" height="28" rx="3" fill="#FF5252" fill-opacity="0.25" stroke="#FF5252" stroke-width="1"/>
+            <rect x="50" y="104" width="28" height="28" rx="3" fill="#FF5252" fill-opacity="0.25" stroke="#FF5252" stroke-width="1"/>
+            <rect x="82" y="104" width="28" height="28" rx="3" fill="#FF5252" fill-opacity="0.25" stroke="#FF5252" stroke-width="1"/>
+            <rect x="114" y="104" width="28" height="28" rx="3" fill="#FF5252" fill-opacity="0.25" stroke="#FF5252" stroke-width="1"/>
+            <!-- Row 4 -->
+            <rect x="-14" y="132" width="28" height="28" rx="3" fill="#FF5252" fill-opacity="0.25" stroke="#FF5252" stroke-width="1"/>
+            <rect x="18" y="132" width="28" height="28" rx="3" fill="#FF5252" fill-opacity="0.25" stroke="#FF5252" stroke-width="1"/>
+            <rect x="50" y="132" width="28" height="28" rx="3" fill="#FF5252" fill-opacity="0.25" stroke="#FF5252" stroke-width="1"/>
+            <rect x="82" y="132" width="28" height="28" rx="3" fill="#FF5252" fill-opacity="0.25" stroke="#FF5252" stroke-width="1"/>
+            <rect x="114" y="132" width="28" height="28" rx="3" fill="#FF5252" fill-opacity="0.25" stroke="#FF5252" stroke-width="1"/>
+          </g>
+          <text x="490" y="295" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="11">i 1回につき j が 5回 → 5×5マス</text>
+          <text x="490" y="315" text-anchor="middle" fill="#FF5252" font-family="sans-serif" font-size="13" font-weight="bold">合計 25マス</text>
+
+          <!-- Bottom note -->
+          <text x="320" y="358" text-anchor="middle" fill="#FFB800" font-family="sans-serif" font-size="11" font-weight="bold">n が 5 → 25, 10 → 100, 100 → 10,000 ── n² は爆発的に増える</text>
         </svg>
+      </div>
+
+      <div class="callout-tip" style="margin-top:0.8rem">
+        <h4>図の読み方</h4>
+        <p>左の<strong>1重ループ</strong>は横一列の5マス（5回の処理）。右の<strong>2重ループ</strong>は外側ループ <code>i</code> が1回進むたびに、内側ループ <code>j</code> が0→4まで5回回ります。つまり <code>i</code> の各行に5マスずつ処理があり、合計で 5×5 = <strong>25マス</strong>。これが <code>n²</code> の意味です。</p>
+        <p style="margin-top:0.5rem"><code>step2-5.py</code> の二重ループはまさにこの構造で、<strong>縦5×横5＝25個の四角形</strong>を描いています。<code>range</code> の数字を10にすると100個、50にすると2,500個になり、描画が遅くなるのが体感できます。</p>
+      </div>
+
+      <div style="margin:1.5rem 0;text-align:center">
+        <svg viewBox="0 0 620 340" style="max-width:620px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" xmlns="http://www.w3.org/2000/svg">
+          <text x="310" y="26" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="14" font-weight="bold">計算量の比較: O(n) vs O(n²) （縦軸 等間隔）</text>
+
+          <!-- Axes -->
+          <line x1="80" y1="270" x2="580" y2="270" stroke="#888" stroke-width="2"/>
+          <line x1="80" y1="270" x2="80" y2="50" stroke="#888" stroke-width="2"/>
+
+          <!-- Axis labels -->
+          <text x="330" y="305" text-anchor="middle" fill="#bbb" font-family="sans-serif" font-size="12">n（データサイズ）</text>
+          <text x="28" y="160" text-anchor="middle" fill="#bbb" font-family="sans-serif" font-size="12" transform="rotate(-90,28,160)">処理回数</text>
+
+          <!-- Y-axis grid lines (equal spacing: 0, 2500, 5000, 7500, 10000) -->
+          <line x1="80" y1="215" x2="580" y2="215" stroke="#2a2a2a" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="80" y1="160" x2="580" y2="160" stroke="#2a2a2a" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="80" y1="105" x2="580" y2="105" stroke="#2a2a2a" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="80" y1="50"  x2="580" y2="50"  stroke="#2a2a2a" stroke-width="1" stroke-dasharray="4,4"/>
+
+          <!-- Y-axis tick marks -->
+          <line x1="76" y1="270" x2="80" y2="270" stroke="#888" stroke-width="2"/>
+          <line x1="76" y1="215" x2="80" y2="215" stroke="#888" stroke-width="2"/>
+          <line x1="76" y1="160" x2="80" y2="160" stroke="#888" stroke-width="2"/>
+          <line x1="76" y1="105" x2="80" y2="105" stroke="#888" stroke-width="2"/>
+          <line x1="76" y1="50"  x2="80" y2="50"  stroke="#888" stroke-width="2"/>
+
+          <!-- Y-axis tick labels (linear: 0, 2500, 5000, 7500, 10000) -->
+          <text x="72" y="274" text-anchor="end" fill="#bbb" font-family="monospace" font-size="11">0</text>
+          <text x="72" y="219" text-anchor="end" fill="#bbb" font-family="monospace" font-size="11">2,500</text>
+          <text x="72" y="164" text-anchor="end" fill="#bbb" font-family="monospace" font-size="11">5,000</text>
+          <text x="72" y="109" text-anchor="end" fill="#bbb" font-family="monospace" font-size="11">7,500</text>
+          <text x="72" y="54"  text-anchor="end" fill="#bbb" font-family="monospace" font-size="11">10,000</text>
+
+          <!-- X-axis tick marks (equal spacing: 0, 25, 50, 75, 100) -->
+          <line x1="80"  y1="270" x2="80"  y2="274" stroke="#888" stroke-width="2"/>
+          <line x1="205" y1="270" x2="205" y2="274" stroke="#888" stroke-width="2"/>
+          <line x1="330" y1="270" x2="330" y2="274" stroke="#888" stroke-width="2"/>
+          <line x1="455" y1="270" x2="455" y2="274" stroke="#888" stroke-width="2"/>
+          <line x1="580" y1="270" x2="580" y2="274" stroke="#888" stroke-width="2"/>
+          <text x="80"  y="288" text-anchor="middle" fill="#bbb" font-family="monospace" font-size="11">0</text>
+          <text x="205" y="288" text-anchor="middle" fill="#bbb" font-family="monospace" font-size="11">25</text>
+          <text x="330" y="288" text-anchor="middle" fill="#bbb" font-family="monospace" font-size="11">50</text>
+          <text x="455" y="288" text-anchor="middle" fill="#bbb" font-family="monospace" font-size="11">75</text>
+          <text x="580" y="288" text-anchor="middle" fill="#bbb" font-family="monospace" font-size="11">100</text>
+
+          <!-- O(n) line: from (n=0, 0)=(80,270) to (n=100, 100)=(580, 267.8). On this scale it's almost flat. -->
+          <line x1="80" y1="270" x2="580" y2="267.8" stroke="#76B900" stroke-width="3"/>
+          <circle cx="580" cy="267.8" r="5" fill="#76B900"/>
+          <text x="565" y="259" text-anchor="end" fill="#76B900" font-family="monospace" font-size="11">n=100 で 100回</text>
+
+          <!-- O(n²) parabola: polyline through n=0,10,20,...,100 -->
+          <!-- y = 270 - (n^2) * 0.022 -->
+          <polyline points="80,270 130,267.8 180,261.2 230,250.2 280,234.8 330,215 380,190.8 430,162.2 480,129.2 530,91.8 580,50"
+                    fill="none" stroke="#FF5252" stroke-width="3"/>
+
+          <!-- Highlight points on parabola -->
+          <circle cx="330" cy="215" r="5" fill="#FF5252"/>
+          <text x="340" y="211" fill="#FF5252" font-family="monospace" font-size="11">n=50 で 2,500回</text>
+          <circle cx="580" cy="50" r="5" fill="#FF5252"/>
+          <text x="565" y="44" text-anchor="end" fill="#FF5252" font-family="monospace" font-size="11">n=100 で 10,000回</text>
+
+          <!-- Legend -->
+          <rect x="365" y="106" width="200" height="50" rx="6" fill="#0A0A0A" stroke="#333" stroke-width="1"/>
+          <line x1="378" y1="123" x2="408" y2="123" stroke="#76B900" stroke-width="3"/>
+          <text x="415" y="127" fill="#76B900" font-family="sans-serif" font-size="12">O(n) 1重ループ</text>
+          <line x1="378" y1="145" x2="408" y2="145" stroke="#FF5252" stroke-width="3"/>
+          <text x="415" y="149" fill="#FF5252" font-family="sans-serif" font-size="12">O(n²) 2重ループ</text>
+
+          <!-- Bottom note -->
+          <text x="310" y="325" text-anchor="middle" fill="#FFB800" font-family="sans-serif" font-size="11" font-weight="bold">縦軸は等間隔。O(n) は地面に張り付き、O(n²) は放物線で急上昇する</text>
+        </svg>
+      </div>
+
+      <div class="callout-info" style="margin-top:0.8rem">
+        <h4>O(n²) は「指数関数」ではない ── 念のため</h4>
+        <p>このグラフの形（放物線）は「<strong>多項式（=2乗）</strong>」の増え方です。よく似た言葉に<strong>指数関数 O(2<sup>n</sup>)</strong> がありますが、これは別物です：</p>
+        <ul class="point-list">
+          <li><strong>O(n²)</strong>: n が10倍 → 処理は100倍（n×n）</li>
+          <li><strong>O(2<sup>n</sup>)</strong>: n が1<u>増えるごとに</u>処理が2倍。n=100 で 約 10<sup>30</sup> 回 ── 宇宙の年齢でも終わらない</li>
+        </ul>
+        <p style="margin-top:0.4rem">2重ループは「ヤバいけど対処可能」、指数時間は「nが30を超えたら現実的に解けない」── このランクの違いを覚えておきましょう。</p>
+      </div>
+
+      <!-- 入れ子for文の例 -->
+      <div class="concept-box" style="margin-top:1rem">
+        <h4>入れ子（ネスト）for文の書き方 ── 2重・3重ループ</h4>
+        <p>for文の中にfor文を書くと「<strong>入れ子（ネスト）</strong>」になります。インデント（字下げ）が深くなるほどループが深くなります。</p>
+
+        <pre><span class="code-label">Python</span>
+<span class="cmt"># 2重ループ ── i × j の組み合わせを全部出す（3×3 = 9回）</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">3</span>):
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(<span class="num">3</span>):
+        <span class="fn">print</span>(<span class="str">f"i=</span>{i}<span class="str">, j=</span>{j}<span class="str">"</span>)</pre>
+
+        <p style="margin-top:0.4rem;font-size:0.85rem;color:#999">出力（一部）:</p>
+        <pre style="font-size:0.85rem"><span class="code-label">Output</span>
+i=0, j=0
+i=0, j=1
+i=0, j=2
+i=1, j=0
+...
+i=2, j=2</pre>
+
+        <pre style="margin-top:0.6rem"><span class="code-label">Python</span>
+<span class="cmt"># 3重ループ ── i × j × k の組み合わせ（2×2×2 = 8回）</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">2</span>):
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(<span class="num">2</span>):
+        <span class="kw">for</span> k <span class="kw">in</span> <span class="fn">range</span>(<span class="num">2</span>):
+            <span class="fn">print</span>(<span class="str">f"i=</span>{i}<span class="str">, j=</span>{j}<span class="str">, k=</span>{k}<span class="str">"</span>)</pre>
+
+        <div class="analogy" style="margin-top:0.6rem">
+          時計の「時・分・秒」のイメージ。<strong>外側のループ（時）</strong>が1進むあいだに<strong>真ん中（分）</strong>が60回、<strong>内側（秒）</strong>はさらに60回ずつ。3重ループの実行回数は「外×中×内」の掛け算になります。
+        </div>
+      </div>
+
+      <!-- 処理時間を体感する -->
+      <div class="concept-box" style="margin-top:1rem">
+        <h4>体験 ── 処理時間を測ってみよう</h4>
+        <p>「2重ループ・3重ループは本当に遅いのか？」を、Python標準の <code>time</code> モジュールで実測してみましょう。</p>
+
+        <pre><span class="code-label">Python (time_loops.py)</span>
+<span class="kw">import</span> time
+
+n <span class="op">=</span> <span class="num">1000</span>
+
+<span class="cmt"># O(n) ── 1重ループ: 1,000回</span>
+start <span class="op">=</span> time.perf_counter()
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    <span class="kw">pass</span>
+<span class="fn">print</span>(<span class="str">f"O(n)   1重ループ n=</span>{n}<span class="str">: </span>{time.perf_counter() <span class="op">-</span> start<span class="str">:.4f</span>}<span class="str">秒"</span>)
+
+<span class="cmt"># O(n²) ── 2重ループ: 1,000,000回（100万回）</span>
+start <span class="op">=</span> time.perf_counter()
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        <span class="kw">pass</span>
+<span class="fn">print</span>(<span class="str">f"O(n²)  2重ループ n=</span>{n}<span class="str">: </span>{time.perf_counter() <span class="op">-</span> start<span class="str">:.4f</span>}<span class="str">秒"</span>)
+
+<span class="cmt"># O(n³) ── 3重ループ: 1,000,000,000回（10億回）── 数十秒〜1分以上かかる！</span>
+start <span class="op">=</span> time.perf_counter()
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        <span class="kw">for</span> k <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">pass</span>
+<span class="fn">print</span>(<span class="str">f"O(n³)  3重ループ n=</span>{n}<span class="str">: </span>{time.perf_counter() <span class="op">-</span> start<span class="str">:.4f</span>}<span class="str">秒"</span>)</pre>
+
+        <p style="margin-top:0.6rem"><strong>実行例</strong>（環境により異なります）:</p>
+        <pre style="font-size:0.85rem"><span class="code-label">Output</span>
+O(n)   1重ループ n=1000:    0.0000秒    <span class="cmt"># 一瞬</span>
+O(n²)  2重ループ n=1000:    0.0300秒    <span class="cmt"># まだ速い</span>
+O(n³)  3重ループ n=1000:   45.2000秒    <span class="cmt"># 数十秒待たされる！</span></pre>
+
+        <div class="callout-warning" style="margin-top:0.8rem">
+          <h4>注意 ── 3重ループは数十秒待つことを覚悟</h4>
+          <p><code>n=1000</code> で3重ループを回すと <strong>10億回（10<sup>9</sup>）</strong>。PCの性能にもよりますが <strong>30秒〜1分以上</strong>かかります。「フリーズした？」と思ってもターミナルやエディタを閉じず、<strong>そのまま待つ</strong>のがコツ。あまりに遅すぎる場合は <code>Ctrl + C</code> で中断できます（このまさに「待たされる感覚」が O(n³) の本質です）。</p>
+        </div>
+
+        <p style="margin-top:0.8rem;color:#FFB800;font-weight:700">体験のしかた ── 手順を1つずつ</p>
+
+        <p style="margin-top:0.6rem"><strong>(1)</strong> ターミナルを開いて、第1回で作った <code>~/Lecture/MD1</code> の中に <code>no2</code> を作成して移動</p>
+        <pre><code>cd                       <span class="cmt"># ホームディレクトリに移動</span>
+cd Lecture               <span class="cmt"># Lecture に入る</span>
+cd MD1                   <span class="cmt"># MD1 に入る</span>
+mkdir no2                <span class="cmt"># no2 ディレクトリを作成</span>
+cd no2                   <span class="cmt"># no2 に移動</span></code></pre>
+        <p style="font-size:0.8rem;color:#999">※ 1行ずつ実行して、それぞれ <code>ls</code> や <code>pwd</code> で確認するクセを付けましょう。</p>
+
+        <pre style="margin-top:0.4rem"><span class="code-label">今回作るディレクトリ構成</span>
+~/
+└── Lecture/              <span class="cmt">← すでにある</span>
+    └── MD1/              <span class="cmt">← すでにある</span>
+        ├── no1/          <span class="cmt">← 第1回で作成済み</span>
+        └── no2/          <span class="cmt">← 今回ここで作業</span>
+            ├── .venv/        <span class="cmt">← 仮想環境（自動生成、中身を触らない）</span>
+            └── time_loops.py <span class="cmt">← これから作るファイル</span></pre>
+
+        <p style="margin-top:0.8rem"><strong>(2)</strong> 仮想環境を作成して有効化</p>
+        <pre><code>uv venv                            <span class="cmt"># .venv フォルダができる</span>
+source .venv/bin/activate          <span class="cmt"># プロンプトの先頭に (.venv) が付けば成功</span></code></pre>
+        <p style="font-size:0.8rem;color:#999">※ Windowsの場合は <code>.venv\Scripts\activate</code></p>
+
+        <div class="callout-info" style="margin-top:0.6rem">
+          <h4>これはあくまで「練習」── no2 の中に作ります</h4>
+          <p><strong>本来は <code>~/Lecture/MD1</code> 直下に <code>.venv</code> を1つ作れば十分</strong>です。実務では「1プロジェクト = 1仮想環境」が原則で、MD1全体を1プロジェクトとみなせば毎週作り直す必要はありません（パッケージも入れ直さずに済みます）。</p>
+          <p style="margin-top:0.4rem">ただし本授業では <strong>仮想環境を作る・有効化する操作の練習として、毎週 <code>noN</code> の中に作る方針</strong>でいきます。<code>uv venv</code> → <code>source .venv/bin/activate</code> という手の動きを毎週繰り返すうちに、無意識にできるようになるのが狙いです。「本当は1つでいい」を知った上で、<strong>練習として no2 に作りましょう</strong>。</p>
+        </div>
+
+        <p style="margin-top:0.8rem"><strong>(3)</strong> VSCode を起動（このディレクトリを開く）</p>
+        <pre><code>code .</code></pre>
+        <p style="font-size:0.8rem;color:#999"><code>.</code> は「今いるディレクトリ」を意味します。VSCode が <code>no2</code> を開いた状態で起動します。</p>
+
+        <p style="margin-top:0.8rem"><strong>(4)</strong> VSCode 上で <code>time_loops.py</code> を新規作成</p>
+        <ul class="point-list">
+          <li>左サイドバーのエクスプローラーで <code>no2</code> を選択</li>
+          <li>新規ファイルアイコン（📄+）をクリック、または <code>Cmd + N</code>（Win: <code>Ctrl + N</code>）</li>
+          <li>ファイル名は <code>time_loops.py</code>（必ず <code>.py</code> 拡張子、半角英字）</li>
+          <li>場所は <code>no2</code> の<strong>直下</strong>（<code>.venv</code> の中ではない！）</li>
+        </ul>
+
+        <p style="margin-top:0.8rem"><strong>(5)</strong> 下のコードをそのままコピーして <code>time_loops.py</code> に貼り付け、保存（<code>Cmd + S</code> / <code>Ctrl + S</code>）</p>
+
+        <pre><span class="code-label">Python ── time_loops.py</span>
+<span class="kw">import</span> time
+
+n <span class="op">=</span> <span class="num">1000</span>
+
+<span class="cmt"># O(n) ── 1重ループ: 1,000回</span>
+start <span class="op">=</span> time.perf_counter()
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    <span class="kw">pass</span>
+<span class="fn">print</span>(<span class="str">f"O(n)   1重ループ n=</span>{n}<span class="str">: </span>{time.perf_counter() <span class="op">-</span> start<span class="str">:.4f</span>}<span class="str">秒"</span>)
+
+<span class="cmt"># O(n²) ── 2重ループ: 1,000,000回（100万回）</span>
+start <span class="op">=</span> time.perf_counter()
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        <span class="kw">pass</span>
+<span class="fn">print</span>(<span class="str">f"O(n²)  2重ループ n=</span>{n}<span class="str">: </span>{time.perf_counter() <span class="op">-</span> start<span class="str">:.4f</span>}<span class="str">秒"</span>)
+
+<span class="cmt"># O(n³) ── 3重ループ: 1,000,000,000回（10億回）── 数十秒〜1分以上かかる！</span>
+start <span class="op">=</span> time.perf_counter()
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        <span class="kw">for</span> k <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">pass</span>
+<span class="fn">print</span>(<span class="str">f"O(n³)  3重ループ n=</span>{n}<span class="str">: </span>{time.perf_counter() <span class="op">-</span> start<span class="str">:.4f</span>}<span class="str">秒"</span>)</pre>
+
+        <p style="margin-top:0.8rem"><strong>(6)</strong> 実行する ── <strong>VSCode 右上の ▶ ボタン</strong>がいちばんわかりやすい</p>
+        <ul class="point-list">
+          <li>エディタで <code>time_loops.py</code> を開いた状態で、画面右上の <strong>▶（Run Python File）</strong>ボタンをクリック</li>
+          <li>VSCode下部にターミナルが自動で開き、結果が3行表示されます</li>
+          <li><strong>3重ループは数十秒待つ</strong>ので、フリーズと勘違いしないこと（待つことが本日の体験そのもの）</li>
+        </ul>
+        <p style="font-size:0.85rem;color:#999;margin-top:0.4rem">▶ ボタンが見当たらない場合は、ターミナル（<code>Ctrl + `</code> でVSCode内に開ける）から <code>uv run python time_loops.py</code> でもOK。</p>
+
+        <p style="margin-top:0.8rem"><strong>(7)</strong> 数値を変えて再実行 ── ここが本番！</p>
+        <ol class="point-list">
+          <li><strong>n を小さくしてみる</strong>: コードの <code>n = 1000</code> を <code>n = 100</code> に変えて保存→▶。今度は3重ループも一瞬（10⁶=100万回）で終わる</li>
+          <li><strong>n を 1000 に戻す</strong>: 3重ループだけ急に数十秒に。<u>n を10倍にすると3重ループは1000倍遅くなる</u>のが O(n³) の意味</li>
+          <li><strong>n を 1500 に挑戦</strong>: 1.5倍にしただけで、3重ループは <strong>1.5³ = 3.4倍</strong>の時間に（覚悟して実行）</li>
+          <li><strong>記録</strong>: 各実行の結果（n と秒数）を Notion ノートに表でまとめてみよう</li>
+        </ol>
+
+        <div class="callout-tip" style="margin-top:0.8rem">
+          <h4>うまく動かないとき</h4>
+          <ul class="point-list" style="margin-top:0.3rem">
+            <li><code>command not found: uv</code> → 第1回で <code>uv</code> をインストールしたか確認</li>
+            <li><code>No such file or directory: time_loops.py</code> → ターミナルが <code>no2</code> ディレクトリにいるか <code>pwd</code> で確認</li>
+            <li>3重ループで <strong>動かなくなった</strong> → ターミナルで <code>Ctrl + C</code> を押して中断</li>
+          </ul>
+        </div>
       </div>
     </div>
 
@@ -1006,15 +1399,249 @@ name <span class="op">=</span> <span class="str">"py5"</span>   <span class="cmt
       </div>
 
       <div class="concept-box" style="margin-top:0.5rem">
-        <h4>データの種類</h4>
-        <table>
-          <tr><th>分類</th><th>種類</th><th>例</th></tr>
-          <tr><td rowspan="2"><strong>量的データ</strong><br><span style="color:#999;font-size:0.8rem">数値で表現</span></td><td>連続データ</td><td>身長、体重、気温</td></tr>
-          <tr><td>離散データ</td><td>人数、回数、個数</td></tr>
-          <tr><td rowspan="2"><strong>質的データ</strong><br><span style="color:#999;font-size:0.8rem">カテゴリで表現</span></td><td>名義尺度</td><td>血液型、性別、都道府県</td></tr>
-          <tr><td>順序尺度</td><td>成績（A/B/C）、満足度</td></tr>
+        <h4>そもそも「データ」とは？ ── データ・情報・知識の違い</h4>
+        <p>「データの種類」を学ぶ前に、<strong>データ・情報・知識</strong>の関係を整理しましょう。これは情報学の基本概念で、<strong>DIKWピラミッド</strong>とも呼ばれます。</p>
+
+        <div style="margin:1rem 0;text-align:center">
+          <svg viewBox="0 0 680 460" style="max-width:680px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="arrow-dikw" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#76B900"/></marker>
+              <marker id="arrow-loss" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#FF5252"/></marker>
+            </defs>
+            <text x="340" y="24" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="14" font-weight="bold">世界 → データ → 情報 → 知識（各段階で「漏れ」がある）</text>
+
+            <!-- 世界（現実） outer cloud-like rect (widest, dashed boundary) -->
+            <rect x="80" y="50" width="520" height="240" rx="20" fill="#888" fill-opacity="0.05" stroke="#888" stroke-width="2" stroke-dasharray="6,4"/>
+            <text x="340" y="76" text-anchor="middle" fill="#bbb" font-family="sans-serif" font-size="14" font-weight="bold">世界・現実（あらゆる現象・出来事）</text>
+
+            <!-- Data (bottom-most pyramid layer, widest inside the world) -->
+            <polygon points="160,200 520,200 470,260 210,260" fill="#76B900" fill-opacity="0.25" stroke="#76B900" stroke-width="2"/>
+            <text x="340" y="237" text-anchor="middle" fill="#76B900" font-family="sans-serif" font-size="17" font-weight="bold">データ</text>
+
+            <!-- Information -->
+            <polygon points="210,140 470,140 425,195 255,195" fill="#4FC3F7" fill-opacity="0.25" stroke="#4FC3F7" stroke-width="2"/>
+            <text x="340" y="173" text-anchor="middle" fill="#4FC3F7" font-family="sans-serif" font-size="17" font-weight="bold">情報</text>
+
+            <!-- Knowledge (top, smallest) -->
+            <polygon points="265,90 415,90 380,135 300,135" fill="#FFB800" fill-opacity="0.25" stroke="#FFB800" stroke-width="2"/>
+            <text x="340" y="118" text-anchor="middle" fill="#FFB800" font-family="sans-serif" font-size="17" font-weight="bold">知識</text>
+
+            <!-- Right side definitions -->
+            <text x="540" y="118" fill="#FFB800" font-family="sans-serif" font-size="11" font-weight="bold">判断・行動に</text>
+            <text x="540" y="131" fill="#FFB800" font-family="sans-serif" font-size="11" font-weight="bold">使えるもの</text>
+            <text x="540" y="170" fill="#4FC3F7" font-family="sans-serif" font-size="11" font-weight="bold">人間が</text>
+            <text x="540" y="183" fill="#4FC3F7" font-family="sans-serif" font-size="11" font-weight="bold">認識できたもの</text>
+            <text x="540" y="232" fill="#76B900" font-family="sans-serif" font-size="11" font-weight="bold">測定・記録</text>
+            <text x="540" y="245" fill="#76B900" font-family="sans-serif" font-size="11" font-weight="bold">できるもの</text>
+
+            <!-- "漏れ" annotations on the LEFT, pointing OUTWARD from each transition -->
+
+            <!-- Loss 1: 世界 → データ（まだデータ化できないもの）-->
+            <line x1="160" y1="230" x2="120" y2="275" stroke="#FF5252" stroke-width="1.8" stroke-dasharray="3,3" marker-end="url(#arrow-loss)"/>
+            <text x="100" y="282" fill="#FF5252" font-family="sans-serif" font-size="10" font-weight="bold" text-anchor="end">まだデータ化</text>
+            <text x="100" y="294" fill="#FF5252" font-family="sans-serif" font-size="10" font-weight="bold" text-anchor="end">できないもの</text>
+
+            <!-- Loss 2: データ → 情報（解釈できない/活用されないデータ）-->
+            <line x1="210" y1="195" x2="170" y2="170" stroke="#FF5252" stroke-width="1.8" stroke-dasharray="3,3" marker-end="url(#arrow-loss)"/>
+            <text x="158" y="158" fill="#FF5252" font-family="sans-serif" font-size="10" font-weight="bold" text-anchor="end">人間が認識</text>
+            <text x="158" y="170" fill="#FF5252" font-family="sans-serif" font-size="10" font-weight="bold" text-anchor="end">できないデータ</text>
+
+            <!-- Loss 3: 情報 → 知識（活用されない情報）-->
+            <line x1="265" y1="135" x2="225" y2="105" stroke="#FF5252" stroke-width="1.8" stroke-dasharray="3,3" marker-end="url(#arrow-loss)"/>
+            <text x="213" y="93" fill="#FF5252" font-family="sans-serif" font-size="10" font-weight="bold" text-anchor="end">活かしきれない</text>
+            <text x="213" y="105" fill="#FF5252" font-family="sans-serif" font-size="10" font-weight="bold" text-anchor="end">情報</text>
+
+            <!-- World examples (bottom of the world rect) -->
+            <text x="340" y="278" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="10">例: 職人の勘、感情のニュアンス、未観測の宇宙、絶滅した生物の生態...</text>
+
+            <!-- Examples section -->
+            <text x="340" y="320" text-anchor="middle" fill="#bbb" font-family="sans-serif" font-size="13" font-weight="bold">── 体温を例にすると ──</text>
+
+            <rect x="40" y="335" width="190" height="80" rx="8" fill="#0A0A0A" stroke="#76B900" stroke-width="1.5"/>
+            <text x="135" y="354" text-anchor="middle" fill="#76B900" font-family="sans-serif" font-size="12" font-weight="bold">データ（生の値）</text>
+            <text x="135" y="378" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="16">36.5</text>
+            <text x="135" y="398" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="10">体温計が示した数字だけ</text>
+
+            <rect x="245" y="335" width="190" height="80" rx="8" fill="#0A0A0A" stroke="#4FC3F7" stroke-width="1.5"/>
+            <text x="340" y="354" text-anchor="middle" fill="#4FC3F7" font-family="sans-serif" font-size="12" font-weight="bold">情報（意味づけ）</text>
+            <text x="340" y="378" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="13">今朝の私の体温は</text>
+            <text x="340" y="395" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="13">36.5℃ だった</text>
+
+            <rect x="450" y="335" width="190" height="80" rx="8" fill="#0A0A0A" stroke="#FFB800" stroke-width="1.5"/>
+            <text x="545" y="354" text-anchor="middle" fill="#FFB800" font-family="sans-serif" font-size="12" font-weight="bold">知識（行動の指針）</text>
+            <text x="545" y="378" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="12">37℃以上が続いたら</text>
+            <text x="545" y="395" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="12">病院に行くべき</text>
+
+            <!-- Arrows between examples -->
+            <line x1="232" y1="375" x2="244" y2="375" stroke="#999" stroke-width="2" marker-end="url(#arrow-dikw)"/>
+            <line x1="437" y1="375" x2="449" y2="375" stroke="#999" stroke-width="2" marker-end="url(#arrow-dikw)"/>
+
+            <text x="340" y="438" text-anchor="middle" fill="#FFB800" font-family="sans-serif" font-size="11" font-weight="bold">データサイエンスは各段階の「漏れ」をいかに減らすかが勝負</text>
+          </svg>
+        </div>
+
+        <table style="margin-top:0.6rem">
+          <tr><th>段階</th><th>定義（穴埋め式の言い方）</th><th>例</th></tr>
+          <tr><td><strong style="color:#76B900">データ</strong></td><td><strong>測定・記録できるもの</strong>（生の事実、まだ意味なし）</td><td><code>36.5</code>、<code>A型</code>、<code>晴れ</code></td></tr>
+          <tr><td><strong style="color:#4FC3F7">情報</strong></td><td><strong>人間が認識できたもの</strong>（データに文脈・意味を付けた）</td><td>「今朝の体温は 36.5℃」「彼の血液型は A型」</td></tr>
+          <tr><td><strong style="color:#FFB800">知識</strong></td><td><strong>判断・行動に使えるもの</strong>（情報を経験・法則と結びつけた）</td><td>「37℃ 以上が続いたら病院へ」「A型は几帳面な傾向」</td></tr>
         </table>
-        <p style="margin-top:0.5rem">色のRGB値（0〜255の整数）は<strong>離散的な量的データ</strong>です。</p>
+
+        <div class="analogy" style="margin-top:0.6rem">
+          料理で例えると ── <strong>データ</strong> は「冷蔵庫の中の食材（生のニンジン、玉ねぎ、肉）」、<strong>情報</strong> は「これらを使うとカレーが作れる、と気づくこと」、<strong>知識</strong> は「お客さんに合わせて辛さを調整する経験則」。生の食材だけでは料理にならないし、レシピだけでは美味しくならない。
+        </div>
+
+        <div class="callout-info" style="margin-top:0.6rem">
+          <h4>各段階で「漏れ」がある ── ピラミッドが逆三角形なのはそのため</h4>
+          <p>世界には<strong>まだデータ化できていないもの</strong>がたくさんあります。職人の勘、表情の微妙な変化、深海や宇宙の未観測領域、絶滅した生物の生態 ── こうしたものは数値にも記号にもなっていません。さらに、せっかくデータ化されても <strong>人間が解釈できないもの</strong>（ノイズだらけのセンサー値、膨大すぎて読めないログ）や、<strong>情報になっても活かしきれないもの</strong>（書かれているのに誰も読まないレポート）が大量に存在します。</p>
+          <p style="margin-top:0.4rem">図の左側に出ている<strong style="color:#FF5252">赤い矢印</strong>が、それぞれの段階で「外に漏れていくもの」を表しています。データサイエンスとは、<strong>この漏れをいかに減らして、世界の現象を行動可能な知識に変換するか</strong>という挑戦です。</p>
+        </div>
+
+        <p style="margin-top:0.6rem;font-size:0.9rem">この授業で扱う <code>print(36.5)</code> や CSV ファイルの中身は <strong>「データ」</strong>。それを Python で集計・可視化して人が理解できる形にすると <strong>「情報」</strong>。さらに「だから次はこうしよう」と意思決定に繋げると <strong>「知識」</strong>になります。<u>そして、まだ誰もデータ化していない現象を新しく測定できるようにすることも、データサイエンスの大事な仕事</u>です。</p>
+      </div>
+
+      <div class="concept-box" style="margin-top:0.5rem">
+        <h4>データの種類 ── 種類によって「できる処理」と「向いてるグラフ」が違う</h4>
+        <p>データの種類は4つに分かれ、それぞれ <strong>使える計算（統計量）</strong> と <strong>適切なグラフ</strong> が決まっています。種類を間違えると、平均0.5血液型のような<strong>意味のない計算</strong>をしてしまいます。</p>
+
+        <table style="margin-top:0.6rem">
+          <tr>
+            <th style="width:11%">大分類</th>
+            <th style="width:11%">種類</th>
+            <th style="width:18%">例</th>
+            <th style="width:30%">できる処理（統計量）</th>
+            <th style="width:30%">適したグラフ</th>
+          </tr>
+          <tr>
+            <td rowspan="2" style="background:rgba(118,185,0,0.08)"><strong style="color:#76B900">量的データ</strong><br><span style="color:#999;font-size:0.78rem">数値で表現／四則演算ができる</span></td>
+            <td><strong>連続</strong><br><span style="color:#999;font-size:0.78rem">小数あり</span></td>
+            <td>身長、体重、気温、時間</td>
+            <td>四則演算 / <strong>平均・中央値・最頻値</strong> / 標準偏差・分散 / 相関係数</td>
+            <td><strong>ヒストグラム</strong>、折れ線グラフ、散布図、箱ひげ図</td>
+          </tr>
+          <tr>
+            <td><strong>離散</strong><br><span style="color:#999;font-size:0.78rem">整数のみ</span></td>
+            <td>人数、回数、個数、サイコロの目</td>
+            <td>四則演算 / 平均・中央値・最頻値 / 合計</td>
+            <td><strong>棒グラフ</strong>、ヒストグラム、折れ線グラフ</td>
+          </tr>
+          <tr>
+            <td rowspan="2" style="background:rgba(79,195,247,0.08)"><strong style="color:#4FC3F7">質的データ</strong><br><span style="color:#999;font-size:0.78rem">カテゴリで表現／四則演算は意味なし</span></td>
+            <td><strong>名義</strong><br><span style="color:#999;font-size:0.78rem">順序なし</span></td>
+            <td>血液型、性別、都道府県、色名</td>
+            <td><strong>度数（カウント）</strong> / <strong>最頻値</strong> / 比率<br><span style="color:#FF5252;font-size:0.8rem">✗ 平均・合計はNG（A型+B型=?）</span></td>
+            <td><strong>円グラフ</strong>、棒グラフ（並び替え自由）</td>
+          </tr>
+          <tr>
+            <td><strong>順序</strong><br><span style="color:#999;font-size:0.78rem">順序あり、間隔は不明</span></td>
+            <td>成績(A/B/C)、満足度(5段階)、震度</td>
+            <td>度数 / <strong>中央値</strong> / 最頻値 / 順位<br><span style="color:#FF5252;font-size:0.8rem">△ 平均は要注意（5段階の平均3.7に厳密な意味はない）</span></td>
+            <td><strong>棒グラフ</strong>（順序を保つ）、累積分布</td>
+          </tr>
+        </table>
+
+        <div class="callout-tip" style="margin-top:0.8rem">
+          <h4>なぜ種類で分けるの？ ── やってはいけない計算がある</h4>
+          <ul class="point-list">
+            <li><strong>名義尺度に平均を取るな</strong>: 「A型・B型・O型・AB型の平均」に意味はない。<u>カウントと比率</u>だけが使える</li>
+            <li><strong>順序尺度の平均は要注意</strong>: 「満足度1〜5」の平均が3.7でも、満足度2と3の差と、4と5の差が等しい保証はない</li>
+            <li><strong>量的データはほぼ何でもOK</strong>: 平均・分散・相関と、強力な統計手法が全部使える</li>
+            <li><strong>グラフ選び</strong>: 質的データに <u>折れ線グラフはNG</u>（点と点を線で繋ぐ意味がない）。連続データに <u>円グラフはNG</u>（カテゴリじゃない）</li>
+          </ul>
+        </div>
+
+        <!-- グラフの目安をミニチャートで可視化 -->
+        <div style="margin:1rem 0;text-align:center">
+          <svg viewBox="0 0 640 220" style="max-width:640px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" xmlns="http://www.w3.org/2000/svg">
+            <text x="320" y="22" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="13" font-weight="bold">向いているグラフのイメージ</text>
+
+            <!-- ヒストグラム（連続） -->
+            <g transform="translate(20,50)">
+              <text x="70" y="0" text-anchor="middle" fill="#76B900" font-size="11" font-weight="bold">ヒストグラム</text>
+              <text x="70" y="14" text-anchor="middle" fill="#999" font-size="9">連続データの分布</text>
+              <rect x="20" y="80" width="14" height="40" fill="#76B900" fill-opacity="0.6"/>
+              <rect x="36" y="60" width="14" height="60" fill="#76B900" fill-opacity="0.6"/>
+              <rect x="52" y="40" width="14" height="80" fill="#76B900" fill-opacity="0.6"/>
+              <rect x="68" y="55" width="14" height="65" fill="#76B900" fill-opacity="0.6"/>
+              <rect x="84" y="75" width="14" height="45" fill="#76B900" fill-opacity="0.6"/>
+              <rect x="100" y="95" width="14" height="25" fill="#76B900" fill-opacity="0.6"/>
+              <line x1="18" y1="120" x2="120" y2="120" stroke="#888" stroke-width="1.5"/>
+            </g>
+
+            <!-- 棒グラフ（離散・名義） -->
+            <g transform="translate(160,50)">
+              <text x="70" y="0" text-anchor="middle" fill="#76B900" font-size="11" font-weight="bold">棒グラフ</text>
+              <text x="70" y="14" text-anchor="middle" fill="#999" font-size="9">離散・カテゴリ別の比較</text>
+              <rect x="22" y="50" width="20" height="70" fill="#4FC3F7" fill-opacity="0.6"/>
+              <rect x="52" y="35" width="20" height="85" fill="#4FC3F7" fill-opacity="0.6"/>
+              <rect x="82" y="70" width="20" height="50" fill="#4FC3F7" fill-opacity="0.6"/>
+              <rect x="112" y="55" width="20" height="65" fill="#4FC3F7" fill-opacity="0.6"/>
+              <line x1="18" y1="120" x2="140" y2="120" stroke="#888" stroke-width="1.5"/>
+              <text x="32" y="135" text-anchor="middle" fill="#999" font-size="9">A</text>
+              <text x="62" y="135" text-anchor="middle" fill="#999" font-size="9">B</text>
+              <text x="92" y="135" text-anchor="middle" fill="#999" font-size="9">O</text>
+              <text x="122" y="135" text-anchor="middle" fill="#999" font-size="9">AB</text>
+            </g>
+
+            <!-- 折れ線グラフ（時系列・連続） -->
+            <g transform="translate(320,50)">
+              <text x="70" y="0" text-anchor="middle" fill="#76B900" font-size="11" font-weight="bold">折れ線グラフ</text>
+              <text x="70" y="14" text-anchor="middle" fill="#999" font-size="9">時系列・推移</text>
+              <polyline points="20,90 40,70 60,80 80,50 100,45 120,30" fill="none" stroke="#FFB800" stroke-width="2.5"/>
+              <circle cx="20" cy="90" r="3" fill="#FFB800"/>
+              <circle cx="40" cy="70" r="3" fill="#FFB800"/>
+              <circle cx="60" cy="80" r="3" fill="#FFB800"/>
+              <circle cx="80" cy="50" r="3" fill="#FFB800"/>
+              <circle cx="100" cy="45" r="3" fill="#FFB800"/>
+              <circle cx="120" cy="30" r="3" fill="#FFB800"/>
+              <line x1="18" y1="120" x2="125" y2="120" stroke="#888" stroke-width="1.5"/>
+            </g>
+
+            <!-- 円グラフ（名義） -->
+            <g transform="translate(480,50)">
+              <text x="70" y="0" text-anchor="middle" fill="#76B900" font-size="11" font-weight="bold">円グラフ</text>
+              <text x="70" y="14" text-anchor="middle" fill="#999" font-size="9">名義データの構成比</text>
+              <!-- pie chart with 4 segments -->
+              <path d="M 70,75 L 70,30 A 45,45 0 0,1 110,90 Z" fill="#FF5252" fill-opacity="0.7"/>
+              <path d="M 70,75 L 110,90 A 45,45 0 0,1 50,110 Z" fill="#4FC3F7" fill-opacity="0.7"/>
+              <path d="M 70,75 L 50,110 A 45,45 0 0,1 30,60 Z" fill="#FFB800" fill-opacity="0.7"/>
+              <path d="M 70,75 L 30,60 A 45,45 0 0,1 70,30 Z" fill="#76B900" fill-opacity="0.7"/>
+            </g>
+
+            <!-- 散布図（量的×量的） -->
+            <g transform="translate(80,180)">
+              <text x="0" y="-3" fill="#bbb" font-size="11" font-weight="bold">散布図 ── 2つの量的データの関係（身長×体重など）</text>
+              <line x1="0" y1="20" x2="180" y2="20" stroke="#888" stroke-width="1"/>
+              <circle cx="20" cy="15" r="2.5" fill="#76B900"/>
+              <circle cx="40" cy="12" r="2.5" fill="#76B900"/>
+              <circle cx="55" cy="10" r="2.5" fill="#76B900"/>
+              <circle cx="70" cy="8" r="2.5" fill="#76B900"/>
+              <circle cx="85" cy="6" r="2.5" fill="#76B900"/>
+              <circle cx="100" cy="5" r="2.5" fill="#76B900"/>
+              <circle cx="115" cy="3" r="2.5" fill="#76B900"/>
+              <circle cx="130" cy="2" r="2.5" fill="#76B900"/>
+              <circle cx="145" cy="0" r="2.5" fill="#76B900"/>
+              <circle cx="160" cy="-2" r="2.5" fill="#76B900"/>
+            </g>
+
+            <!-- 箱ひげ図 -->
+            <g transform="translate(380,180)">
+              <text x="0" y="-3" fill="#bbb" font-size="11" font-weight="bold">箱ひげ図 ── 量的データのばらつき</text>
+              <line x1="20" y1="10" x2="20" y2="30" stroke="#FFB800" stroke-width="1.5"/>
+              <line x1="60" y1="10" x2="60" y2="30" stroke="#FFB800" stroke-width="1.5"/>
+              <line x1="20" y1="20" x2="60" y2="20" stroke="#FFB800" stroke-width="1.5"/>
+              <rect x="22" y="13" width="36" height="14" fill="#FFB800" fill-opacity="0.4" stroke="#FFB800" stroke-width="1.5"/>
+              <line x1="40" y1="13" x2="40" y2="27" stroke="#FFB800" stroke-width="2"/>
+              <line x1="100" y1="10" x2="100" y2="30" stroke="#4FC3F7" stroke-width="1.5"/>
+              <line x1="150" y1="10" x2="150" y2="30" stroke="#4FC3F7" stroke-width="1.5"/>
+              <line x1="100" y1="20" x2="150" y2="20" stroke="#4FC3F7" stroke-width="1.5"/>
+              <rect x="105" y="15" width="40" height="10" fill="#4FC3F7" fill-opacity="0.4" stroke="#4FC3F7" stroke-width="1.5"/>
+              <line x1="125" y1="15" x2="125" y2="25" stroke="#4FC3F7" stroke-width="2"/>
+            </g>
+          </svg>
+        </div>
+
+        <p style="margin-top:0.5rem">色のRGB値（0〜255の整数）は<strong>離散的な量的データ</strong>。だから RGB の<strong>平均を取って色を混ぜる</strong>こともできるし、<strong>ヒストグラムで色の分布</strong>を出すこともできる ── これが第3回以降の画像処理の出発点です。</p>
       </div>
 
       <div style="margin:1.5rem 0;text-align:center">
@@ -1077,6 +1704,11 @@ name <span class="op">=</span> <span class="str">"py5"</span>   <span class="cmt
       <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
         <div style="color:#76B900;font-weight:700">2. 繰り返し処理</div>
         <div style="color:#999">約40分</div>
+      </div>
+      <div style="color:#76B900;display:flex;align-items:center">&rarr;</div>
+      <div style="background:#1A1A1A;border:1px solid #FFB800;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
+        <div style="color:#FFB800;font-weight:700">口頭試問</div>
+        <div style="color:#999">約60分</div>
       </div>
       <div style="color:#76B900;display:flex;align-items:center">&rarr;</div>
       <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
@@ -1147,18 +1779,76 @@ name <span class="op">=</span> <span class="str">"py5"</span>   <span class="cmt
       <p>以下のstep2-1〜step2-5のコードをすべて実行し、<strong>各コードにコメントを追加</strong>してNotionに記録してください。</p>
       <p style="margin-top:0.5rem;color:#FFB800;font-weight:700">この授業を知らない人が読んでも分かる文書にすること。</p>
 
+      <div class="callout-tip" style="margin-top:1rem;border-left:4px solid #FFB800">
+        <h4>🤝 グループ学習の進め方 ── 「担当制 + ランダム指名」で全員理解を目指す</h4>
+        <p>各 step は「実行できた」で終わらせず、<strong>グループの出席メンバー全員が理解し、人に説明できる状態</strong>を目指してください。以下の手順で進めるのがおすすめです。</p>
+
+        <table style="margin-top:0.6rem">
+          <tr><th style="width:18%">フェーズ</th><th style="width:14%">時間目安</th><th>やること</th></tr>
+          <tr>
+            <td><strong>① 担当決め</strong></td>
+            <td>1分</td>
+            <td>step2-1 〜 step2-5 を <strong>各メンバーで分担</strong>。出席人数 &lt; 5 ならステップ複数担当、人数 &gt; 5 なら2人ペア担当でOK</td>
+          </tr>
+          <tr>
+            <td><strong>② 個別読み込み</strong></td>
+            <td>3〜5分</td>
+            <td>全員が <strong>すべての step</strong> を黙読＆コードを実行。担当の step は<u>特に深く</u>読んでおく（「人に説明できる」レベル）</td>
+          </tr>
+          <tr>
+            <td><strong>③ 順番に解説</strong></td>
+            <td>step毎 3分</td>
+            <td><strong>担当者が順番にコードを画面共有しながら説明</strong>。「ここで <code>i*70</code> しているのは...」のように<u>1行ずつ</u>。聴き手はメモを取る</td>
+          </tr>
+          <tr style="background:rgba(255,107,0,0.08)">
+            <td><strong>④ ランダム深掘り</strong></td>
+            <td>step毎 2分</td>
+            <td>説明後、<strong>担当者が別のメンバーをランダム指名</strong>して「<code>range(5)</code> を <code>range(3)</code> にしたら？」のような <strong>変更系の問い</strong>をぶつける。指名された人は答える</td>
+          </tr>
+          <tr>
+            <td><strong>⑤ 全員チェック</strong></td>
+            <td>1分</td>
+            <td>「全員、自分の言葉で説明できる？」を声に出して確認。詰まる人がいたらその step に戻る</td>
+          </tr>
+        </table>
+
+        <div class="callout-info" style="margin-top:0.7rem">
+          <h4>なぜこの方法？ ── 「担当制」だけでは弱い理由</h4>
+          <p>単純に分担するだけだと、自分の担当 step だけを深く読み、<strong>他の step は流し聞き</strong>になりがち。これを防ぐのが <strong>④ ランダム深掘り</strong>です。「自分も指名されるかもしれない」と思うと、全員が全 step に集中せざるを得なくなります。これは教育学で<strong>ジグソー法（Jigsaw Method）</strong>＋<strong>コールド・コール</strong>と呼ばれる、小グループ学習で最も効果が実証されている手法の組み合わせです。</p>
+        </div>
+
+        <p style="margin-top:0.5rem;font-size:0.9rem"><strong>ランダム指名のやり方</strong> ── じゃんけん、ペットボトルを回して止まった人、Notion に名前を入れてランダム抽出、何でもOK。<u>「自分以外」を指名するのがコツ</u>。</p>
+
+        <p style="margin-top:0.4rem;font-size:0.9rem"><strong>「教える側」も得をする</strong> ── 人に説明する過程で<u>自分の理解の穴に気づく</u>のが最大のメリット。教えながら詰まったらそれが学習のチャンスです。</p>
+
+        <p style="margin-top:0.5rem;font-size:0.9rem"><span class="sa-check-tag" style="display:inline-block;margin-right:0.4rem;background:#FF6B00;color:#fff;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px">SA確認</span>SAが各 step の節目で「グループの誰かを指名して説明してもらう」ので、全員準備しておきましょう（授業時間外はSA確認不要）。</p>
+      </div>
+
       <div class="callout-info" style="margin-top:1rem">
         <h4>作業ディレクトリの準備</h4>
         <p>ターミナルで以下を実行して、今回の作業ディレクトリに移動してください。</p>
       </div>
 
       <pre><span class="code-label">Terminal</span>
-<span class="fn">cd</span> ~/MD1/no2
+<span class="fn">cd</span> ~/Lecture/MD1/no2
 <span class="fn">source</span> .venv/bin/activate</pre>
 
       <div class="callout-warning">
         <h4>仮想環境の確認</h4>
         <p>プロンプトの先頭に <code>(.venv)</code> が表示されていることを確認してください。表示されていない場合は <code>source .venv/bin/activate</code> を実行してください。</p>
+      </div>
+
+      <div class="callout-warning" style="margin-top:0.8rem">
+        <h4>▶ ボタンで <code>ModuleNotFoundError: No module named 'py5'</code> が出たら</h4>
+        <p>VSCode の ▶ ボタンが <strong>仮想環境ではない別の Python</strong> で実行している状態です。py5 は <code>.venv</code> の中だけにあるので、エラーになります。</p>
+        <p style="margin-top:0.5rem"><strong>解決手順:</strong></p>
+        <ol class="point-list">
+          <li>VSCode <strong>画面右下のステータスバー</strong>に <code>Python 3.x.x ...</code> という表示をクリック</li>
+          <li>（出ない場合は <kbd>&#8984; + Shift + P</kbd> / <kbd>Ctrl + Shift + P</kbd> → 「<strong>Python: Select Interpreter</strong>」）</li>
+          <li>パスに <strong><code>.venv/bin/python</code></strong>（Win: <code>.venv\Scripts\python.exe</code>）が含まれるものを選ぶ</li>
+          <li>再度 ▶ をクリックで実行できる</li>
+        </ol>
+        <p style="font-size:0.85rem;color:#999;margin-top:0.4rem">※ 詳細は<a href="week01.html#py5-troubleshooting" style="color:#76B900">第1回の対処法</a>と同じ。設定はフォルダ単位で記憶されるので、no2 で一度設定すれば step2-1〜2-5 全部に効きます。</p>
       </div>
     </div>
 
@@ -1332,7 +2022,7 @@ py5.<span class="fn">run_sketch</span>()</pre>
       <div class="concept-box">
         <h4>二重ループの仕組み</h4>
         <p>外側のループ（x）が1回進むごとに、内側のループ（y）が5回実行されます。合計 5 &times; 5 = <strong>25個</strong>の四角形が描画されます。</p>
-        <p style="margin-top:0.5rem;color:#FFB800;font-weight:700">実験: range(5) を range(20) に変えてみよう。描画数は 20&times;20 = 400個になります。さらに range(50) にすると？</p>
+        <p style="margin-top:0.5rem;color:#FFB800;font-weight:700">実験: range(5) を range(10) に変えてみよう。描画数は 10&times;10 = 100個になります。さらに range(50) にすると？</p>
       </div>
 
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
@@ -1348,7 +2038,7 @@ py5.<span class="fn">run_sketch</span>()</pre>
         <span class="tag tag-note">ノート</span>
         <h3>口頭試問 <span class="exam-alert">全員参加</span></h3>
       </div>
-      <p>グループ内で口頭試問を行います。1人2問ずつ出題し、他のメンバーが回答します。</p>
+      <p>グループ内で口頭試問を行います。1人3問ずつ出題し、他のメンバーが回答します。</p>
       <p style="font-size:0.75rem;color:#999;margin-top:0.5rem"><strong style="color:#93D500">注意:</strong> 出席メンバで取り組むこと。欠席またはリアルタイムに受講できなかった場合は、授業後にSlackでグループメンバに質問し回答を得ること（どうしても回答が得られなかった場合は空欄でも構わない）。</p>
 
       <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:10px;padding:1rem;margin:1rem 0">
@@ -1426,14 +2116,50 @@ py5.<span class="fn">run_sketch</span>()</pre>
       <text x="675" y="72" text-anchor="middle" fill="#FFB800" font-size="16" font-weight="700">HSB（色相・彩度・明度）</text>
       <text x="675" y="92" text-anchor="middle" fill="#999" font-size="12">H=0~360, S=0~100, B=0~100</text>
 
-      <!-- Color wheel simplified -->
-      <circle cx="570" cy="200" r="65" fill="none" stroke="#FF0000" stroke-width="8" stroke-dasharray="34 170"/>
-      <circle cx="570" cy="200" r="65" fill="none" stroke="#FFFF00" stroke-width="8" stroke-dasharray="34 170" stroke-dashoffset="-34"/>
-      <circle cx="570" cy="200" r="65" fill="none" stroke="#00FF00" stroke-width="8" stroke-dasharray="34 170" stroke-dashoffset="-68"/>
-      <circle cx="570" cy="200" r="65" fill="none" stroke="#00FFFF" stroke-width="8" stroke-dasharray="34 170" stroke-dashoffset="-102"/>
-      <circle cx="570" cy="200" r="65" fill="none" stroke="#0000FF" stroke-width="8" stroke-dasharray="34 170" stroke-dashoffset="-136"/>
-      <circle cx="570" cy="200" r="65" fill="none" stroke="#FF00FF" stroke-width="8" stroke-dasharray="34 170" stroke-dashoffset="-170"/>
-      <text x="570" y="205" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">H: 色相環</text>
+      <!-- Color wheel ── 12 segments + degree labels -->
+      <!-- Segments (30° each, colored by central hue, going clockwise from top=0°) -->
+      <!-- Each path: M center L (start of arc) A r,r 0 0,1 (end of arc) Z -->
+      <path d="M 570,200 L 570,135 A 65,65 0 0,1 602.5,143.7 Z" fill="#FF0000"/>
+      <path d="M 570,200 L 602.5,143.7 A 65,65 0 0,1 626.3,167.5 Z" fill="#FF8000"/>
+      <path d="M 570,200 L 626.3,167.5 A 65,65 0 0,1 635,200 Z" fill="#FFFF00"/>
+      <path d="M 570,200 L 635,200 A 65,65 0 0,1 626.3,232.5 Z" fill="#80FF00"/>
+      <path d="M 570,200 L 626.3,232.5 A 65,65 0 0,1 602.5,256.3 Z" fill="#00FF00"/>
+      <path d="M 570,200 L 602.5,256.3 A 65,65 0 0,1 570,265 Z" fill="#00FF80"/>
+      <path d="M 570,200 L 570,265 A 65,65 0 0,1 537.5,256.3 Z" fill="#00FFFF"/>
+      <path d="M 570,200 L 537.5,256.3 A 65,65 0 0,1 513.7,232.5 Z" fill="#0080FF"/>
+      <path d="M 570,200 L 513.7,232.5 A 65,65 0 0,1 505,200 Z" fill="#0000FF"/>
+      <path d="M 570,200 L 505,200 A 65,65 0 0,1 513.7,167.5 Z" fill="#8000FF"/>
+      <path d="M 570,200 L 513.7,167.5 A 65,65 0 0,1 537.5,143.7 Z" fill="#FF00FF"/>
+      <path d="M 570,200 L 537.5,143.7 A 65,65 0 0,1 570,135 Z" fill="#FF0080"/>
+
+      <!-- Inner white hub for clean look -->
+      <circle cx="570" cy="200" r="22" fill="#141414" stroke="#333" stroke-width="1"/>
+      <text x="570" y="198" text-anchor="middle" fill="#E0E0E0" font-size="9" font-weight="700">H</text>
+      <text x="570" y="210" text-anchor="middle" fill="#999" font-size="7">色相環</text>
+
+      <!-- Tick marks at 0, 60, 120, 180, 240, 300 (just outside the wheel) -->
+      <!-- 0° (top) -->
+      <line x1="570" y1="128" x2="570" y2="118" stroke="#bbb" stroke-width="1.5"/>
+      <text x="570" y="113" text-anchor="middle" fill="#FF6B6B" font-size="11" font-weight="700">0°</text>
+      <!-- 60° (upper right) -->
+      <line x1="630.6" y1="164" x2="639.3" y2="159" stroke="#bbb" stroke-width="1.5"/>
+      <text x="650" y="157" text-anchor="middle" fill="#FFE066" font-size="11" font-weight="700">60°</text>
+      <!-- 120° (lower right) -->
+      <line x1="630.6" y1="236" x2="639.3" y2="241" stroke="#bbb" stroke-width="1.5"/>
+      <text x="650" y="248" text-anchor="middle" fill="#7DDF64" font-size="11" font-weight="700">120°</text>
+      <!-- 180° (bottom) -->
+      <line x1="570" y1="272" x2="570" y2="282" stroke="#bbb" stroke-width="1.5"/>
+      <text x="570" y="294" text-anchor="middle" fill="#5EE3E3" font-size="11" font-weight="700">180°</text>
+      <!-- 240° (lower left) -->
+      <line x1="509.4" y1="236" x2="500.7" y2="241" stroke="#bbb" stroke-width="1.5"/>
+      <text x="490" y="248" text-anchor="middle" fill="#7B7BFF" font-size="11" font-weight="700">240°</text>
+      <!-- 300° (upper left) -->
+      <line x1="509.4" y1="164" x2="500.7" y2="159" stroke="#bbb" stroke-width="1.5"/>
+      <text x="490" y="157" text-anchor="middle" fill="#FF6BD6" font-size="11" font-weight="700">300°</text>
+
+      <!-- Direction arrow (clockwise) -->
+      <path d="M 590,113 A 78,78 0 0,1 615,128" fill="none" stroke="#666" stroke-width="1.2" stroke-dasharray="2,2"/>
+      <text x="615" y="120" fill="#666" font-size="8">時計回り</text>
 
       <!-- HSB examples -->
       <text x="670" y="135" fill="#E0E0E0" font-size="13">H=0: 赤</text>
@@ -1560,47 +2286,6 @@ py5.<span class="fn">run_sketch</span>()</pre>
       </div>
     </div>
 
-    <!-- インタラクティブ例 -->
-    <div class="card" style="border-left:4px solid #93D500">
-      <div class="card-header">
-        <span class="tag" style="background:#1a2e0a;color:#93D500">発展</span>
-        <h3>マウスで色を操作する（参考例）</h3>
-      </div>
-      <p><code>draw()</code> 関数を使うとアニメーションが作れます。マウスの位置で色が変わるインタラクティブな例を試してみましょう。</p>
-
-      <pre><span class="code-label">Python ── interactive_hsb.py</span>
-<span class="kw">import</span> py5
-
-<span class="kw">def</span> <span class="fn">setup</span>():
-    py5.<span class="fn">size</span>(<span class="num">800</span>, <span class="num">800</span>)
-    py5.<span class="fn">color_mode</span>(py5.HSB, <span class="num">360</span>, <span class="num">100</span>, <span class="num">100</span>)
-    py5.<span class="fn">no_stroke</span>()
-
-<span class="kw">def</span> <span class="fn">draw</span>():
-    py5.<span class="fn">background</span>(<span class="num">0</span>)
-    hue <span class="op">=</span> py5.<span class="fn">remap</span>(py5.mouse_x, <span class="num">0</span>, py5.width, <span class="num">0</span>, <span class="num">360</span>)
-    brightness <span class="op">=</span> py5.<span class="fn">remap</span>(py5.mouse_y, <span class="num">0</span>, py5.height, <span class="num">100</span>, <span class="num">0</span>)
-    py5.<span class="fn">fill</span>(hue, <span class="num">100</span>, brightness)
-    py5.<span class="fn">ellipse</span>(py5.width / <span class="num">2</span>, py5.height / <span class="num">2</span>, <span class="num">200</span>, <span class="num">200</span>)
-
-py5.<span class="fn">run_sketch</span>()</pre>
-
-      <div class="concept-box">
-        <h4>py5 座標系のルール</h4>
-        <p>py5のウィンドウでは<strong>左上が原点 (0, 0)</strong> です。x軸は右方向が正、y軸は<strong>下方向が正</strong>（数学の座標系とは逆）。<code>py5.width</code> がウィンドウの幅、<code>py5.height</code> が高さを返します。</p>
-      </div>
-
-      <div class="concept-box">
-        <h4>setup() と draw() の違い</h4>
-        <table>
-          <tr><th>関数</th><th>実行回数</th><th>用途</th></tr>
-          <tr><td><code>setup()</code></td><td>1回だけ</td><td>初期設定（ウィンドウサイズ、背景色など）</td></tr>
-          <tr><td><code>draw()</code></td><td>毎フレーム繰り返し（約60fps）</td><td>アニメーション、ユーザー操作への反応</td></tr>
-        </table>
-        <p style="margin-top:0.5rem"><code>remap()</code> は値の範囲を変換する関数です。マウスのx座標（0〜800）を色相（0〜360）に変換しています。</p>
-      </div>
-    </div>
-
   </div>
 </section>
 
@@ -1615,7 +2300,7 @@ py5.<span class="fn">run_sketch</span>()</pre>
     <div class="card standard" id="std2-4">
       <div class="card-header">
         <span class="tag tag-standard">標準課題</span>
-        <h3>std2-4: 自由制作 <span class="exam-alert">5/11にプレゼン</span></h3>
+        <h3>std2-4: 自由制作 <span class="exam-alert">5/11（第3回）にプレゼン</span></h3>
       </div>
       <p>今回学んだ<strong>順次制御・繰り返し処理（for文）・RGB/HSBカラー</strong>を活用して、視覚的に美しいコンテンツを制作してください。</p>
 
@@ -1673,6 +2358,75 @@ py5.<span class="fn">run_sketch</span>()</pre>
   </div>
 </section>
 
+<!-- ============ 5. ADVANCED ASSIGNMENTS ============ -->
+<section id="sec-advanced">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">5</div>
+      <h2>発展課題（任意） <span style="font-size:0.5rem;color:#999;font-weight:400">── 余裕がある人向け</span></h2>
+    </div>
+
+    <div class="callout-info" style="margin-top:0.5rem">
+      <h4>発展課題について</h4>
+      <p>発展課題は<strong>任意</strong>です。標準課題（std2-1〜std2-4）を完了してから取り組んでください。提出は <strong>コード＋実行結果＋音声説明（1〜2分）</strong> の3点セットを Notion に記録します。音声説明は教員・SAが内容を確認するため、<strong>「何を作ったか」だけでなく「どう作ったか／なぜそうしたか」</strong>を含めてください。</p>
+    </div>
+
+    <!-- adv2-1 オリジナル作品 -->
+    <div class="card advanced" id="adv2-1">
+      <div class="card-header">
+        <span class="tag tag-advanced">発展課題</span>
+        <h3>adv2-1: オリジナル作品（自由テーマ） <span class="exam-alert">音声説明必須</span></h3>
+      </div>
+      <p>テーマは完全に自由。今回学んだ技術（<strong>for文 / 二重ループ / RGB / HSB / draw() / マウス入力</strong>）を組み合わせて、自分なりの作品を制作してください。std2-4（自由制作）よりも<strong>1段難しいことに挑戦</strong>するのがおすすめです。</p>
+
+      <!-- 作品例の動画 -->
+      <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:10px;padding:1rem;margin:1rem 0;text-align:center">
+        <p style="font-size:0.95rem;font-weight:700;color:#FFB800;margin-bottom:0.6rem">作品例 ── 回転対称模様（rotationally symmetric）</p>
+        <video controls loop muted playsinline preload="metadata" style="max-width:100%;border-radius:8px;border:1px solid #333">
+          <source src="rotationally_symmetric.mov" type="video/quicktime">
+          <source src="rotationally_symmetric.mov" type="video/mp4">
+          お使いのブラウザは video タグに対応していません。<a href="rotationally_symmetric.mov" style="color:#FFB800">こちらからダウンロード</a>して再生してください。
+        </video>
+        <p style="font-size:0.8rem;color:#999;margin-top:0.6rem">中心からの<strong>角度（θ）と半径（r）</strong>を二重 for で回し、各点を <code>sin</code>/<code>cos</code> で配置しつつ HSB で色相を変化。<code>draw()</code> で <code>frame_count</code> を使い回転アニメーション化したサンプルです。</p>
+        <p style="font-size:0.8rem;color:#bbb;margin-top:0.4rem">※ これは<strong>1つの例</strong>に過ぎません。同じ模様をコピーするのではなく、これを参考に「自分のオリジナル」を作りましょう。</p>
+      </div>
+
+      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1rem;margin:1rem 0">
+        <p style="font-size:0.9rem;font-weight:700;color:#93D500;margin-bottom:0.5rem">挑戦例</p>
+        <table>
+          <tr><th style="width:30%">アイデア</th><th>使う技術</th></tr>
+          <tr><td>マウスで色が変わる花畑</td><td><code>draw()</code> + <code>mouse_x/y</code> + 二重 for + HSB</td></tr>
+          <tr><td>キャラクターのアニメーション</td><td><code>draw()</code> + <code>frame_count</code> で位置・色を変化</td></tr>
+          <tr><td>万華鏡（角度回転）</td><td>二重 for + 三角関数 (<code>sin</code>, <code>cos</code>) + HSB</td></tr>
+          <tr><td>ランダムスター</td><td><code>random</code> + for + 不透明度（α）</td></tr>
+          <tr><td>波打つグラデーション</td><td><code>draw()</code> + <code>frame_count</code> + sin 波 + HSB</td></tr>
+        </table>
+      </div>
+
+      <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:10px;padding:1.2rem;margin:1rem 0">
+        <p style="color:#FFB800;font-weight:700;font-size:1rem;margin-bottom:0.8rem">提出要件（3点セット）</p>
+        <table>
+          <tr><th style="width:30%">提出物</th><th>内容</th></tr>
+          <tr><td><strong style="color:#76B900">1. コード</strong></td><td>完成コード全体を Notion に貼り付け</td></tr>
+          <tr><td><strong style="color:#76B900">2. 実行結果</strong></td><td>スクリーンショット（動きがある場合は数枚）</td></tr>
+          <tr><td><strong style="color:#FFB800">3. 音声説明</strong></td><td>1〜2分の音声を Notion に添付</td></tr>
+        </table>
+        <p style="margin-top:0.8rem;font-size:0.9rem;color:#E0E0E0"><strong>音声で説明すること:</strong></p>
+        <ul class="point-list" style="margin-top:0.3rem">
+          <li>作品のテーマ・コンセプト（何を表現したかったか）</li>
+          <li>使った技術（for / 二重ループ / HSB / draw / mouse / random など、どれを採用したか）</li>
+          <li><strong>詰まった所と解決方法</strong>（エラーの原因、ロジックの工夫など）</li>
+        </ul>
+      </div>
+
+      <div class="notion-submit">
+        <strong>Notion ノートに記録してください</strong> ── コード / スクリーンショット / 音声ファイル の3点
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <!-- ============ NOTION TEMPLATE ============ -->
 <section id="sec-notion">
   <div class="container">
@@ -1712,12 +2466,16 @@ py5.<span class="fn">run_sketch</span>()</pre>
 （スクリーンショットを貼り付け）
 ### コメント
 （このコードが何をしているか、自分の言葉で説明）
+### やってみよう
+（range の数を変えた結果のメモ ── 例: range(3) では3個、range(8) では8個になり、画面からはみ出した）
 
 ## step2-2: 色の変化
 ### 実行結果
 （スクリーンショットを貼り付け）
 ### コメント
 （fill(50*i, 0, 0) でどのように色が変わるか説明）
+### やってみよう
+（数値や色チャネルを変更した結果の記録 ── 例: fill(0, 50*i, 0) にしたら緑のグラデーションになった）
 
 ## step2-3: 同心円（修正前と修正後）
 ### 修正前の実行結果
@@ -1739,7 +2497,23 @@ py5.<span class="fn">run_sketch</span>()</pre>
 ### 実行結果
 （スクリーンショットを貼り付け）
 ### コメント
-（二重ループがどのように動くか説明。range の数を変えた実験結果も記録）
+（二重ループがどのように動くか説明）
+### やってみよう（処理時間の体感）
+| range の値 | 描画数 | 体感速度（瞬時／少し待つ／重い） |
+|------|------|------|
+| range(5) | 25個 |  |
+| range(10) | 100個 |  |
+| range(50) | 2,500個 |  |
+
+---
+
+## 実験1: RGB vs HSB の比較
+### 実行結果
+（experiment1.py のスクリーンショット ── 左の赤円(RGB)と右の赤円(HSB)）
+### 確認できたこと
+- RGB(255,0,0) と HSB(0,100,100) が同じ「赤」になることを確認した／しなかった
+- color_mode を切り替える書き方を理解した／していない
+- HSBの H=0 が赤になる理由（色相環の開始位置）を説明できる／できない
 
 ---
 
@@ -1758,7 +2532,7 @@ py5.<span class="fn">run_sketch</span>()</pre>
 ---
 
 ## 標準課題 std2-2: 授業ノート
-（上記の step2-1〜step2-5 の記録がこれに該当します）
+（上の「step2-1: 横一列に5つの四角形」〜「step2-5: 二重ループ格子状」の各セクションがそのまま std2-2 に該当します。重複して書く必要はありません ── 上のセクションをきちんと埋めてあれば std2-2 は完了です）
 
 ---
 
@@ -1778,7 +2552,21 @@ py5.<span class="fn">run_sketch</span>()</pre>
 ### View
 （実行結果のスクリーンショットを貼り付け）
 ### 説明
-（工夫した点・for文の使い方・色の選び方を説明）</pre>
+（工夫した点・for文の使い方・色の選び方を説明）
+
+---
+
+## 発展課題 adv2-1: オリジナル作品（※取り組まない場合はこのセクションごと削除）
+### テーマ
+（何を表現したかったか）
+### Code
+（完成コードを貼り付け）
+### View
+（スクリーンショット ── 動きがある場合は数枚）
+### 音声説明（1〜2分の音声ファイルを添付）
+- 作品のテーマ・コンセプト
+- 使った技術（for / 二重ループ / HSB / draw / mouse / random など）
+- 詰まった所と解決方法</pre>
 
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
         <strong>Notionに書いただけでは提出にならない。</strong>必ずPDFにエクスポートし、Google Classroomに提出すること。

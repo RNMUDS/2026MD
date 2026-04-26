@@ -4,7 +4,14 @@
  *
  * 使い方:
  *   node encrypt-answers.js <password> <file.html> [file2.html ...]
- *   node encrypt-answers.js <password> --all   # week*.html を一括処理
+ *   node encrypt-answers.js <password> --all   # week*.html を一括処理（同一PW）
+ *
+ * ⚠️ パスワード運用ルール:
+ *   各週ごとに異なるパスワードを使用すること。
+ *   1つが漏れても他週の解答は守られる設計。
+ *   通常は --all を使わず、ファイル単位で実行する:
+ *     node encrypt-answers.js <pw_week01> docs/week01.html
+ *     node encrypt-answers.js <pw_week02> docs/week02.html
  *
  * 処理:
  *   1. <div id="answers-content"> 〜 対応する閉じタグの中身を抽出

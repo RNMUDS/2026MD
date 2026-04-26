@@ -549,13 +549,16 @@ a.sub-item:hover {
   border-color: #76B900;
 }
 
-/* ============ SECTION NAV (sticky) ============ */
-.section-nav { 
-  position: sticky;
+/* ============ SECTION NAV (always visible at top) ============ */
+.section-nav {
+  position: fixed;
   top: 0;
-  z-index: 100;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   background: rgba(17,17,17,0.95);
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid #222;
   padding: 0.2rem 0;
   display: flex;
@@ -563,6 +566,8 @@ a.sub-item:hover {
   gap: 0.3rem;
   flex-wrap: wrap;
 }
+/* Push body content down to make room for fixed nav */
+body { padding-top: 2.2rem; }
 .section-nav a { 
   color: #999;
   text-decoration: none;
@@ -578,7 +583,8 @@ a.sub-item:hover {
 .section-nav a.nav-exam { color: #FFB800; }
 
 /* ============ SCROLL TARGET OFFSET ============ */
-[id] { scroll-margin-top: 3rem; }
+/* Account for fixed nav (~2.2rem) so anchor jumps land below it */
+[id] { scroll-margin-top: 3.5rem; }
 
 /* ============ REDUCED MOTION ============ */
 @media (prefers-reduced-motion: reduce) {
@@ -2152,6 +2158,21 @@ cd MD1/no1</code></pre>
 py5.run_sketch()</code></pre>
       <p style="font-size:0.8rem;color:#999">白い矩形が表示されたウィンドウが開けば成功です。確認できたらウィンドウを閉じてください（ウィンドウ左上の × ボタン、または <kbd>&#8984; + W</kbd>）。</p>
 
+      <div class="callout-warning" id="py5-troubleshooting" style="margin-top:1rem">
+        <h4>▶ ボタンを押したら <code>ModuleNotFoundError: No module named 'py5'</code> と出る場合</h4>
+        <p>これは VSCode が <strong>仮想環境（.venv）の Python ではなく、別の Python で実行している</strong>のが原因です。py5 は <code>.venv</code> の中だけにインストールされているので、別の Python では見つかりません。</p>
+
+        <p style="margin-top:0.6rem"><strong>対処法 ── インタープリターを <code>.venv</code> のものに切り替える</strong></p>
+        <ol class="point-list">
+          <li>VSCode の <strong>画面右下のステータスバー</strong>を見る。<code>Python 3.x.x ('xxx': ...)</code> のような表示があるはず</li>
+          <li>そこをクリック（または <kbd>&#8984; + Shift + P</kbd> / <kbd>Ctrl + Shift + P</kbd> → 「<strong>Python: Select Interpreter</strong>」と入力して選択）</li>
+          <li>表示されたリストから、パスに <strong><code>.venv/bin/python</code></strong>（Win: <code>.venv\Scripts\python.exe</code>）が含まれるものを選ぶ。「<strong>Recommended</strong>」と書かれているものでもOK</li>
+          <li>再度 ▶ ボタンを押すと、今度は py5 が読み込めて実行できる</li>
+        </ol>
+
+        <p style="margin-top:0.6rem;font-size:0.85rem;color:#999">※ 一度設定すると、そのフォルダを開いている間は VSCode が記憶します。次に <code>code .</code> で開き直したときも有効。<br>※ それでも動かない場合は、ターミナルで <code>uv pip list</code> を実行して py5 が入っているか確認。入っていなければ <code>uv pip install py5</code> をやり直す。</p>
+      </div>
+
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">&#x1F590; やってみよう（1分）</p>
         <p style="color:#ccc;font-size:0.9rem"><code>py5.rect</code> の引数を変えてみよう。例えば <code>py5.rect(0, 0, 200, 200)</code> にするとどうなる？ 座標とサイズの関係を体感しよう。</p>
@@ -2679,7 +2700,7 @@ py5.run_sketch()           <span class="cmt"># プログラムを実行する</s
     <div class="card advanced" id="adv1-1">
       <div class="card-header">
         <span class="tag tag-advanced">発展課題</span>
-        <h3>adv1-1: 応用図形の描画 <span class="exam-alert">音声説明あり</span></h3>
+        <h3>adv1-1: 応用図形の描画 <span class="exam-alert">音声説明必須</span></h3>
       </div>
       <p>3種類以上の図形（rect, ellipse, triangle, line など）を組み合わせて、1つの絵や模様を描画してください。</p>
 
@@ -2710,7 +2731,6 @@ py5.run_sketch()           <span class="cmt"># プログラムを実行する</s
       </div>
       <div class="notion-submit">
         <strong>Notionノートに記録してください</strong> ── コード / 実行結果 / 音声ファイル の3点を添付
-        <div style="margin-top:0.4rem;font-size:0.8rem;color:#FF6B00"><span class="sa-check-tag" style="display:inline-block;margin-left:0.5rem;background:#FF6B00;color:#fff;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px;vertical-align:middle">SA確認</span> SAさんのOKがもらえたら次に進んでください（授業時間外はSA確認不要）</div>
       </div>
     </div>
 
@@ -2718,7 +2738,7 @@ py5.run_sketch()           <span class="cmt"># プログラムを実行する</s
     <div class="card advanced" id="adv1-2">
       <div class="card-header">
         <span class="tag tag-advanced">発展課題</span>
-        <h3>adv1-2: 自由制作（テーマ: Minecraftのクリーパー） <span class="exam-alert">音声説明あり</span></h3>
+        <h3>adv1-2: 自由制作（テーマ: Minecraftのクリーパー） <span class="exam-alert">音声説明必須</span></h3>
       </div>
       <p>py5の基本図形（rect, ellipse など）を組み合わせて、Minecraftのクリーパーを描画してください。</p>
 
@@ -2748,7 +2768,6 @@ py5.run_sketch()           <span class="cmt"># プログラムを実行する</s
       </div>
       <div class="notion-submit">
         <strong>Notionノートに記録してください</strong> ── コード / 実行結果 / 音声ファイル の3点を添付
-        <div style="margin-top:0.4rem;font-size:0.8rem;color:#FF6B00"><span class="sa-check-tag" style="display:inline-block;margin-left:0.5rem;background:#FF6B00;color:#fff;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px;vertical-align:middle">SA確認</span> SAさんのOKがもらえたら次に進んでください（授業時間外はSA確認不要）</div>
       </div>
     </div>
 
@@ -2756,7 +2775,7 @@ py5.run_sketch()           <span class="cmt"># プログラムを実行する</s
     <div class="card advanced" id="adv1-3">
       <div class="card-header">
         <span class="tag tag-advanced">発展課題</span>
-        <h3>adv1-3: オリジナル作品 <span class="exam-alert">音声説明あり</span></h3>
+        <h3>adv1-3: オリジナル作品 <span class="exam-alert">音声説明必須</span></h3>
       </div>
       <p>テーマは自由。py5で好きな絵・キャラクター・模様・風景などを描いてください。</p>
 
@@ -2799,7 +2818,6 @@ py5.run_sketch()           <span class="cmt"># プログラムを実行する</s
 
       <div class="notion-submit">
         <strong>Notionノートに記録してください</strong> ── コード / 実行結果 / 音声ファイル の3点を添付
-        <div style="margin-top:0.4rem;font-size:0.8rem;color:#FF6B00"><span class="sa-check-tag" style="display:inline-block;margin-left:0.5rem;background:#FF6B00;color:#fff;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px;vertical-align:middle">SA確認</span> SAさんのOKがもらえたら次に進んでください（授業時間外はSA確認不要）</div>
       </div>
     </div>
 
