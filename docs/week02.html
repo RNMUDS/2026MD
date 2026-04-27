@@ -2403,6 +2403,31 @@ py5.<span class="fn">run_sketch</span>()</pre>
         </table>
       </div>
 
+      <div style="background:#1A1A1A;border:1px solid #4FC3F7;border-radius:10px;padding:1rem;margin:1rem 0">
+        <p style="font-size:0.9rem;font-weight:700;color:#4FC3F7;margin-bottom:0.6rem">ヒント: マウス入力の使い方</p>
+        <p style="font-size:0.88rem;color:#ccc">py5 では <code>mouse_x</code> / <code>mouse_y</code> でマウスの現在位置を取得できます。<code>draw()</code> の中で使うと、マウスに追従するインタラクティブな作品が作れます。</p>
+        <pre><span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">draw</span>():
+    py5.<span class="fn">background</span>(<span class="num">0</span>)
+    <span class="cmt"># マウス位置に円を描く</span>
+    py5.<span class="fn">ellipse</span>(py5.mouse_x, py5.mouse_y, <span class="num">50</span>, <span class="num">50</span>)
+
+    <span class="cmt"># クリック中かどうかを判定</span>
+    <span class="kw">if</span> py5.is_mouse_pressed:
+        py5.<span class="fn">fill</span>(<span class="num">255</span>, <span class="num">0</span>, <span class="num">0</span>)   <span class="cmt"># 押している間は赤</span>
+    <span class="kw">else</span>:
+        py5.<span class="fn">fill</span>(<span class="num">255</span>)           <span class="cmt"># 離すと白</span></pre>
+        <table style="margin-top:0.6rem">
+          <tr><th style="width:35%">変数・関数</th><th>説明</th></tr>
+          <tr><td><code>py5.mouse_x</code></td><td>マウスの現在の x 座標</td></tr>
+          <tr><td><code>py5.mouse_y</code></td><td>マウスの現在の y 座標</td></tr>
+          <tr><td><code>py5.pmouse_x</code></td><td>1フレーム前の x 座標（軌跡を描くのに便利）</td></tr>
+          <tr><td><code>py5.pmouse_y</code></td><td>1フレーム前の y 座標</td></tr>
+          <tr><td><code>py5.is_mouse_pressed</code></td><td>マウスボタンが押されていれば <code>True</code></td></tr>
+        </table>
+        <p style="font-size:0.82rem;color:#999;margin-top:0.5rem">例: <code>py5.line(py5.pmouse_x, py5.pmouse_y, py5.mouse_x, py5.mouse_y)</code> で「お絵描きツール」のような軌跡が描けます。</p>
+      </div>
+
       <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:10px;padding:1.2rem;margin:1rem 0">
         <p style="color:#FFB800;font-weight:700;font-size:1rem;margin-bottom:0.8rem">提出要件（3点セット）</p>
         <table>
