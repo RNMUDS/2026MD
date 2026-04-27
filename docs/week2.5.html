@@ -529,7 +529,7 @@ footer {
       <!-- ① 実行結果 (コードと連動するライブ実行ビュー) -->
       <span class="step-label step-figure">① 実行結果（コード連動アニメ）</span>
       <div class="exec-viewer">
-        <svg viewBox="0 0 900 380" preserveAspectRatio="xMidYMid meet">
+        <svg viewBox="0 0 900 470" preserveAspectRatio="xMidYMid meet">
           <!-- code panel bg -->
           <rect x="0" y="0" width="450" height="340" rx="10" fill="#0A0A0A" stroke="#222"/>
           <text x="430" y="20" text-anchor="end" fill="#666" font-size="10" font-family="'JetBrains Mono', monospace">prob1.py</text>
@@ -586,26 +586,60 @@ footer {
               <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.643;0.652;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
           </g>
 
-          <!-- status bar -->
-          <rect x="0" y="345" width="900" height="35" rx="6" fill="#141414" stroke="#222"/>
-          <text x="20" y="368" font-family="'JetBrains Mono', monospace" font-size="14" fill="#999">変数:</text>
-          <g font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700">
-            <text x="80" y="368" fill="#FFB800">i = 0
+          <!-- 変数トレースパネル (3 行構造: 変数値 / 計算 / 実行) -->
+          <rect x="0" y="350" width="900" height="115" rx="8" fill="#141414" stroke="#FFB800" stroke-width="1"/>
+          <text x="20" y="370" font-family="'Noto Sans JP', sans-serif" font-size="12" fill="#666" font-weight="700">▼ 変数の中身と実行内容</text>
+
+          <!-- Row 1: i = N (large badge style) -->
+          <g font-family="'JetBrains Mono', monospace" font-size="26" font-weight="900">
+            <text x="40" y="402" fill="#FFB800">i = 0
               <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0;0.143;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="368" fill="#FFB800">i = 1
+            <text x="40" y="402" fill="#FFB800">i = 1
               <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.143;0.286;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="368" fill="#FFB800">i = 2
+            <text x="40" y="402" fill="#FFB800">i = 2
               <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.286;0.429;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="368" fill="#FFB800">i = 3
+            <text x="40" y="402" fill="#FFB800">i = 3
               <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.429;0.571;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="368" fill="#FFB800">i = 4
+            <text x="40" y="402" fill="#FFB800">i = 4
               <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.571;0.714;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="368" fill="#FF5252">i = 5 → range(5) を抜けてループ終了
+            <text x="40" y="402" fill="#FF5252">ループ終了 (i = 5 で range(5) を抜けた)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.714;1" dur="7s" repeatCount="indefinite"/></text>
+          </g>
+
+          <!-- Row 2: 計算式 (substituted expression) -->
+          <text x="160" y="402" font-family="'Noto Sans JP', sans-serif" font-size="14" fill="#666" font-weight="700">→</text>
+          <g font-family="'JetBrains Mono', monospace" font-size="16" fill="#e0e0e0">
+            <text x="190" y="402">x = 60 + <tspan fill="#FFB800" font-weight="700">0</tspan>*70 = <tspan fill="#4FC3F7" font-weight="700">60</tspan>
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.071;0.143;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="190" y="402">x = 60 + <tspan fill="#FFB800" font-weight="700">1</tspan>*70 = <tspan fill="#4FC3F7" font-weight="700">130</tspan>
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.214;0.286;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="190" y="402">x = 60 + <tspan fill="#FFB800" font-weight="700">2</tspan>*70 = <tspan fill="#4FC3F7" font-weight="700">200</tspan>
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.357;0.429;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="190" y="402">x = 60 + <tspan fill="#FFB800" font-weight="700">3</tspan>*70 = <tspan fill="#4FC3F7" font-weight="700">270</tspan>
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.500;0.571;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="190" y="402">x = 60 + <tspan fill="#FFB800" font-weight="700">4</tspan>*70 = <tspan fill="#4FC3F7" font-weight="700">340</tspan>
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.643;0.714;1" dur="7s" repeatCount="indefinite"/></text>
+          </g>
+
+          <!-- Row 3: 実際の呼び出し (substituted call) -->
+          <text x="20" y="445" font-family="'Noto Sans JP', sans-serif" font-size="12" fill="#666" font-weight="700">実行 →</text>
+          <g font-family="'JetBrains Mono', monospace" font-size="17" font-weight="700">
+            <text x="80" y="445" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">60</tspan>, 150, 50, 50)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.071;0.143;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="445" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">130</tspan>, 150, 50, 50)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.214;0.286;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="445" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">200</tspan>, 150, 50, 50)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.357;0.429;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="445" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">270</tspan>, 150, 50, 50)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.500;0.571;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="445" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">340</tspan>, 150, 50, 50)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.643;0.714;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="445" fill="#666">(描画コードはもう実行されない)
               <animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.714;1" dur="7s" repeatCount="indefinite"/></text>
           </g>
         </svg>
-        <span class="play-badge">コード行ハイライト ⇄ 円の出現が同期（7 秒ループ）</span>
-        <div class="figure-caption">左: 実行中のコード行をオレンジ枠で表示／右: 対応する描画／下: 現在の変数値</div>
+        <span class="play-badge">変数 i の値、計算結果、実行される命令を 1 行ずつ可視化（7 秒ループ）</span>
+        <div class="figure-caption">下のパネル: 大きい i の値 → 計算式 i 代入 → 実際に呼ばれる関数</div>
       </div>
 
       <!-- ② 考え方 -->
@@ -724,7 +758,7 @@ py5.<span class="fn">run_sketch</span>()</pre>
 
       <span class="step-label step-figure">① 実行結果（コード連動アニメ）</span>
       <div class="exec-viewer">
-        <svg viewBox="0 0 900 380" preserveAspectRatio="xMidYMid meet">
+        <svg viewBox="0 0 900 470" preserveAspectRatio="xMidYMid meet">
           <rect x="0" y="0" width="450" height="340" rx="10" fill="#0A0A0A" stroke="#222"/>
           <text x="430" y="20" text-anchor="end" fill="#666" font-size="10" font-family="'JetBrains Mono', monospace">prob2.py</text>
           <g font-family="'JetBrains Mono', monospace" font-size="14" xml:space="preserve">
@@ -767,36 +801,58 @@ py5.<span class="fn">run_sketch</span>()</pre>
           <rect x="790" y="20" width="40" height="300" fill="rgb(200,200,200)" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.729;0.735;0.95;1" dur="7s" repeatCount="indefinite"/></rect>
           <rect x="830" y="20" width="40" height="300" fill="rgb(225,225,225)" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.814;0.820;0.95;1" dur="7s" repeatCount="indefinite"/></rect>
 
-          <!-- status -->
-          <rect x="0" y="345" width="900" height="35" rx="6" fill="#141414" stroke="#222"/>
-          <text x="20" y="368" font-family="'JetBrains Mono', monospace" font-size="14" fill="#999">変数:</text>
-          <g font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700">
-            <text x="80" y="368" fill="#FFB800">i = 0  (fill=0, x=0)
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0;0.086;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="368" fill="#FFB800">i = 1  (fill=25, x=40)
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.086;0.171;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="368" fill="#FFB800">i = 2  (fill=50, x=80)
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.171;0.257;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="368" fill="#FFB800">i = 3  (fill=75, x=120)
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.257;0.343;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="368" fill="#FFB800">i = 4  (fill=100, x=160)
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.343;0.429;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="368" fill="#FFB800">i = 5  (fill=125, x=200)
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.429;0.514;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="368" fill="#FFB800">i = 6  (fill=150, x=240)
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.514;0.600;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="368" fill="#FFB800">i = 7  (fill=175, x=280)
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.600;0.686;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="368" fill="#FFB800">i = 8  (fill=200, x=320)
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.686;0.771;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="368" fill="#FFB800">i = 9  (fill=225, x=360)
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.771;0.857;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="368" fill="#FF5252">i = 10 → range(10) を抜けてループ終了
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.857;1" dur="7s" repeatCount="indefinite"/></text>
+          <!-- 変数トレースパネル -->
+          <rect x="0" y="350" width="900" height="115" rx="8" fill="#141414" stroke="#FFB800" stroke-width="1"/>
+          <text x="20" y="370" font-family="'Noto Sans JP', sans-serif" font-size="12" fill="#666" font-weight="700">▼ 変数の中身と実行内容</text>
+
+          <!-- Row 1: i = N -->
+          <g font-family="'JetBrains Mono', monospace" font-size="26" font-weight="900">
+            <text x="40" y="402" fill="#FFB800">i = 0<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0;0.086;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="402" fill="#FFB800">i = 1<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.086;0.171;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="402" fill="#FFB800">i = 2<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.171;0.257;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="402" fill="#FFB800">i = 3<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.257;0.343;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="402" fill="#FFB800">i = 4<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.343;0.429;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="402" fill="#FFB800">i = 5<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.429;0.514;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="402" fill="#FFB800">i = 6<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.514;0.600;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="402" fill="#FFB800">i = 7<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.600;0.686;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="402" fill="#FFB800">i = 8<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.686;0.771;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="402" fill="#FFB800">i = 9<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.771;0.857;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="402" fill="#FF5252">ループ終了<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.857;1" dur="7s" repeatCount="indefinite"/></text>
+          </g>
+
+          <!-- Row 2: 計算式 (fill = i*25, x = i*40) -->
+          <text x="160" y="402" font-family="'Noto Sans JP', sans-serif" font-size="14" fill="#666" font-weight="700">→</text>
+          <g font-family="'JetBrains Mono', monospace" font-size="14" fill="#e0e0e0">
+            <text x="190" y="402">fill = <tspan fill="#FFB800">0</tspan>*25 = <tspan fill="#4FC3F7" font-weight="700">0</tspan>,  x = <tspan fill="#FFB800">0</tspan>*40 = <tspan fill="#4FC3F7" font-weight="700">0</tspan><animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.043;0.086;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="190" y="402">fill = <tspan fill="#FFB800">1</tspan>*25 = <tspan fill="#4FC3F7" font-weight="700">25</tspan>,  x = <tspan fill="#FFB800">1</tspan>*40 = <tspan fill="#4FC3F7" font-weight="700">40</tspan><animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.129;0.171;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="190" y="402">fill = <tspan fill="#FFB800">2</tspan>*25 = <tspan fill="#4FC3F7" font-weight="700">50</tspan>,  x = <tspan fill="#FFB800">2</tspan>*40 = <tspan fill="#4FC3F7" font-weight="700">80</tspan><animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.214;0.257;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="190" y="402">fill = <tspan fill="#FFB800">3</tspan>*25 = <tspan fill="#4FC3F7" font-weight="700">75</tspan>,  x = <tspan fill="#FFB800">3</tspan>*40 = <tspan fill="#4FC3F7" font-weight="700">120</tspan><animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.300;0.343;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="190" y="402">fill = <tspan fill="#FFB800">4</tspan>*25 = <tspan fill="#4FC3F7" font-weight="700">100</tspan>, x = <tspan fill="#FFB800">4</tspan>*40 = <tspan fill="#4FC3F7" font-weight="700">160</tspan><animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.386;0.429;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="190" y="402">fill = <tspan fill="#FFB800">5</tspan>*25 = <tspan fill="#4FC3F7" font-weight="700">125</tspan>, x = <tspan fill="#FFB800">5</tspan>*40 = <tspan fill="#4FC3F7" font-weight="700">200</tspan><animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.471;0.514;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="190" y="402">fill = <tspan fill="#FFB800">6</tspan>*25 = <tspan fill="#4FC3F7" font-weight="700">150</tspan>, x = <tspan fill="#FFB800">6</tspan>*40 = <tspan fill="#4FC3F7" font-weight="700">240</tspan><animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.557;0.600;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="190" y="402">fill = <tspan fill="#FFB800">7</tspan>*25 = <tspan fill="#4FC3F7" font-weight="700">175</tspan>, x = <tspan fill="#FFB800">7</tspan>*40 = <tspan fill="#4FC3F7" font-weight="700">280</tspan><animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.643;0.686;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="190" y="402">fill = <tspan fill="#FFB800">8</tspan>*25 = <tspan fill="#4FC3F7" font-weight="700">200</tspan>, x = <tspan fill="#FFB800">8</tspan>*40 = <tspan fill="#4FC3F7" font-weight="700">320</tspan><animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.729;0.771;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="190" y="402">fill = <tspan fill="#FFB800">9</tspan>*25 = <tspan fill="#4FC3F7" font-weight="700">225</tspan>, x = <tspan fill="#FFB800">9</tspan>*40 = <tspan fill="#4FC3F7" font-weight="700">360</tspan><animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.814;0.857;1" dur="7s" repeatCount="indefinite"/></text>
+          </g>
+
+          <!-- Row 3: 実際の呼び出し -->
+          <text x="20" y="445" font-family="'Noto Sans JP', sans-serif" font-size="12" fill="#666" font-weight="700">実行 →</text>
+          <g font-family="'JetBrains Mono', monospace" font-size="15" font-weight="700">
+            <text x="80" y="445" fill="#93D500">py5.fill(<tspan fill="#4FC3F7">0</tspan>); py5.rect(<tspan fill="#4FC3F7">0</tspan>, 0, 40, 300)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.043;0.086;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="445" fill="#93D500">py5.fill(<tspan fill="#4FC3F7">25</tspan>); py5.rect(<tspan fill="#4FC3F7">40</tspan>, 0, 40, 300)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.129;0.171;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="445" fill="#93D500">py5.fill(<tspan fill="#4FC3F7">50</tspan>); py5.rect(<tspan fill="#4FC3F7">80</tspan>, 0, 40, 300)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.214;0.257;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="445" fill="#93D500">py5.fill(<tspan fill="#4FC3F7">75</tspan>); py5.rect(<tspan fill="#4FC3F7">120</tspan>, 0, 40, 300)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.300;0.343;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="445" fill="#93D500">py5.fill(<tspan fill="#4FC3F7">100</tspan>); py5.rect(<tspan fill="#4FC3F7">160</tspan>, 0, 40, 300)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.386;0.429;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="445" fill="#93D500">py5.fill(<tspan fill="#4FC3F7">125</tspan>); py5.rect(<tspan fill="#4FC3F7">200</tspan>, 0, 40, 300)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.471;0.514;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="445" fill="#93D500">py5.fill(<tspan fill="#4FC3F7">150</tspan>); py5.rect(<tspan fill="#4FC3F7">240</tspan>, 0, 40, 300)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.557;0.600;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="445" fill="#93D500">py5.fill(<tspan fill="#4FC3F7">175</tspan>); py5.rect(<tspan fill="#4FC3F7">280</tspan>, 0, 40, 300)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.643;0.686;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="445" fill="#93D500">py5.fill(<tspan fill="#4FC3F7">200</tspan>); py5.rect(<tspan fill="#4FC3F7">320</tspan>, 0, 40, 300)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.729;0.771;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="445" fill="#93D500">py5.fill(<tspan fill="#4FC3F7">225</tspan>); py5.rect(<tspan fill="#4FC3F7">360</tspan>, 0, 40, 300)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.814;0.857;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="445" fill="#666">(描画コードはもう実行されない)<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.857;1" dur="7s" repeatCount="indefinite"/></text>
           </g>
         </svg>
-        <span class="play-badge">10 反復のたびに「for → fill+rect」がハイライトされる（7 秒ループ）</span>
-        <div class="figure-caption">左: コード行ハイライト／右: i ごとに縞が増える／下: 計算後の値</div>
+        <span class="play-badge">変数 i の値、計算結果、fill と rect の引数を可視化（7 秒ループ）</span>
+        <div class="figure-caption">下のパネル: i の値 → fill と x の計算 → 実際の py5 呼び出し</div>
       </div>
 
       <span class="step-label step-idea">② 考え方</span>
@@ -910,7 +966,7 @@ py5.<span class="fn">run_sketch</span>()</pre>
 
       <span class="step-label step-figure">① 実行結果（コード連動アニメ）</span>
       <div class="exec-viewer">
-        <svg viewBox="0 0 900 480" preserveAspectRatio="xMidYMid meet">
+        <svg viewBox="0 0 900 570" preserveAspectRatio="xMidYMid meet">
           <rect x="0" y="0" width="450" height="440" rx="10" fill="#0A0A0A" stroke="#222"/>
           <text x="430" y="20" text-anchor="end" fill="#666" font-size="10" font-family="'JetBrains Mono', monospace">prob3.py</text>
           <g font-family="'JetBrains Mono', monospace" font-size="14" xml:space="preserve">
@@ -942,25 +998,40 @@ py5.<span class="fn">run_sketch</span>()</pre>
             <rect x="770" y="320" width="60" height="60" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.643;0.652;0.95;1" dur="7s" repeatCount="indefinite"/></rect>
           </g>
 
-          <rect x="0" y="445" width="900" height="35" rx="6" fill="#141414" stroke="#222"/>
-          <text x="20" y="468" font-family="'JetBrains Mono', monospace" font-size="14" fill="#999">変数:</text>
-          <g font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700">
-            <text x="80" y="468" fill="#FFB800">i = 0  (x=20, y=20)
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0;0.143;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="468" fill="#FFB800">i = 1  (x=90, y=90)
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.143;0.286;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="468" fill="#FFB800">i = 2  (x=160, y=160)
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.286;0.429;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="468" fill="#FFB800">i = 3  (x=230, y=230)
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.429;0.571;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="468" fill="#FFB800">i = 4  (x=300, y=300)
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.571;0.714;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="468" fill="#FF5252">i = 5 → range(5) を抜けてループ終了
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.714;1" dur="7s" repeatCount="indefinite"/></text>
+          <!-- 変数トレースパネル -->
+          <rect x="0" y="450" width="900" height="115" rx="8" fill="#141414" stroke="#FFB800" stroke-width="1"/>
+          <text x="20" y="470" font-family="'Noto Sans JP', sans-serif" font-size="12" fill="#666" font-weight="700">▼ 変数の中身と実行内容</text>
+
+          <g font-family="'JetBrains Mono', monospace" font-size="26" font-weight="900">
+            <text x="40" y="502" fill="#FFB800">i = 0<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0;0.143;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="502" fill="#FFB800">i = 1<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.143;0.286;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="502" fill="#FFB800">i = 2<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.286;0.429;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="502" fill="#FFB800">i = 3<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.429;0.571;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="502" fill="#FFB800">i = 4<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.571;0.714;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="502" fill="#FF5252">ループ終了<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.714;1" dur="7s" repeatCount="indefinite"/></text>
+          </g>
+
+          <text x="160" y="502" font-family="'Noto Sans JP', sans-serif" font-size="14" fill="#666" font-weight="700">→</text>
+          <g font-family="'JetBrains Mono', monospace" font-size="15" fill="#e0e0e0">
+            <text x="190" y="502">x = 20 + <tspan fill="#FFB800">0</tspan>*70 = <tspan fill="#4FC3F7" font-weight="700">20</tspan>,  y = 20 + <tspan fill="#FFB800">0</tspan>*70 = <tspan fill="#4FC3F7" font-weight="700">20</tspan><animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.071;0.143;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="190" y="502">x = 20 + <tspan fill="#FFB800">1</tspan>*70 = <tspan fill="#4FC3F7" font-weight="700">90</tspan>,  y = 20 + <tspan fill="#FFB800">1</tspan>*70 = <tspan fill="#4FC3F7" font-weight="700">90</tspan><animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.214;0.286;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="190" y="502">x = 20 + <tspan fill="#FFB800">2</tspan>*70 = <tspan fill="#4FC3F7" font-weight="700">160</tspan>, y = 20 + <tspan fill="#FFB800">2</tspan>*70 = <tspan fill="#4FC3F7" font-weight="700">160</tspan><animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.357;0.429;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="190" y="502">x = 20 + <tspan fill="#FFB800">3</tspan>*70 = <tspan fill="#4FC3F7" font-weight="700">230</tspan>, y = 20 + <tspan fill="#FFB800">3</tspan>*70 = <tspan fill="#4FC3F7" font-weight="700">230</tspan><animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.500;0.571;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="190" y="502">x = 20 + <tspan fill="#FFB800">4</tspan>*70 = <tspan fill="#4FC3F7" font-weight="700">300</tspan>, y = 20 + <tspan fill="#FFB800">4</tspan>*70 = <tspan fill="#4FC3F7" font-weight="700">300</tspan><animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.643;0.714;1" dur="7s" repeatCount="indefinite"/></text>
+          </g>
+
+          <text x="20" y="545" font-family="'Noto Sans JP', sans-serif" font-size="12" fill="#666" font-weight="700">実行 →</text>
+          <g font-family="'JetBrains Mono', monospace" font-size="17" font-weight="700">
+            <text x="80" y="545" fill="#93D500">py5.rect(<tspan fill="#4FC3F7">20</tspan>, <tspan fill="#4FC3F7">20</tspan>, 60, 60)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.071;0.143;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.rect(<tspan fill="#4FC3F7">90</tspan>, <tspan fill="#4FC3F7">90</tspan>, 60, 60)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.214;0.286;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.rect(<tspan fill="#4FC3F7">160</tspan>, <tspan fill="#4FC3F7">160</tspan>, 60, 60)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.357;0.429;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.rect(<tspan fill="#4FC3F7">230</tspan>, <tspan fill="#4FC3F7">230</tspan>, 60, 60)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.500;0.571;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.rect(<tspan fill="#4FC3F7">300</tspan>, <tspan fill="#4FC3F7">300</tspan>, 60, 60)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.643;0.714;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#666">(描画コードはもう実行されない)<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.714;1" dur="7s" repeatCount="indefinite"/></text>
           </g>
         </svg>
-        <span class="play-badge">x と y が同時に i*70 で進む様子（7 秒ループ）</span>
-        <div class="figure-caption">左: コード行ハイライト／右: 斜めに 1 個ずつ追加／下: x, y 座標の値</div>
+        <span class="play-badge">変数 i の値、x・y 計算、rect 呼び出しを可視化（7 秒ループ）</span>
+        <div class="figure-caption">下のパネル: i の値 → x と y の計算 → 実際の py5.rect 呼び出し</div>
       </div>
 
       <span class="step-label step-idea">② 考え方</span>
@@ -1053,7 +1124,7 @@ py5.<span class="fn">run_sketch</span>()</pre>
 
       <span class="step-label step-figure">① 実行結果（コード連動アニメ）</span>
       <div class="exec-viewer">
-        <svg viewBox="0 0 900 480" preserveAspectRatio="xMidYMid meet">
+        <svg viewBox="0 0 900 570" preserveAspectRatio="xMidYMid meet">
           <rect x="0" y="0" width="450" height="440" rx="10" fill="#0A0A0A" stroke="#222"/>
           <text x="430" y="20" text-anchor="end" fill="#666" font-size="10" font-family="'JetBrains Mono', monospace">prob4.py</text>
           <g font-family="'JetBrains Mono', monospace" font-size="14" xml:space="preserve">
@@ -1092,27 +1163,43 @@ py5.<span class="fn">run_sketch</span>()</pre>
             <circle cx="670" cy="220" r="30"  opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.786;0.795;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
           </g>
 
-          <rect x="0" y="445" width="900" height="35" rx="6" fill="#141414" stroke="#222"/>
-          <text x="20" y="468" font-family="'JetBrains Mono', monospace" font-size="14" fill="#999">変数:</text>
-          <g font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700">
-            <text x="80" y="468" fill="#FFB800">i = 0  (d = 360)
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0;0.143;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="468" fill="#FFB800">i = 1  (d = 300)
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.143;0.286;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="468" fill="#FFB800">i = 2  (d = 240)
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.286;0.429;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="468" fill="#FFB800">i = 3  (d = 180)
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.429;0.571;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="468" fill="#FFB800">i = 4  (d = 120)
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.571;0.714;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="468" fill="#FFB800">i = 5  (d = 60)
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.714;0.857;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="468" fill="#FF5252">i = 6 → range(6) を抜けてループ終了
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.857;1" dur="7s" repeatCount="indefinite"/></text>
+          <!-- 変数トレースパネル -->
+          <rect x="0" y="450" width="900" height="115" rx="8" fill="#141414" stroke="#FFB800" stroke-width="1"/>
+          <text x="20" y="470" font-family="'Noto Sans JP', sans-serif" font-size="12" fill="#666" font-weight="700">▼ 変数の中身と実行内容</text>
+
+          <g font-family="'JetBrains Mono', monospace" font-size="26" font-weight="900">
+            <text x="40" y="502" fill="#FFB800">i = 0<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0;0.143;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="502" fill="#FFB800">i = 1<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.143;0.286;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="502" fill="#FFB800">i = 2<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.286;0.429;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="502" fill="#FFB800">i = 3<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.429;0.571;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="502" fill="#FFB800">i = 4<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.571;0.714;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="502" fill="#FFB800">i = 5<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.714;0.857;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="502" fill="#FF5252">ループ終了<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.857;1" dur="7s" repeatCount="indefinite"/></text>
+          </g>
+
+          <text x="160" y="502" font-family="'Noto Sans JP', sans-serif" font-size="14" fill="#666" font-weight="700">→</text>
+          <g font-family="'JetBrains Mono', monospace" font-size="16" fill="#e0e0e0">
+            <text x="190" y="502">d = 360 - <tspan fill="#FFB800">0</tspan>*60 = <tspan fill="#4FC3F7" font-weight="700">360</tspan><animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.071;0.143;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="190" y="502">d = 360 - <tspan fill="#FFB800">1</tspan>*60 = <tspan fill="#4FC3F7" font-weight="700">300</tspan><animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.214;0.286;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="190" y="502">d = 360 - <tspan fill="#FFB800">2</tspan>*60 = <tspan fill="#4FC3F7" font-weight="700">240</tspan><animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.357;0.429;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="190" y="502">d = 360 - <tspan fill="#FFB800">3</tspan>*60 = <tspan fill="#4FC3F7" font-weight="700">180</tspan><animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.500;0.571;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="190" y="502">d = 360 - <tspan fill="#FFB800">4</tspan>*60 = <tspan fill="#4FC3F7" font-weight="700">120</tspan><animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.643;0.714;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="190" y="502">d = 360 - <tspan fill="#FFB800">5</tspan>*60 = <tspan fill="#4FC3F7" font-weight="700">60</tspan><animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.786;0.857;1" dur="7s" repeatCount="indefinite"/></text>
+          </g>
+
+          <text x="20" y="545" font-family="'Noto Sans JP', sans-serif" font-size="12" fill="#666" font-weight="700">実行 →</text>
+          <g font-family="'JetBrains Mono', monospace" font-size="17" font-weight="700">
+            <text x="80" y="545" fill="#93D500">py5.ellipse(200, 200, <tspan fill="#4FC3F7">360</tspan>, <tspan fill="#4FC3F7">360</tspan>)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.071;0.143;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(200, 200, <tspan fill="#4FC3F7">300</tspan>, <tspan fill="#4FC3F7">300</tspan>)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.214;0.286;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(200, 200, <tspan fill="#4FC3F7">240</tspan>, <tspan fill="#4FC3F7">240</tspan>)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.357;0.429;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(200, 200, <tspan fill="#4FC3F7">180</tspan>, <tspan fill="#4FC3F7">180</tspan>)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.500;0.571;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(200, 200, <tspan fill="#4FC3F7">120</tspan>, <tspan fill="#4FC3F7">120</tspan>)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.643;0.714;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(200, 200, <tspan fill="#4FC3F7">60</tspan>, <tspan fill="#4FC3F7">60</tspan>)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.786;0.857;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#666">(描画コードはもう実行されない)<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.857;1" dur="7s" repeatCount="indefinite"/></text>
           </g>
         </svg>
-        <span class="play-badge">i が増える → d が減る → 内側に小さい円が積み上がる（7 秒ループ）</span>
-        <div class="figure-caption">左: コード行ハイライト／右: 大→小の順で描かれる／下: 計算済み d の値</div>
+        <span class="play-badge">変数 i, 中間変数 d, ellipse 呼び出しを可視化（7 秒ループ）</span>
+        <div class="figure-caption">下のパネル: i の値 → d の計算 → 実際の py5.ellipse 呼び出し</div>
       </div>
 
       <span class="step-label step-idea">② 考え方</span>
@@ -1235,7 +1322,7 @@ py5.<span class="fn">run_sketch</span>()</pre>
 
       <span class="step-label step-figure">① 実行結果（コード連動アニメ）</span>
       <div class="exec-viewer">
-        <svg viewBox="0 0 900 480" preserveAspectRatio="xMidYMid meet">
+        <svg viewBox="0 0 900 570" preserveAspectRatio="xMidYMid meet">
           <rect x="0" y="0" width="450" height="440" rx="10" fill="#0A0A0A" stroke="#222"/>
           <text x="430" y="20" text-anchor="end" fill="#666" font-size="10" font-family="'JetBrains Mono', monospace">prob5.py</text>
           <g font-family="'JetBrains Mono', monospace" font-size="14" xml:space="preserve">
@@ -1310,39 +1397,60 @@ py5.<span class="fn">run_sketch</span>()</pre>
               dur="7s" repeatCount="indefinite"/>
           </rect>
 
-          <!-- status -->
-          <rect x="0" y="445" width="900" height="35" rx="6" fill="#141414" stroke="#222"/>
-          <text x="20" y="468" font-family="'JetBrains Mono', monospace" font-size="14" fill="#999">変数:</text>
-          <g font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700">
-            <!-- x value -->
-            <text x="80" y="468" fill="#FFB800">x = 0
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0;0.157;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="468" fill="#FFB800">x = 1
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.157;0.314;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="468" fill="#FFB800">x = 2
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.314;0.471;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="468" fill="#FFB800">x = 3
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.471;0.629;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="468" fill="#FFB800">x = 4
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.629;0.786;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="80" y="468" fill="#FF5252">x = 5 → 外側ループ終了
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.786;1" dur="7s" repeatCount="indefinite"/></text>
-            <!-- y value (multi-window) -->
-            <text x="220" y="468" fill="#4FC3F7">y = 0
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;1;0;1;0;1;0;1;0;0" keyTimes="0;0.014;0.043;0.171;0.200;0.329;0.357;0.486;0.514;0.643;0.671;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="220" y="468" fill="#4FC3F7">y = 1
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;1;0;1;0;1;0;1;0;0" keyTimes="0;0.043;0.071;0.200;0.229;0.357;0.386;0.514;0.543;0.671;0.700;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="220" y="468" fill="#4FC3F7">y = 2
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;1;0;1;0;1;0;1;0;0" keyTimes="0;0.071;0.100;0.229;0.257;0.386;0.414;0.543;0.571;0.700;0.729;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="220" y="468" fill="#4FC3F7">y = 3
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;1;0;1;0;1;0;1;0;0" keyTimes="0;0.100;0.129;0.257;0.286;0.414;0.443;0.571;0.600;0.729;0.757;1" dur="7s" repeatCount="indefinite"/></text>
-            <text x="220" y="468" fill="#4FC3F7">y = 4
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;1;0;1;0;1;0;1;0;0" keyTimes="0;0.129;0.157;0.286;0.314;0.443;0.471;0.600;0.629;0.757;0.786;1" dur="7s" repeatCount="indefinite"/></text>
+          <!-- 変数トレースパネル -->
+          <rect x="0" y="450" width="900" height="115" rx="8" fill="#141414" stroke="#FFB800" stroke-width="1"/>
+          <text x="20" y="470" font-family="'Noto Sans JP', sans-serif" font-size="12" fill="#666" font-weight="700">▼ 変数の中身と実行内容</text>
+
+          <!-- Row 1: x and y values (large) -->
+          <g font-family="'JetBrains Mono', monospace" font-size="24" font-weight="900">
+            <text x="40" y="502" fill="#FFB800">x = 0<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0;0.157;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="502" fill="#FFB800">x = 1<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.157;0.314;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="502" fill="#FFB800">x = 2<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.314;0.471;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="502" fill="#FFB800">x = 3<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.471;0.629;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="502" fill="#FFB800">x = 4<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.629;0.786;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="40" y="502" fill="#FF5252">外側 ループ終了<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.786;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="200" y="502" fill="#4FC3F7">y = 0<animate attributeName="opacity" calcMode="discrete" values="0;1;0;1;0;1;0;1;0;1;0;0" keyTimes="0;0.014;0.043;0.171;0.200;0.329;0.357;0.486;0.514;0.643;0.671;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="200" y="502" fill="#4FC3F7">y = 1<animate attributeName="opacity" calcMode="discrete" values="0;1;0;1;0;1;0;1;0;1;0;0" keyTimes="0;0.043;0.071;0.200;0.229;0.357;0.386;0.514;0.543;0.671;0.700;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="200" y="502" fill="#4FC3F7">y = 2<animate attributeName="opacity" calcMode="discrete" values="0;1;0;1;0;1;0;1;0;1;0;0" keyTimes="0;0.071;0.100;0.229;0.257;0.386;0.414;0.543;0.571;0.700;0.729;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="200" y="502" fill="#4FC3F7">y = 3<animate attributeName="opacity" calcMode="discrete" values="0;1;0;1;0;1;0;1;0;1;0;0" keyTimes="0;0.100;0.129;0.257;0.286;0.414;0.443;0.571;0.600;0.729;0.757;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="200" y="502" fill="#4FC3F7">y = 4<animate attributeName="opacity" calcMode="discrete" values="0;1;0;1;0;1;0;1;0;1;0;0" keyTimes="0;0.129;0.157;0.286;0.314;0.443;0.471;0.600;0.629;0.757;0.786;1" dur="7s" repeatCount="indefinite"/></text>
           </g>
-          <text x="370" y="468" font-family="'JetBrains Mono', monospace" font-size="14" fill="#999">  内側 y は 5 回／外側 x は 5 回 → 合計 25 回</text>
+
+          <text x="350" y="502" font-family="'Noto Sans JP', sans-serif" font-size="14" fill="#666" font-weight="700">→ セル <tspan font-family="'JetBrains Mono', monospace" fill="#999">5×5 = 25 個</tspan></text>
+
+          <!-- Row 2: 実行 (25 unique substituted ellipse calls) -->
+          <text x="20" y="545" font-family="'Noto Sans JP', sans-serif" font-size="12" fill="#666" font-weight="700">実行 →</text>
+          <g font-family="'JetBrains Mono', monospace" font-size="15" font-weight="700">
+            <text x="80" y="545" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">40</tspan>, <tspan fill="#4FC3F7">40</tspan>, 50, 50)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.014;0.043;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">40</tspan>, <tspan fill="#4FC3F7">120</tspan>, 50, 50)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.043;0.071;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">40</tspan>, <tspan fill="#4FC3F7">200</tspan>, 50, 50)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.071;0.100;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">40</tspan>, <tspan fill="#4FC3F7">280</tspan>, 50, 50)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.100;0.129;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">40</tspan>, <tspan fill="#4FC3F7">360</tspan>, 50, 50)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.129;0.157;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">120</tspan>, <tspan fill="#4FC3F7">40</tspan>, 50, 50)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.171;0.200;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">120</tspan>, <tspan fill="#4FC3F7">120</tspan>, 50, 50)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.200;0.229;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">120</tspan>, <tspan fill="#4FC3F7">200</tspan>, 50, 50)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.229;0.257;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">120</tspan>, <tspan fill="#4FC3F7">280</tspan>, 50, 50)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.257;0.286;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">120</tspan>, <tspan fill="#4FC3F7">360</tspan>, 50, 50)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.286;0.314;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">200</tspan>, <tspan fill="#4FC3F7">40</tspan>, 50, 50)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.329;0.357;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">200</tspan>, <tspan fill="#4FC3F7">120</tspan>, 50, 50)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.357;0.386;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">200</tspan>, <tspan fill="#4FC3F7">200</tspan>, 50, 50)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.386;0.414;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">200</tspan>, <tspan fill="#4FC3F7">280</tspan>, 50, 50)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.414;0.443;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">200</tspan>, <tspan fill="#4FC3F7">360</tspan>, 50, 50)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.443;0.471;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">280</tspan>, <tspan fill="#4FC3F7">40</tspan>, 50, 50)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.486;0.514;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">280</tspan>, <tspan fill="#4FC3F7">120</tspan>, 50, 50)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.514;0.543;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">280</tspan>, <tspan fill="#4FC3F7">200</tspan>, 50, 50)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.543;0.571;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">280</tspan>, <tspan fill="#4FC3F7">280</tspan>, 50, 50)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.571;0.600;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">280</tspan>, <tspan fill="#4FC3F7">360</tspan>, 50, 50)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.600;0.629;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">360</tspan>, <tspan fill="#4FC3F7">40</tspan>, 50, 50)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.643;0.671;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">360</tspan>, <tspan fill="#4FC3F7">120</tspan>, 50, 50)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.671;0.700;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">360</tspan>, <tspan fill="#4FC3F7">200</tspan>, 50, 50)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.700;0.729;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">360</tspan>, <tspan fill="#4FC3F7">280</tspan>, 50, 50)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.729;0.757;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#93D500">py5.ellipse(<tspan fill="#4FC3F7">360</tspan>, <tspan fill="#4FC3F7">360</tspan>, 50, 50)<animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.757;0.786;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="545" fill="#666">25 個 すべて描画完了 (描画コードはもう実行されない)<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.786;1" dur="7s" repeatCount="indefinite"/></text>
+          </g>
         </svg>
-        <span class="play-badge">外側 x の中で内側 y が 5 回まわる ── これがネスト for（7 秒ループ）</span>
-        <div class="figure-caption">左: コード行ハイライト／右: 列ごとに縦に埋まる、現在のセルはオレンジ枠／下: x と y の値</div>
+        <span class="play-badge">外側 x と内側 y の値、各セルの ellipse 呼び出しを可視化（7 秒ループ）</span>
+        <div class="figure-caption">下のパネル: 大きい x, y の値 → 25 通りの py5.ellipse(40+x*80, 40+y*80, 50, 50)</div>
       </div>
 
       <span class="step-label step-idea">② 考え方</span>
