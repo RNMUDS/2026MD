@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第2.75回: translate / push / pop を理解する | MD1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: clamp(13px, 1.6vw, 28px); }
+html, body { overflow-x: hidden; max-width: 100%; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #111111;
+  color: #e0e0e0;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  padding-top: 2.2rem;
+}
+img, video, iframe, svg, canvas { max-width: 100%; height: auto; }
+
+.container { max-width: 1600px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+
+.hero {
+  background: linear-gradient(135deg, #111111, #0a1a2e, #0a0a1a);
+  color: white;
+  padding: clamp(3rem, 8vw, 6rem) 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(108,99,255,0.3), transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(155,89,182,0.2), transparent 50%);
+}
+.hero .container { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 100px;
+  padding: 0.35rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+}
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 700px; }
+
+.section-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.section-num {
+  width: 2.5rem; height: 2.5rem;
+  border-radius: 0.4rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 900; color: white;
+  flex-shrink: 0;
+}
+.section-header h2 {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.card {
+  background: #141414;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  border: 1px solid #2a2a2a;
+}
+.card-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #222;
+  flex-wrap: wrap;
+}
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+
+.tag {
+  display: inline-flex; align-items: center; gap: 0.2rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: 100px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.tag-q  { background: #1a2e0a; color: #76B900; }
+.tag-mini { background: #0a1a2e; color: #4FC3F7; }
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.88rem;
+  margin: 1rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+th {
+  background: rgba(108, 99, 255, 0.15);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  color: #76B900;
+  letter-spacing: 0.02em;
+}
+td {
+  padding: 0.55rem 0.8rem;
+  border-top: 1px solid #222;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+}
+tr:nth-child(even) td { background: #111; }
+
+pre {
+  background: #0A0A0A;
+  color: #E0E0E0;
+  border-radius: 12px;
+  padding: clamp(0.8rem, 2vw, 1.4rem);
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
+  font-size: clamp(0.75rem, 1.3vw, 0.88rem);
+  line-height: 1.7;
+  margin: 1rem 0;
+  position: relative;
+}
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #FFB800; }
+pre .op  { color: #93D500; }
+.code-label {
+  position: absolute; top: 0; right: 0;
+  background: rgba(255,255,255,0.08);
+  color: #999999;
+  padding: 0.2rem 0.8rem;
+  border-radius: 0 12px 0 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+:not(pre) > code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(108,99,255,0.15);
+  padding: 0.15em 0.45em;
+  border-radius: 5px;
+  font-size: 0.85em;
+}
+
+.concept-box {
+  background: rgba(108, 99, 255, 0.10);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  border: 1px solid #2a2a3a;
+}
+.concept-box h4 {
+  font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem;
+}
+
+.callout-tip {
+  background: rgba(155, 89, 182, 0.08);
+  border: 1px solid rgba(155, 89, 182, 0.3);
+  border-left: 4px solid #93D500;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-tip h4 {
+  color: #93D500; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+
+.callout-info {
+  background: rgba(108, 99, 255, 0.08);
+  border: 1px solid rgba(108, 99, 255, 0.3);
+  border-left: 4px solid #76B900;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-info h4 {
+  color: #76B900; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+
+.callout-warn {
+  background: rgba(255, 107, 107, 0.08);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  border-left: 4px solid #FF6B6B;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-warn h4 {
+  color: #FF6B6B; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+
+.point-list { list-style: none; padding: 0; }
+.point-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+}
+.point-list li::before {
+  content: '\25B8';
+  position: absolute; left: 0;
+  color: #76B900;
+  font-weight: 700;
+}
+
+details {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  margin-bottom: 0.8rem;
+  overflow: hidden;
+}
+details summary {
+  padding: 0.7rem 1.1rem;
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 0.5rem;
+  background: #1a1a1a;
+  user-select: none;
+}
+details summary::marker { content: ''; }
+details summary::before {
+  content: '\25B6';
+  font-size: 0.65rem;
+  transition: transform 0.2s;
+  color: #666;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
+
+.result-figure {
+  display: flex; flex-direction: column; align-items: center;
+  margin: 1rem 0;
+}
+.result-figure svg {
+  border: 2px solid #333;
+  background: #cccccc;
+  border-radius: 6px;
+  display: block;
+  max-width: 100%;
+}
+
+.exec-viewer {
+  margin: 1rem 0;
+  background: #141414;
+  border-radius: 12px;
+  padding: 0.6rem;
+  border: 1px solid #2a2a2a;
+}
+.exec-viewer svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: transparent;
+}
+.exec-viewer .play-badge { margin-top: 0.5rem; }
+.exec-viewer .figure-caption {
+  font-size: 0.78rem;
+  color: #999;
+  margin-top: 0.4rem;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+.exec-controls {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.6rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  background: #0A0A0A;
+  border-radius: 8px;
+  padding: 0.5rem;
+  border: 1px solid #222;
+}
+.exec-ctrl {
+  background: #1a1a1a;
+  border: 1px solid #444;
+  color: #e0e0e0;
+  padding: 0.4rem 0.85rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.15s;
+  user-select: none;
+  min-width: 5rem;
+}
+.exec-ctrl:hover {
+  background: #2a2a2a;
+  border-color: #76B900;
+  color: #76B900;
+}
+.exec-ctrl:active { transform: translateY(1px); }
+.exec-ctrl[data-action="play"] { border-color: #76B900; color: #76B900; }
+.exec-ctrl[data-action="pause"] { border-color: #FFB800; color: #FFB800; }
+.exec-ctrl[data-action="reset"] { border-color: #FF6B6B; color: #FF6B6B; }
+.exec-ctrl.is-paused {
+  background: #1a2e0a;
+  border-color: #76B900;
+  color: #76B900;
+}
+.exec-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: #999;
+  margin-left: 0.6rem;
+  min-width: 5.5rem;
+  letter-spacing: 0.03em;
+}
+.result-figure .figure-caption {
+  font-size: 0.78rem;
+  color: #999;
+  margin-top: 0.4rem;
+  letter-spacing: 0.04em;
+}
+.play-badge {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  background: rgba(118,185,0,0.12);
+  color: #76B900;
+  border: 1px solid #2e4a0a;
+  border-radius: 100px;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-top: 0.3rem;
+}
+.play-badge::before {
+  content: '\25B6';
+  color: #76B900;
+  font-size: 0.6rem;
+  animation: blink 1.4s ease-in-out infinite;
+}
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+@media (prefers-reduced-motion: reduce) {
+  svg animate, svg animateTransform, svg set { display: none; }
+  .play-badge::before { animation: none; }
+}
+
+.idea-diagram {
+  background: #0A0A0A;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 1rem 0;
+  overflow-x: auto;
+}
+.idea-diagram svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.step-label {
+  display: inline-block;
+  background: #76B900;
+  color: #0A0A0A;
+  padding: 0.2rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+}
+.step-label.step-figure { background: #4FC3F7; }
+.step-label.step-idea { background: #FFB800; }
+.step-label.step-code { background: #76B900; }
+
+.section-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.2rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.55rem;
+  font-weight: 500;
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.current { color: #76B900; background: rgba(118,185,0,0.15); }
+
+[id] { scroll-margin-top: 3.5rem; }
+
+footer {
+  background: #0A0A0A;
+  color: #999999;
+  padding: 2rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  body { line-height: 1.7; }
+  .container { padding: 0 0.75rem; }
+  .hero { padding: 1.6rem 0; }
+  .hero h1 { font-size: 1.15rem !important; }
+  .hero p { font-size: 0.82rem !important; }
+  .hero-badge { font-size: 0.7rem; padding: 0.25rem 0.75rem; }
+  .section-header { gap: 0.5rem; flex-wrap: wrap; }
+  .section-header h2 { font-size: 1.05rem; }
+  .section-num { width: 1.9rem; height: 1.9rem; font-size: 0.85rem; }
+  .card { padding: 1rem; }
+  .card-header h3 { font-size: 1rem; }
+  pre { font-size: 0.72rem; padding: 0.7rem; }
+  table { font-size: 0.78rem; }
+  th, td { padding: 0.4rem 0.5rem; }
+}
+</style>
+</head>
+<body>
+
+<nav class="section-nav">
+  <div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.6rem;border-right:1px solid #333;padding-right:0.6rem">
+    <span style="color:#666;font-size:0.5rem">回:</span>
+    <a href="week01.html" style="color:#666;font-size:0.6rem;padding:0.2rem 0.45rem">1</a>
+    <a href="week02.html" style="color:#666;font-size:0.6rem;padding:0.2rem 0.45rem">2</a>
+    <a href="week2.5.html" style="color:#666;font-size:0.6rem;padding:0.2rem 0.45rem">2.5</a>
+    <a href="week2.75.html" class="current" style="font-size:0.6rem;padding:0.2rem 0.45rem">2.75</a>
+    <a href="week03.html" style="color:#666;font-size:0.6rem;padding:0.2rem 0.45rem">3</a>
+    <a href="week04.html" style="color:#666;font-size:0.6rem;padding:0.2rem 0.45rem">4</a>
+  </div>
+  <a href="#sec-intro">導入</a>
+  <a href="#sec-translate">translate</a>
+  <a href="#sec-push-pop">push/pop</a>
+  <a href="#prob1">問1</a>
+  <a href="#prob2">問2</a>
+  <a href="#prob3">問3</a>
+  <a href="#sec-mini">小問8題</a>
+  <a href="#sec-practice">練習問題</a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">第2.75回 ── 補講</div>
+    <h1>translate / push / pop を理解する</h1>
+    <p>py5 で「座標系を動かして描く」仕組みを学びます。<code>translate()</code> で原点を移動し、<code>push()</code> / <code>pop()</code> で座標系を保存・復元する技術は、複雑な図形を簡潔に書くための基本です。</p>
+  </div>
+</header>
+
+<!-- ============ INTRO ============ -->
+<section id="sec-intro">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">0</div>
+      <h2>このページの使い方</h2>
+    </div>
+    <div class="card">
+      <p><code>translate()</code>、<code>push()</code>、<code>pop()</code> は座標変換の 3 大関数です。「図形の位置を計算で決める」のではなく「<strong>原点を動かしてからローカル座標で描く</strong>」という発想を身につけましょう。</p>
+      <ul class="point-list" style="margin-top:0.8rem">
+        <li><span style="color:#4FC3F7">①完成図</span> ── 何を作るか（ゴール）</li>
+        <li><span style="color:#FFB800">②考え方</span> ── 図と表で「なぜ translate が使えるか」</li>
+        <li><span style="color:#76B900">③コード</span> ── 実装と 1 行ずつの解説</li>
+      </ul>
+      <div class="callout-info" style="margin-top:1rem">
+        <h4>準備</h4>
+        <p>ターミナルで <code>cd ~/Lecture/MD1/no2_75</code> （無ければ <code>mkdir -p ~/Lecture/MD1/no2_75 && cd ~/Lecture/MD1/no2_75</code>）して仮想環境を有効化してから、各問題のコードを <code>prob1.py</code>〜<code>prob3.py</code> として保存・実行してください。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ translate の基本 ============ -->
+<section id="sec-translate">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#93D500">1</div>
+      <h2>translate() ── 原点を動かす</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-q">基本概念</span>
+        <h3>translate(x, y) とは？</h3>
+      </div>
+
+      <p><code>translate(x, y)</code> は、座標系の<strong>原点 (0, 0) を (x, y) へ移動</strong>させます。以降の描画命令はすべて新しい原点を基準にして動きます。</p>
+
+      <div class="concept-box">
+        <h4>たとえ話：画用紙をずらす</h4>
+        <p>机の上に画用紙がある。<code>translate(100, 50)</code> は「画用紙を右に 100、下に 50 ずらす」のと同じ。鉛筆を (0, 0) に置いても、画用紙上では (100, 50) に点が付く。</p>
+      </div>
+
+      <!-- translate のビジュアル図解 -->
+      <span class="step-label step-idea">原点の移動イメージ</span>
+      <div class="idea-diagram">
+        <svg viewBox="0 0 900 320" preserveAspectRatio="xMidYMid meet">
+          <!-- 左: translate なし -->
+          <text x="200" y="22" text-anchor="middle" fill="#FF6B6B" font-size="14" font-weight="700">translate なし</text>
+          <rect x="10" y="30" width="380" height="270" rx="8" fill="#cccccc" stroke="#333" stroke-width="2"/>
+          <!-- 原点マーク -->
+          <line x1="10" y1="30" x2="50" y2="30" stroke="#FF6B6B" stroke-width="3"/>
+          <line x1="10" y1="30" x2="10" y2="70" stroke="#FF6B6B" stroke-width="3"/>
+          <text x="16" y="48" fill="#FF6B6B" font-size="12" font-weight="700" font-family="'JetBrains Mono', monospace">(0,0)</text>
+          <!-- rect(80, 60, 100, 80) -->
+          <rect x="90" y="90" width="100" height="80" fill="#4FC3F7" stroke="#0a1a2e" stroke-width="2" opacity="0.8"/>
+          <text x="140" y="136" text-anchor="middle" fill="#0a1a2e" font-size="11" font-weight="700" font-family="'JetBrains Mono', monospace">rect(80,60,100,80)</text>
+
+          <!-- 右: translate(200, 100) あり -->
+          <text x="680" y="22" text-anchor="middle" fill="#000000" font-size="14" font-weight="700">translate(200, 100) してから描画</text>
+          <rect x="490" y="30" width="380" height="270" rx="8" fill="#cccccc" stroke="#333" stroke-width="2"/>
+          <!-- 元の原点 (薄い) -->
+          <line x1="490" y1="30" x2="530" y2="30" stroke="#FF6B6B" stroke-width="2" opacity="0.3"/>
+          <line x1="490" y1="30" x2="490" y2="70" stroke="#FF6B6B" stroke-width="2" opacity="0.3"/>
+          <text x="496" y="48" fill="#FF6B6B" font-size="10" font-family="'JetBrains Mono', monospace" opacity="0.4">(0,0) 元</text>
+          <!-- 新しい原点 -->
+          <line x1="690" y1="130" x2="730" y2="130" stroke="#76B900" stroke-width="3"/>
+          <line x1="690" y1="130" x2="690" y2="170" stroke="#76B900" stroke-width="3"/>
+          <text x="696" y="148" fill="#76B900" font-size="12" font-weight="700" font-family="'JetBrains Mono', monospace">(0,0) 新</text>
+          <!-- 矢印: 元→新 -->
+          <line x1="510" y1="40" x2="685" y2="125" stroke="#FFB800" stroke-width="2" stroke-dasharray="6 4"/>
+          <text x="580" y="72" fill="#000000" font-size="11" font-weight="700" font-family="'JetBrains Mono', monospace" transform="rotate(25, 580, 72)">translate(200,100)</text>
+          <!-- rect(80, 60, 100, 80) ─ 新原点基準 -->
+          <rect x="770" y="190" width="100" height="80" fill="#76B900" stroke="#1a2e0a" stroke-width="2" opacity="0.8"/>
+          <text x="820" y="236" text-anchor="middle" fill="#0a1a2e" font-size="11" font-weight="700" font-family="'JetBrains Mono', monospace">rect(80,60,100,80)</text>
+          <text x="820" y="252" text-anchor="middle" fill="#0a1a2e" font-size="9" font-family="'JetBrains Mono', monospace">実際位置: (280,160)</text>
+        </svg>
+      </div>
+
+      <pre><span class="code-label">Python</span>
+<span class="cmt"># translate なし ── rect の位置を直接計算</span>
+py5.<span class="fn">rect</span>(<span class="num">280</span>, <span class="num">160</span>, <span class="num">100</span>, <span class="num">80</span>)
+
+<span class="cmt"># translate あり ── 原点を (200,100) に動かしてからローカル座標で描く</span>
+py5.<span class="fn">translate</span>(<span class="num">200</span>, <span class="num">100</span>)
+py5.<span class="fn">rect</span>(<span class="num">80</span>, <span class="num">60</span>, <span class="num">100</span>, <span class="num">80</span>)  <span class="cmt"># 画面上では (280, 160) に描かれる</span></pre>
+
+      <div class="callout-warn">
+        <h4>translate は累積する！</h4>
+        <p><code>translate(100, 0)</code> を 2 回呼ぶと、原点は (200, 0) に移動します。元に戻したい場合は <code>push()</code> / <code>pop()</code> を使います（次のセクション）。</p>
+      </div>
+
+      <!-- translate 累積のアニメ -->
+      <span class="step-label step-figure">translate の累積を見る</span>
+      <div class="exec-viewer">
+        <div class="exec-controls" data-cycle="8" data-step="0.5">
+          <button class="exec-ctrl" data-action="play">&#9654; 再生</button>
+          <button class="exec-ctrl" data-action="pause">&#9208; 一時停止</button>
+          <button class="exec-ctrl" data-action="step">&#9197; 次へ (+0.5s)</button>
+          <button class="exec-ctrl" data-action="reset">&#9198; 最初から</button>
+          <span class="exec-time">0.00s / 8s</span>
+        </div>
+        <svg viewBox="0 0 900 300" preserveAspectRatio="xMidYMid meet">
+          <!-- canvas -->
+          <rect x="10" y="10" width="880" height="200" rx="8" fill="#cccccc" stroke="#333" stroke-width="2"/>
+          <text x="880" y="8" text-anchor="end" fill="#666" font-size="10" font-family="'JetBrains Mono', monospace">canvas (880x200)</text>
+
+          <!-- Step 0: 原点 (0,0) に十字 -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;1;0.3;0.3;0.3;0" keyTimes="0;0.01;0.25;0.50;0.75;1" dur="8s" repeatCount="indefinite"/>
+            <line x1="10" y1="10" x2="60" y2="10" stroke="#FF6B6B" stroke-width="3"/>
+            <line x1="10" y1="10" x2="10" y2="60" stroke="#FF6B6B" stroke-width="3"/>
+            <text x="16" y="28" fill="#FF6B6B" font-size="12" font-weight="700" font-family="'JetBrains Mono', monospace">原点</text>
+            <circle cx="60" cy="60" r="20" fill="#4FC3F7" stroke="#0a1a2e" stroke-width="2"/>
+            <text x="60" y="65" text-anchor="middle" fill="#0a1a2e" font-size="10" font-weight="700">1</text>
+          </g>
+
+          <!-- Step 1: translate(200, 0) → 原点が (200,0) に -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;1;0.3;0.3;0" keyTimes="0;0.25;0.26;0.50;0.75;1" dur="8s" repeatCount="indefinite"/>
+            <line x1="210" y1="10" x2="260" y2="10" stroke="#76B900" stroke-width="3"/>
+            <line x1="210" y1="10" x2="210" y2="60" stroke="#76B900" stroke-width="3"/>
+            <text x="216" y="28" fill="#76B900" font-size="10" font-weight="700" font-family="'JetBrains Mono', monospace">+200</text>
+            <circle cx="260" cy="60" r="20" fill="#76B900" stroke="#1a2e0a" stroke-width="2"/>
+            <text x="260" y="65" text-anchor="middle" fill="#0a1a2e" font-size="10" font-weight="700">2</text>
+          </g>
+
+          <!-- Step 2: translate(200, 0) → 累積で (400,0) -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;1;0.3;0" keyTimes="0;0.25;0.50;0.51;0.75;1" dur="8s" repeatCount="indefinite"/>
+            <line x1="410" y1="10" x2="460" y2="10" stroke="#FFB800" stroke-width="3"/>
+            <line x1="410" y1="10" x2="410" y2="60" stroke="#FFB800" stroke-width="3"/>
+            <text x="416" y="28" fill="#FFB800" font-size="10" font-weight="700" font-family="'JetBrains Mono', monospace">+400</text>
+            <circle cx="460" cy="60" r="20" fill="#FFB800" stroke="#2e1a0a" stroke-width="2"/>
+            <text x="460" y="65" text-anchor="middle" fill="#0a1a2e" font-size="10" font-weight="700">3</text>
+          </g>
+
+          <!-- Step 3: translate(200, 0) → 累積で (600,0) -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;0" keyTimes="0;0.25;0.50;0.75;0.76;1" dur="8s" repeatCount="indefinite"/>
+            <line x1="610" y1="10" x2="660" y2="10" stroke="#E040FB" stroke-width="3"/>
+            <line x1="610" y1="10" x2="610" y2="60" stroke="#E040FB" stroke-width="3"/>
+            <text x="616" y="28" fill="#E040FB" font-size="10" font-weight="700" font-family="'JetBrains Mono', monospace">+600</text>
+            <circle cx="660" cy="60" r="20" fill="#E040FB" stroke="#2e0a2e" stroke-width="2"/>
+            <text x="660" y="65" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">4</text>
+          </g>
+
+          <!-- トレースパネル -->
+          <rect x="0" y="220" width="900" height="75" rx="8" fill="#141414" stroke="#FFB800" stroke-width="1"/>
+          <text x="20" y="240" font-family="'Noto Sans JP', sans-serif" font-size="12" fill="#666" font-weight="700">&#9660; 実行の流れ</text>
+          <g font-family="'JetBrains Mono', monospace" font-size="15" font-weight="700">
+            <text x="40" y="270" fill="#4FC3F7">ellipse(50, 50, 40, 40) <tspan fill="#666" font-size="12">← 原点=(0,0) なので画面上の (50,50)</tspan>
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0;0;0" keyTimes="0;0.01;0.25;0.50;0.75;1" dur="8s" repeatCount="indefinite"/></text>
+            <text x="40" y="270" fill="#76B900">translate(200,0) <tspan fill="#e0e0e0">→</tspan> ellipse(50,50,40,40) <tspan fill="#666" font-size="12">← 画面上の (250,50)</tspan>
+              <animate attributeName="opacity" calcMode="discrete" values="0;0;1;0;0;0" keyTimes="0;0.25;0.26;0.50;0.75;1" dur="8s" repeatCount="indefinite"/></text>
+            <text x="40" y="270" fill="#FFB800">translate(200,0) <tspan fill="#e0e0e0">→</tspan> ellipse(50,50,40,40) <tspan fill="#666" font-size="12">← 累積(400,0)→画面上の (450,50)</tspan>
+              <animate attributeName="opacity" calcMode="discrete" values="0;0;0;1;0;0" keyTimes="0;0.25;0.50;0.51;0.75;1" dur="8s" repeatCount="indefinite"/></text>
+            <text x="40" y="270" fill="#E040FB">translate(200,0) <tspan fill="#e0e0e0">→</tspan> ellipse(50,50,40,40) <tspan fill="#666" font-size="12">← 累積(600,0)→画面上の (650,50)</tspan>
+              <animate attributeName="opacity" calcMode="discrete" values="0;0;0;0;1;0" keyTimes="0;0.25;0.50;0.75;0.76;1" dur="8s" repeatCount="indefinite"/></text>
+          </g>
+        </svg>
+        <span class="play-badge">translate を呼ぶたびに原点がずれる（8 秒ループ）</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ push / pop ============ -->
+<section id="sec-push-pop">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">2</div>
+      <h2>push() / pop() ── 座標系の保存と復元</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-q">基本概念</span>
+        <h3>push() と pop() のペア</h3>
+      </div>
+
+      <div class="concept-box">
+        <h4>たとえ話：セーブ &amp; ロード</h4>
+        <p><code>push()</code> = 今の座標系を<strong>セーブ</strong>する。<code>pop()</code> = セーブした状態に<strong>ロード</strong>（復元）する。<br>
+        <code>push()</code> と <code>pop()</code> の間でどんなに <code>translate()</code> しても、<code>pop()</code> した瞬間に元通り。</p>
+      </div>
+
+      <!-- push/pop のビジュアル図解 -->
+      <span class="step-label step-idea">push/pop のイメージ</span>
+      <div class="idea-diagram">
+        <svg viewBox="0 0 900 260" preserveAspectRatio="xMidYMid meet">
+          <text x="450" y="20" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">push() → translate() → 描画 → pop() の流れ</text>
+
+          <!-- Step 1: push() -->
+          <g transform="translate(20, 40)">
+            <rect width="200" height="190" rx="10" fill="#1a1a1a" stroke="#4FC3F7" stroke-width="2"/>
+            <text x="100" y="24" text-anchor="middle" fill="#4FC3F7" font-size="14" font-weight="900" font-family="'JetBrains Mono', monospace">push()</text>
+            <rect x="15" y="35" width="170" height="120" rx="6" fill="#cccccc" stroke="#333"/>
+            <line x1="15" y1="35" x2="55" y2="35" stroke="#76B900" stroke-width="3"/>
+            <line x1="15" y1="35" x2="15" y2="75" stroke="#76B900" stroke-width="3"/>
+            <text x="22" y="52" fill="#76B900" font-size="10" font-weight="700" font-family="'JetBrains Mono', monospace">(0,0)</text>
+            <text x="100" y="180" text-anchor="middle" fill="#4FC3F7" font-size="11" font-weight="600">座標系を保存</text>
+          </g>
+
+          <!-- Arrow -->
+          <text x="240" y="140" fill="#666" font-size="24">&#10132;</text>
+
+          <!-- Step 2: translate(150, 80) + draw -->
+          <g transform="translate(270, 40)">
+            <rect width="250" height="190" rx="10" fill="#1a1a1a" stroke="#FFB800" stroke-width="2"/>
+            <text x="125" y="24" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="900" font-family="'JetBrains Mono', monospace">translate(150,80) + draw</text>
+            <rect x="15" y="35" width="220" height="120" rx="6" fill="#cccccc" stroke="#333"/>
+            <!-- 元の原点 (薄い) -->
+            <line x1="15" y1="35" x2="45" y2="35" stroke="#76B900" stroke-width="2" opacity="0.3"/>
+            <line x1="15" y1="35" x2="15" y2="65" stroke="#76B900" stroke-width="2" opacity="0.3"/>
+            <!-- 新しい原点 -->
+            <line x1="165" y1="115" x2="195" y2="115" stroke="#FFB800" stroke-width="3"/>
+            <line x1="165" y1="115" x2="165" y2="145" stroke="#FFB800" stroke-width="3"/>
+            <text x="175" y="110" fill="#000000" font-size="9" font-weight="700" font-family="'JetBrains Mono', monospace">(0,0)新</text>
+            <circle cx="165" cy="115" r="12" fill="#FFB800" stroke="#2e1a0a" stroke-width="2" opacity="0.7"/>
+            <text x="125" y="180" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="600">原点をずらして描画</text>
+          </g>
+
+          <!-- Arrow -->
+          <text x="540" y="140" fill="#666" font-size="24">&#10132;</text>
+
+          <!-- Step 3: pop() -->
+          <g transform="translate(580, 40)">
+            <rect width="290" height="190" rx="10" fill="#1a1a1a" stroke="#93D500" stroke-width="2"/>
+            <text x="145" y="24" text-anchor="middle" fill="#93D500" font-size="14" font-weight="900" font-family="'JetBrains Mono', monospace">pop()</text>
+            <rect x="15" y="35" width="260" height="120" rx="6" fill="#cccccc" stroke="#333"/>
+            <line x1="15" y1="35" x2="55" y2="35" stroke="#76B900" stroke-width="3"/>
+            <line x1="15" y1="35" x2="15" y2="75" stroke="#76B900" stroke-width="3"/>
+            <text x="22" y="52" fill="#76B900" font-size="10" font-weight="700" font-family="'JetBrains Mono', monospace">(0,0) 復元!</text>
+            <!-- 描画結果は残る -->
+            <circle cx="175" cy="120" r="12" fill="#FFB800" stroke="#2e1a0a" stroke-width="2" opacity="0.5"/>
+            <text x="145" y="180" text-anchor="middle" fill="#93D500" font-size="11" font-weight="600">原点が元に戻る（絵は残る）</text>
+          </g>
+        </svg>
+      </div>
+
+      <pre><span class="code-label">Python</span>
+<span class="cmt"># push/pop の基本パターン</span>
+py5.<span class="fn">push</span>()               <span class="cmt"># 今の座標系をセーブ</span>
+py5.<span class="fn">translate</span>(<span class="num">150</span>, <span class="num">80</span>)  <span class="cmt"># 原点を (150, 80) に移動</span>
+py5.<span class="fn">ellipse</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">40</span>, <span class="num">40</span>)  <span class="cmt"># (150,80) に円が描かれる</span>
+py5.<span class="fn">pop</span>()                <span class="cmt"># 座標系をロード → 原点は (0,0) に戻る</span>
+
+<span class="cmt"># この時点で原点は (0,0) なので、次の描画は影響を受けない</span>
+py5.<span class="fn">rect</span>(<span class="num">10</span>, <span class="num">10</span>, <span class="num">30</span>, <span class="num">30</span>)  <span class="cmt"># (10,10) に四角が描かれる</span></pre>
+
+      <div class="callout-tip">
+        <h4>push/pop なしだとどうなる？</h4>
+        <p><code>translate(150, 80)</code> の後に <code>rect(10, 10, 30, 30)</code> を描くと、rect は画面上の <strong>(160, 90)</strong> に描かれてしまいます。push/pop で囲めば、translate の影響を限定できます。</p>
+      </div>
+
+      <div class="concept-box">
+        <h4>push/pop は「入れ子」にできる</h4>
+        <p><code>push()</code> の中でさらに <code>push()</code> を呼べます。それぞれの <code>pop()</code> で対応する <code>push()</code> の時点に戻ります。必ず <strong>push と pop は同じ数</strong> にしてください。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 問題1 ============ -->
+<section id="prob1">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">問1</div>
+      <h2>translate で横一列に花を 4 つ並べる</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-q">基本問題</span>
+        <h3>「push/pop + translate で繰り返し配置」</h3>
+      </div>
+
+      <span class="step-label step-figure">① 完成図</span>
+      <div class="result-figure">
+        <svg viewBox="0 0 400 200" width="400" height="200">
+          <rect width="400" height="200" fill="#cccccc"/>
+          <!-- 花 x4: 各位置 (50,100) (150,100) (250,100) (350,100) -->
+          <g>
+            <!-- 花1 at (50,100) -->
+            <circle cx="50" cy="75"  r="12" fill="#FF6B6B" stroke="#c0392b" opacity="0.7"/>
+            <circle cx="50" cy="125" r="12" fill="#FF6B6B" stroke="#c0392b" opacity="0.7"/>
+            <circle cx="25" cy="100" r="12" fill="#FF6B6B" stroke="#c0392b" opacity="0.7"/>
+            <circle cx="75" cy="100" r="12" fill="#FF6B6B" stroke="#c0392b" opacity="0.7"/>
+            <circle cx="50" cy="100" r="10" fill="#FFB800" stroke="#e67e22"/>
+            <!-- 花2 at (150,100) -->
+            <circle cx="150" cy="75"  r="12" fill="#FF6B6B" stroke="#c0392b" opacity="0.7"/>
+            <circle cx="150" cy="125" r="12" fill="#FF6B6B" stroke="#c0392b" opacity="0.7"/>
+            <circle cx="125" cy="100" r="12" fill="#FF6B6B" stroke="#c0392b" opacity="0.7"/>
+            <circle cx="175" cy="100" r="12" fill="#FF6B6B" stroke="#c0392b" opacity="0.7"/>
+            <circle cx="150" cy="100" r="10" fill="#FFB800" stroke="#e67e22"/>
+            <!-- 花3 at (250,100) -->
+            <circle cx="250" cy="75"  r="12" fill="#FF6B6B" stroke="#c0392b" opacity="0.7"/>
+            <circle cx="250" cy="125" r="12" fill="#FF6B6B" stroke="#c0392b" opacity="0.7"/>
+            <circle cx="225" cy="100" r="12" fill="#FF6B6B" stroke="#c0392b" opacity="0.7"/>
+            <circle cx="275" cy="100" r="12" fill="#FF6B6B" stroke="#c0392b" opacity="0.7"/>
+            <circle cx="250" cy="100" r="10" fill="#FFB800" stroke="#e67e22"/>
+            <!-- 花4 at (350,100) -->
+            <circle cx="350" cy="75"  r="12" fill="#FF6B6B" stroke="#c0392b" opacity="0.7"/>
+            <circle cx="350" cy="125" r="12" fill="#FF6B6B" stroke="#c0392b" opacity="0.7"/>
+            <circle cx="325" cy="100" r="12" fill="#FF6B6B" stroke="#c0392b" opacity="0.7"/>
+            <circle cx="375" cy="100" r="12" fill="#FF6B6B" stroke="#c0392b" opacity="0.7"/>
+            <circle cx="350" cy="100" r="10" fill="#FFB800" stroke="#e67e22"/>
+          </g>
+        </svg>
+        <span class="figure-caption">4 つの花が等間隔で並ぶ</span>
+      </div>
+
+      <!-- ② 考え方 -->
+      <span class="step-label step-idea">② 考え方</span>
+      <div class="concept-box">
+        <h4>花のパーツは常に同じ ── 位置だけが違う</h4>
+        <ul class="point-list">
+          <li>花びら 4 枚 + 中心 = 全部で 5 つの円で 1 つの花</li>
+          <li>花びらの座標は中心から見て (0,-25), (0,+25), (-25,0), (+25,0)</li>
+          <li><strong>translate で花の中心を移動</strong>してから、同じ描画コードを使い回す</li>
+          <li>push/pop で囲めば、次の花に影響しない</li>
+        </ul>
+      </div>
+
+      <table>
+        <tr><th>i</th><th>50 + i*100</th><th>花の中心 x</th></tr>
+        <tr><td>0</td><td>50 + 0</td><td>50</td></tr>
+        <tr><td>1</td><td>50 + 100</td><td>150</td></tr>
+        <tr><td>2</td><td>50 + 200</td><td>250</td></tr>
+        <tr><td>3</td><td>50 + 300</td><td>350</td></tr>
+      </table>
+
+      <!-- ③ コード -->
+      <span class="step-label step-code">③ コード</span>
+      <pre><span class="code-label">Python ── prob1.py</span>
+<span class="cmt"># prob1.py - push/pop + translate で花を 4 つ並べる</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">200</span>)
+    py5.<span class="fn">background</span>(<span class="num">204</span>)
+
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">4</span>):
+        py5.<span class="fn">push</span>()                          <span class="cmt"># 座標系をセーブ</span>
+        py5.<span class="fn">translate</span>(<span class="num">50</span> <span class="op">+</span> i<span class="op">*</span><span class="num">100</span>, <span class="num">100</span>)   <span class="cmt"># 花の中心へ移動</span>
+
+        <span class="cmt"># 花びら (赤)</span>
+        py5.<span class="fn">fill</span>(<span class="num">255</span>, <span class="num">107</span>, <span class="num">107</span>)
+        py5.<span class="fn">ellipse</span>( <span class="num">0</span>, <span class="op">-</span><span class="num">25</span>, <span class="num">24</span>, <span class="num">24</span>)   <span class="cmt"># 上</span>
+        py5.<span class="fn">ellipse</span>( <span class="num">0</span>,  <span class="num">25</span>, <span class="num">24</span>, <span class="num">24</span>)   <span class="cmt"># 下</span>
+        py5.<span class="fn">ellipse</span>(<span class="op">-</span><span class="num">25</span>,  <span class="num">0</span>, <span class="num">24</span>, <span class="num">24</span>)   <span class="cmt"># 左</span>
+        py5.<span class="fn">ellipse</span>( <span class="num">25</span>,  <span class="num">0</span>, <span class="num">24</span>, <span class="num">24</span>)   <span class="cmt"># 右</span>
+
+        <span class="cmt"># 中心 (黄)</span>
+        py5.<span class="fn">fill</span>(<span class="num">255</span>, <span class="num">184</span>, <span class="num">0</span>)
+        py5.<span class="fn">ellipse</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">20</span>, <span class="num">20</span>)
+
+        py5.<span class="fn">pop</span>()                           <span class="cmt"># 座標系をロード → 原点が (0,0) に戻る</span>
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="callout-tip">
+        <h4>1 行ずつ読む</h4>
+        <ul class="point-list">
+          <li><code>push()</code> ── 現在の座標系を保存（この時点では原点 = (0,0)）</li>
+          <li><code>translate(50 + i*100, 100)</code> ── 花の中心位置に原点を移動</li>
+          <li><code>ellipse(0, -25, ...)</code> ── 「中心の上 25px」は原点からの相対位置</li>
+          <li><code>pop()</code> ── 原点を (0,0) に戻す → 次のループの translate がリセットされる</li>
+        </ul>
+      </div>
+
+      <div class="callout-info">
+        <h4>やってみよう</h4>
+        <p>push/pop を外してみよう。translate が累積するので、花がどんどん右にずれていくはず！</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 問題2 ============ -->
+<section id="prob2">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">問2</div>
+      <h2>入れ子の translate で家を描く</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-q">応用問題</span>
+        <h3>「家のパーツを translate で相対配置」</h3>
+      </div>
+
+      <span class="step-label step-figure">① 完成図</span>
+      <div class="result-figure">
+        <svg viewBox="0 0 400 400" width="400" height="400">
+          <rect width="400" height="400" fill="#87CEEB"/>
+          <!-- 地面 -->
+          <rect x="0" y="300" width="400" height="100" fill="#228B22"/>
+          <!-- 家の本体 -->
+          <rect x="100" y="180" width="200" height="150" fill="#DEB887" stroke="#8B4513" stroke-width="2"/>
+          <!-- 屋根 -->
+          <polygon points="80,180 200,80 320,180" fill="#8B0000" stroke="#5B0000" stroke-width="2"/>
+          <!-- ドア -->
+          <rect x="170" y="260" width="60" height="70" fill="#8B4513" stroke="#5B2C06" stroke-width="2"/>
+          <circle cx="220" cy="298" r="4" fill="#FFB800"/>
+          <!-- 窓 (左) -->
+          <rect x="120" y="210" width="40" height="40" fill="#87CEEB" stroke="#333" stroke-width="2"/>
+          <line x1="140" y1="210" x2="140" y2="250" stroke="#333" stroke-width="1"/>
+          <line x1="120" y1="230" x2="160" y2="230" stroke="#333" stroke-width="1"/>
+          <!-- 窓 (右) -->
+          <rect x="240" y="210" width="40" height="40" fill="#87CEEB" stroke="#333" stroke-width="2"/>
+          <line x1="260" y1="210" x2="260" y2="250" stroke="#333" stroke-width="1"/>
+          <line x1="240" y1="230" x2="280" y2="230" stroke="#333" stroke-width="1"/>
+        </svg>
+        <span class="figure-caption">translate で家の各パーツを相対配置</span>
+      </div>
+
+      <span class="step-label step-idea">② 考え方</span>
+      <div class="concept-box">
+        <h4>階層構造で考える</h4>
+        <ul class="point-list">
+          <li>まず <strong>家の基準点</strong>（左上 = (100, 180)）に translate する</li>
+          <li>家の中で<strong>窓の位置</strong>に translate → 窓を「ローカル座標」で描く</li>
+          <li>窓が終わったら pop → ドアの位置に translate → ドアを描く</li>
+          <li>全部終わったら最外側の pop → 原点が (0,0) に戻る</li>
+        </ul>
+      </div>
+
+      <div class="idea-diagram">
+        <svg viewBox="0 0 900 160" preserveAspectRatio="xMidYMid meet">
+          <text x="450" y="20" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">push/pop の入れ子構造</text>
+          <g font-family="'JetBrains Mono', monospace" font-size="13">
+            <!-- 外側 push -->
+            <rect x="20" y="35" width="860" height="110" rx="10" fill="none" stroke="#4FC3F7" stroke-width="2" stroke-dasharray="6 4"/>
+            <text x="30" y="52" fill="#4FC3F7" font-weight="700">push() ── translate(100,180) ── 家の基準点</text>
+
+            <!-- 内側 push: 左窓 -->
+            <rect x="40" y="65" width="240" height="65" rx="8" fill="rgba(118,185,0,0.1)" stroke="#76B900" stroke-width="2"/>
+            <text x="50" y="82" fill="#76B900" font-weight="700">push()</text>
+            <text x="50" y="100" fill="#e0e0e0">translate(20,30)</text>
+            <text x="50" y="118" fill="#93D500">窓を描画 → pop()</text>
+
+            <!-- 内側 push: 右窓 -->
+            <rect x="300" y="65" width="240" height="65" rx="8" fill="rgba(118,185,0,0.1)" stroke="#76B900" stroke-width="2"/>
+            <text x="310" y="82" fill="#76B900" font-weight="700">push()</text>
+            <text x="310" y="100" fill="#e0e0e0">translate(140,30)</text>
+            <text x="310" y="118" fill="#93D500">窓を描画 → pop()</text>
+
+            <!-- 内側 push: ドア -->
+            <rect x="560" y="65" width="240" height="65" rx="8" fill="rgba(255,184,0,0.1)" stroke="#FFB800" stroke-width="2"/>
+            <text x="570" y="82" fill="#FFB800" font-weight="700">push()</text>
+            <text x="570" y="100" fill="#e0e0e0">translate(70,80)</text>
+            <text x="570" y="118" fill="#93D500">ドアを描画 → pop()</text>
+
+            <!-- 外側の終了 -->
+            <text x="830" y="52" fill="#4FC3F7" font-weight="700" text-anchor="end">pop()</text>
+          </g>
+        </svg>
+      </div>
+
+      <span class="step-label step-code">③ コード</span>
+      <pre><span class="code-label">Python ── prob2.py</span>
+<span class="cmt"># prob2.py - translate の入れ子で家を描く</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">400</span>)
+    py5.<span class="fn">background</span>(<span class="num">135</span>, <span class="num">206</span>, <span class="num">235</span>)  <span class="cmt"># 空色</span>
+
+    <span class="cmt"># 地面</span>
+    py5.<span class="fn">fill</span>(<span class="num">34</span>, <span class="num">139</span>, <span class="num">34</span>)
+    py5.<span class="fn">rect</span>(<span class="num">0</span>, <span class="num">300</span>, <span class="num">400</span>, <span class="num">100</span>)
+
+    py5.<span class="fn">push</span>()                          <span class="cmt"># ★ 家の基準点をセーブ</span>
+    py5.<span class="fn">translate</span>(<span class="num">100</span>, <span class="num">180</span>)            <span class="cmt"># 家の左上を原点にする</span>
+
+    <span class="cmt"># 家の本体 (幅200, 高さ150)</span>
+    py5.<span class="fn">fill</span>(<span class="num">222</span>, <span class="num">184</span>, <span class="num">135</span>)
+    py5.<span class="fn">stroke</span>(<span class="num">139</span>, <span class="num">69</span>, <span class="num">19</span>)
+    py5.<span class="fn">rect</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">200</span>, <span class="num">150</span>)
+
+    <span class="cmt"># 屋根</span>
+    py5.<span class="fn">fill</span>(<span class="num">139</span>, <span class="num">0</span>, <span class="num">0</span>)
+    py5.<span class="fn">triangle</span>(<span class="op">-</span><span class="num">20</span>, <span class="num">0</span>, <span class="num">100</span>, <span class="op">-</span><span class="num">100</span>, <span class="num">220</span>, <span class="num">0</span>)
+
+    <span class="cmt"># ── 左の窓 ──</span>
+    py5.<span class="fn">push</span>()
+    py5.<span class="fn">translate</span>(<span class="num">20</span>, <span class="num">30</span>)
+    py5.<span class="fn">fill</span>(<span class="num">135</span>, <span class="num">206</span>, <span class="num">235</span>)
+    py5.<span class="fn">stroke</span>(<span class="num">51</span>)
+    py5.<span class="fn">rect</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">40</span>, <span class="num">40</span>)
+    py5.<span class="fn">line</span>(<span class="num">20</span>, <span class="num">0</span>, <span class="num">20</span>, <span class="num">40</span>)          <span class="cmt"># 十字の縦線</span>
+    py5.<span class="fn">line</span>(<span class="num">0</span>, <span class="num">20</span>, <span class="num">40</span>, <span class="num">20</span>)          <span class="cmt"># 十字の横線</span>
+    py5.<span class="fn">pop</span>()
+
+    <span class="cmt"># ── 右の窓 ──</span>
+    py5.<span class="fn">push</span>()
+    py5.<span class="fn">translate</span>(<span class="num">140</span>, <span class="num">30</span>)
+    py5.<span class="fn">fill</span>(<span class="num">135</span>, <span class="num">206</span>, <span class="num">235</span>)
+    py5.<span class="fn">stroke</span>(<span class="num">51</span>)
+    py5.<span class="fn">rect</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">40</span>, <span class="num">40</span>)
+    py5.<span class="fn">line</span>(<span class="num">20</span>, <span class="num">0</span>, <span class="num">20</span>, <span class="num">40</span>)
+    py5.<span class="fn">line</span>(<span class="num">0</span>, <span class="num">20</span>, <span class="num">40</span>, <span class="num">20</span>)
+    py5.<span class="fn">pop</span>()
+
+    <span class="cmt"># ── ドア ──</span>
+    py5.<span class="fn">push</span>()
+    py5.<span class="fn">translate</span>(<span class="num">70</span>, <span class="num">80</span>)
+    py5.<span class="fn">fill</span>(<span class="num">139</span>, <span class="num">69</span>, <span class="num">19</span>)
+    py5.<span class="fn">rect</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">60</span>, <span class="num">70</span>)
+    py5.<span class="fn">fill</span>(<span class="num">255</span>, <span class="num">184</span>, <span class="num">0</span>)
+    py5.<span class="fn">ellipse</span>(<span class="num">50</span>, <span class="num">38</span>, <span class="num">8</span>, <span class="num">8</span>)       <span class="cmt"># ドアノブ</span>
+    py5.<span class="fn">pop</span>()
+
+    py5.<span class="fn">pop</span>()                           <span class="cmt"># ★ 家の基準点をロード</span>
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="callout-tip">
+        <h4>ポイント</h4>
+        <ul class="point-list">
+          <li>外側の <code>push/pop</code> が「家全体」の座標系</li>
+          <li>内側の <code>push/pop</code> が「窓」「ドア」のローカル座標系</li>
+          <li>窓の描画コードは左も右も<strong>まったく同じ</strong> ── translate の位置だけが違う</li>
+        </ul>
+      </div>
+
+      <div class="callout-info">
+        <h4>やってみよう</h4>
+        <p>外側の <code>translate(100, 180)</code> を <code>translate(50, 100)</code> に変えてみよう。家全体が左上に移動するはず。パーツ間の位置関係は崩れない！</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 問題3 ============ -->
+<section id="prob3">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">問3</div>
+      <h2>for + push/pop で時計の目盛りを描く</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-q">応用問題</span>
+        <h3>「translate + rotate で円周上に配置」</h3>
+      </div>
+
+      <span class="step-label step-figure">① 完成図</span>
+      <div class="result-figure">
+        <svg viewBox="0 0 400 400" width="400" height="400">
+          <rect width="400" height="400" fill="#cccccc"/>
+          <!-- 文字盤 -->
+          <circle cx="200" cy="200" r="170" fill="#f0f0f0" stroke="#333" stroke-width="3"/>
+          <!-- 12 本の目盛り -->
+          <g stroke="#333" stroke-width="3">
+            <line x1="200" y1="40"  x2="200" y2="70"/>   <!-- 12 -->
+            <line x1="283" y1="57"  x2="268" y2="83"/>   <!-- 1 -->
+            <line x1="343" y1="117" x2="317" y2="132"/>  <!-- 2 -->
+            <line x1="360" y1="200" x2="330" y2="200"/>  <!-- 3 -->
+            <line x1="343" y1="283" x2="317" y2="268"/>  <!-- 4 -->
+            <line x1="283" y1="343" x2="268" y2="317"/>  <!-- 5 -->
+            <line x1="200" y1="360" x2="200" y2="330"/>  <!-- 6 -->
+            <line x1="117" y1="343" x2="132" y2="317"/>  <!-- 7 -->
+            <line x1="57"  y1="283" x2="83"  y2="268"/>  <!-- 8 -->
+            <line x1="40"  y1="200" x2="70"  y2="200"/>  <!-- 9 -->
+            <line x1="57"  y1="117" x2="83"  y2="132"/>  <!-- 10 -->
+            <line x1="117" y1="57"  x2="132" y2="83"/>   <!-- 11 -->
+          </g>
+          <!-- 中心 -->
+          <circle cx="200" cy="200" r="5" fill="#333"/>
+        </svg>
+        <span class="figure-caption">12 本の目盛りを translate + rotate で描く</span>
+      </div>
+
+      <span class="step-label step-idea">② 考え方</span>
+      <div class="concept-box">
+        <h4>rotate = 座標系を回転させる</h4>
+        <ul class="point-list">
+          <li><code>translate(200, 200)</code> で原点をキャンバス中心に移動</li>
+          <li>12 本の目盛りは <strong>30 度 (= 360/12) ずつ回転</strong>した同じ線</li>
+          <li><code>push()</code> → <code>rotate(i * 30度)</code> → 線を描く → <code>pop()</code></li>
+          <li>ラジアン変換: <code>py5.radians(角度)</code></li>
+        </ul>
+      </div>
+
+      <table>
+        <tr><th>i</th><th>i * 30</th><th>角度 (度)</th><th>位置</th></tr>
+        <tr><td>0</td><td>0</td><td>0</td><td>12 時</td></tr>
+        <tr><td>1</td><td>30</td><td>30</td><td>1 時</td></tr>
+        <tr><td>2</td><td>60</td><td>60</td><td>2 時</td></tr>
+        <tr><td>3</td><td>90</td><td>90</td><td>3 時</td></tr>
+        <tr><td colspan="4" style="text-align:center;color:#666">... 30度ずつ増えて 12 本</td></tr>
+      </table>
+
+      <span class="step-label step-code">③ コード</span>
+      <pre><span class="code-label">Python ── prob3.py</span>
+<span class="cmt"># prob3.py - translate + rotate で時計の目盛り</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">400</span>)
+    py5.<span class="fn">background</span>(<span class="num">204</span>)
+    py5.<span class="fn">stroke_weight</span>(<span class="num">3</span>)
+
+    <span class="cmt"># 文字盤</span>
+    py5.<span class="fn">fill</span>(<span class="num">240</span>)
+    py5.<span class="fn">ellipse</span>(<span class="num">200</span>, <span class="num">200</span>, <span class="num">340</span>, <span class="num">340</span>)
+
+    py5.<span class="fn">push</span>()                          <span class="cmt"># ★ 外側の push</span>
+    py5.<span class="fn">translate</span>(<span class="num">200</span>, <span class="num">200</span>)            <span class="cmt"># 原点をキャンバス中心に</span>
+
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">12</span>):
+        py5.<span class="fn">push</span>()                      <span class="cmt"># ★ 各目盛り用の push</span>
+        py5.<span class="fn">rotate</span>(py5.<span class="fn">radians</span>(i <span class="op">*</span> <span class="num">30</span>))  <span class="cmt"># i*30 度回転</span>
+        py5.<span class="fn">line</span>(<span class="num">0</span>, <span class="op">-</span><span class="num">160</span>, <span class="num">0</span>, <span class="op">-</span><span class="num">130</span>)    <span class="cmt"># 上方向に線を引く</span>
+        py5.<span class="fn">pop</span>()                       <span class="cmt"># ★ 回転をリセット</span>
+
+    <span class="cmt"># 中心の丸</span>
+    py5.<span class="fn">fill</span>(<span class="num">51</span>)
+    py5.<span class="fn">ellipse</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">10</span>, <span class="num">10</span>)
+
+    py5.<span class="fn">pop</span>()                           <span class="cmt"># ★ 外側の pop</span>
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="callout-tip">
+        <h4>1 行ずつ読む</h4>
+        <ul class="point-list">
+          <li><code>translate(200, 200)</code> ── 原点をキャンバス中心に → 回転の軸もここ</li>
+          <li><code>rotate(py5.radians(i * 30))</code> ── 座標系全体を i*30 度回転</li>
+          <li><code>line(0, -160, 0, -130)</code> ── 「上方向に短い線」を引く。回転により位置が変わる</li>
+          <li>push/pop のおかげで、各ループの rotate が次のループに影響しない</li>
+        </ul>
+      </div>
+
+      <div class="callout-info">
+        <h4>やってみよう</h4>
+        <p><code>range(12)</code> を <code>range(60)</code>、角度を <code>i * 6</code> に変えると秒の目盛り（60 本）になる。太さを <code>stroke_weight(1)</code> にすると時計らしくなる。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 小問8題 ============ -->
+<section id="sec-mini">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">Q</div>
+      <h2>理解度チェック ── 小問 8 題</h2>
+    </div>
+
+    <div class="card">
+      <p>各問、<strong>答えを考えてから</strong>開いてください。</p>
+
+      <!-- Q1 -->
+      <details>
+        <summary><span class="tag tag-mini">Q1</span> <code>translate(100, 50)</code> の後に <code>rect(0, 0, 30, 30)</code> を描くと、画面上の位置は？</summary>
+        <div class="answer-content">
+          <p><strong>(100, 50)</strong> に四角が描かれる。<br>translate は原点を移動するので、rect(0,0,...) は新しい原点 = 画面上の (100,50) に描かれる。</p>
+        </div>
+      </details>
+
+      <!-- Q2 -->
+      <details>
+        <summary><span class="tag tag-mini">Q2</span> <code>translate(100, 0)</code> を 3 回呼んだ後、原点はどこ？</summary>
+        <div class="answer-content">
+          <p><strong>(300, 0)</strong>。translate は累積する。100 + 100 + 100 = 300。</p>
+        </div>
+      </details>
+
+      <!-- Q3 -->
+      <details>
+        <summary><span class="tag tag-mini">Q3</span> push/pop を使わずに translate の効果を元に戻すには？</summary>
+        <div class="answer-content">
+          <p><code>translate(-100, -50)</code> のように<strong>逆方向に translate</strong> する。ただし push/pop を使うほうが安全で可読性も高い。</p>
+        </div>
+      </details>
+
+      <!-- Q4 -->
+      <details>
+        <summary><span class="tag tag-mini">Q4</span> <code>push()</code> は translate 以外にも何を保存する？</summary>
+        <div class="answer-content">
+          <p><strong>fill, stroke, strokeWeight, rotate, scale</strong> など、すべての描画設定を保存する。pop() ですべて元に戻る。色を変えたい箇所だけ push/pop で囲むテクニックも有効。</p>
+        </div>
+      </details>
+
+      <!-- Q5 -->
+      <details>
+        <summary><span class="tag tag-mini">Q5</span> 次のコードで 2 つ目の円はどこに描かれる？<br><code>translate(50,50); ellipse(0,0,20,20); translate(100,0); ellipse(0,0,20,20);</code></summary>
+        <div class="answer-content">
+          <p>1 つ目: <strong>(50, 50)</strong>。2 つ目: <strong>(150, 50)</strong>。<br>2 回目の translate は 1 回目に累積するので、原点は (50+100, 50+0) = (150, 50) になる。</p>
+        </div>
+      </details>
+
+      <!-- Q6 -->
+      <details>
+        <summary><span class="tag tag-mini">Q6</span> push() を呼んだのに pop() を呼び忘れるとどうなる？</summary>
+        <div class="answer-content">
+          <p>py5 が<strong>内部スタックにゴミが溜まる</strong>。動作はおかしくならない場合もあるが、保存した状態が解放されず、多く繰り返すとエラーになる可能性がある。<strong>必ずペアにする</strong>こと。</p>
+        </div>
+      </details>
+
+      <!-- Q7 -->
+      <details>
+        <summary><span class="tag tag-mini">Q7</span> for ループの中で push/pop を使う理由は？</summary>
+        <div class="answer-content">
+          <p>ループのたびに translate/rotate が<strong>累積してしまう</strong>のを防ぐため。push/pop で囲めば、各反復が「まっさらな座標系」から始められる。</p>
+        </div>
+      </details>
+
+      <!-- Q8 -->
+      <details>
+        <summary><span class="tag tag-mini">Q8</span> <code>translate(200,200)</code> してから <code>rotate(py5.radians(45))</code> すると、回転の中心はどこ？</summary>
+        <div class="answer-content">
+          <p><strong>(200, 200)</strong>。rotate は常に<strong>現在の原点</strong>を中心に回転する。先に translate で原点を移動しているので、画面上の (200,200) が回転の中心になる。</p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 練習問題 ============ -->
+<section id="sec-practice">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#E040FB">&#9998;</div>
+      <h2>練習問題</h2>
+    </div>
+
+    <!-- 練習1: 信号機 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-q">練習1</span>
+        <h3>信号機を描く</h3>
+      </div>
+      <p>キャンバス 300×400 に縦型の信号機を描く。本体は黒い角丸四角、中に赤・黄・緑の 3 つの円を translate で配置する。</p>
+
+      <div class="result-figure">
+        <svg viewBox="0 0 300 400" width="300" height="400">
+          <rect width="300" height="400" fill="#cccccc"/>
+          <!-- 支柱 -->
+          <rect x="135" y="300" width="30" height="100" fill="#333"/>
+          <!-- 本体 -->
+          <rect x="90" y="40" width="120" height="280" rx="20" fill="#222" stroke="#111" stroke-width="2"/>
+          <!-- 赤 -->
+          <circle cx="150" cy="110" r="35" fill="#FF3333" stroke="#cc0000" stroke-width="2"/>
+          <!-- 黄 -->
+          <circle cx="150" cy="190" r="35" fill="#FFCC00" stroke="#cc9900" stroke-width="2"/>
+          <!-- 緑 -->
+          <circle cx="150" cy="270" r="35" fill="#33CC33" stroke="#009900" stroke-width="2"/>
+        </svg>
+        <span class="figure-caption">translate で赤・黄・緑をローカル座標で配置</span>
+      </div>
+
+      <div class="callout-tip">
+        <h4>ヒント</h4>
+        <p>本体の左上に translate してから、各ライトの中心位置に push/translate/pop で配置する。3 つのライトの描画コードは<strong>ほぼ同じ</strong>（色だけ違う）。</p>
+      </div>
+
+      <details>
+        <summary>解答例を見る</summary>
+        <div class="answer-content">
+          <pre><span class="code-label">Python ── 解答例</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">300</span>, <span class="num">400</span>)
+    py5.<span class="fn">background</span>(<span class="num">204</span>)
+
+    <span class="cmt"># 支柱</span>
+    py5.<span class="fn">fill</span>(<span class="num">51</span>)
+    py5.<span class="fn">no_stroke</span>()
+    py5.<span class="fn">rect</span>(<span class="num">135</span>, <span class="num">300</span>, <span class="num">30</span>, <span class="num">100</span>)
+
+    py5.<span class="fn">push</span>()
+    py5.<span class="fn">translate</span>(<span class="num">90</span>, <span class="num">40</span>)             <span class="cmt"># 本体の左上</span>
+
+    <span class="cmt"># 本体</span>
+    py5.<span class="fn">fill</span>(<span class="num">34</span>)
+    py5.<span class="fn">rect</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">120</span>, <span class="num">280</span>, <span class="num">20</span>)
+
+    <span class="cmt"># ライトの色と y 位置</span>
+    colors <span class="op">=</span> [(<span class="num">255</span>,<span class="num">51</span>,<span class="num">51</span>), (<span class="num">255</span>,<span class="num">204</span>,<span class="num">0</span>), (<span class="num">51</span>,<span class="num">204</span>,<span class="num">51</span>)]
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">3</span>):
+        py5.<span class="fn">push</span>()
+        py5.<span class="fn">translate</span>(<span class="num">60</span>, <span class="num">70</span> <span class="op">+</span> i<span class="op">*</span><span class="num">80</span>)  <span class="cmt"># 各ライトの中心</span>
+        py5.<span class="fn">fill</span>(colors[i][<span class="num">0</span>], colors[i][<span class="num">1</span>], colors[i][<span class="num">2</span>])
+        py5.<span class="fn">ellipse</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">70</span>, <span class="num">70</span>)
+        py5.<span class="fn">pop</span>()
+
+    py5.<span class="fn">pop</span>()
+
+py5.<span class="fn">run_sketch</span>()</pre>
+        </div>
+      </details>
+    </div>
+
+    <!-- 練習2: 2x3 グリッドに家を並べる -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-q">練習2</span>
+        <h3>push/pop + for で 2 列 × 3 行の街を描く</h3>
+      </div>
+      <p>キャンバス 600×500 に、問 2 の家を <strong>2 列 × 3 行</strong>に並べる。各家は translate で配置し、描画コードは 1 つだけにする。</p>
+
+      <div class="result-figure">
+        <svg viewBox="0 0 600 500" width="600" height="500">
+          <rect width="600" height="500" fill="#87CEEB"/>
+          <!-- 地面 -->
+          <rect x="0" y="400" width="600" height="100" fill="#228B22"/>
+          <!-- 家 6 軒 (2x3) -->
+          <g>
+            <!-- row 0 -->
+            <g transform="translate(50,50)">
+              <rect width="120" height="90" fill="#DEB887" stroke="#8B4513"/>
+              <polygon points="-10,0 60,-50 130,0" fill="#8B0000"/>
+              <rect x="45" y="45" width="30" height="45" fill="#8B4513"/>
+            </g>
+            <g transform="translate(230,50)">
+              <rect width="120" height="90" fill="#DEB887" stroke="#8B4513"/>
+              <polygon points="-10,0 60,-50 130,0" fill="#8B0000"/>
+              <rect x="45" y="45" width="30" height="45" fill="#8B4513"/>
+            </g>
+            <g transform="translate(410,50)">
+              <rect width="120" height="90" fill="#DEB887" stroke="#8B4513"/>
+              <polygon points="-10,0 60,-50 130,0" fill="#8B0000"/>
+              <rect x="45" y="45" width="30" height="45" fill="#8B4513"/>
+            </g>
+            <!-- row 1 -->
+            <g transform="translate(50,200)">
+              <rect width="120" height="90" fill="#DEB887" stroke="#8B4513"/>
+              <polygon points="-10,0 60,-50 130,0" fill="#8B0000"/>
+              <rect x="45" y="45" width="30" height="45" fill="#8B4513"/>
+            </g>
+            <g transform="translate(230,200)">
+              <rect width="120" height="90" fill="#DEB887" stroke="#8B4513"/>
+              <polygon points="-10,0 60,-50 130,0" fill="#8B0000"/>
+              <rect x="45" y="45" width="30" height="45" fill="#8B4513"/>
+            </g>
+            <g transform="translate(410,200)">
+              <rect width="120" height="90" fill="#DEB887" stroke="#8B4513"/>
+              <polygon points="-10,0 60,-50 130,0" fill="#8B0000"/>
+              <rect x="45" y="45" width="30" height="45" fill="#8B4513"/>
+            </g>
+          </g>
+        </svg>
+        <span class="figure-caption">translate + for のネストで同じ家を 6 軒配置</span>
+      </div>
+
+      <div class="callout-tip">
+        <h4>ヒント</h4>
+        <p>二重ループ <code>for col in range(3): for row in range(2):</code> で、<code>translate(col*180 + 50, row*150 + 50)</code> して家の描画関数を呼ぶ。家の描画は「ローカル座標で書く」のがポイント。</p>
+      </div>
+
+      <details>
+        <summary>解答例を見る</summary>
+        <div class="answer-content">
+          <pre><span class="code-label">Python ── 解答例</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">draw_house</span>():
+    <span class="cmt"># 本体 (幅120, 高さ90)</span>
+    py5.<span class="fn">fill</span>(<span class="num">222</span>, <span class="num">184</span>, <span class="num">135</span>)
+    py5.<span class="fn">stroke</span>(<span class="num">139</span>, <span class="num">69</span>, <span class="num">19</span>)
+    py5.<span class="fn">rect</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">120</span>, <span class="num">90</span>)
+    <span class="cmt"># 屋根</span>
+    py5.<span class="fn">fill</span>(<span class="num">139</span>, <span class="num">0</span>, <span class="num">0</span>)
+    py5.<span class="fn">triangle</span>(<span class="op">-</span><span class="num">10</span>, <span class="num">0</span>, <span class="num">60</span>, <span class="op">-</span><span class="num">50</span>, <span class="num">130</span>, <span class="num">0</span>)
+    <span class="cmt"># ドア</span>
+    py5.<span class="fn">fill</span>(<span class="num">139</span>, <span class="num">69</span>, <span class="num">19</span>)
+    py5.<span class="fn">rect</span>(<span class="num">45</span>, <span class="num">45</span>, <span class="num">30</span>, <span class="num">45</span>)
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">600</span>, <span class="num">500</span>)
+    py5.<span class="fn">background</span>(<span class="num">135</span>, <span class="num">206</span>, <span class="num">235</span>)
+    py5.<span class="fn">fill</span>(<span class="num">34</span>, <span class="num">139</span>, <span class="num">34</span>)
+    py5.<span class="fn">no_stroke</span>()
+    py5.<span class="fn">rect</span>(<span class="num">0</span>, <span class="num">400</span>, <span class="num">600</span>, <span class="num">100</span>)
+
+    <span class="kw">for</span> col <span class="kw">in</span> <span class="fn">range</span>(<span class="num">3</span>):
+        <span class="kw">for</span> row <span class="kw">in</span> <span class="fn">range</span>(<span class="num">2</span>):
+            py5.<span class="fn">push</span>()
+            py5.<span class="fn">translate</span>(col<span class="op">*</span><span class="num">180</span> <span class="op">+</span> <span class="num">50</span>, row<span class="op">*</span><span class="num">150</span> <span class="op">+</span> <span class="num">50</span>)
+            <span class="fn">draw_house</span>()
+            py5.<span class="fn">pop</span>()
+
+py5.<span class="fn">run_sketch</span>()</pre>
+          <p style="margin-top:0.5rem"><code>draw_house()</code> は常にローカル座標 (0,0) 基準で描く。translate で家の位置を変えるだけで、何軒でも配置できる。これが translate + push/pop の真価。</p>
+        </div>
+      </details>
+    </div>
+
+    <!-- 練習3: 太陽系 (同心円軌道 + 惑星) -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-q">練習3</span>
+        <h3>translate + rotate で太陽系を描く</h3>
+      </div>
+      <p>キャンバス 500×500 の中心に太陽を描き、3 つの惑星を<strong>異なる角度</strong>で円軌道上に配置する。軌道は <code>no_fill()</code> の円で描く。</p>
+
+      <div class="result-figure">
+        <svg viewBox="0 0 500 500" width="500" height="500">
+          <rect width="500" height="500" fill="#111"/>
+          <!-- 軌道 -->
+          <circle cx="250" cy="250" r="80"  fill="none" stroke="#333" stroke-width="1"/>
+          <circle cx="250" cy="250" r="140" fill="none" stroke="#333" stroke-width="1"/>
+          <circle cx="250" cy="250" r="200" fill="none" stroke="#333" stroke-width="1"/>
+          <!-- 太陽 -->
+          <circle cx="250" cy="250" r="25" fill="#FFB800"/>
+          <!-- 惑星1: 軌道80, 角度45度 -->
+          <circle cx="306.6" cy="193.4" r="10" fill="#4FC3F7"/>
+          <!-- 惑星2: 軌道140, 角度160度 -->
+          <circle cx="118.4" cy="297.9" r="14" fill="#FF6B6B"/>
+          <!-- 惑星3: 軌道200, 角度280度 -->
+          <circle cx="284.7" cy="53.0"  r="8"  fill="#76B900"/>
+        </svg>
+        <span class="figure-caption">translate(中心) → rotate(角度) → translate(軌道半径, 0) で惑星を配置</span>
+      </div>
+
+      <div class="callout-tip">
+        <h4>ヒント</h4>
+        <p>各惑星: <code>push()</code> → <code>rotate(角度)</code> → <code>translate(軌道半径, 0)</code> → <code>ellipse(0,0,...)</code> → <code>pop()</code>。rotate + translate の組み合わせで円周上の任意の点に配置できる。</p>
+      </div>
+
+      <details>
+        <summary>解答例を見る</summary>
+        <div class="answer-content">
+          <pre><span class="code-label">Python ── 解答例</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">500</span>, <span class="num">500</span>)
+    py5.<span class="fn">background</span>(<span class="num">17</span>)
+
+    py5.<span class="fn">push</span>()
+    py5.<span class="fn">translate</span>(<span class="num">250</span>, <span class="num">250</span>)          <span class="cmt"># 原点を中心に</span>
+
+    <span class="cmt"># 軌道を描画</span>
+    py5.<span class="fn">no_fill</span>()
+    py5.<span class="fn">stroke</span>(<span class="num">51</span>)
+    <span class="kw">for</span> r <span class="kw">in</span> [<span class="num">80</span>, <span class="num">140</span>, <span class="num">200</span>]:
+        py5.<span class="fn">ellipse</span>(<span class="num">0</span>, <span class="num">0</span>, r<span class="op">*</span><span class="num">2</span>, r<span class="op">*</span><span class="num">2</span>)
+
+    <span class="cmt"># 太陽</span>
+    py5.<span class="fn">no_stroke</span>()
+    py5.<span class="fn">fill</span>(<span class="num">255</span>, <span class="num">184</span>, <span class="num">0</span>)
+    py5.<span class="fn">ellipse</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">50</span>, <span class="num">50</span>)
+
+    <span class="cmt"># 惑星データ: (軌道半径, 角度, サイズ, R, G, B)</span>
+    planets <span class="op">=</span> [
+        (<span class="num">80</span>,  <span class="num">45</span>,  <span class="num">20</span>, <span class="num">79</span>, <span class="num">195</span>, <span class="num">247</span>),
+        (<span class="num">140</span>, <span class="num">160</span>, <span class="num">28</span>, <span class="num">255</span>, <span class="num">107</span>, <span class="num">107</span>),
+        (<span class="num">200</span>, <span class="num">280</span>, <span class="num">16</span>, <span class="num">118</span>, <span class="num">185</span>, <span class="num">0</span>),
+    ]
+    <span class="kw">for</span> dist, angle, sz, r, g, b <span class="kw">in</span> planets:
+        py5.<span class="fn">push</span>()
+        py5.<span class="fn">rotate</span>(py5.<span class="fn">radians</span>(angle))
+        py5.<span class="fn">translate</span>(dist, <span class="num">0</span>)
+        py5.<span class="fn">fill</span>(r, g, b)
+        py5.<span class="fn">ellipse</span>(<span class="num">0</span>, <span class="num">0</span>, sz, sz)
+        py5.<span class="fn">pop</span>()
+
+    py5.<span class="fn">pop</span>()
+
+py5.<span class="fn">run_sketch</span>()</pre>
+          <p style="margin-top:0.5rem">rotate で方向を決め、translate で距離を進む。この「回してから進む」パターンは円周上の配置で非常に強力。</p>
+        </div>
+      </details>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>第 2.75 回 補講 ── translate / push / pop を理解する ／ MD1 2026</p>
+    <p style="margin-top:0.4rem;font-size:0.78rem">
+      &laquo; <a href="week2.5.html" style="color:#76B900">第 2.5 回</a> ｜ <a href="week03.html" style="color:#76B900">第 3 回</a> &raquo;
+    </p>
+  </div>
+</footer>
+
+<script>
+// Animation control: play / pause / step / reset for each .exec-viewer
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.exec-viewer').forEach(viewer => {
+    const svg = viewer.querySelector('svg');
+    const controls = viewer.querySelector('.exec-controls');
+    if (!svg || !controls) return;
+    const cycle = parseFloat(controls.dataset.cycle || '7');
+    const step = parseFloat(controls.dataset.step || '0.5');
+    const timeEl = controls.querySelector('.exec-time');
+    const pauseBtn = controls.querySelector('[data-action="pause"]');
+
+    const updateTime = () => {
+      try {
+        const t = svg.getCurrentTime();
+        const norm = ((t % cycle) + cycle) % cycle;
+        if (timeEl) timeEl.textContent = norm.toFixed(2) + 's / ' + cycle + 's';
+      } catch (e) {}
+    };
+    setInterval(updateTime, 100);
+
+    const setPaused = (paused) => {
+      if (pauseBtn) {
+        if (paused) pauseBtn.classList.add('is-paused');
+        else pauseBtn.classList.remove('is-paused');
+      }
+    };
+
+    controls.addEventListener('click', e => {
+      const btn = e.target.closest('button.exec-ctrl');
+      if (!btn) return;
+      const action = btn.dataset.action;
+      try {
+        if (action === 'play') {
+          svg.unpauseAnimations();
+          setPaused(false);
+        } else if (action === 'pause') {
+          svg.pauseAnimations();
+          setPaused(true);
+        } else if (action === 'step') {
+          svg.pauseAnimations();
+          const newTime = svg.getCurrentTime() + step;
+          svg.setCurrentTime(newTime);
+          setPaused(true);
+        } else if (action === 'reset') {
+          svg.setCurrentTime(0);
+          svg.pauseAnimations();
+          setPaused(true);
+        }
+        updateTime();
+      } catch (err) {
+        console.error('Animation control error:', err);
+      }
+    });
+  });
+});
+</script>
+
+</body>
+</html>
