@@ -257,6 +257,29 @@ details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
   display: block;
   max-width: 100%;
 }
+
+/* Live execution viewer (code + canvas + status) */
+.exec-viewer {
+  margin: 1rem 0;
+  background: #141414;
+  border-radius: 12px;
+  padding: 0.6rem;
+  border: 1px solid #2a2a2a;
+}
+.exec-viewer svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: transparent;
+}
+.exec-viewer .play-badge { margin-top: 0.5rem; }
+.exec-viewer .figure-caption {
+  font-size: 0.78rem;
+  color: #999;
+  margin-top: 0.4rem;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
 .result-figure .figure-caption {
   font-size: 0.78rem;
   color: #999;
@@ -503,42 +526,86 @@ footer {
         <h3>「等間隔に並んだ 5 つの円」</h3>
       </div>
 
-      <!-- ① 実行結果 -->
-      <span class="step-label step-figure">① 実行結果</span>
-      <div class="result-figure">
-        <svg viewBox="0 0 400 300" width="400" height="300">
-          <rect width="400" height="300" fill="#cccccc"/>
-          <circle cx="60"  cy="150" r="25" fill="#ffffff" stroke="#000" stroke-width="1" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.05;0.10;0.95;1" dur="6s" repeatCount="indefinite"/>
-          </circle>
-          <circle cx="130" cy="150" r="25" fill="#ffffff" stroke="#000" stroke-width="1" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.22;0.27;0.95;1" dur="6s" repeatCount="indefinite"/>
-          </circle>
-          <circle cx="200" cy="150" r="25" fill="#ffffff" stroke="#000" stroke-width="1" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.39;0.44;0.95;1" dur="6s" repeatCount="indefinite"/>
-          </circle>
-          <circle cx="270" cy="150" r="25" fill="#ffffff" stroke="#000" stroke-width="1" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.56;0.61;0.95;1" dur="6s" repeatCount="indefinite"/>
-          </circle>
-          <circle cx="340" cy="150" r="25" fill="#ffffff" stroke="#000" stroke-width="1" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.73;0.78;0.95;1" dur="6s" repeatCount="indefinite"/>
-          </circle>
-          <!-- 現在の i 値ラベル（discrete モードで 5 段階切替） -->
-          <g font-family="'JetBrains Mono', monospace" font-size="18" font-weight="700">
-            <text x="14" y="28" fill="#FF6B00">i = 0
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.08;0.22;1" dur="6s" repeatCount="indefinite"/></text>
-            <text x="14" y="28" fill="#FF6B00">i = 1
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.22;0.39;1" dur="6s" repeatCount="indefinite"/></text>
-            <text x="14" y="28" fill="#FF6B00">i = 2
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.39;0.56;1" dur="6s" repeatCount="indefinite"/></text>
-            <text x="14" y="28" fill="#FF6B00">i = 3
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.56;0.73;1" dur="6s" repeatCount="indefinite"/></text>
-            <text x="14" y="28" fill="#FF6B00">i = 4
-              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.73;0.95;1" dur="6s" repeatCount="indefinite"/></text>
+      <!-- ① 実行結果 (コードと連動するライブ実行ビュー) -->
+      <span class="step-label step-figure">① 実行結果（コード連動アニメ）</span>
+      <div class="exec-viewer">
+        <svg viewBox="0 0 900 380" preserveAspectRatio="xMidYMid meet">
+          <!-- code panel bg -->
+          <rect x="0" y="0" width="450" height="340" rx="10" fill="#0A0A0A" stroke="#222"/>
+          <text x="430" y="20" text-anchor="end" fill="#666" font-size="10" font-family="'JetBrains Mono', monospace">prob1.py</text>
+          <!-- code lines -->
+          <g font-family="'JetBrains Mono', monospace" font-size="14" xml:space="preserve">
+            <text x="20" y="50" fill="#616161"># for 文で円を 5 個並べる</text>
+            <text x="20" y="72" fill="#76B900">import <tspan fill="#e0e0e0">py5</tspan></text>
+            <text x="20" y="116" fill="#76B900">def <tspan fill="#93D500">setup</tspan><tspan fill="#e0e0e0">():</tspan></text>
+            <text x="20" y="138" fill="#e0e0e0">    py5.<tspan fill="#93D500">size</tspan>(<tspan fill="#FFB800">400</tspan>, <tspan fill="#FFB800">300</tspan>)</text>
+            <text x="20" y="160" fill="#e0e0e0">    <tspan fill="#76B900">for</tspan> i <tspan fill="#76B900">in</tspan> <tspan fill="#93D500">range</tspan>(<tspan fill="#FFB800">5</tspan>):</text>
+            <text x="20" y="182" fill="#e0e0e0">        py5.<tspan fill="#93D500">ellipse</tspan>(<tspan fill="#FFB800">60</tspan> <tspan fill="#93D500">+</tspan> i<tspan fill="#93D500">*</tspan><tspan fill="#FFB800">70</tspan>, <tspan fill="#FFB800">150</tspan>, <tspan fill="#FFB800">50</tspan>, <tspan fill="#FFB800">50</tspan>)</text>
+            <text x="20" y="226" fill="#e0e0e0">py5.<tspan fill="#93D500">run_sketch</tspan>()</text>
+          </g>
+          <!-- highlight rect that jumps between for-line(160) and body-line(182) -->
+          <rect x="14" width="426" height="22" rx="4" fill="rgba(255,184,0,0.18)" stroke="#FFB800" stroke-width="1.5">
+            <animate attributeName="y" calcMode="discrete"
+              keyTimes="0;0.071;0.143;0.214;0.286;0.357;0.429;0.500;0.571;0.643;0.714;1"
+              values   ="144;166;144;166;144;166;144;166;144;166;144;144"
+              dur="7s" repeatCount="indefinite"/>
+            <animate attributeName="stroke" calcMode="discrete"
+              keyTimes="0;0.714;1"
+              values   ="#FFB800;#FF5252;#FF5252"
+              dur="7s" repeatCount="indefinite"/>
+          </rect>
+          <!-- "←今ここ" arrow next to highlighted line -->
+          <g font-family="'JetBrains Mono', monospace" font-size="11" fill="#FFB800">
+            <text x="450" y="0" text-anchor="end">
+              <animate attributeName="y" calcMode="discrete"
+                keyTimes="0;0.071;0.143;0.214;0.286;0.357;0.429;0.500;0.571;0.643;0.714;1"
+                values   ="160;182;160;182;160;182;160;182;160;182;160;160"
+                dur="7s" repeatCount="indefinite"/>
+              <animate attributeName="fill" calcMode="discrete"
+                keyTimes="0;0.714;1"
+                values   ="#FFB800;#FF5252;#FF5252"
+                dur="7s" repeatCount="indefinite"/>
+              ▶
+            </text>
+          </g>
+
+          <!-- canvas panel -->
+          <rect x="470" y="20" width="400" height="300" fill="#cccccc" stroke="#333" stroke-width="2"/>
+          <text x="870" y="14" text-anchor="end" fill="#666" font-size="10" font-family="'JetBrains Mono', monospace">canvas (400×300)</text>
+          <!-- 5 circles, each appearing at body-line highlight time -->
+          <g fill="#ffffff" stroke="#000" stroke-width="1">
+            <circle cx="530" cy="170" r="25" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.071;0.080;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="600" cy="170" r="25" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.214;0.223;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="670" cy="170" r="25" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.357;0.366;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="740" cy="170" r="25" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.500;0.509;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="810" cy="170" r="25" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.643;0.652;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+          </g>
+
+          <!-- status bar -->
+          <rect x="0" y="345" width="900" height="35" rx="6" fill="#141414" stroke="#222"/>
+          <text x="20" y="368" font-family="'JetBrains Mono', monospace" font-size="14" fill="#999">変数:</text>
+          <g font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700">
+            <text x="80" y="368" fill="#FFB800">i = 0
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0;0.143;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="368" fill="#FFB800">i = 1
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.143;0.286;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="368" fill="#FFB800">i = 2
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.286;0.429;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="368" fill="#FFB800">i = 3
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.429;0.571;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="368" fill="#FFB800">i = 4
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.571;0.714;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="368" fill="#FF5252">i = 5 → range(5) を抜けてループ終了
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.714;1" dur="7s" repeatCount="indefinite"/></text>
           </g>
         </svg>
-        <span class="play-badge">i = 0 → 1 → 2 → 3 → 4 と順に円が現れる（6 秒ループ）</span>
-        <div class="figure-caption">400 × 300 のキャンバスに、半径 25 の円が 5 つ等間隔（70 px）で並んでいる</div>
+        <span class="play-badge">コード行ハイライト ⇄ 円の出現が同期（7 秒ループ）</span>
+        <div class="figure-caption">左: 実行中のコード行をオレンジ枠で表示／右: 対応する描画／下: 現在の変数値</div>
       </div>
 
       <!-- ② 考え方 -->
@@ -655,34 +722,81 @@ py5.<span class="fn">run_sketch</span>()</pre>
         <h3>「左から右へ黒→白に変化する 10 本の縦縞」</h3>
       </div>
 
-      <span class="step-label step-figure">① 実行結果</span>
-      <div class="result-figure">
-        <svg viewBox="0 0 400 300" width="400" height="300">
-          <rect width="400" height="300" fill="#cccccc"/>
-          <!-- 10 stripes appearing left-to-right -->
-          <rect x="0"   y="0" width="40" height="300" fill="rgb(0,0,0)" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.05;0.07;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
-          <rect x="40"  y="0" width="40" height="300" fill="rgb(25,25,25)" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.12;0.14;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
-          <rect x="80"  y="0" width="40" height="300" fill="rgb(50,50,50)" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.19;0.21;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
-          <rect x="120" y="0" width="40" height="300" fill="rgb(75,75,75)" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.26;0.28;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
-          <rect x="160" y="0" width="40" height="300" fill="rgb(100,100,100)" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.33;0.35;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
-          <rect x="200" y="0" width="40" height="300" fill="rgb(125,125,125)" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.40;0.42;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
-          <rect x="240" y="0" width="40" height="300" fill="rgb(150,150,150)" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.47;0.49;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
-          <rect x="280" y="0" width="40" height="300" fill="rgb(175,175,175)" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.54;0.56;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
-          <rect x="320" y="0" width="40" height="300" fill="rgb(200,200,200)" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.61;0.63;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
-          <rect x="360" y="0" width="40" height="300" fill="rgb(225,225,225)" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.68;0.70;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
+      <span class="step-label step-figure">① 実行結果（コード連動アニメ）</span>
+      <div class="exec-viewer">
+        <svg viewBox="0 0 900 380" preserveAspectRatio="xMidYMid meet">
+          <rect x="0" y="0" width="450" height="340" rx="10" fill="#0A0A0A" stroke="#222"/>
+          <text x="430" y="20" text-anchor="end" fill="#666" font-size="10" font-family="'JetBrains Mono', monospace">prob2.py</text>
+          <g font-family="'JetBrains Mono', monospace" font-size="14" xml:space="preserve">
+            <text x="20" y="50" fill="#616161"># グラデーションの縦縞</text>
+            <text x="20" y="72" fill="#76B900">import <tspan fill="#e0e0e0">py5</tspan></text>
+            <text x="20" y="116" fill="#76B900">def <tspan fill="#93D500">setup</tspan><tspan fill="#e0e0e0">():</tspan></text>
+            <text x="20" y="138" fill="#e0e0e0">    py5.<tspan fill="#93D500">size</tspan>(<tspan fill="#FFB800">400</tspan>, <tspan fill="#FFB800">300</tspan>)</text>
+            <text x="20" y="160" fill="#e0e0e0">    py5.<tspan fill="#93D500">no_stroke</tspan>()</text>
+            <text x="20" y="182" fill="#e0e0e0">    <tspan fill="#76B900">for</tspan> i <tspan fill="#76B900">in</tspan> <tspan fill="#93D500">range</tspan>(<tspan fill="#FFB800">10</tspan>):</text>
+            <text x="20" y="204" fill="#e0e0e0">        py5.<tspan fill="#93D500">fill</tspan>(i<tspan fill="#93D500">*</tspan><tspan fill="#FFB800">25</tspan>)</text>
+            <text x="20" y="226" fill="#e0e0e0">        py5.<tspan fill="#93D500">rect</tspan>(i<tspan fill="#93D500">*</tspan><tspan fill="#FFB800">40</tspan>, <tspan fill="#FFB800">0</tspan>, <tspan fill="#FFB800">40</tspan>, <tspan fill="#FFB800">300</tspan>)</text>
+            <text x="20" y="270" fill="#e0e0e0">py5.<tspan fill="#93D500">run_sketch</tspan>()</text>
+          </g>
+          <!-- highlight: y=166(for, h=22) ↔ y=188(body fill+rect, h=44) -->
+          <rect x="14" width="426" rx="4" fill="rgba(255,184,0,0.18)" stroke="#FFB800" stroke-width="1.5">
+            <animate attributeName="y" calcMode="discrete"
+              keyTimes="0;0.043;0.086;0.129;0.171;0.214;0.257;0.300;0.343;0.386;0.429;0.471;0.514;0.557;0.600;0.643;0.686;0.729;0.771;0.814;0.857;1"
+              values   ="166;188;166;188;166;188;166;188;166;188;166;188;166;188;166;188;166;188;166;188;166;166"
+              dur="7s" repeatCount="indefinite"/>
+            <animate attributeName="height" calcMode="discrete"
+              keyTimes="0;0.043;0.086;0.129;0.171;0.214;0.257;0.300;0.343;0.386;0.429;0.471;0.514;0.557;0.600;0.643;0.686;0.729;0.771;0.814;0.857;1"
+              values   ="22;44;22;44;22;44;22;44;22;44;22;44;22;44;22;44;22;44;22;44;22;22"
+              dur="7s" repeatCount="indefinite"/>
+            <animate attributeName="stroke" calcMode="discrete"
+              keyTimes="0;0.857;1" values="#FFB800;#FF5252;#FF5252" dur="7s" repeatCount="indefinite"/>
+          </rect>
+
+          <!-- canvas panel -->
+          <rect x="470" y="20" width="400" height="300" fill="#cccccc" stroke="#333" stroke-width="2"/>
+          <text x="870" y="14" text-anchor="end" fill="#666" font-size="10" font-family="'JetBrains Mono', monospace">canvas (400×300)</text>
+          <!-- 10 stripes synchronized with body-phase highlights -->
+          <rect x="470" y="20" width="40" height="300" fill="rgb(0,0,0)"     opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.043;0.050;0.95;1" dur="7s" repeatCount="indefinite"/></rect>
+          <rect x="510" y="20" width="40" height="300" fill="rgb(25,25,25)"  opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.129;0.135;0.95;1" dur="7s" repeatCount="indefinite"/></rect>
+          <rect x="550" y="20" width="40" height="300" fill="rgb(50,50,50)"  opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.214;0.220;0.95;1" dur="7s" repeatCount="indefinite"/></rect>
+          <rect x="590" y="20" width="40" height="300" fill="rgb(75,75,75)"  opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.300;0.306;0.95;1" dur="7s" repeatCount="indefinite"/></rect>
+          <rect x="630" y="20" width="40" height="300" fill="rgb(100,100,100)" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.386;0.392;0.95;1" dur="7s" repeatCount="indefinite"/></rect>
+          <rect x="670" y="20" width="40" height="300" fill="rgb(125,125,125)" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.471;0.477;0.95;1" dur="7s" repeatCount="indefinite"/></rect>
+          <rect x="710" y="20" width="40" height="300" fill="rgb(150,150,150)" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.557;0.563;0.95;1" dur="7s" repeatCount="indefinite"/></rect>
+          <rect x="750" y="20" width="40" height="300" fill="rgb(175,175,175)" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.643;0.649;0.95;1" dur="7s" repeatCount="indefinite"/></rect>
+          <rect x="790" y="20" width="40" height="300" fill="rgb(200,200,200)" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.729;0.735;0.95;1" dur="7s" repeatCount="indefinite"/></rect>
+          <rect x="830" y="20" width="40" height="300" fill="rgb(225,225,225)" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.814;0.820;0.95;1" dur="7s" repeatCount="indefinite"/></rect>
+
+          <!-- status -->
+          <rect x="0" y="345" width="900" height="35" rx="6" fill="#141414" stroke="#222"/>
+          <text x="20" y="368" font-family="'JetBrains Mono', monospace" font-size="14" fill="#999">変数:</text>
+          <g font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700">
+            <text x="80" y="368" fill="#FFB800">i = 0  (fill=0, x=0)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0;0.086;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="368" fill="#FFB800">i = 1  (fill=25, x=40)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.086;0.171;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="368" fill="#FFB800">i = 2  (fill=50, x=80)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.171;0.257;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="368" fill="#FFB800">i = 3  (fill=75, x=120)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.257;0.343;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="368" fill="#FFB800">i = 4  (fill=100, x=160)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.343;0.429;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="368" fill="#FFB800">i = 5  (fill=125, x=200)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.429;0.514;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="368" fill="#FFB800">i = 6  (fill=150, x=240)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.514;0.600;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="368" fill="#FFB800">i = 7  (fill=175, x=280)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.600;0.686;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="368" fill="#FFB800">i = 8  (fill=200, x=320)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.686;0.771;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="368" fill="#FFB800">i = 9  (fill=225, x=360)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.771;0.857;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="368" fill="#FF5252">i = 10 → range(10) を抜けてループ終了
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.857;1" dur="7s" repeatCount="indefinite"/></text>
+          </g>
         </svg>
-        <span class="play-badge">i が 0 → 9 と進むのに合わせて、左から右へ縞が現れる</span>
-        <div class="figure-caption">400 × 300 に幅 40 の長方形を 10 本。明るさが i × 25 で増える</div>
+        <span class="play-badge">10 反復のたびに「for → fill+rect」がハイライトされる（7 秒ループ）</span>
+        <div class="figure-caption">左: コード行ハイライト／右: i ごとに縞が増える／下: 計算後の値</div>
       </div>
 
       <span class="step-label step-idea">② 考え方</span>
@@ -794,24 +908,59 @@ py5.<span class="fn">run_sketch</span>()</pre>
         <h3>「左上から右下へ 5 段の階段」</h3>
       </div>
 
-      <span class="step-label step-figure">① 実行結果</span>
-      <div class="result-figure">
-        <svg viewBox="0 0 400 400" width="400" height="400">
-          <rect width="400" height="400" fill="#cccccc"/>
-          <!-- 5 squares appearing diagonally top-left → bottom-right -->
-          <rect x="20"  y="20"  width="60" height="60" fill="#ffffff" stroke="#000" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.05;0.10;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
-          <rect x="90"  y="90"  width="60" height="60" fill="#ffffff" stroke="#000" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.22;0.27;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
-          <rect x="160" y="160" width="60" height="60" fill="#ffffff" stroke="#000" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.39;0.44;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
-          <rect x="230" y="230" width="60" height="60" fill="#ffffff" stroke="#000" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.56;0.61;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
-          <rect x="300" y="300" width="60" height="60" fill="#ffffff" stroke="#000" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.73;0.78;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
+      <span class="step-label step-figure">① 実行結果（コード連動アニメ）</span>
+      <div class="exec-viewer">
+        <svg viewBox="0 0 900 480" preserveAspectRatio="xMidYMid meet">
+          <rect x="0" y="0" width="450" height="440" rx="10" fill="#0A0A0A" stroke="#222"/>
+          <text x="430" y="20" text-anchor="end" fill="#666" font-size="10" font-family="'JetBrains Mono', monospace">prob3.py</text>
+          <g font-family="'JetBrains Mono', monospace" font-size="14" xml:space="preserve">
+            <text x="20" y="50" fill="#616161"># 階段状の正方形</text>
+            <text x="20" y="72" fill="#76B900">import <tspan fill="#e0e0e0">py5</tspan></text>
+            <text x="20" y="116" fill="#76B900">def <tspan fill="#93D500">setup</tspan><tspan fill="#e0e0e0">():</tspan></text>
+            <text x="20" y="138" fill="#e0e0e0">    py5.<tspan fill="#93D500">size</tspan>(<tspan fill="#FFB800">400</tspan>, <tspan fill="#FFB800">400</tspan>)</text>
+            <text x="20" y="160" fill="#e0e0e0">    <tspan fill="#76B900">for</tspan> i <tspan fill="#76B900">in</tspan> <tspan fill="#93D500">range</tspan>(<tspan fill="#FFB800">5</tspan>):</text>
+            <text x="20" y="182" fill="#e0e0e0">        py5.<tspan fill="#93D500">rect</tspan>(<tspan fill="#FFB800">20</tspan> <tspan fill="#93D500">+</tspan> i<tspan fill="#93D500">*</tspan><tspan fill="#FFB800">70</tspan>, <tspan fill="#FFB800">20</tspan> <tspan fill="#93D500">+</tspan> i<tspan fill="#93D500">*</tspan><tspan fill="#FFB800">70</tspan>, <tspan fill="#FFB800">60</tspan>, <tspan fill="#FFB800">60</tspan>)</text>
+            <text x="20" y="226" fill="#e0e0e0">py5.<tspan fill="#93D500">run_sketch</tspan>()</text>
+          </g>
+          <rect x="14" width="426" height="22" rx="4" fill="rgba(255,184,0,0.18)" stroke="#FFB800" stroke-width="1.5">
+            <animate attributeName="y" calcMode="discrete"
+              keyTimes="0;0.071;0.143;0.214;0.286;0.357;0.429;0.500;0.571;0.643;0.714;1"
+              values   ="144;166;144;166;144;166;144;166;144;166;144;144"
+              dur="7s" repeatCount="indefinite"/>
+            <animate attributeName="stroke" calcMode="discrete"
+              keyTimes="0;0.714;1" values="#FFB800;#FF5252;#FF5252" dur="7s" repeatCount="indefinite"/>
+          </rect>
+
+          <!-- canvas panel (400×400 native) -->
+          <rect x="470" y="20" width="400" height="400" fill="#cccccc" stroke="#333" stroke-width="2"/>
+          <text x="870" y="14" text-anchor="end" fill="#666" font-size="10" font-family="'JetBrains Mono', monospace">canvas (400×400)</text>
+          <g fill="#ffffff" stroke="#000" stroke-width="1">
+            <rect x="490" y="40"  width="60" height="60" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.071;0.080;0.95;1" dur="7s" repeatCount="indefinite"/></rect>
+            <rect x="560" y="110" width="60" height="60" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.214;0.223;0.95;1" dur="7s" repeatCount="indefinite"/></rect>
+            <rect x="630" y="180" width="60" height="60" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.357;0.366;0.95;1" dur="7s" repeatCount="indefinite"/></rect>
+            <rect x="700" y="250" width="60" height="60" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.500;0.509;0.95;1" dur="7s" repeatCount="indefinite"/></rect>
+            <rect x="770" y="320" width="60" height="60" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.643;0.652;0.95;1" dur="7s" repeatCount="indefinite"/></rect>
+          </g>
+
+          <rect x="0" y="445" width="900" height="35" rx="6" fill="#141414" stroke="#222"/>
+          <text x="20" y="468" font-family="'JetBrains Mono', monospace" font-size="14" fill="#999">変数:</text>
+          <g font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700">
+            <text x="80" y="468" fill="#FFB800">i = 0  (x=20, y=20)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0;0.143;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="468" fill="#FFB800">i = 1  (x=90, y=90)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.143;0.286;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="468" fill="#FFB800">i = 2  (x=160, y=160)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.286;0.429;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="468" fill="#FFB800">i = 3  (x=230, y=230)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.429;0.571;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="468" fill="#FFB800">i = 4  (x=300, y=300)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.571;0.714;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="468" fill="#FF5252">i = 5 → range(5) を抜けてループ終了
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.714;1" dur="7s" repeatCount="indefinite"/></text>
+          </g>
         </svg>
-        <span class="play-badge">i が 0 → 4 と進むに連れて、斜めに 1 段ずつ追加される</span>
-        <div class="figure-caption">400 × 400 のキャンバスに、60 × 60 の正方形が斜めに 5 つ並ぶ</div>
+        <span class="play-badge">x と y が同時に i*70 で進む様子（7 秒ループ）</span>
+        <div class="figure-caption">左: コード行ハイライト／右: 斜めに 1 個ずつ追加／下: x, y 座標の値</div>
       </div>
 
       <span class="step-label step-idea">② 考え方</span>
@@ -902,26 +1051,68 @@ py5.<span class="fn">run_sketch</span>()</pre>
         <h3>「中心は同じで、サイズが減っていく 6 つの円」</h3>
       </div>
 
-      <span class="step-label step-figure">① 実行結果</span>
-      <div class="result-figure">
-        <svg viewBox="0 0 400 400" width="400" height="400">
-          <rect width="400" height="400" fill="#cccccc"/>
-          <!-- 6 concentric circles drawn outside-in (i=0 largest first) -->
-          <circle cx="200" cy="200" r="180" fill="#ffffff" stroke="#000" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.05;0.10;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
-          <circle cx="200" cy="200" r="150" fill="#ffffff" stroke="#000" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.18;0.23;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
-          <circle cx="200" cy="200" r="120" fill="#ffffff" stroke="#000" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.31;0.36;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
-          <circle cx="200" cy="200" r="90"  fill="#ffffff" stroke="#000" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.44;0.49;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
-          <circle cx="200" cy="200" r="60"  fill="#ffffff" stroke="#000" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.57;0.62;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
-          <circle cx="200" cy="200" r="30"  fill="#ffffff" stroke="#000" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.70;0.75;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+      <span class="step-label step-figure">① 実行結果（コード連動アニメ）</span>
+      <div class="exec-viewer">
+        <svg viewBox="0 0 900 480" preserveAspectRatio="xMidYMid meet">
+          <rect x="0" y="0" width="450" height="440" rx="10" fill="#0A0A0A" stroke="#222"/>
+          <text x="430" y="20" text-anchor="end" fill="#666" font-size="10" font-family="'JetBrains Mono', monospace">prob4.py</text>
+          <g font-family="'JetBrains Mono', monospace" font-size="14" xml:space="preserve">
+            <text x="20" y="50" fill="#616161"># 同心円 (大きい円から順に描く)</text>
+            <text x="20" y="72" fill="#76B900">import <tspan fill="#e0e0e0">py5</tspan></text>
+            <text x="20" y="116" fill="#76B900">def <tspan fill="#93D500">setup</tspan><tspan fill="#e0e0e0">():</tspan></text>
+            <text x="20" y="138" fill="#e0e0e0">    py5.<tspan fill="#93D500">size</tspan>(<tspan fill="#FFB800">400</tspan>, <tspan fill="#FFB800">400</tspan>)</text>
+            <text x="20" y="160" fill="#e0e0e0">    <tspan fill="#76B900">for</tspan> i <tspan fill="#76B900">in</tspan> <tspan fill="#93D500">range</tspan>(<tspan fill="#FFB800">6</tspan>):</text>
+            <text x="20" y="182" fill="#e0e0e0">        d <tspan fill="#93D500">=</tspan> <tspan fill="#FFB800">360</tspan> <tspan fill="#93D500">-</tspan> i<tspan fill="#93D500">*</tspan><tspan fill="#FFB800">60</tspan></text>
+            <text x="20" y="204" fill="#e0e0e0">        py5.<tspan fill="#93D500">ellipse</tspan>(<tspan fill="#FFB800">200</tspan>, <tspan fill="#FFB800">200</tspan>, d, d)</text>
+            <text x="20" y="248" fill="#e0e0e0">py5.<tspan fill="#93D500">run_sketch</tspan>()</text>
+          </g>
+          <!-- highlight: y=144(for, h=22) ↔ y=166(body d= and ellipse, h=44) -->
+          <rect x="14" width="426" rx="4" fill="rgba(255,184,0,0.18)" stroke="#FFB800" stroke-width="1.5">
+            <animate attributeName="y" calcMode="discrete"
+              keyTimes="0;0.071;0.143;0.214;0.286;0.357;0.429;0.500;0.571;0.643;0.714;0.786;0.857;1"
+              values   ="144;166;144;166;144;166;144;166;144;166;144;166;144;144"
+              dur="7s" repeatCount="indefinite"/>
+            <animate attributeName="height" calcMode="discrete"
+              keyTimes="0;0.071;0.143;0.214;0.286;0.357;0.429;0.500;0.571;0.643;0.714;0.786;0.857;1"
+              values   ="22;44;22;44;22;44;22;44;22;44;22;44;22;22"
+              dur="7s" repeatCount="indefinite"/>
+            <animate attributeName="stroke" calcMode="discrete"
+              keyTimes="0;0.857;1" values="#FFB800;#FF5252;#FF5252" dur="7s" repeatCount="indefinite"/>
+          </rect>
+
+          <!-- canvas (400x400, center at (670,220)) -->
+          <rect x="470" y="20" width="400" height="400" fill="#cccccc" stroke="#333" stroke-width="2"/>
+          <text x="870" y="14" text-anchor="end" fill="#666" font-size="10" font-family="'JetBrains Mono', monospace">canvas (400×400)</text>
+          <g fill="#ffffff" stroke="#000" stroke-width="1">
+            <circle cx="670" cy="220" r="180" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.071;0.080;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="670" cy="220" r="150" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.214;0.223;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="670" cy="220" r="120" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.357;0.366;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="670" cy="220" r="90"  opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.500;0.509;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="670" cy="220" r="60"  opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.643;0.652;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="670" cy="220" r="30"  opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.786;0.795;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+          </g>
+
+          <rect x="0" y="445" width="900" height="35" rx="6" fill="#141414" stroke="#222"/>
+          <text x="20" y="468" font-family="'JetBrains Mono', monospace" font-size="14" fill="#999">変数:</text>
+          <g font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700">
+            <text x="80" y="468" fill="#FFB800">i = 0  (d = 360)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0;0.143;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="468" fill="#FFB800">i = 1  (d = 300)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.143;0.286;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="468" fill="#FFB800">i = 2  (d = 240)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.286;0.429;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="468" fill="#FFB800">i = 3  (d = 180)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.429;0.571;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="468" fill="#FFB800">i = 4  (d = 120)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.571;0.714;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="468" fill="#FFB800">i = 5  (d = 60)
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.714;0.857;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="468" fill="#FF5252">i = 6 → range(6) を抜けてループ終了
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.857;1" dur="7s" repeatCount="indefinite"/></text>
+          </g>
         </svg>
-        <span class="play-badge">大きい円から順に描かれていく ── 後の小さい円が手前に積まれて同心円に見える</span>
-        <div class="figure-caption">400 × 400 の中心 (200,200) に同心円。半径 360→60 と減っていくため、後から描く円ほど小さい</div>
+        <span class="play-badge">i が増える → d が減る → 内側に小さい円が積み上がる（7 秒ループ）</span>
+        <div class="figure-caption">左: コード行ハイライト／右: 大→小の順で描かれる／下: 計算済み d の値</div>
       </div>
 
       <span class="step-label step-idea">② 考え方</span>
@@ -1042,58 +1233,116 @@ py5.<span class="fn">run_sketch</span>()</pre>
         <h3>「5 × 5 の格子状に並ぶ 25 個の円」</h3>
       </div>
 
-      <span class="step-label step-figure">① 実行結果</span>
-      <div class="result-figure">
-        <svg viewBox="0 0 400 400" width="400" height="400">
-          <rect width="400" height="400" fill="#cccccc"/>
-          <!-- 5x5 grid: column-major animation (外側 x 1 列ぶん終わってから次の列へ) -->
-          <g fill="#ffffff" stroke="#000" stroke-width="1">
-            <!-- col x=0 (idx 0..4) -->
-            <circle cx="40"  cy="40"  r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.04;0.05;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
-            <circle cx="40"  cy="120" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.07;0.08;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
-            <circle cx="40"  cy="200" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.10;0.11;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
-            <circle cx="40"  cy="280" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.14;0.15;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
-            <circle cx="40"  cy="360" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.17;0.18;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
-            <!-- col x=1 (idx 5..9) -->
-            <circle cx="120" cy="40"  r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.21;0.22;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
-            <circle cx="120" cy="120" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.24;0.25;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
-            <circle cx="120" cy="200" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.27;0.28;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
-            <circle cx="120" cy="280" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.31;0.32;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
-            <circle cx="120" cy="360" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.34;0.35;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
-            <!-- col x=2 (idx 10..14) -->
-            <circle cx="200" cy="40"  r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.38;0.39;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
-            <circle cx="200" cy="120" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.41;0.42;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
-            <circle cx="200" cy="200" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.44;0.45;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
-            <circle cx="200" cy="280" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.48;0.49;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
-            <circle cx="200" cy="360" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.51;0.52;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
-            <!-- col x=3 (idx 15..19) -->
-            <circle cx="280" cy="40"  r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.55;0.56;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
-            <circle cx="280" cy="120" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.58;0.59;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
-            <circle cx="280" cy="200" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.61;0.62;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
-            <circle cx="280" cy="280" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.65;0.66;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
-            <circle cx="280" cy="360" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.68;0.69;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
-            <!-- col x=4 (idx 20..24) -->
-            <circle cx="360" cy="40"  r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.72;0.73;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
-            <circle cx="360" cy="120" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.75;0.76;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
-            <circle cx="360" cy="200" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.78;0.79;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
-            <circle cx="360" cy="280" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.82;0.83;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
-            <circle cx="360" cy="360" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.85;0.86;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+      <span class="step-label step-figure">① 実行結果（コード連動アニメ）</span>
+      <div class="exec-viewer">
+        <svg viewBox="0 0 900 480" preserveAspectRatio="xMidYMid meet">
+          <rect x="0" y="0" width="450" height="440" rx="10" fill="#0A0A0A" stroke="#222"/>
+          <text x="430" y="20" text-anchor="end" fill="#666" font-size="10" font-family="'JetBrains Mono', monospace">prob5.py</text>
+          <g font-family="'JetBrains Mono', monospace" font-size="14" xml:space="preserve">
+            <text x="20" y="50" fill="#616161"># 二重ループで 5x5 格子</text>
+            <text x="20" y="72" fill="#76B900">import <tspan fill="#e0e0e0">py5</tspan></text>
+            <text x="20" y="116" fill="#76B900">def <tspan fill="#93D500">setup</tspan><tspan fill="#e0e0e0">():</tspan></text>
+            <text x="20" y="138" fill="#e0e0e0">    py5.<tspan fill="#93D500">size</tspan>(<tspan fill="#FFB800">400</tspan>, <tspan fill="#FFB800">400</tspan>)</text>
+            <text x="20" y="160" fill="#e0e0e0">    <tspan fill="#76B900">for</tspan> x <tspan fill="#76B900">in</tspan> <tspan fill="#93D500">range</tspan>(<tspan fill="#FFB800">5</tspan>):</text>
+            <text x="20" y="182" fill="#e0e0e0">        <tspan fill="#76B900">for</tspan> y <tspan fill="#76B900">in</tspan> <tspan fill="#93D500">range</tspan>(<tspan fill="#FFB800">5</tspan>):</text>
+            <text x="20" y="204" fill="#e0e0e0">            py5.<tspan fill="#93D500">ellipse</tspan>(<tspan fill="#FFB800">40</tspan> <tspan fill="#93D500">+</tspan> x<tspan fill="#93D500">*</tspan><tspan fill="#FFB800">80</tspan>, <tspan fill="#FFB800">40</tspan> <tspan fill="#93D500">+</tspan> y<tspan fill="#93D500">*</tspan><tspan fill="#FFB800">80</tspan>, <tspan fill="#FFB800">50</tspan>, <tspan fill="#FFB800">50</tspan>)</text>
+            <text x="20" y="248" fill="#e0e0e0">py5.<tspan fill="#93D500">run_sketch</tspan>()</text>
           </g>
-          <!-- 現在の (x, y) ハイライト枠 -->
-          <rect width="80" height="80" fill="none" stroke="#FF6B00" stroke-width="3" rx="6" opacity="0">
-            <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.04;0.86;1" dur="8s" repeatCount="indefinite"/>
-            <animate attributeName="x" calcMode="discrete"
-              keyTimes="0;0.04;0.07;0.10;0.14;0.17;0.21;0.24;0.27;0.31;0.34;0.38;0.41;0.44;0.48;0.51;0.55;0.58;0.61;0.65;0.68;0.72;0.75;0.78;0.82;0.85;1"
-              values="0;0;0;0;0;0;80;80;80;80;80;160;160;160;160;160;240;240;240;240;240;320;320;320;320;320;320"
-              dur="8s" repeatCount="indefinite"/>
+          <!-- highlight: outer-for at y=144 / body at y=188 (covers inner-for + ellipse, h=44) -->
+          <rect x="14" width="426" rx="4" fill="rgba(255,184,0,0.18)" stroke="#FFB800" stroke-width="1.5">
             <animate attributeName="y" calcMode="discrete"
-              keyTimes="0;0.04;0.07;0.10;0.14;0.17;0.21;0.24;0.27;0.31;0.34;0.38;0.41;0.44;0.48;0.51;0.55;0.58;0.61;0.65;0.68;0.72;0.75;0.78;0.82;0.85;1"
-              values="0;0;80;160;240;320;0;80;160;240;320;0;80;160;240;320;0;80;160;240;320;0;80;160;240;320;320"
-              dur="8s" repeatCount="indefinite"/>
+              keyTimes="0;0.014;0.043;0.071;0.100;0.129;0.157;0.171;0.200;0.229;0.257;0.286;0.314;0.329;0.357;0.386;0.414;0.443;0.471;0.486;0.514;0.543;0.571;0.600;0.629;0.643;0.671;0.700;0.729;0.757;0.786;1"
+              values   ="144;166;166;166;166;166;144;166;166;166;166;166;144;166;166;166;166;166;144;166;166;166;166;166;144;166;166;166;166;166;144;144"
+              dur="7s" repeatCount="indefinite"/>
+            <animate attributeName="height" calcMode="discrete"
+              keyTimes="0;0.014;0.043;0.071;0.100;0.129;0.157;0.171;0.200;0.229;0.257;0.286;0.314;0.329;0.357;0.386;0.414;0.443;0.471;0.486;0.514;0.543;0.571;0.600;0.629;0.643;0.671;0.700;0.729;0.757;0.786;1"
+              values   ="22;44;44;44;44;44;22;44;44;44;44;44;22;44;44;44;44;44;22;44;44;44;44;44;22;44;44;44;44;44;22;22"
+              dur="7s" repeatCount="indefinite"/>
+            <animate attributeName="stroke" calcMode="discrete"
+              keyTimes="0;0.786;1" values="#FFB800;#FF5252;#FF5252" dur="7s" repeatCount="indefinite"/>
           </rect>
+
+          <!-- canvas (400×400 native) -->
+          <rect x="470" y="20" width="400" height="400" fill="#cccccc" stroke="#333" stroke-width="2"/>
+          <text x="870" y="14" text-anchor="end" fill="#666" font-size="10" font-family="'JetBrains Mono', monospace">canvas (400×400)</text>
+          <g fill="#ffffff" stroke="#000" stroke-width="1">
+            <!-- column x=0 -->
+            <circle cx="510" cy="60"  r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.014;0.020;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="510" cy="140" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.043;0.049;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="510" cy="220" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.071;0.077;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="510" cy="300" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.100;0.106;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="510" cy="380" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.129;0.135;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <!-- column x=1 -->
+            <circle cx="590" cy="60"  r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.171;0.177;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="590" cy="140" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.200;0.206;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="590" cy="220" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.229;0.235;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="590" cy="300" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.257;0.263;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="590" cy="380" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.286;0.292;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <!-- column x=2 -->
+            <circle cx="670" cy="60"  r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.329;0.335;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="670" cy="140" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.357;0.363;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="670" cy="220" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.386;0.392;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="670" cy="300" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.414;0.420;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="670" cy="380" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.443;0.449;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <!-- column x=3 -->
+            <circle cx="750" cy="60"  r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.486;0.492;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="750" cy="140" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.514;0.520;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="750" cy="220" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.543;0.549;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="750" cy="300" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.571;0.577;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="750" cy="380" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.600;0.606;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <!-- column x=4 -->
+            <circle cx="830" cy="60"  r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.643;0.649;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="830" cy="140" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.671;0.677;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="830" cy="220" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.700;0.706;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="830" cy="300" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.729;0.735;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+            <circle cx="830" cy="380" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.757;0.763;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+          </g>
+          <!-- "今描いている cell" のオレンジ枠 (canvas 内を移動) -->
+          <rect width="80" height="80" fill="none" stroke="#FF6B00" stroke-width="3" rx="6">
+            <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.014;0.786;1" dur="7s" repeatCount="indefinite"/>
+            <animate attributeName="x" calcMode="discrete"
+              keyTimes="0;0.014;0.043;0.071;0.100;0.129;0.157;0.171;0.200;0.229;0.257;0.286;0.314;0.329;0.357;0.386;0.414;0.443;0.471;0.486;0.514;0.543;0.571;0.600;0.629;0.643;0.671;0.700;0.729;0.757;0.786;1"
+              values   ="470;470;470;470;470;470;470;550;550;550;550;550;550;630;630;630;630;630;630;710;710;710;710;710;710;790;790;790;790;790;790;790"
+              dur="7s" repeatCount="indefinite"/>
+            <animate attributeName="y" calcMode="discrete"
+              keyTimes="0;0.014;0.043;0.071;0.100;0.129;0.157;0.171;0.200;0.229;0.257;0.286;0.314;0.329;0.357;0.386;0.414;0.443;0.471;0.486;0.514;0.543;0.571;0.600;0.629;0.643;0.671;0.700;0.729;0.757;0.786;1"
+              values   ="20;20;100;180;260;340;20;20;100;180;260;340;20;20;100;180;260;340;20;20;100;180;260;340;20;20;100;180;260;340;340;340"
+              dur="7s" repeatCount="indefinite"/>
+          </rect>
+
+          <!-- status -->
+          <rect x="0" y="445" width="900" height="35" rx="6" fill="#141414" stroke="#222"/>
+          <text x="20" y="468" font-family="'JetBrains Mono', monospace" font-size="14" fill="#999">変数:</text>
+          <g font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700">
+            <!-- x value -->
+            <text x="80" y="468" fill="#FFB800">x = 0
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0;0.157;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="468" fill="#FFB800">x = 1
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.157;0.314;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="468" fill="#FFB800">x = 2
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.314;0.471;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="468" fill="#FFB800">x = 3
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.471;0.629;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="468" fill="#FFB800">x = 4
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.629;0.786;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="80" y="468" fill="#FF5252">x = 5 → 外側ループ終了
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.786;1" dur="7s" repeatCount="indefinite"/></text>
+            <!-- y value (multi-window) -->
+            <text x="220" y="468" fill="#4FC3F7">y = 0
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;1;0;1;0;1;0;1;0;0" keyTimes="0;0.014;0.043;0.171;0.200;0.329;0.357;0.486;0.514;0.643;0.671;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="220" y="468" fill="#4FC3F7">y = 1
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;1;0;1;0;1;0;1;0;0" keyTimes="0;0.043;0.071;0.200;0.229;0.357;0.386;0.514;0.543;0.671;0.700;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="220" y="468" fill="#4FC3F7">y = 2
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;1;0;1;0;1;0;1;0;0" keyTimes="0;0.071;0.100;0.229;0.257;0.386;0.414;0.543;0.571;0.700;0.729;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="220" y="468" fill="#4FC3F7">y = 3
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;1;0;1;0;1;0;1;0;0" keyTimes="0;0.100;0.129;0.257;0.286;0.414;0.443;0.571;0.600;0.729;0.757;1" dur="7s" repeatCount="indefinite"/></text>
+            <text x="220" y="468" fill="#4FC3F7">y = 4
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;1;0;1;0;1;0;1;0;0" keyTimes="0;0.129;0.157;0.286;0.314;0.443;0.471;0.600;0.629;0.757;0.786;1" dur="7s" repeatCount="indefinite"/></text>
+          </g>
+          <text x="370" y="468" font-family="'JetBrains Mono', monospace" font-size="14" fill="#999">  内側 y は 5 回／外側 x は 5 回 → 合計 25 回</text>
         </svg>
-        <span class="play-badge">外側 x の列が縦に埋まってから、次の列へ進む（25 回 = 5×5）</span>
-        <div class="figure-caption">400 × 400 のキャンバスに、5 × 5 = 25 個の円。間隔 80, 直径 50</div>
+        <span class="play-badge">外側 x の中で内側 y が 5 回まわる ── これがネスト for（7 秒ループ）</span>
+        <div class="figure-caption">左: コード行ハイライト／右: 列ごとに縦に埋まる、現在のセルはオレンジ枠／下: x と y の値</div>
       </div>
 
       <span class="step-label step-idea">② 考え方</span>
