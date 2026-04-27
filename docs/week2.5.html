@@ -466,6 +466,7 @@ footer {
   <a href="#prob4">問4</a>
   <a href="#prob5">問5</a>
   <a href="#sec-mini">小問10題</a>
+  <a href="#sec-practice">練習問題</a>
 </nav>
 
 <!-- ============ HERO ============ -->
@@ -1726,11 +1727,261 @@ py5.<span class="fn">run_sketch</span>()</pre>
         </div>
       </details>
     </div>
+  </div>
+</section>
 
-    <div class="callout-info" style="margin-top:1.5rem">
-      <h4>提出</h4>
-      <p>10 問のうち <strong>3 問以上を Notion にスクリーンショット + 一言コメント</strong>で記録してください（「ここで詰まった」「こうしたら動いた」など）。完璧でなくて OK です ── <u>考えた跡を残すこと</u>が目的です。</p>
+<!-- ============ 練習問題 ============ -->
+<section id="sec-practice">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">練習</div>
+      <h2>練習問題 ── アニメの絵を描くコードを書こう</h2>
     </div>
+
+    <div class="card">
+      <p>下のアニメーションは <strong>あなたが書いたコードが描画する完成形</strong>です。これを実現する <code>for</code> 文を書いてみてください。</p>
+      <ul class="point-list" style="margin-top:0.5rem">
+        <li>まず <strong>「変わる値」と「変わらない値」</strong>を見分ける</li>
+        <li>変わる値を <code>i</code> の式で表せるか考える</li>
+        <li>解答を見る前に <strong>必ず一度自分で書いて実行</strong>してみる</li>
+      </ul>
+    </div>
+
+    <!-- 練習1: 縦に5つの円 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-q">練習1</span>
+        <h3>縦に並ぶ 5 つの円</h3>
+      </div>
+      <p>キャンバス 400×300 に、直径 50 の円を <strong>縦一列に等間隔</strong>で 5 つ並べる。x は 200 固定、y は 50, 100, 150, 200, 250。</p>
+
+      <div class="result-figure">
+        <svg viewBox="0 0 400 300" width="400" height="300">
+          <rect width="400" height="300" fill="#cccccc"/>
+          <circle cx="200" cy="50"  r="25" fill="#fff" stroke="#000" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.05;0.10;0.95;1" dur="6s" repeatCount="indefinite"/></circle>
+          <circle cx="200" cy="100" r="25" fill="#fff" stroke="#000" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.22;0.27;0.95;1" dur="6s" repeatCount="indefinite"/></circle>
+          <circle cx="200" cy="150" r="25" fill="#fff" stroke="#000" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.39;0.44;0.95;1" dur="6s" repeatCount="indefinite"/></circle>
+          <circle cx="200" cy="200" r="25" fill="#fff" stroke="#000" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.56;0.61;0.95;1" dur="6s" repeatCount="indefinite"/></circle>
+          <circle cx="200" cy="250" r="25" fill="#fff" stroke="#000" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.73;0.78;0.95;1" dur="6s" repeatCount="indefinite"/></circle>
+        </svg>
+        <span class="play-badge">i = 0 → 4 で y が 50 → 250 へ進む（6 秒ループ）</span>
+      </div>
+
+      <div class="callout-tip">
+        <h4>ヒント</h4>
+        <p>x は 200 で固定。y を <code>50 + i*50</code> で表すと、i=0 で 50、i=4 で 250 になる。</p>
+      </div>
+
+      <details>
+        <summary>解答例を見る</summary>
+        <div class="answer-content">
+          <pre><span class="code-label">Python ── 解答例</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">300</span>)
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):
+        py5.<span class="fn">ellipse</span>(<span class="num">200</span>, <span class="num">50</span> <span class="op">+</span> i<span class="op">*</span><span class="num">50</span>, <span class="num">50</span>, <span class="num">50</span>)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+          <p style="margin-top:0.5rem">x = 200 (固定) ／ y = <code>50 + i*50</code> ／ 直径 50 (半径 25 の倍)</p>
+        </div>
+      </details>
+    </div>
+
+    <!-- 練習2: サイズが大きくなる円の列 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-q">練習2</span>
+        <h3>右に進むほど大きくなる円</h3>
+      </div>
+      <p>キャンバス 400×300 に、横に 5 つ並ぶ円。<strong>右に行くほど大きく</strong>なる。x は 50, 125, 200, 275, 350、直径は 20, 40, 60, 80, 100。</p>
+
+      <div class="result-figure">
+        <svg viewBox="0 0 400 300" width="400" height="300">
+          <rect width="400" height="300" fill="#cccccc"/>
+          <circle cx="50"  cy="150" r="10" fill="#fff" stroke="#000" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.05;0.10;0.95;1" dur="6s" repeatCount="indefinite"/></circle>
+          <circle cx="125" cy="150" r="20" fill="#fff" stroke="#000" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.22;0.27;0.95;1" dur="6s" repeatCount="indefinite"/></circle>
+          <circle cx="200" cy="150" r="30" fill="#fff" stroke="#000" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.39;0.44;0.95;1" dur="6s" repeatCount="indefinite"/></circle>
+          <circle cx="275" cy="150" r="40" fill="#fff" stroke="#000" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.56;0.61;0.95;1" dur="6s" repeatCount="indefinite"/></circle>
+          <circle cx="350" cy="150" r="50" fill="#fff" stroke="#000" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.73;0.78;0.95;1" dur="6s" repeatCount="indefinite"/></circle>
+        </svg>
+        <span class="play-badge">x が 50→350、直径が 20→100 と同時に進む（6 秒ループ）</span>
+      </div>
+
+      <div class="callout-tip">
+        <h4>ヒント</h4>
+        <p>x = <code>50 + i*75</code>、直径 = <code>20 + i*20</code>。1 つの <code>i</code> で 2 つのパラメータを動かす。</p>
+      </div>
+
+      <details>
+        <summary>解答例を見る</summary>
+        <div class="answer-content">
+          <pre><span class="code-label">Python ── 解答例</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">300</span>)
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):
+        d <span class="op">=</span> <span class="num">20</span> <span class="op">+</span> i<span class="op">*</span><span class="num">20</span>
+        py5.<span class="fn">ellipse</span>(<span class="num">50</span> <span class="op">+</span> i<span class="op">*</span><span class="num">75</span>, <span class="num">150</span>, d, d)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+          <p style="margin-top:0.5rem">中間変数 <code>d</code> を使うと、横幅と縦幅を同じ値にしやすい。<code>d</code> なしで <code>py5.ellipse(50+i*75, 150, 20+i*20, 20+i*20)</code> でも OK。</p>
+        </div>
+      </details>
+    </div>
+
+    <!-- 練習3: 赤青交互の縞 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-q">練習3</span>
+        <h3>赤と青が交互に並ぶ縞模様</h3>
+      </div>
+      <p>キャンバス 400×300 に、幅 50 の長方形を 8 本並べる。<strong>偶数番目は赤、奇数番目は青</strong>。</p>
+
+      <div class="result-figure">
+        <svg viewBox="0 0 400 300" width="400" height="300">
+          <rect width="400" height="300" fill="#cccccc"/>
+          <rect x="0"   y="0" width="50" height="300" fill="rgb(255,0,0)" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.05;0.08;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
+          <rect x="50"  y="0" width="50" height="300" fill="rgb(0,0,255)" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.16;0.19;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
+          <rect x="100" y="0" width="50" height="300" fill="rgb(255,0,0)" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.26;0.29;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
+          <rect x="150" y="0" width="50" height="300" fill="rgb(0,0,255)" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.37;0.40;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
+          <rect x="200" y="0" width="50" height="300" fill="rgb(255,0,0)" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.47;0.50;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
+          <rect x="250" y="0" width="50" height="300" fill="rgb(0,0,255)" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.58;0.61;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
+          <rect x="300" y="0" width="50" height="300" fill="rgb(255,0,0)" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.68;0.71;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
+          <rect x="350" y="0" width="50" height="300" fill="rgb(0,0,255)" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.79;0.82;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
+        </svg>
+        <span class="play-badge">i が偶数なら赤、奇数なら青（6 秒ループ）</span>
+      </div>
+
+      <div class="callout-tip">
+        <h4>ヒント</h4>
+        <p><code>i % 2 == 0</code> で偶数判定。<code>if/else</code> で fill 色を切り替える。</p>
+      </div>
+
+      <details>
+        <summary>解答例を見る</summary>
+        <div class="answer-content">
+          <pre><span class="code-label">Python ── 解答例</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">300</span>)
+    py5.<span class="fn">no_stroke</span>()
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">8</span>):
+        <span class="kw">if</span> i <span class="op">%</span> <span class="num">2</span> <span class="op">==</span> <span class="num">0</span>:
+            py5.<span class="fn">fill</span>(<span class="num">255</span>, <span class="num">0</span>, <span class="num">0</span>)   <span class="cmt"># 赤</span>
+        <span class="kw">else</span>:
+            py5.<span class="fn">fill</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">255</span>)   <span class="cmt"># 青</span>
+        py5.<span class="fn">rect</span>(i<span class="op">*</span><span class="num">50</span>, <span class="num">0</span>, <span class="num">50</span>, <span class="num">300</span>)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+          <p style="margin-top:0.5rem"><code>%</code> は剰余演算子。<code>i % 2</code> は i を 2 で割った余り。偶数なら 0、奇数なら 1。</p>
+        </div>
+      </details>
+    </div>
+
+    <!-- 練習4: 同心の正方形 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-q">練習4</span>
+        <h3>外から内へ縮む同心の正方形</h3>
+      </div>
+      <p>キャンバス 400×400 に、5 つの正方形を <strong>大きい順</strong>に重ねて描く。一番外側は 350×350、内側ほど一辺が 70 ずつ短くなる。</p>
+
+      <div class="result-figure">
+        <svg viewBox="0 0 400 400" width="400" height="400">
+          <rect width="400" height="400" fill="#cccccc"/>
+          <rect x="25"  y="25"  width="350" height="350" fill="#fff" stroke="#000" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.05;0.10;0.95;1" dur="7s" repeatCount="indefinite"/></rect>
+          <rect x="60"  y="60"  width="280" height="280" fill="#fff" stroke="#000" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.22;0.27;0.95;1" dur="7s" repeatCount="indefinite"/></rect>
+          <rect x="95"  y="95"  width="210" height="210" fill="#fff" stroke="#000" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.39;0.44;0.95;1" dur="7s" repeatCount="indefinite"/></rect>
+          <rect x="130" y="130" width="140" height="140" fill="#fff" stroke="#000" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.56;0.61;0.95;1" dur="7s" repeatCount="indefinite"/></rect>
+          <rect x="165" y="165" width="70"  height="70"  fill="#fff" stroke="#000" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.73;0.78;0.95;1" dur="7s" repeatCount="indefinite"/></rect>
+        </svg>
+        <span class="play-badge">大きい正方形から順に手前へ重なる（7 秒ループ）</span>
+      </div>
+
+      <div class="callout-tip">
+        <h4>ヒント</h4>
+        <p>左上座標 = <code>25 + i*35</code>、辺の長さ = <code>350 - i*70</code>。i が増えると左上は内側へ、辺は短く。</p>
+      </div>
+
+      <details>
+        <summary>解答例を見る</summary>
+        <div class="answer-content">
+          <pre><span class="code-label">Python ── 解答例</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">400</span>)
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):
+        s <span class="op">=</span> <span class="num">350</span> <span class="op">-</span> i<span class="op">*</span><span class="num">70</span>      <span class="cmt"># 350, 280, 210, 140, 70</span>
+        py5.<span class="fn">rect</span>(<span class="num">25</span> <span class="op">+</span> i<span class="op">*</span><span class="num">35</span>, <span class="num">25</span> <span class="op">+</span> i<span class="op">*</span><span class="num">35</span>, s, s)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+          <p style="margin-top:0.5rem">問4 (同心円) と同じ「外側から先に描く」原則。鉛筆で重ね描きするのと同じ。</p>
+        </div>
+      </details>
+    </div>
+
+    <!-- 練習5: 3x4 の格子 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-q">練習5</span>
+        <h3>3 × 4 の格子に並ぶ 12 個の円</h3>
+      </div>
+      <p>キャンバス 400×400 に、円を <strong>3 列 × 4 行</strong>の格子状に並べる。x 座標は 75, 200, 325（3 列）、y 座標は 60, 160, 260, 360（4 行）。直径は 60。</p>
+
+      <div class="result-figure">
+        <svg viewBox="0 0 400 400" width="400" height="400">
+          <rect width="400" height="400" fill="#cccccc"/>
+          <g fill="#fff" stroke="#000">
+            <!-- col 0 -->
+            <circle cx="75"  cy="60"  r="30" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.04;0.06;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="75"  cy="160" r="30" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.10;0.12;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="75"  cy="260" r="30" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.16;0.18;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="75"  cy="360" r="30" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.22;0.24;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <!-- col 1 -->
+            <circle cx="200" cy="60"  r="30" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.30;0.32;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="200" cy="160" r="30" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.36;0.38;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="200" cy="260" r="30" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.42;0.44;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="200" cy="360" r="30" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.48;0.50;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <!-- col 2 -->
+            <circle cx="325" cy="60"  r="30" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.56;0.58;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="325" cy="160" r="30" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.62;0.64;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="325" cy="260" r="30" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.68;0.70;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="325" cy="360" r="30" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.74;0.76;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+          </g>
+        </svg>
+        <span class="play-badge">外側 x の列が縦に埋まってから次の列へ（8 秒ループ）</span>
+      </div>
+
+      <div class="callout-tip">
+        <h4>ヒント</h4>
+        <p>2 つの <code>for</code> をネストする（問5 と同じ）。x 方向 3 列・y 方向 4 行。<br>
+        x = <code>75 + xx*125</code>、y = <code>60 + yy*100</code>。</p>
+      </div>
+
+      <details>
+        <summary>解答例を見る</summary>
+        <div class="answer-content">
+          <pre><span class="code-label">Python ── 解答例</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">400</span>)
+    <span class="kw">for</span> xx <span class="kw">in</span> <span class="fn">range</span>(<span class="num">3</span>):
+        <span class="kw">for</span> yy <span class="kw">in</span> <span class="fn">range</span>(<span class="num">4</span>):
+            py5.<span class="fn">ellipse</span>(<span class="num">75</span> <span class="op">+</span> xx<span class="op">*</span><span class="num">125</span>, <span class="num">60</span> <span class="op">+</span> yy<span class="op">*</span><span class="num">100</span>, <span class="num">60</span>, <span class="num">60</span>)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+          <p style="margin-top:0.5rem">外側ループ <code>xx</code> = 0,1,2 (3 列) ／ 内側ループ <code>yy</code> = 0,1,2,3 (4 行) ／ 合計 3×4 = <strong>12 個</strong>。<br>
+          (Python の予約語と紛らわしいので変数名を <code>xx</code>, <code>yy</code> にしているが、<code>i</code>, <code>j</code> でも OK)</p>
+        </div>
+      </details>
+    </div>
+
   </div>
 </section>
 
