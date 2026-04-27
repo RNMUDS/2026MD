@@ -263,6 +263,30 @@ details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
   margin-top: 0.4rem;
   letter-spacing: 0.04em;
 }
+.play-badge {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  background: rgba(118,185,0,0.12);
+  color: #76B900;
+  border: 1px solid #2e4a0a;
+  border-radius: 100px;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-top: 0.3rem;
+}
+.play-badge::before {
+  content: '\25B6';
+  color: #76B900;
+  font-size: 0.6rem;
+  animation: blink 1.4s ease-in-out infinite;
+}
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+@media (prefers-reduced-motion: reduce) {
+  svg animate, svg animateTransform, svg set { display: none; }
+  .play-badge::before { animation: none; }
+}
 
 /* Idea diagram (explain how loop builds the result) */
 .idea-diagram {
@@ -442,8 +466,24 @@ footer {
             <text x="550" y="72" text-anchor="middle" fill="#FFB800" font-size="22" font-weight="700">i=4</text>
             <rect x="620" y="40" width="180" height="50" rx="8" fill="#2e0a0a" stroke="#FF5252" stroke-width="2" stroke-dasharray="4 4"/>
             <text x="710" y="72" text-anchor="middle" fill="#FF5252" font-size="16" font-weight="700">i=5 になったら終了</text>
+            <!-- 現在の i を示すハイライト -->
+            <rect y="36" width="100" height="58" rx="10" fill="rgba(255,184,0,0.0)" stroke="#FFB800" stroke-width="4">
+              <animate attributeName="x" dur="6s" repeatCount="indefinite"
+                       calcMode="discrete"
+                       keyTimes="0;0.16;0.32;0.48;0.64;0.80;1"
+                       values="20;140;260;380;500;620;620"/>
+              <animate attributeName="width" dur="6s" repeatCount="indefinite"
+                       calcMode="discrete"
+                       keyTimes="0;0.16;0.32;0.48;0.64;0.80;1"
+                       values="100;100;100;100;100;180;180"/>
+              <animate attributeName="stroke" dur="6s" repeatCount="indefinite"
+                       calcMode="discrete"
+                       keyTimes="0;0.80;1"
+                       values="#FFB800;#FF5252;#FF5252"/>
+            </rect>
           </g>
         </svg>
+        <p style="text-align:center;margin-top:0.5rem"><span class="play-badge">アニメーション再生中（6 秒で 1 周）</span></p>
       </div>
     </div>
   </div>
@@ -468,12 +508,36 @@ footer {
       <div class="result-figure">
         <svg viewBox="0 0 400 300" width="400" height="300">
           <rect width="400" height="300" fill="#cccccc"/>
-          <circle cx="60"  cy="150" r="25" fill="#ffffff" stroke="#000" stroke-width="1"/>
-          <circle cx="130" cy="150" r="25" fill="#ffffff" stroke="#000" stroke-width="1"/>
-          <circle cx="200" cy="150" r="25" fill="#ffffff" stroke="#000" stroke-width="1"/>
-          <circle cx="270" cy="150" r="25" fill="#ffffff" stroke="#000" stroke-width="1"/>
-          <circle cx="340" cy="150" r="25" fill="#ffffff" stroke="#000" stroke-width="1"/>
+          <circle cx="60"  cy="150" r="25" fill="#ffffff" stroke="#000" stroke-width="1" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.05;0.10;0.95;1" dur="6s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="130" cy="150" r="25" fill="#ffffff" stroke="#000" stroke-width="1" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.22;0.27;0.95;1" dur="6s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="200" cy="150" r="25" fill="#ffffff" stroke="#000" stroke-width="1" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.39;0.44;0.95;1" dur="6s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="270" cy="150" r="25" fill="#ffffff" stroke="#000" stroke-width="1" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.56;0.61;0.95;1" dur="6s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="340" cy="150" r="25" fill="#ffffff" stroke="#000" stroke-width="1" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.73;0.78;0.95;1" dur="6s" repeatCount="indefinite"/>
+          </circle>
+          <!-- 現在の i 値ラベル（discrete モードで 5 段階切替） -->
+          <g font-family="'JetBrains Mono', monospace" font-size="18" font-weight="700">
+            <text x="14" y="28" fill="#FF6B00">i = 0
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.08;0.22;1" dur="6s" repeatCount="indefinite"/></text>
+            <text x="14" y="28" fill="#FF6B00">i = 1
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.22;0.39;1" dur="6s" repeatCount="indefinite"/></text>
+            <text x="14" y="28" fill="#FF6B00">i = 2
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.39;0.56;1" dur="6s" repeatCount="indefinite"/></text>
+            <text x="14" y="28" fill="#FF6B00">i = 3
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.56;0.73;1" dur="6s" repeatCount="indefinite"/></text>
+            <text x="14" y="28" fill="#FF6B00">i = 4
+              <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0" keyTimes="0;0.73;0.95;1" dur="6s" repeatCount="indefinite"/></text>
+          </g>
         </svg>
+        <span class="play-badge">i = 0 → 1 → 2 → 3 → 4 と順に円が現れる（6 秒ループ）</span>
         <div class="figure-caption">400 × 300 のキャンバスに、半径 25 の円が 5 つ等間隔（70 px）で並んでいる</div>
       </div>
 
@@ -595,18 +659,29 @@ py5.<span class="fn">run_sketch</span>()</pre>
       <div class="result-figure">
         <svg viewBox="0 0 400 300" width="400" height="300">
           <rect width="400" height="300" fill="#cccccc"/>
-          <!-- 10 stripes width=40, color = 25*i -->
-          <rect x="0"   y="0" width="40" height="300" fill="rgb(0,0,0)"/>
-          <rect x="40"  y="0" width="40" height="300" fill="rgb(25,25,25)"/>
-          <rect x="80"  y="0" width="40" height="300" fill="rgb(50,50,50)"/>
-          <rect x="120" y="0" width="40" height="300" fill="rgb(75,75,75)"/>
-          <rect x="160" y="0" width="40" height="300" fill="rgb(100,100,100)"/>
-          <rect x="200" y="0" width="40" height="300" fill="rgb(125,125,125)"/>
-          <rect x="240" y="0" width="40" height="300" fill="rgb(150,150,150)"/>
-          <rect x="280" y="0" width="40" height="300" fill="rgb(175,175,175)"/>
-          <rect x="320" y="0" width="40" height="300" fill="rgb(200,200,200)"/>
-          <rect x="360" y="0" width="40" height="300" fill="rgb(225,225,225)"/>
+          <!-- 10 stripes appearing left-to-right -->
+          <rect x="0"   y="0" width="40" height="300" fill="rgb(0,0,0)" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.05;0.07;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
+          <rect x="40"  y="0" width="40" height="300" fill="rgb(25,25,25)" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.12;0.14;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
+          <rect x="80"  y="0" width="40" height="300" fill="rgb(50,50,50)" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.19;0.21;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
+          <rect x="120" y="0" width="40" height="300" fill="rgb(75,75,75)" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.26;0.28;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
+          <rect x="160" y="0" width="40" height="300" fill="rgb(100,100,100)" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.33;0.35;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
+          <rect x="200" y="0" width="40" height="300" fill="rgb(125,125,125)" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.40;0.42;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
+          <rect x="240" y="0" width="40" height="300" fill="rgb(150,150,150)" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.47;0.49;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
+          <rect x="280" y="0" width="40" height="300" fill="rgb(175,175,175)" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.54;0.56;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
+          <rect x="320" y="0" width="40" height="300" fill="rgb(200,200,200)" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.61;0.63;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
+          <rect x="360" y="0" width="40" height="300" fill="rgb(225,225,225)" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.68;0.70;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
         </svg>
+        <span class="play-badge">i が 0 → 9 と進むのに合わせて、左から右へ縞が現れる</span>
         <div class="figure-caption">400 × 300 に幅 40 の長方形を 10 本。明るさが i × 25 で増える</div>
       </div>
 
@@ -723,13 +798,19 @@ py5.<span class="fn">run_sketch</span>()</pre>
       <div class="result-figure">
         <svg viewBox="0 0 400 400" width="400" height="400">
           <rect width="400" height="400" fill="#cccccc"/>
-          <!-- 5 squares 60x60, pos = (20+i*70, 20+i*70) -->
-          <rect x="20"  y="20"  width="60" height="60" fill="#ffffff" stroke="#000"/>
-          <rect x="90"  y="90"  width="60" height="60" fill="#ffffff" stroke="#000"/>
-          <rect x="160" y="160" width="60" height="60" fill="#ffffff" stroke="#000"/>
-          <rect x="230" y="230" width="60" height="60" fill="#ffffff" stroke="#000"/>
-          <rect x="300" y="300" width="60" height="60" fill="#ffffff" stroke="#000"/>
+          <!-- 5 squares appearing diagonally top-left → bottom-right -->
+          <rect x="20"  y="20"  width="60" height="60" fill="#ffffff" stroke="#000" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.05;0.10;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
+          <rect x="90"  y="90"  width="60" height="60" fill="#ffffff" stroke="#000" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.22;0.27;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
+          <rect x="160" y="160" width="60" height="60" fill="#ffffff" stroke="#000" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.39;0.44;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
+          <rect x="230" y="230" width="60" height="60" fill="#ffffff" stroke="#000" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.56;0.61;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
+          <rect x="300" y="300" width="60" height="60" fill="#ffffff" stroke="#000" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.73;0.78;0.95;1" dur="6s" repeatCount="indefinite"/></rect>
         </svg>
+        <span class="play-badge">i が 0 → 4 と進むに連れて、斜めに 1 段ずつ追加される</span>
         <div class="figure-caption">400 × 400 のキャンバスに、60 × 60 の正方形が斜めに 5 つ並ぶ</div>
       </div>
 
@@ -825,14 +906,21 @@ py5.<span class="fn">run_sketch</span>()</pre>
       <div class="result-figure">
         <svg viewBox="0 0 400 400" width="400" height="400">
           <rect width="400" height="400" fill="#cccccc"/>
-          <!-- 6 concentric circles, big to small (so big drawn first) -->
-          <circle cx="200" cy="200" r="180" fill="#ffffff" stroke="#000"/>
-          <circle cx="200" cy="200" r="150" fill="#ffffff" stroke="#000"/>
-          <circle cx="200" cy="200" r="120" fill="#ffffff" stroke="#000"/>
-          <circle cx="200" cy="200" r="90"  fill="#ffffff" stroke="#000"/>
-          <circle cx="200" cy="200" r="60"  fill="#ffffff" stroke="#000"/>
-          <circle cx="200" cy="200" r="30"  fill="#ffffff" stroke="#000"/>
+          <!-- 6 concentric circles drawn outside-in (i=0 largest first) -->
+          <circle cx="200" cy="200" r="180" fill="#ffffff" stroke="#000" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.05;0.10;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+          <circle cx="200" cy="200" r="150" fill="#ffffff" stroke="#000" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.18;0.23;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+          <circle cx="200" cy="200" r="120" fill="#ffffff" stroke="#000" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.31;0.36;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+          <circle cx="200" cy="200" r="90"  fill="#ffffff" stroke="#000" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.44;0.49;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+          <circle cx="200" cy="200" r="60"  fill="#ffffff" stroke="#000" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.57;0.62;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
+          <circle cx="200" cy="200" r="30"  fill="#ffffff" stroke="#000" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.70;0.75;0.95;1" dur="7s" repeatCount="indefinite"/></circle>
         </svg>
+        <span class="play-badge">大きい円から順に描かれていく ── 後の小さい円が手前に積まれて同心円に見える</span>
         <div class="figure-caption">400 × 400 の中心 (200,200) に同心円。半径 360→60 と減っていくため、後から描く円ほど小さい</div>
       </div>
 
@@ -958,40 +1046,53 @@ py5.<span class="fn">run_sketch</span>()</pre>
       <div class="result-figure">
         <svg viewBox="0 0 400 400" width="400" height="400">
           <rect width="400" height="400" fill="#cccccc"/>
-          <!-- 5x5 grid, pos = (40 + x*80, 40 + y*80), r=25 -->
+          <!-- 5x5 grid: column-major animation (外側 x 1 列ぶん終わってから次の列へ) -->
           <g fill="#ffffff" stroke="#000" stroke-width="1">
-          <!-- y=0 -->
-          <circle cx="40"  cy="40"  r="25"/>
-          <circle cx="120" cy="40"  r="25"/>
-          <circle cx="200" cy="40"  r="25"/>
-          <circle cx="280" cy="40"  r="25"/>
-          <circle cx="360" cy="40"  r="25"/>
-          <!-- y=1 -->
-          <circle cx="40"  cy="120" r="25"/>
-          <circle cx="120" cy="120" r="25"/>
-          <circle cx="200" cy="120" r="25"/>
-          <circle cx="280" cy="120" r="25"/>
-          <circle cx="360" cy="120" r="25"/>
-          <!-- y=2 -->
-          <circle cx="40"  cy="200" r="25"/>
-          <circle cx="120" cy="200" r="25"/>
-          <circle cx="200" cy="200" r="25"/>
-          <circle cx="280" cy="200" r="25"/>
-          <circle cx="360" cy="200" r="25"/>
-          <!-- y=3 -->
-          <circle cx="40"  cy="280" r="25"/>
-          <circle cx="120" cy="280" r="25"/>
-          <circle cx="200" cy="280" r="25"/>
-          <circle cx="280" cy="280" r="25"/>
-          <circle cx="360" cy="280" r="25"/>
-          <!-- y=4 -->
-          <circle cx="40"  cy="360" r="25"/>
-          <circle cx="120" cy="360" r="25"/>
-          <circle cx="200" cy="360" r="25"/>
-          <circle cx="280" cy="360" r="25"/>
-          <circle cx="360" cy="360" r="25"/>
+            <!-- col x=0 (idx 0..4) -->
+            <circle cx="40"  cy="40"  r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.04;0.05;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="40"  cy="120" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.07;0.08;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="40"  cy="200" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.10;0.11;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="40"  cy="280" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.14;0.15;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="40"  cy="360" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.17;0.18;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <!-- col x=1 (idx 5..9) -->
+            <circle cx="120" cy="40"  r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.21;0.22;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="120" cy="120" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.24;0.25;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="120" cy="200" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.27;0.28;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="120" cy="280" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.31;0.32;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="120" cy="360" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.34;0.35;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <!-- col x=2 (idx 10..14) -->
+            <circle cx="200" cy="40"  r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.38;0.39;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="200" cy="120" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.41;0.42;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="200" cy="200" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.44;0.45;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="200" cy="280" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.48;0.49;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="200" cy="360" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.51;0.52;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <!-- col x=3 (idx 15..19) -->
+            <circle cx="280" cy="40"  r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.55;0.56;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="280" cy="120" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.58;0.59;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="280" cy="200" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.61;0.62;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="280" cy="280" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.65;0.66;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="280" cy="360" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.68;0.69;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <!-- col x=4 (idx 20..24) -->
+            <circle cx="360" cy="40"  r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.72;0.73;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="360" cy="120" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.75;0.76;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="360" cy="200" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.78;0.79;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="360" cy="280" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.82;0.83;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
+            <circle cx="360" cy="360" r="25" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.85;0.86;0.95;1" dur="8s" repeatCount="indefinite"/></circle>
           </g>
+          <!-- 現在の (x, y) ハイライト枠 -->
+          <rect width="80" height="80" fill="none" stroke="#FF6B00" stroke-width="3" rx="6" opacity="0">
+            <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.04;0.86;1" dur="8s" repeatCount="indefinite"/>
+            <animate attributeName="x" calcMode="discrete"
+              keyTimes="0;0.04;0.07;0.10;0.14;0.17;0.21;0.24;0.27;0.31;0.34;0.38;0.41;0.44;0.48;0.51;0.55;0.58;0.61;0.65;0.68;0.72;0.75;0.78;0.82;0.85;1"
+              values="0;0;0;0;0;0;80;80;80;80;80;160;160;160;160;160;240;240;240;240;240;320;320;320;320;320;320"
+              dur="8s" repeatCount="indefinite"/>
+            <animate attributeName="y" calcMode="discrete"
+              keyTimes="0;0.04;0.07;0.10;0.14;0.17;0.21;0.24;0.27;0.31;0.34;0.38;0.41;0.44;0.48;0.51;0.55;0.58;0.61;0.65;0.68;0.72;0.75;0.78;0.82;0.85;1"
+              values="0;0;80;160;240;320;0;80;160;240;320;0;80;160;240;320;0;80;160;240;320;0;80;160;240;320;320"
+              dur="8s" repeatCount="indefinite"/>
+          </rect>
         </svg>
+        <span class="play-badge">外側 x の列が縦に埋まってから、次の列へ進む（25 回 = 5×5）</span>
         <div class="figure-caption">400 × 400 のキャンバスに、5 × 5 = 25 個の円。間隔 80, 直径 50</div>
       </div>
 
