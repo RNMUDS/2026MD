@@ -280,6 +280,56 @@ details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
   letter-spacing: 0.04em;
   text-align: center;
 }
+
+/* Animation controls */
+.exec-controls {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.6rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  background: #0A0A0A;
+  border-radius: 8px;
+  padding: 0.5rem;
+  border: 1px solid #222;
+}
+.exec-ctrl {
+  background: #1a1a1a;
+  border: 1px solid #444;
+  color: #e0e0e0;
+  padding: 0.4rem 0.85rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.15s;
+  user-select: none;
+  min-width: 5rem;
+}
+.exec-ctrl:hover {
+  background: #2a2a2a;
+  border-color: #76B900;
+  color: #76B900;
+}
+.exec-ctrl:active { transform: translateY(1px); }
+.exec-ctrl[data-action="play"] { border-color: #76B900; color: #76B900; }
+.exec-ctrl[data-action="pause"] { border-color: #FFB800; color: #FFB800; }
+.exec-ctrl[data-action="reset"] { border-color: #FF6B6B; color: #FF6B6B; }
+.exec-ctrl.is-paused {
+  background: #1a2e0a;
+  border-color: #76B900;
+  color: #76B900;
+}
+.exec-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: #999;
+  margin-left: 0.6rem;
+  min-width: 5.5rem;
+  letter-spacing: 0.03em;
+}
 .result-figure .figure-caption {
   font-size: 0.78rem;
   color: #999;
@@ -529,6 +579,13 @@ footer {
       <!-- ① 実行結果 (コードと連動するライブ実行ビュー) -->
       <span class="step-label step-figure">① 実行結果（コード連動アニメ）</span>
       <div class="exec-viewer">
+        <div class="exec-controls" data-cycle="7" data-step="0.5">
+          <button class="exec-ctrl" data-action="play">▶ 再生</button>
+          <button class="exec-ctrl" data-action="pause">⏸ 一時停止</button>
+          <button class="exec-ctrl" data-action="step">⏭ 次へ (+0.5s)</button>
+          <button class="exec-ctrl" data-action="reset">⏮ 最初から</button>
+          <span class="exec-time">0.00s / 7s</span>
+        </div>
         <svg viewBox="0 0 900 470" preserveAspectRatio="xMidYMid meet">
           <!-- code panel bg -->
           <rect x="0" y="0" width="450" height="340" rx="10" fill="#0A0A0A" stroke="#222"/>
@@ -758,6 +815,13 @@ py5.<span class="fn">run_sketch</span>()</pre>
 
       <span class="step-label step-figure">① 実行結果（コード連動アニメ）</span>
       <div class="exec-viewer">
+        <div class="exec-controls" data-cycle="7" data-step="0.3">
+          <button class="exec-ctrl" data-action="play">▶ 再生</button>
+          <button class="exec-ctrl" data-action="pause">⏸ 一時停止</button>
+          <button class="exec-ctrl" data-action="step">⏭ 次へ (+0.3s)</button>
+          <button class="exec-ctrl" data-action="reset">⏮ 最初から</button>
+          <span class="exec-time">0.00s / 7s</span>
+        </div>
         <svg viewBox="0 0 900 470" preserveAspectRatio="xMidYMid meet">
           <rect x="0" y="0" width="450" height="340" rx="10" fill="#0A0A0A" stroke="#222"/>
           <text x="430" y="20" text-anchor="end" fill="#666" font-size="10" font-family="'JetBrains Mono', monospace">prob2.py</text>
@@ -966,6 +1030,13 @@ py5.<span class="fn">run_sketch</span>()</pre>
 
       <span class="step-label step-figure">① 実行結果（コード連動アニメ）</span>
       <div class="exec-viewer">
+        <div class="exec-controls" data-cycle="7" data-step="0.5">
+          <button class="exec-ctrl" data-action="play">▶ 再生</button>
+          <button class="exec-ctrl" data-action="pause">⏸ 一時停止</button>
+          <button class="exec-ctrl" data-action="step">⏭ 次へ (+0.5s)</button>
+          <button class="exec-ctrl" data-action="reset">⏮ 最初から</button>
+          <span class="exec-time">0.00s / 7s</span>
+        </div>
         <svg viewBox="0 0 900 570" preserveAspectRatio="xMidYMid meet">
           <rect x="0" y="0" width="450" height="440" rx="10" fill="#0A0A0A" stroke="#222"/>
           <text x="430" y="20" text-anchor="end" fill="#666" font-size="10" font-family="'JetBrains Mono', monospace">prob3.py</text>
@@ -1124,6 +1195,13 @@ py5.<span class="fn">run_sketch</span>()</pre>
 
       <span class="step-label step-figure">① 実行結果（コード連動アニメ）</span>
       <div class="exec-viewer">
+        <div class="exec-controls" data-cycle="7" data-step="0.5">
+          <button class="exec-ctrl" data-action="play">▶ 再生</button>
+          <button class="exec-ctrl" data-action="pause">⏸ 一時停止</button>
+          <button class="exec-ctrl" data-action="step">⏭ 次へ (+0.5s)</button>
+          <button class="exec-ctrl" data-action="reset">⏮ 最初から</button>
+          <span class="exec-time">0.00s / 7s</span>
+        </div>
         <svg viewBox="0 0 900 570" preserveAspectRatio="xMidYMid meet">
           <rect x="0" y="0" width="450" height="440" rx="10" fill="#0A0A0A" stroke="#222"/>
           <text x="430" y="20" text-anchor="end" fill="#666" font-size="10" font-family="'JetBrains Mono', monospace">prob4.py</text>
@@ -1322,6 +1400,13 @@ py5.<span class="fn">run_sketch</span>()</pre>
 
       <span class="step-label step-figure">① 実行結果（コード連動アニメ）</span>
       <div class="exec-viewer">
+        <div class="exec-controls" data-cycle="7" data-step="0.2">
+          <button class="exec-ctrl" data-action="play">▶ 再生</button>
+          <button class="exec-ctrl" data-action="pause">⏸ 一時停止</button>
+          <button class="exec-ctrl" data-action="step">⏭ 次へ (+0.2s)</button>
+          <button class="exec-ctrl" data-action="reset">⏮ 最初から</button>
+          <span class="exec-time">0.00s / 7s</span>
+        </div>
         <svg viewBox="0 0 900 570" preserveAspectRatio="xMidYMid meet">
           <rect x="0" y="0" width="450" height="440" rx="10" fill="#0A0A0A" stroke="#222"/>
           <text x="430" y="20" text-anchor="end" fill="#666" font-size="10" font-family="'JetBrains Mono', monospace">prob5.py</text>
@@ -1657,6 +1742,64 @@ py5.<span class="fn">run_sketch</span>()</pre>
     </p>
   </div>
 </footer>
+
+<script>
+// Animation control: play / pause / step / reset for each .exec-viewer
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.exec-viewer').forEach(viewer => {
+    const svg = viewer.querySelector('svg');
+    const controls = viewer.querySelector('.exec-controls');
+    if (!svg || !controls) return;
+    const cycle = parseFloat(controls.dataset.cycle || '7');
+    const step = parseFloat(controls.dataset.step || '0.5');
+    const timeEl = controls.querySelector('.exec-time');
+    const pauseBtn = controls.querySelector('[data-action="pause"]');
+
+    const updateTime = () => {
+      try {
+        const t = svg.getCurrentTime();
+        const norm = ((t % cycle) + cycle) % cycle;
+        if (timeEl) timeEl.textContent = norm.toFixed(2) + 's / ' + cycle + 's';
+      } catch (e) {}
+    };
+    setInterval(updateTime, 100);
+
+    const setPaused = (paused) => {
+      if (pauseBtn) {
+        if (paused) pauseBtn.classList.add('is-paused');
+        else pauseBtn.classList.remove('is-paused');
+      }
+    };
+
+    controls.addEventListener('click', e => {
+      const btn = e.target.closest('button.exec-ctrl');
+      if (!btn) return;
+      const action = btn.dataset.action;
+      try {
+        if (action === 'play') {
+          svg.unpauseAnimations();
+          setPaused(false);
+        } else if (action === 'pause') {
+          svg.pauseAnimations();
+          setPaused(true);
+        } else if (action === 'step') {
+          svg.pauseAnimations();
+          const newTime = svg.getCurrentTime() + step;
+          svg.setCurrentTime(newTime);
+          setPaused(true);
+        } else if (action === 'reset') {
+          svg.setCurrentTime(0);
+          svg.pauseAnimations();
+          setPaused(true);
+        }
+        updateTime();
+      } catch (err) {
+        console.error('Animation control error:', err);
+      }
+    });
+  });
+});
+</script>
 
 </body>
 </html>
