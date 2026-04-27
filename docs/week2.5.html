@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第2.5回: for文を徹底的に学ぶ | MD1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: clamp(13px, 1.6vw, 28px); }
+html, body { overflow-x: hidden; max-width: 100%; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #111111;
+  color: #e0e0e0;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  padding-top: 2.2rem;
+}
+img, video, iframe, svg, canvas { max-width: 100%; height: auto; }
+
+.container { max-width: 1600px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+
+.hero {
+  background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a);
+  color: white;
+  padding: clamp(3rem, 8vw, 6rem) 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(108,99,255,0.3), transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(155,89,182,0.2), transparent 50%);
+}
+.hero .container { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 100px;
+  padding: 0.35rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+}
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 700px; }
+
+.section-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.section-num {
+  width: 2.5rem; height: 2.5rem;
+  border-radius: 0.4rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 900; color: white;
+  flex-shrink: 0;
+}
+.section-header h2 {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.card {
+  background: #141414;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  border: 1px solid #2a2a2a;
+}
+.card-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #222;
+  flex-wrap: wrap;
+}
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+
+.tag {
+  display: inline-flex; align-items: center; gap: 0.2rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: 100px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.tag-q  { background: #1a2e0a; color: #76B900; }
+.tag-mini { background: #0a1a2e; color: #4FC3F7; }
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.88rem;
+  margin: 1rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+th {
+  background: rgba(108, 99, 255, 0.15);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  color: #76B900;
+  letter-spacing: 0.02em;
+}
+td {
+  padding: 0.55rem 0.8rem;
+  border-top: 1px solid #222;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+}
+tr:nth-child(even) td { background: #111; }
+
+pre {
+  background: #0A0A0A;
+  color: #E0E0E0;
+  border-radius: 12px;
+  padding: clamp(0.8rem, 2vw, 1.4rem);
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
+  font-size: clamp(0.75rem, 1.3vw, 0.88rem);
+  line-height: 1.7;
+  margin: 1rem 0;
+  position: relative;
+}
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #FFB800; }
+pre .op  { color: #93D500; }
+.code-label {
+  position: absolute; top: 0; right: 0;
+  background: rgba(255,255,255,0.08);
+  color: #999999;
+  padding: 0.2rem 0.8rem;
+  border-radius: 0 12px 0 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+:not(pre) > code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(108,99,255,0.15);
+  padding: 0.15em 0.45em;
+  border-radius: 5px;
+  font-size: 0.85em;
+}
+
+.concept-box {
+  background: rgba(108, 99, 255, 0.10);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  border: 1px solid #2a2a3a;
+}
+.concept-box h4 {
+  font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem;
+}
+
+.callout-tip {
+  background: rgba(155, 89, 182, 0.08);
+  border: 1px solid rgba(155, 89, 182, 0.3);
+  border-left: 4px solid #93D500;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-tip h4 {
+  color: #93D500; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+
+.callout-info {
+  background: rgba(108, 99, 255, 0.08);
+  border: 1px solid rgba(108, 99, 255, 0.3);
+  border-left: 4px solid #76B900;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-info h4 {
+  color: #76B900; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+
+.point-list { list-style: none; padding: 0; }
+.point-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+}
+.point-list li::before {
+  content: '\25B8';
+  position: absolute; left: 0;
+  color: #76B900;
+  font-weight: 700;
+}
+
+details {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  margin-bottom: 0.8rem;
+  overflow: hidden;
+}
+details summary {
+  padding: 0.7rem 1.1rem;
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 0.5rem;
+  background: #1a1a1a;
+  user-select: none;
+}
+details summary::marker { content: ''; }
+details summary::before {
+  content: '\25B6';
+  font-size: 0.65rem;
+  transition: transform 0.2s;
+  color: #666;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
+
+/* Result figure (mimic py5 canvas) */
+.result-figure {
+  display: flex; flex-direction: column; align-items: center;
+  margin: 1rem 0;
+}
+.result-figure svg {
+  border: 2px solid #333;
+  background: #cccccc;
+  border-radius: 6px;
+  display: block;
+  max-width: 100%;
+}
+.result-figure .figure-caption {
+  font-size: 0.78rem;
+  color: #999;
+  margin-top: 0.4rem;
+  letter-spacing: 0.04em;
+}
+
+/* Idea diagram (explain how loop builds the result) */
+.idea-diagram {
+  background: #0A0A0A;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 1rem 0;
+  overflow-x: auto;
+}
+.idea-diagram svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.step-label {
+  display: inline-block;
+  background: #76B900;
+  color: #0A0A0A;
+  padding: 0.2rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+}
+.step-label.step-figure { background: #4FC3F7; }
+.step-label.step-idea { background: #FFB800; }
+.step-label.step-code { background: #76B900; }
+
+.section-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.2rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.55rem;
+  font-weight: 500;
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.current { color: #76B900; background: rgba(118,185,0,0.15); }
+
+[id] { scroll-margin-top: 3.5rem; }
+
+footer {
+  background: #0A0A0A;
+  color: #999999;
+  padding: 2rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  body { line-height: 1.7; }
+  .container { padding: 0 0.75rem; }
+  .hero { padding: 1.6rem 0; }
+  .hero h1 { font-size: 1.15rem !important; }
+  .hero p { font-size: 0.82rem !important; }
+  .hero-badge { font-size: 0.7rem; padding: 0.25rem 0.75rem; }
+  .section-header { gap: 0.5rem; flex-wrap: wrap; }
+  .section-header h2 { font-size: 1.05rem; }
+  .section-num { width: 1.9rem; height: 1.9rem; font-size: 0.85rem; }
+  .card { padding: 1rem; }
+  .card-header h3 { font-size: 1rem; }
+  pre { font-size: 0.72rem; padding: 0.7rem; }
+  table { font-size: 0.78rem; }
+  th, td { padding: 0.4rem 0.5rem; }
+}
+</style>
+</head>
+<body>
+
+<nav class="section-nav">
+  <div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.6rem;border-right:1px solid #333;padding-right:0.6rem">
+    <span style="color:#666;font-size:0.5rem">回:</span>
+    <a href="week01.html" style="color:#666;font-size:0.6rem;padding:0.2rem 0.45rem">1</a>
+    <a href="week02.html" style="color:#666;font-size:0.6rem;padding:0.2rem 0.45rem">2</a>
+    <a href="week2.5.html" class="current" style="font-size:0.6rem;padding:0.2rem 0.45rem">2.5</a>
+    <a href="week03.html" style="color:#666;font-size:0.6rem;padding:0.2rem 0.45rem">3</a>
+    <a href="week04.html" style="color:#666;font-size:0.6rem;padding:0.2rem 0.45rem">4</a>
+  </div>
+  <a href="#sec-intro">導入</a>
+  <a href="#sec-basics">for の基本</a>
+  <a href="#prob1">問1</a>
+  <a href="#prob2">問2</a>
+  <a href="#prob3">問3</a>
+  <a href="#prob4">問4</a>
+  <a href="#prob5">問5</a>
+  <a href="#sec-mini">小問10題</a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">第2.5回 ── 補講</div>
+    <h1>for 文を徹底的に学ぶ</h1>
+    <p>py5 で「ある絵を描くには？」を起点に、繰り返し処理を 5 つの図 + 10 の小問で身につけます。各問は <strong>① 完成図 → ② 考え方の図解 → ③ コード解説</strong> の順で進みます。</p>
+  </div>
+</header>
+
+<!-- ============ INTRO ============ -->
+<section id="sec-intro">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">0</div>
+      <h2>このページの使い方</h2>
+    </div>
+    <div class="card">
+      <p>第 2 回で <code>for</code> 文に触れましたが、「<strong>絵を描くために</strong>使えるかどうか」が本質です。本ページの 5 つの問題は、すべて<strong>先に完成図</strong>を見せます。「これをコードで作るとしたら？」と頭の中で考えてから、考え方とコードに進んでください。</p>
+      <ul class="point-list" style="margin-top:0.8rem">
+        <li><span style="color:#4FC3F7">①完成図</span> ── 何を作るか（ゴール）</li>
+        <li><span style="color:#FFB800">②考え方</span> ── 図と表で「なぜ for が使えるか」</li>
+        <li><span style="color:#76B900">③コード</span> ── 実装と 1 行ずつの解説</li>
+      </ul>
+      <div class="callout-info" style="margin-top:1rem">
+        <h4>準備</h4>
+        <p>ターミナルで <code>cd ~/Lecture/MD1/no2_5</code> （無ければ <code>mkdir -p ~/Lecture/MD1/no2_5 && cd ~/Lecture/MD1/no2_5</code>）して仮想環境を有効化してから、各問題のコードを <code>prob1.py</code>〜<code>prob5.py</code> として保存・実行してください。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ for の基本 ============ -->
+<section id="sec-basics">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#93D500">1</div>
+      <h2>for 文の基本構造（5 秒で復習）</h2>
+    </div>
+
+    <div class="card">
+      <pre><span class="code-label">Python</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):
+    <span class="cmt"># i が 0,1,2,3,4 と順に変化しながらこのブロックを 5 回実行</span>
+    <span class="fn">print</span>(i)</pre>
+
+      <div class="concept-box">
+        <h4>覚えること 3 つだけ</h4>
+        <ul class="point-list">
+          <li><code>range(N)</code> は <code>0, 1, 2, ..., N-1</code> （<strong>N は含まない</strong>）</li>
+          <li>ブロックの中で <code>i</code> を「位置」「色」「サイズ」の式に使える</li>
+          <li>インデント (字下げ) されている行が 1 回ずつ実行される</li>
+        </ul>
+      </div>
+
+      <!-- range visualizer -->
+      <div class="idea-diagram">
+        <svg viewBox="0 0 900 110" preserveAspectRatio="xMidYMid meet">
+          <text x="20" y="22" fill="#76B900" font-size="14" font-weight="700">range(5) の値が i にひとつずつ入っていく</text>
+          <g font-family="'JetBrains Mono', monospace">
+            <rect x="20"  y="40" width="100" height="50" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="70"  y="72" text-anchor="middle" fill="#FFB800" font-size="22" font-weight="700">i=0</text>
+            <rect x="140" y="40" width="100" height="50" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="190" y="72" text-anchor="middle" fill="#FFB800" font-size="22" font-weight="700">i=1</text>
+            <rect x="260" y="40" width="100" height="50" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="310" y="72" text-anchor="middle" fill="#FFB800" font-size="22" font-weight="700">i=2</text>
+            <rect x="380" y="40" width="100" height="50" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="430" y="72" text-anchor="middle" fill="#FFB800" font-size="22" font-weight="700">i=3</text>
+            <rect x="500" y="40" width="100" height="50" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="550" y="72" text-anchor="middle" fill="#FFB800" font-size="22" font-weight="700">i=4</text>
+            <rect x="620" y="40" width="180" height="50" rx="8" fill="#2e0a0a" stroke="#FF5252" stroke-width="2" stroke-dasharray="4 4"/>
+            <text x="710" y="72" text-anchor="middle" fill="#FF5252" font-size="16" font-weight="700">i=5 になったら終了</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 問題1 ============ -->
+<section id="prob1">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">問1</div>
+      <h2>横一列に 5 つの円を並べる</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-q">基本問題</span>
+        <h3>「等間隔に並んだ 5 つの円」</h3>
+      </div>
+
+      <!-- ① 実行結果 -->
+      <span class="step-label step-figure">① 実行結果</span>
+      <div class="result-figure">
+        <svg viewBox="0 0 400 300" width="400" height="300">
+          <rect width="400" height="300" fill="#cccccc"/>
+          <circle cx="60"  cy="150" r="25" fill="#ffffff" stroke="#000" stroke-width="1"/>
+          <circle cx="130" cy="150" r="25" fill="#ffffff" stroke="#000" stroke-width="1"/>
+          <circle cx="200" cy="150" r="25" fill="#ffffff" stroke="#000" stroke-width="1"/>
+          <circle cx="270" cy="150" r="25" fill="#ffffff" stroke="#000" stroke-width="1"/>
+          <circle cx="340" cy="150" r="25" fill="#ffffff" stroke="#000" stroke-width="1"/>
+        </svg>
+        <div class="figure-caption">400 × 300 のキャンバスに、半径 25 の円が 5 つ等間隔（70 px）で並んでいる</div>
+      </div>
+
+      <!-- ② 考え方 -->
+      <span class="step-label step-idea">② 考え方</span>
+      <div class="concept-box">
+        <h4>変わるもの・変わらないもの</h4>
+        <ul class="point-list">
+          <li><strong>変わるもの</strong>: 円の <strong>x 座標</strong>（60 → 130 → 200 → 270 → 340）</li>
+          <li><strong>変わらないもの</strong>: y 座標 (150)、半径 (25)</li>
+        </ul>
+        <p style="margin-top:0.4rem">変わる x 座標を <code>60 + i*70</code> という式で表せれば、5 回繰り返すだけで済みます。</p>
+      </div>
+
+      <!-- 反復表 -->
+      <table>
+        <tr><th>i</th><th>60 + i*70</th><th>x 座標</th></tr>
+        <tr><td>0</td><td>60 + 0</td><td>60</td></tr>
+        <tr><td>1</td><td>60 + 70</td><td>130</td></tr>
+        <tr><td>2</td><td>60 + 140</td><td>200</td></tr>
+        <tr><td>3</td><td>60 + 210</td><td>270</td></tr>
+        <tr><td>4</td><td>60 + 280</td><td>340</td></tr>
+      </table>
+
+      <!-- 反復ビジュアル -->
+      <div class="idea-diagram">
+        <svg viewBox="0 0 900 200" preserveAspectRatio="xMidYMid meet">
+          <text x="450" y="20" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">各 i ごとに ellipse(x, 150, 50, 50) が呼ばれる</text>
+          <g font-family="'JetBrains Mono', monospace">
+            <g transform="translate(20,40)">
+              <rect width="160" height="130" rx="8" fill="#1a1a1a" stroke="#76B900"/>
+              <text x="80" y="22" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">i=0 → x=60</text>
+              <rect x="20" y="35" width="120" height="80" fill="#cccccc"/>
+              <circle cx="38" cy="75" r="9" fill="#fff" stroke="#000"/>
+            </g>
+            <g transform="translate(200,40)">
+              <rect width="160" height="130" rx="8" fill="#1a1a1a" stroke="#76B900"/>
+              <text x="80" y="22" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">i=1 → x=130</text>
+              <rect x="20" y="35" width="120" height="80" fill="#cccccc"/>
+              <circle cx="38" cy="75" r="9" fill="#fff" stroke="#000"/>
+              <circle cx="59" cy="75" r="9" fill="#fff" stroke="#000"/>
+            </g>
+            <g transform="translate(380,40)">
+              <rect width="160" height="130" rx="8" fill="#1a1a1a" stroke="#76B900"/>
+              <text x="80" y="22" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">i=2 → x=200</text>
+              <rect x="20" y="35" width="120" height="80" fill="#cccccc"/>
+              <circle cx="38" cy="75" r="9" fill="#fff" stroke="#000"/>
+              <circle cx="59" cy="75" r="9" fill="#fff" stroke="#000"/>
+              <circle cx="80" cy="75" r="9" fill="#fff" stroke="#000"/>
+            </g>
+            <g transform="translate(560,40)">
+              <rect width="160" height="130" rx="8" fill="#1a1a1a" stroke="#76B900"/>
+              <text x="80" y="22" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">i=3 → x=270</text>
+              <rect x="20" y="35" width="120" height="80" fill="#cccccc"/>
+              <circle cx="38" cy="75" r="9" fill="#fff" stroke="#000"/>
+              <circle cx="59" cy="75" r="9" fill="#fff" stroke="#000"/>
+              <circle cx="80" cy="75" r="9" fill="#fff" stroke="#000"/>
+              <circle cx="101" cy="75" r="9" fill="#fff" stroke="#000"/>
+            </g>
+            <g transform="translate(740,40)">
+              <rect width="140" height="130" rx="8" fill="#1a1a1a" stroke="#76B900"/>
+              <text x="70" y="22" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">i=4 → x=340</text>
+              <rect x="10" y="35" width="120" height="80" fill="#cccccc"/>
+              <circle cx="28" cy="75" r="9" fill="#fff" stroke="#000"/>
+              <circle cx="49" cy="75" r="9" fill="#fff" stroke="#000"/>
+              <circle cx="70" cy="75" r="9" fill="#fff" stroke="#000"/>
+              <circle cx="91" cy="75" r="9" fill="#fff" stroke="#000"/>
+              <circle cx="112" cy="75" r="9" fill="#fff" stroke="#000"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+
+      <!-- ③ コード -->
+      <span class="step-label step-code">③ コード</span>
+      <pre><span class="code-label">Python ── prob1.py</span>
+<span class="cmt"># prob1.py - 横一列に 5 つの円</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">300</span>)
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):
+        py5.<span class="fn">ellipse</span>(<span class="num">60</span> <span class="op">+</span> i<span class="op">*</span><span class="num">70</span>, <span class="num">150</span>, <span class="num">50</span>, <span class="num">50</span>)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="callout-tip">
+        <h4>1 行ずつ読む</h4>
+        <ul class="point-list">
+          <li><code>size(400, 300)</code> ── 400 × 300 のキャンバス</li>
+          <li><code>for i in range(5):</code> ── i に 0,1,2,3,4 を順に入れて 5 回ループ</li>
+          <li><code>ellipse(60 + i*70, 150, 50, 50)</code> ── x が <code>60 + i*70</code>、y が 150 固定、幅 50・高さ 50 の円</li>
+        </ul>
+      </div>
+
+      <div class="callout-info">
+        <h4>🖐 やってみよう</h4>
+        <p><code>range(5)</code> を <code>range(7)</code> に変えるとどうなる？ 右の 2 つはキャンバスからはみ出す？ 出る場合、間隔の <code>70</code> をいくつに変えれば収まる？</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 問題2 ============ -->
+<section id="prob2">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">問2</div>
+      <h2>グラデーションの縦縞（色を i で計算する）</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-q">色 × ループ</span>
+        <h3>「左から右へ黒→白に変化する 10 本の縦縞」</h3>
+      </div>
+
+      <span class="step-label step-figure">① 実行結果</span>
+      <div class="result-figure">
+        <svg viewBox="0 0 400 300" width="400" height="300">
+          <rect width="400" height="300" fill="#cccccc"/>
+          <!-- 10 stripes width=40, color = 25*i -->
+          <rect x="0"   y="0" width="40" height="300" fill="rgb(0,0,0)"/>
+          <rect x="40"  y="0" width="40" height="300" fill="rgb(25,25,25)"/>
+          <rect x="80"  y="0" width="40" height="300" fill="rgb(50,50,50)"/>
+          <rect x="120" y="0" width="40" height="300" fill="rgb(75,75,75)"/>
+          <rect x="160" y="0" width="40" height="300" fill="rgb(100,100,100)"/>
+          <rect x="200" y="0" width="40" height="300" fill="rgb(125,125,125)"/>
+          <rect x="240" y="0" width="40" height="300" fill="rgb(150,150,150)"/>
+          <rect x="280" y="0" width="40" height="300" fill="rgb(175,175,175)"/>
+          <rect x="320" y="0" width="40" height="300" fill="rgb(200,200,200)"/>
+          <rect x="360" y="0" width="40" height="300" fill="rgb(225,225,225)"/>
+        </svg>
+        <div class="figure-caption">400 × 300 に幅 40 の長方形を 10 本。明るさが i × 25 で増える</div>
+      </div>
+
+      <span class="step-label step-idea">② 考え方</span>
+      <div class="concept-box">
+        <h4>「位置」と「色」を同時に i で表現する</h4>
+        <ul class="point-list">
+          <li>x 座標は <code>i*40</code> （0, 40, 80, ..., 360）</li>
+          <li>色（明るさ）は <code>i*25</code> （0, 25, 50, ..., 225）</li>
+          <li>つまり <strong>1 つのループ変数で 2 つのパラメータ</strong>を制御している</li>
+        </ul>
+      </div>
+
+      <table>
+        <tr><th>i</th><th>x = i*40</th><th>fill = i*25</th><th>イメージ</th></tr>
+        <tr><td>0</td><td>0</td><td>0 (真っ黒)</td><td><span style="display:inline-block;width:1.5rem;height:0.8rem;background:rgb(0,0,0);vertical-align:middle"></span></td></tr>
+        <tr><td>2</td><td>80</td><td>50 (暗い灰)</td><td><span style="display:inline-block;width:1.5rem;height:0.8rem;background:rgb(50,50,50);vertical-align:middle"></span></td></tr>
+        <tr><td>5</td><td>200</td><td>125 (中間)</td><td><span style="display:inline-block;width:1.5rem;height:0.8rem;background:rgb(125,125,125);vertical-align:middle"></span></td></tr>
+        <tr><td>9</td><td>360</td><td>225 (明るい灰)</td><td><span style="display:inline-block;width:1.5rem;height:0.8rem;background:rgb(225,225,225);vertical-align:middle"></span></td></tr>
+      </table>
+
+      <div class="idea-diagram">
+        <svg viewBox="0 0 900 140" preserveAspectRatio="xMidYMid meet">
+          <text x="450" y="20" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">i が増えるごとに x が右に、色が明るく</text>
+          <g transform="translate(50,40)">
+            <text x="0" y="-5" fill="#76B900" font-size="12">i:</text>
+            <text x="0" y="55" fill="#76B900" font-size="12">x:</text>
+            <text x="0" y="75" fill="#76B900" font-size="12">明:</text>
+          </g>
+          <g font-family="'JetBrains Mono', monospace" font-size="13" fill="#fff">
+            <g transform="translate(85,35)">
+              <rect width="70" height="60" fill="rgb(0,0,0)" stroke="#666"/>
+              <text x="35" y="-5" text-anchor="middle" fill="#FFB800">0</text>
+              <text x="35" y="80" text-anchor="middle" fill="#76B900">0</text>
+              <text x="35" y="100" text-anchor="middle" fill="#76B900">0</text>
+            </g>
+            <g transform="translate(165,35)">
+              <rect width="70" height="60" fill="rgb(50,50,50)" stroke="#666"/>
+              <text x="35" y="-5" text-anchor="middle" fill="#FFB800">2</text>
+              <text x="35" y="80" text-anchor="middle" fill="#76B900">80</text>
+              <text x="35" y="100" text-anchor="middle" fill="#76B900">50</text>
+            </g>
+            <g transform="translate(245,35)">
+              <rect width="70" height="60" fill="rgb(100,100,100)" stroke="#666"/>
+              <text x="35" y="-5" text-anchor="middle" fill="#FFB800">4</text>
+              <text x="35" y="80" text-anchor="middle" fill="#76B900">160</text>
+              <text x="35" y="100" text-anchor="middle" fill="#76B900">100</text>
+            </g>
+            <g transform="translate(325,35)">
+              <rect width="70" height="60" fill="rgb(150,150,150)" stroke="#666"/>
+              <text x="35" y="-5" text-anchor="middle" fill="#FFB800">6</text>
+              <text x="35" y="80" text-anchor="middle" fill="#76B900">240</text>
+              <text x="35" y="100" text-anchor="middle" fill="#76B900">150</text>
+            </g>
+            <g transform="translate(405,35)">
+              <rect width="70" height="60" fill="rgb(200,200,200)" stroke="#666"/>
+              <text x="35" y="-5" text-anchor="middle" fill="#FFB800">8</text>
+              <text x="35" y="80" text-anchor="middle" fill="#76B900">320</text>
+              <text x="35" y="100" text-anchor="middle" fill="#76B900">200</text>
+            </g>
+            <g transform="translate(490,35)">
+              <text x="0" y="35" fill="#999" font-size="14">... 10 本まで連続</text>
+            </g>
+          </g>
+        </svg>
+      </div>
+
+      <span class="step-label step-code">③ コード</span>
+      <pre><span class="code-label">Python ── prob2.py</span>
+<span class="cmt"># prob2.py - グラデーションの縦縞</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">300</span>)
+    py5.<span class="fn">no_stroke</span>()
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>):
+        py5.<span class="fn">fill</span>(i<span class="op">*</span><span class="num">25</span>)
+        py5.<span class="fn">rect</span>(i<span class="op">*</span><span class="num">40</span>, <span class="num">0</span>, <span class="num">40</span>, <span class="num">300</span>)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="callout-tip">
+        <h4>1 行ずつ読む</h4>
+        <ul class="point-list">
+          <li><code>no_stroke()</code> ── 縞の境界線を消す（グラデーションが滑らかに見える）</li>
+          <li><code>fill(i*25)</code> ── 引数 1 つだとグレースケール (0=黒, 255=白)</li>
+          <li><code>rect(i*40, 0, 40, 300)</code> ── 幅 40・高さ 300、x 座標は <code>i*40</code></li>
+        </ul>
+      </div>
+
+      <div class="callout-info">
+        <h4>🖐 やってみよう</h4>
+        <p><code>fill(i*25)</code> を <code>fill(255 - i*25)</code> に変えるとどうなる？ 左右が逆になる？</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 問題3 ============ -->
+<section id="prob3">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">問3</div>
+      <h2>階段状に下がる正方形（x も y も i で動かす）</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-q">2 軸を i で</span>
+        <h3>「左上から右下へ 5 段の階段」</h3>
+      </div>
+
+      <span class="step-label step-figure">① 実行結果</span>
+      <div class="result-figure">
+        <svg viewBox="0 0 400 400" width="400" height="400">
+          <rect width="400" height="400" fill="#cccccc"/>
+          <!-- 5 squares 60x60, pos = (20+i*70, 20+i*70) -->
+          <rect x="20"  y="20"  width="60" height="60" fill="#ffffff" stroke="#000"/>
+          <rect x="90"  y="90"  width="60" height="60" fill="#ffffff" stroke="#000"/>
+          <rect x="160" y="160" width="60" height="60" fill="#ffffff" stroke="#000"/>
+          <rect x="230" y="230" width="60" height="60" fill="#ffffff" stroke="#000"/>
+          <rect x="300" y="300" width="60" height="60" fill="#ffffff" stroke="#000"/>
+        </svg>
+        <div class="figure-caption">400 × 400 のキャンバスに、60 × 60 の正方形が斜めに 5 つ並ぶ</div>
+      </div>
+
+      <span class="step-label step-idea">② 考え方</span>
+      <div class="concept-box">
+        <h4>x と y を同じ式で増やすと斜め</h4>
+        <p>x 座標と y 座標が <strong>同じペース</strong>で増えると、図形は<strong>右下方向への斜め</strong>に並びます。両方を <code>20 + i*70</code> で表現します。</p>
+      </div>
+
+      <table>
+        <tr><th>i</th><th>x = 20 + i*70</th><th>y = 20 + i*70</th><th>位置</th></tr>
+        <tr><td>0</td><td>20</td><td>20</td><td>左上</td></tr>
+        <tr><td>1</td><td>90</td><td>90</td><td>少し右下</td></tr>
+        <tr><td>2</td><td>160</td><td>160</td><td>中央</td></tr>
+        <tr><td>3</td><td>230</td><td>230</td><td>さらに右下</td></tr>
+        <tr><td>4</td><td>300</td><td>300</td><td>右下</td></tr>
+      </table>
+
+      <!-- Idea: arrow showing diagonal motion -->
+      <div class="idea-diagram">
+        <svg viewBox="0 0 900 220" preserveAspectRatio="xMidYMid meet">
+          <text x="450" y="20" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">x も y も同じ式 → 斜め 45° に並ぶ</text>
+          <!-- canvas mockup at left -->
+          <g transform="translate(40,40)">
+            <rect width="170" height="170" fill="#cccccc" stroke="#666"/>
+            <rect x="8"   y="8"   width="25" height="25" fill="#fff" stroke="#000"/>
+            <rect x="38"  y="38"  width="25" height="25" fill="#fff" stroke="#000"/>
+            <rect x="68"  y="68"  width="25" height="25" fill="#fff" stroke="#000"/>
+            <rect x="98"  y="98"  width="25" height="25" fill="#fff" stroke="#000"/>
+            <rect x="128" y="128" width="25" height="25" fill="#fff" stroke="#000"/>
+            <text x="85" y="195" text-anchor="middle" fill="#76B900" font-size="12">完成図</text>
+          </g>
+          <!-- Arrow -->
+          <g transform="translate(230, 130)">
+            <path d="M 0 0 L 40 0" stroke="#76B900" stroke-width="3" marker-end="url(#arrow1)"/>
+          </g>
+          <defs>
+            <marker id="arrow1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+              <path d="M0,0 L10,5 L0,10 Z" fill="#76B900"/>
+            </marker>
+          </defs>
+          <!-- Equation breakdown -->
+          <g transform="translate(290, 60)" font-family="'JetBrains Mono', monospace">
+            <rect width="560" height="120" rx="10" fill="#0A0A0A" stroke="#333"/>
+            <text x="20" y="30" fill="#76B900" font-size="14" font-weight="700">rect(x, y, w, h) の x と y を同じ式で動かす</text>
+            <text x="20" y="60" fill="#FFB800" font-size="13">x = <tspan fill="#fff">20 + i*70</tspan>     <tspan fill="#999">← 右に進む</tspan></text>
+            <text x="20" y="85" fill="#FFB800" font-size="13">y = <tspan fill="#fff">20 + i*70</tspan>     <tspan fill="#999">← 下にも進む</tspan></text>
+            <text x="20" y="108" fill="#999" font-size="12">同じ係数 70 だから、ちょうど 45° の階段になる</text>
+          </g>
+        </svg>
+      </div>
+
+      <span class="step-label step-code">③ コード</span>
+      <pre><span class="code-label">Python ── prob3.py</span>
+<span class="cmt"># prob3.py - 階段状の正方形</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">400</span>)
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):
+        py5.<span class="fn">rect</span>(<span class="num">20</span> <span class="op">+</span> i<span class="op">*</span><span class="num">70</span>, <span class="num">20</span> <span class="op">+</span> i<span class="op">*</span><span class="num">70</span>, <span class="num">60</span>, <span class="num">60</span>)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="callout-tip">
+        <h4>応用のヒント</h4>
+        <p>x と y を <strong>違う式</strong>にすると角度が変えられます。例えば <code>rect(20 + i*70, 20 + i*30, ...)</code> なら浅い斜め、<code>rect(20 + i*30, 20 + i*70, ...)</code> なら急な斜めになります。</p>
+      </div>
+
+      <div class="callout-info">
+        <h4>🖐 やってみよう</h4>
+        <p>逆向きの階段（右上から左下）にするには、x の式をどう変えればよい？ ヒント: <code>20 + i*70</code> の代わりに「左から減っていく」式を考える。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 問題4 ============ -->
+<section id="prob4">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">問4</div>
+      <h2>同心円（描画順がカギ）</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-q">サイズ × 描画順</span>
+        <h3>「中心は同じで、サイズが減っていく 6 つの円」</h3>
+      </div>
+
+      <span class="step-label step-figure">① 実行結果</span>
+      <div class="result-figure">
+        <svg viewBox="0 0 400 400" width="400" height="400">
+          <rect width="400" height="400" fill="#cccccc"/>
+          <!-- 6 concentric circles, big to small (so big drawn first) -->
+          <circle cx="200" cy="200" r="180" fill="#ffffff" stroke="#000"/>
+          <circle cx="200" cy="200" r="150" fill="#ffffff" stroke="#000"/>
+          <circle cx="200" cy="200" r="120" fill="#ffffff" stroke="#000"/>
+          <circle cx="200" cy="200" r="90"  fill="#ffffff" stroke="#000"/>
+          <circle cx="200" cy="200" r="60"  fill="#ffffff" stroke="#000"/>
+          <circle cx="200" cy="200" r="30"  fill="#ffffff" stroke="#000"/>
+        </svg>
+        <div class="figure-caption">400 × 400 の中心 (200,200) に同心円。半径 360→60 と減っていくため、後から描く円ほど小さい</div>
+      </div>
+
+      <span class="step-label step-idea">② 考え方</span>
+      <div class="concept-box">
+        <h4>大きい円から先に描く ── これが超重要</h4>
+        <p>py5 では <strong>後から描いた図形が手前に重なります</strong>（順次制御）。「小さい円 → 大きい円」の順に描くと、大きい円が小さい円を覆い隠してしまいます。<br>
+        正解は <strong>「大きい円 → 小さい円」</strong>。 i が増えるごとに半径を<strong>減らす</strong>式を使います。</p>
+      </div>
+
+      <table>
+        <tr><th>i</th><th>diameter = 360 - i*60</th><th>結果</th></tr>
+        <tr><td>0</td><td>360</td><td>一番大きな円（先に描かれる）</td></tr>
+        <tr><td>1</td><td>300</td><td>少し小さい</td></tr>
+        <tr><td>2</td><td>240</td><td></td></tr>
+        <tr><td>3</td><td>180</td><td></td></tr>
+        <tr><td>4</td><td>120</td><td></td></tr>
+        <tr><td>5</td><td>60</td><td>一番小さい円（最後に描かれる）</td></tr>
+      </table>
+
+      <div class="idea-diagram">
+        <svg viewBox="0 0 900 200" preserveAspectRatio="xMidYMid meet">
+          <text x="450" y="20" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">i が増える → 半径が小さくなる → 後の円が手前に積まれる</text>
+          <!-- 6 stages -->
+          <g font-family="'JetBrains Mono', monospace">
+            <g transform="translate(20,40)">
+              <rect width="130" height="140" rx="6" fill="#0A0A0A" stroke="#333"/>
+              <text x="65" y="20" text-anchor="middle" fill="#76B900" font-size="13">i=0 (D=360)</text>
+              <rect x="10" y="30" width="110" height="100" fill="#cccccc"/>
+              <circle cx="65" cy="80" r="48" fill="#fff" stroke="#000"/>
+            </g>
+            <g transform="translate(170,40)">
+              <rect width="130" height="140" rx="6" fill="#0A0A0A" stroke="#333"/>
+              <text x="65" y="20" text-anchor="middle" fill="#76B900" font-size="13">i=1 (D=300)</text>
+              <rect x="10" y="30" width="110" height="100" fill="#cccccc"/>
+              <circle cx="65" cy="80" r="48" fill="#fff" stroke="#000"/>
+              <circle cx="65" cy="80" r="40" fill="#fff" stroke="#000"/>
+            </g>
+            <g transform="translate(320,40)">
+              <rect width="130" height="140" rx="6" fill="#0A0A0A" stroke="#333"/>
+              <text x="65" y="20" text-anchor="middle" fill="#76B900" font-size="13">i=2 (D=240)</text>
+              <rect x="10" y="30" width="110" height="100" fill="#cccccc"/>
+              <circle cx="65" cy="80" r="48" fill="#fff" stroke="#000"/>
+              <circle cx="65" cy="80" r="40" fill="#fff" stroke="#000"/>
+              <circle cx="65" cy="80" r="32" fill="#fff" stroke="#000"/>
+            </g>
+            <g transform="translate(470,40)">
+              <rect width="130" height="140" rx="6" fill="#0A0A0A" stroke="#333"/>
+              <text x="65" y="20" text-anchor="middle" fill="#76B900" font-size="13">...</text>
+              <rect x="10" y="30" width="110" height="100" fill="#cccccc"/>
+              <circle cx="65" cy="80" r="48" fill="#fff" stroke="#000"/>
+              <circle cx="65" cy="80" r="40" fill="#fff" stroke="#000"/>
+              <circle cx="65" cy="80" r="32" fill="#fff" stroke="#000"/>
+              <circle cx="65" cy="80" r="24" fill="#fff" stroke="#000"/>
+            </g>
+            <g transform="translate(620,40)">
+              <rect width="130" height="140" rx="6" fill="#0A0A0A" stroke="#333"/>
+              <text x="65" y="20" text-anchor="middle" fill="#76B900" font-size="13">i=5 (D=60)</text>
+              <rect x="10" y="30" width="110" height="100" fill="#cccccc"/>
+              <circle cx="65" cy="80" r="48" fill="#fff" stroke="#000"/>
+              <circle cx="65" cy="80" r="40" fill="#fff" stroke="#000"/>
+              <circle cx="65" cy="80" r="32" fill="#fff" stroke="#000"/>
+              <circle cx="65" cy="80" r="24" fill="#fff" stroke="#000"/>
+              <circle cx="65" cy="80" r="16" fill="#fff" stroke="#000"/>
+              <circle cx="65" cy="80" r="8"  fill="#fff" stroke="#000"/>
+            </g>
+            <g transform="translate(770,40)">
+              <rect width="120" height="140" rx="6" fill="#1a2e0a" stroke="#76B900"/>
+              <text x="60" y="20" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">完成</text>
+              <rect x="10" y="30" width="100" height="100" fill="#cccccc"/>
+              <circle cx="60" cy="80" r="44" fill="#fff" stroke="#000"/>
+              <circle cx="60" cy="80" r="36" fill="#fff" stroke="#000"/>
+              <circle cx="60" cy="80" r="28" fill="#fff" stroke="#000"/>
+              <circle cx="60" cy="80" r="20" fill="#fff" stroke="#000"/>
+              <circle cx="60" cy="80" r="12" fill="#fff" stroke="#000"/>
+              <circle cx="60" cy="80" r="6"  fill="#fff" stroke="#000"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+
+      <span class="step-label step-code">③ コード</span>
+      <pre><span class="code-label">Python ── prob4.py</span>
+<span class="cmt"># prob4.py - 同心円</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">400</span>)
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">6</span>):
+        d <span class="op">=</span> <span class="num">360</span> <span class="op">-</span> i<span class="op">*</span><span class="num">60</span>          <span class="cmt"># 直径: 360, 300, 240, 180, 120, 60</span>
+        py5.<span class="fn">ellipse</span>(<span class="num">200</span>, <span class="num">200</span>, d, d)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="callout-tip">
+        <h4>失敗例: 半径が増えていく式にすると？</h4>
+        <p><code>d = 60 + i*60</code> （0,60,120 → 60,120,180,...）にすると、最後に描くのが <strong>一番大きい</strong>円。すべての小さい円が覆い隠されて、結果は<strong>一番大きな円 1 つだけ</strong>に見えます。</p>
+      </div>
+
+      <div class="callout-info">
+        <h4>🖐 やってみよう</h4>
+        <p>同心円ごとに <code>fill(i*40)</code> を入れると、外側ほど黒、内側ほど白の同心円グラデーションになる。試してみよう。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 問題5 ============ -->
+<section id="prob5">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">問5</div>
+      <h2>二重ループで格子模様</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-q">ネスト for</span>
+        <h3>「5 × 5 の格子状に並ぶ 25 個の円」</h3>
+      </div>
+
+      <span class="step-label step-figure">① 実行結果</span>
+      <div class="result-figure">
+        <svg viewBox="0 0 400 400" width="400" height="400">
+          <rect width="400" height="400" fill="#cccccc"/>
+          <!-- 5x5 grid, pos = (40 + x*80, 40 + y*80), r=25 -->
+          <g fill="#ffffff" stroke="#000" stroke-width="1">
+          <!-- y=0 -->
+          <circle cx="40"  cy="40"  r="25"/>
+          <circle cx="120" cy="40"  r="25"/>
+          <circle cx="200" cy="40"  r="25"/>
+          <circle cx="280" cy="40"  r="25"/>
+          <circle cx="360" cy="40"  r="25"/>
+          <!-- y=1 -->
+          <circle cx="40"  cy="120" r="25"/>
+          <circle cx="120" cy="120" r="25"/>
+          <circle cx="200" cy="120" r="25"/>
+          <circle cx="280" cy="120" r="25"/>
+          <circle cx="360" cy="120" r="25"/>
+          <!-- y=2 -->
+          <circle cx="40"  cy="200" r="25"/>
+          <circle cx="120" cy="200" r="25"/>
+          <circle cx="200" cy="200" r="25"/>
+          <circle cx="280" cy="200" r="25"/>
+          <circle cx="360" cy="200" r="25"/>
+          <!-- y=3 -->
+          <circle cx="40"  cy="280" r="25"/>
+          <circle cx="120" cy="280" r="25"/>
+          <circle cx="200" cy="280" r="25"/>
+          <circle cx="280" cy="280" r="25"/>
+          <circle cx="360" cy="280" r="25"/>
+          <!-- y=4 -->
+          <circle cx="40"  cy="360" r="25"/>
+          <circle cx="120" cy="360" r="25"/>
+          <circle cx="200" cy="360" r="25"/>
+          <circle cx="280" cy="360" r="25"/>
+          <circle cx="360" cy="360" r="25"/>
+          </g>
+        </svg>
+        <div class="figure-caption">400 × 400 のキャンバスに、5 × 5 = 25 個の円。間隔 80, 直径 50</div>
+      </div>
+
+      <span class="step-label step-idea">② 考え方</span>
+      <div class="concept-box">
+        <h4>「2 つの軸」を 2 つの for で</h4>
+        <p>1 次元（横一列）の発想を <strong>2 軸</strong>に拡張するには、<code>for x</code> の中に <code>for y</code> を入れます。これを<strong>ネスト（入れ子）</strong>と呼びます。</p>
+        <p style="margin-top:0.4rem"><strong>外側ループ × 内側ループ</strong>の回数だけ、内側のブロックが実行されます。5 × 5 = 25 個。</p>
+      </div>
+
+      <div class="idea-diagram">
+        <svg viewBox="0 0 900 240" preserveAspectRatio="xMidYMid meet">
+          <text x="450" y="20" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">外側 x が 1 回回るごとに、内側 y が最後まで回る</text>
+          <g font-family="'JetBrains Mono', monospace">
+            <!-- Pseudo trace -->
+            <g transform="translate(50, 50)">
+              <rect width="280" height="170" rx="8" fill="#0A0A0A" stroke="#333"/>
+              <text x="140" y="22" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">x が 0 のとき</text>
+              <text x="20" y="50"  fill="#FFB800" font-size="12">y = 0 → ellipse(40, 40)</text>
+              <text x="20" y="72"  fill="#FFB800" font-size="12">y = 1 → ellipse(40, 120)</text>
+              <text x="20" y="94"  fill="#FFB800" font-size="12">y = 2 → ellipse(40, 200)</text>
+              <text x="20" y="116" fill="#FFB800" font-size="12">y = 3 → ellipse(40, 280)</text>
+              <text x="20" y="138" fill="#FFB800" font-size="12">y = 4 → ellipse(40, 360)</text>
+              <text x="20" y="160" fill="#999" font-size="11">→ 縦 1 列が描かれる</text>
+            </g>
+            <text x="345" y="135" fill="#76B900" font-size="20">→</text>
+            <g transform="translate(380, 50)">
+              <rect width="280" height="170" rx="8" fill="#0A0A0A" stroke="#333"/>
+              <text x="140" y="22" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">x が 1 のとき（次へ）</text>
+              <text x="20" y="50"  fill="#FFB800" font-size="12">y = 0 → ellipse(120, 40)</text>
+              <text x="20" y="72"  fill="#FFB800" font-size="12">y = 1 → ellipse(120, 120)</text>
+              <text x="20" y="94"  fill="#FFB800" font-size="12">y = 2 → ellipse(120, 200)</text>
+              <text x="20" y="116" fill="#FFB800" font-size="12">y = 3 → ellipse(120, 280)</text>
+              <text x="20" y="138" fill="#FFB800" font-size="12">y = 4 → ellipse(120, 360)</text>
+              <text x="20" y="160" fill="#999" font-size="11">→ 2 列目が描かれる</text>
+            </g>
+            <text x="675" y="135" fill="#76B900" font-size="20">→</text>
+            <g transform="translate(710, 50)">
+              <rect width="170" height="170" rx="8" fill="#1a2e0a" stroke="#76B900"/>
+              <text x="85" y="22" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">x=4 まで続く</text>
+              <text x="85" y="48"  text-anchor="middle" fill="#FFB800" font-size="12">5 × 5 = 25 回</text>
+              <rect x="20" y="60" width="130" height="100" fill="#cccccc"/>
+              <g fill="#fff" stroke="#000" stroke-width="0.7">
+                <circle cx="35" cy="75" r="6"/><circle cx="58" cy="75" r="6"/><circle cx="81" cy="75" r="6"/><circle cx="104" cy="75" r="6"/><circle cx="127" cy="75" r="6"/>
+                <circle cx="35" cy="98" r="6"/><circle cx="58" cy="98" r="6"/><circle cx="81" cy="98" r="6"/><circle cx="104" cy="98" r="6"/><circle cx="127" cy="98" r="6"/>
+                <circle cx="35" cy="121" r="6"/><circle cx="58" cy="121" r="6"/><circle cx="81" cy="121" r="6"/><circle cx="104" cy="121" r="6"/><circle cx="127" cy="121" r="6"/>
+                <circle cx="35" cy="144" r="6"/><circle cx="58" cy="144" r="6"/><circle cx="81" cy="144" r="6"/><circle cx="104" cy="144" r="6"/><circle cx="127" cy="144" r="6"/>
+              </g>
+            </g>
+          </g>
+        </svg>
+      </div>
+
+      <span class="step-label step-code">③ コード</span>
+      <pre><span class="code-label">Python ── prob5.py</span>
+<span class="cmt"># prob5.py - 二重ループで 5x5 格子</span>
+<span class="kw">import</span> py5
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">400</span>)
+    <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):
+        <span class="kw">for</span> y <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):
+            py5.<span class="fn">ellipse</span>(<span class="num">40</span> <span class="op">+</span> x<span class="op">*</span><span class="num">80</span>, <span class="num">40</span> <span class="op">+</span> y<span class="op">*</span><span class="num">80</span>, <span class="num">50</span>, <span class="num">50</span>)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="callout-tip">
+        <h4>1 行ずつ読む</h4>
+        <ul class="point-list">
+          <li>外側 <code>for x in range(5)</code> ── 横方向 0〜4</li>
+          <li>内側 <code>for y in range(5)</code> ── 縦方向 0〜4</li>
+          <li>位置式: x 座標 = <code>40 + x*80</code>, y 座標 = <code>40 + y*80</code></li>
+          <li>ループ全体は <strong>5 × 5 = 25 回</strong> 実行される</li>
+        </ul>
+      </div>
+
+      <div class="callout-info">
+        <h4>🖐 やってみよう</h4>
+        <p>2 つを<strong>同時に色に使う</strong>と、画面全体に色のマトリクスができます。
+        <code>fill(x*50, y*50, 200)</code> を <code>ellipse</code> の前に入れて実行してみよう。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 小問 10 題 ============ -->
+<section id="sec-mini">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">小問</div>
+      <h2>かんたん 10 問（1 問 1 分）</h2>
+    </div>
+
+    <div class="card">
+      <p>クリックすると答えが開きます。<strong>まず自分で考えてから</strong>開いてください。</p>
+
+      <details>
+        <summary><span class="tag tag-mini">Q1</span>&nbsp; <code>for i in range(7): print(i)</code> を実行すると、何が何回出力される？</summary>
+        <div class="answer-content">
+          <p><strong>0, 1, 2, 3, 4, 5, 6 の 7 回</strong>。<code>range(N)</code> は 0 から始まり <code>N-1</code> までで、<strong>N は含まれない</strong>。</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="tag tag-mini">Q2</span>&nbsp; <code>range(2, 6)</code> をループするとどんな値が出る？</summary>
+        <div class="answer-content">
+          <p><strong>2, 3, 4, 5</strong> の 4 つ。<code>range(start, stop)</code> は <code>start</code> を含み <code>stop</code> を含まない。</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="tag tag-mini">Q3</span>&nbsp; <code>range(0, 10, 2)</code> は何回ループする？</summary>
+        <div class="answer-content">
+          <p><strong>5 回</strong>（値は 0, 2, 4, 6, 8）。第 3 引数はステップ幅。</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="tag tag-mini">Q4</span>&nbsp; <code>range(10, 0, -1)</code> をループするとどんな順？</summary>
+        <div class="answer-content">
+          <p><strong>10, 9, 8, ..., 1</strong> の逆順。0 は出力されない（stop は含まないルールは負のステップでも同じ）。</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="tag tag-mini">Q5</span>&nbsp; py5 で「縦に 4 つ円を並べる」コードの空欄を埋めよ:<br>
+        <code>for i in range( ___ ): py5.ellipse(200, 50 + i * ___, 30, 30)</code></summary>
+        <div class="answer-content">
+          <p><strong>4</strong> と <strong>50</strong>。x は 200 固定、y を 50, 100, 150, 200 と進めるので増分は 50。</p>
+          <pre style="margin-top:0.5rem"><span class="code-label">Python</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">4</span>):
+    py5.<span class="fn">ellipse</span>(<span class="num">200</span>, <span class="num">50</span> <span class="op">+</span> i<span class="op">*</span><span class="num">50</span>, <span class="num">30</span>, <span class="num">30</span>)</pre>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="tag tag-mini">Q6</span>&nbsp; 円の半径を 10, 20, 30, ... と増やしたい。<code>r = ___ * (i + 1)</code> の空欄は？</summary>
+        <div class="answer-content">
+          <p><strong>10</strong>。i = 0 のときに 10、i = 1 で 20、i = 2 で 30 にしたいので係数は 10。</p>
+          <p>もし <code>(i + 1)</code> ではなく <code>i</code> を使うなら、初項を 10 にずらすために <code>r = 10 + i*10</code> と書く方法もあり。</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="tag tag-mini">Q7</span>&nbsp; <code>for x in range(5): for y in range(3):</code> の内側のブロックは何回実行される？</summary>
+        <div class="answer-content">
+          <p><strong>15 回</strong>（5 × 3 = 15）。外側が 1 回回るごとに内側は 3 回まわる。</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="tag tag-mini">Q8</span>&nbsp; ループ内で「偶数番目だけ円を塗る」にはどうする？</summary>
+        <div class="answer-content">
+          <p><code>if i % 2 == 0:</code> で偶数だけ <code>fill</code> を変える。</p>
+          <pre style="margin-top:0.5rem"><span class="code-label">Python</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">8</span>):
+    <span class="kw">if</span> i <span class="op">%</span> <span class="num">2</span> <span class="op">==</span> <span class="num">0</span>:
+        py5.<span class="fn">fill</span>(<span class="num">255</span>, <span class="num">200</span>, <span class="num">0</span>)
+    <span class="kw">else</span>:
+        py5.<span class="fn">fill</span>(<span class="num">100</span>)
+    py5.<span class="fn">ellipse</span>(<span class="num">40</span> <span class="op">+</span> i<span class="op">*</span><span class="num">45</span>, <span class="num">150</span>, <span class="num">35</span>, <span class="num">35</span>)</pre>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="tag tag-mini">Q9</span>&nbsp; <code>for i in range(5): py5.rect(50 + i*70, 100, 50, 50)</code> を <strong>逆向き</strong>（右から左へ並ぶ）に変えるには？</summary>
+        <div class="answer-content">
+          <p>x の式を <strong>引き算</strong>に変えればよい。例:</p>
+          <pre style="margin-top:0.5rem"><span class="code-label">Python</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):
+    py5.<span class="fn">rect</span>(<span class="num">330</span> <span class="op">-</span> i<span class="op">*</span><span class="num">70</span>, <span class="num">100</span>, <span class="num">50</span>, <span class="num">50</span>)</pre>
+          <p style="margin-top:0.4rem"><code>range(4, -1, -1)</code> で i 自体を逆順にする方法もある。</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="tag tag-mini">Q10</span>&nbsp; 二重ループで「市松模様（チェッカー）」を作りたい。空欄は？<br>
+        <code>if (x + y) % 2 == ___ : py5.fill(0)</code></summary>
+        <div class="answer-content">
+          <p><strong>0</strong>（または 1。0 にすれば「両座標の和が偶数のマス」が黒、奇数なら白）。</p>
+          <pre style="margin-top:0.5rem"><span class="code-label">Python</span>
+<span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">8</span>):
+    <span class="kw">for</span> y <span class="kw">in</span> <span class="fn">range</span>(<span class="num">8</span>):
+        <span class="kw">if</span> (x <span class="op">+</span> y) <span class="op">%</span> <span class="num">2</span> <span class="op">==</span> <span class="num">0</span>:
+            py5.<span class="fn">fill</span>(<span class="num">0</span>)
+        <span class="kw">else</span>:
+            py5.<span class="fn">fill</span>(<span class="num">255</span>)
+        py5.<span class="fn">rect</span>(x<span class="op">*</span><span class="num">50</span>, y<span class="op">*</span><span class="num">50</span>, <span class="num">50</span>, <span class="num">50</span>)</pre>
+        </div>
+      </details>
+    </div>
+
+    <div class="callout-info" style="margin-top:1.5rem">
+      <h4>提出</h4>
+      <p>10 問のうち <strong>3 問以上を Notion にスクリーンショット + 一言コメント</strong>で記録してください（「ここで詰まった」「こうしたら動いた」など）。完璧でなくて OK です ── <u>考えた跡を残すこと</u>が目的です。</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>第 2.5 回 補講 ── for 文を徹底的に学ぶ ／ MD1 2026</p>
+    <p style="margin-top:0.4rem;font-size:0.78rem">
+      &laquo; <a href="week02.html" style="color:#76B900">第 2 回</a> ｜ <a href="week03.html" style="color:#76B900">第 3 回</a> &raquo;
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
