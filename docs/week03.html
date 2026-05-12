@@ -550,7 +550,7 @@ body { padding-top: 2.2rem; }
         <a href="#sec-animation" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count" style="background:#9B59B6">4</span><span class="tag tag-group">練習問題</span>練習2-1〜2-4<br>アニメーション<br>口頭確認</a>
         <a href="#sec-input" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count" style="background:#9B59B6">4</span><span class="tag tag-group">練習問題</span>練習3-1〜3-4<br>ユーザ入力<br>口頭確認</a>
         <a href="#sec-std3-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std3-1<br>Notionに記録</a>
-        <a href="#sec-adv3-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv3-1<br>Notionに記録（任意）</a>
+        <a href="#sec-adv3-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv3-1<br>コード+音声<br>Notionに記録（任意）</a>
         <a href="#cs3-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count" style="background:#9B59B6">CS</span><span class="tag" style="background:#1a0a2e;color:#9B59B6">基礎確認</span>cs3<br>CS/DS 基礎知識 (4題)<br>Notionに記録</a>
         <a href="#sec-notion" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count" style="background:#4A7A00">N</span><span class="tag" style="background:#1a2e0a;color:#76B900">テンプレート</span>Notionテンプレート</a>
       </div>
@@ -560,7 +560,7 @@ body { padding-top: 2.2rem; }
         <span style="font-size:0.9rem;color:#bbb">　・<strong>練習問題（グループ内口頭確認のみ・Notion不要・SA確認不要）</strong>: 各セクション 4 題 × 3 = 12 題。リーダーが各メンバーに口頭で答えさせて理解チェック</span><br>
         <span style="font-size:0.9rem;color:#bbb">　・<strong>CS/DS基礎の確認（Notion必須）</strong>: <code>cs3</code> 状態遷移／プロセスとスレッド／スコープ／関数 の自己確認問題</span><br>
         <span style="font-size:0.9rem;color:#bbb">　・<strong>標準課題（Notion必須）</strong>: <code>std3-1</code> ボールの跳ね返り（上下左右）</span><br>
-        <span style="font-size:0.9rem;color:#bbb">　・<strong>発展課題（任意・Notion）</strong>: <code>adv3-1</code> インタラクティブ・アート</span>
+        <span style="font-size:0.9rem;color:#bbb">　・<strong>発展課題（任意・Notion）</strong>: <code>adv3-1</code> インタラクティブ・アート ── <strong style="color:#FFB800">コード＋実行結果＋音声説明（1〜2分）</strong></span>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:1rem 1.2rem;margin-top:0.6rem;font-size:1.05rem;color:#E0E0E0">
         <strong style="color:#FFFFFF">提出期限:</strong> 5/18(月) 13:10（第4回授業開始まで）
@@ -2378,13 +2378,13 @@ py5.<span class="fn">run_sketch</span>()</pre>
 
     <div class="card advanced">
       <div class="card-header">
-        <h3>adv3-1: インタラクティブ・アート</h3>
+        <h3>adv3-1: インタラクティブ・アート <span class="exam-alert">音声説明必須</span></h3>
         <span class="tag tag-advanced">発展課題</span>
       </div>
 
       <div class="concept-box">
         <h4>課題内容</h4>
-        <p>今回学んだ<strong>条件分岐</strong>、<strong>アニメーション（draw）</strong>、<strong>ユーザ入力（キーボード/マウス）</strong>を組み合わせて、オリジナルのインタラクティブ作品を作成してください。</p>
+        <p>今回学んだ<strong>条件分岐</strong>、<strong>アニメーション（draw）</strong>、<strong>ユーザ入力（キーボード/マウス）</strong>を組み合わせて、オリジナルのインタラクティブ作品を作成してください。提出は <strong>コード＋実行結果＋音声説明（1〜2分）</strong> の3点セットを Notion に記録します。</p>
         <ul class="point-list" style="margin-top:0.5rem">
           <li>条件分岐（if/elif/else）を最低3つ使用すること</li>
           <li>アニメーション（draw()による動き）を含むこと</li>
@@ -2401,8 +2401,27 @@ py5.<span class="fn">run_sketch</span>()</pre>
         <li>マウスで絵を描けるお絵かきツール</li>
       </ul>
 
+      <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:10px;padding:1.2rem;margin:1rem 0">
+        <p style="color:#FFB800;font-weight:700;font-size:1rem;margin-bottom:0.8rem">提出要件（3点セット）</p>
+        <table>
+          <tr><th style="width:30%">提出物</th><th>内容</th></tr>
+          <tr><td><strong style="color:#76B900">1. コード</strong></td><td>完成コード全体を Notion に貼り付け（処理の説明コメント付き）</td></tr>
+          <tr><td><strong style="color:#76B900">2. 実行結果</strong></td><td>スクリーンショット（動き・状態が変わる場合は数枚）</td></tr>
+          <tr><td><strong style="color:#FFB800">3. 音声説明</strong></td><td>1〜2分の音声ファイルを Notion に添付</td></tr>
+        </table>
+        <p style="margin-top:0.8rem;font-size:0.9rem;color:#E0E0E0"><strong>音声で説明すること（自分の言葉で、原稿の棒読みは不可）:</strong></p>
+        <ul class="point-list" style="margin-top:0.3rem">
+          <li>作品のテーマ・コンセプト（何を作ったか／何を表現したかったか）</li>
+          <li>使った <strong>条件分岐（if/elif/else）</strong> が <strong>どこで・何のために</strong> 動いているか（3つ以上それぞれ）</li>
+          <li>使った <strong>ユーザ入力（キーボード／マウス）</strong> と、入力に応じてプログラムがどう反応するか</li>
+          <li><code>draw()</code> の中で <strong>何が毎フレーム変化しているか</strong>（座標／色／状態など）</li>
+          <li><strong>詰まった所と解決方法</strong>（エラーの原因、ロジックの工夫、調べたこと）</li>
+        </ul>
+        <p style="margin-top:0.6rem;font-size:0.82rem;color:#bbb">※ コードを<strong>自分の言葉で説明できる</strong>ことが目的です。AIに書かせたコードでも、内容を理解して説明できれば OK。理解せずにコピペしただけの場合は音声で詰まるので分かります。</p>
+      </div>
+
       <div class="notion-submit">
-        <div><strong>Notionに記録:</strong> <a href="#sec-notion" style="color:#FFB800">セクションN</a> の「adv3-1」項目に コード／実行画面スクリーンショット／作品の説明 を貼り付け
+        <div><strong>Notionに記録:</strong> <a href="#sec-notion" style="color:#FFB800">セクションN</a> の「adv3-1」項目に コード／実行画面スクリーンショット／<strong style="color:#FFB800">音声ファイル</strong>／作品の説明 を貼り付け
         <div style="margin-top:0.4rem;font-size:0.8rem;color:#FF6B00"><span class="sa-check-tag" style="display:inline-block;margin-left:0.5rem;background:#FF6B00;color:#fff;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px;vertical-align:middle">SA確認</span> SAさんのOKがもらえたら次に進んでください（授業時間外はSA確認不要）</div>
       </div>
       </div>
@@ -2550,10 +2569,9 @@ py5.<span class="fn">run_sketch</span>()</pre>
 
 ---
 
-## 発展課題 adv3-1: インタラクティブ・アート
-（任意。取り組まない場合はこのセクションごと削除）
-
+## 発展課題 adv3-1: インタラクティブ・アート（任意。取り組まない場合はこのセクションごと削除）
 条件分岐（if/elif/else）3つ以上 ／ アニメーション（draw）／ ユーザ入力（キー or マウス） を組み合わせたオリジナル作品。
+提出は <strong>コード＋実行結果＋音声説明（1〜2分）</strong> の3点セット。
 
 ### テーマ
 （何を作ったか、何を表現したかったか）
@@ -2564,9 +2582,15 @@ py5.<span class="fn">run_sketch</span>()</pre>
 ### 実行結果（スクリーンショット）
 （貼り付け ── 動きがある場合は数枚／状態が変わる前後）
 
-### 説明
-- 使った条件分岐（どこに if/elif/else があるか）: ＿＿＿＿
-- 使ったユーザ入力（キー／マウス／両方）: ＿＿＿＿
+### 音声説明（1〜2分の音声ファイルを添付）
+自分の言葉でコードを説明できることが目的。以下を含めて録音する。
+- 作品のテーマ・コンセプト（何を作ったか／何を表現したかったか）
+- 使った <strong>条件分岐（if/elif/else）</strong> が どこで・何のために 動いているか（3つ以上それぞれ）
+- 使った <strong>ユーザ入力（キー／マウス）</strong> と、入力でプログラムがどう反応するか
+- <code>draw()</code> の中で 毎フレーム何が変化しているか（座標／色／状態 など）
+- 詰まった所と解決方法（エラーの原因、ロジックの工夫、調べたこと）
+
+### 補足メモ（任意・テキストでも残す）
 - 工夫した点: ＿＿＿＿
 - 苦労した点と解決方法: ＿＿＿＿
 </pre>
