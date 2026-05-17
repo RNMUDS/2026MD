@@ -507,10 +507,8 @@ body { padding-top: 2.2rem; }
   <a href="#list-quiz" class="nav-exam">試問1</a>
   <a href="#std4-1" class="nav-assignment">std4-1</a>
   <a href="#sec-dict">2. 辞書</a>
-  <a href="#dict-quiz" class="nav-exam">試問2</a>
   <a href="#std4-2" class="nav-assignment">std4-2</a>
   <a href="#sec-func">3. 関数</a>
-  <a href="#func-quiz" class="nav-exam">試問3</a>
   <a href="#std4-3" class="nav-assignment">std4-3</a>
   <a href="#adv4-1" class="nav-assignment">adv4-1</a>
   <a href="#sec-answers">解答例</a>
@@ -558,9 +556,21 @@ body { padding-top: 2.2rem; }
           <tr><th style="width:5%"></th><th style="width:30%">セクション</th><th>記録する内容</th><th style="width:10%">リンク</th></tr>
           <tr>
             <td><input type="checkbox"></td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> 復習問題（〇の三角形）</td>
+            <td>自分の解答コード＋実行結果（テキスト）＋一言メモ</td>
+            <td><a href="#sec-teacher" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
             <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> データ構造の基礎</td>
             <td>リスト・辞書・関数の穴埋め問題</td>
             <td><a href="#sec-teacher" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> リスト操作 練習問題 1〜7</td>
+            <td>自分の答え／合否／間違えた問題の「なぜ」「どこが分からなかったか」</td>
+            <td><a href="#list-practice" style="color:#76B900">移動</a></td>
           </tr>
           <tr>
             <td><input type="checkbox"></td>
@@ -570,41 +580,200 @@ body { padding-top: 2.2rem; }
           </tr>
           <tr>
             <td><input type="checkbox"></td>
-            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> 辞書口頭試問</td>
-            <td>3問の作問＋全員分の出題・回答・正誤の記録</td>
-            <td><a href="#dict-quiz" style="color:#76B900">移動</a></td>
-          </tr>
-          <tr>
-            <td><input type="checkbox"></td>
-            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> 関数口頭試問</td>
-            <td>3問の作問＋全員分の出題・回答・正誤の記録</td>
-            <td><a href="#func-quiz" style="color:#76B900">移動</a></td>
-          </tr>
-          <tr>
-            <td><input type="checkbox"></td>
             <td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std4-1</td>
-            <td>リスト操作の結果＋説明文</td>
+            <td>リスト操作6問のコードと実行結果</td>
             <td><a href="#std4-1" style="color:#76B900">移動</a></td>
           </tr>
           <tr>
             <td><input type="checkbox"></td>
             <td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std4-2</td>
-            <td>コード＋実行結果（スクリーンショット）＋説明文</td>
+            <td>コード全文＋実行結果（2色以上のスクリーンショット）＋辞書の色一覧</td>
             <td><a href="#std4-2" style="color:#76B900">移動</a></td>
           </tr>
           <tr>
             <td><input type="checkbox"></td>
             <td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std4-3</td>
-            <td>コード＋実行結果（スクリーンショット）＋説明文</td>
+            <td>コード全文＋実行結果（スクリーンショット）＋「なぜ関数に分けたか」の説明（2〜3文）</td>
             <td><a href="#std4-3" style="color:#76B900">移動</a></td>
           </tr>
           <tr>
             <td><input type="checkbox"></td>
             <td><span class="tag tag-advanced" style="font-size:0.65rem">発展課題</span> adv4-1</td>
-            <td>コード＋実行結果＋音声説明（1〜2分）</td>
+            <td>コード全文＋実行結果＋使用技術の一覧（リスト/辞書/関数/for/ifがどこに使われているか）＋音声説明（1〜2分・別途Google Classroom）</td>
             <td><a href="#adv4-1" style="color:#76B900">移動</a></td>
           </tr>
         </table>
+
+        <!-- Notion テンプレート（コピペ用） -->
+        <details style="margin-top:1rem">
+          <summary style="cursor:pointer;color:#76B900;font-weight:700;font-size:0.9rem;user-select:none;padding:0.4rem 0">▶ Notionに貼り付けるテンプレート（クリックで開く）</summary>
+          <div style="margin-top:0.5rem">
+            <p style="font-size:0.85rem;color:#aaa;margin-bottom:0.4rem">下のコードブロックを丸ごとコピーしてNotionに貼り、各項目を埋めていきましょう。<code>＿＿＿</code> の部分が記入欄です。</p>
+            <pre><span class="code-label">Notion テンプレート（全体）</span>
+# 第4回 課題提出 ── ＿＿＿（学籍番号・名前）
+
+提出日: ＿＿＿  /  グループ: ＿＿＿  /  欠席の有無: ＿＿＿
+
+────────────────────────────────────────
+## 0. 復習問題（〇の三角形）
+────────────────────────────────────────
+
+【自分の解答コード】
+```python
+＿＿＿
+```
+
+【実行結果】
+```
+＿＿＿
+```
+
+【一言メモ】（解答を見る前 / 後で気づいたこと）
+＿＿＿
+
+────────────────────────────────────────
+## 1. データ構造の基礎（穴埋め5問）
+────────────────────────────────────────
+
+1. リストは ＿＿＿ のあるデータの集合である
+2. 辞書は ＿＿＿ と ＿＿＿ のペアでデータを管理する
+3. 関数の3つの要素は ＿＿＿（入力）、＿＿＿（処理）、＿＿＿（出力）
+4. 関数に分割する利点を2つ挙げよ: ＿＿＿、＿＿＿
+5. 次回（第5回）で扱うCSVデータは ＿＿＿ というデータ構造で表現できる
+
+────────────────────────────────────────
+## 2. リスト操作 練習問題 1〜7
+────────────────────────────────────────
+
+| 問 | 自分の答え | 合否 | なぜ間違えたか | どこが分からなかったか |
+|----|-----------|------|---------------|----------------------|
+| 1  | ＿＿＿    | ＿   | ＿＿＿        | ＿＿＿               |
+| 2  | ＿＿＿    | ＿   | ＿＿＿        | ＿＿＿               |
+| 3  | ＿＿＿    | ＿   | ＿＿＿        | ＿＿＿               |
+| 4  | ＿＿＿    | ＿   | ＿＿＿        | ＿＿＿               |
+| 5  | ＿＿＿    | ＿   | ＿＿＿        | ＿＿＿               |
+| 6  | ＿＿＿    | ＿   | ＿＿＿        | ＿＿＿               |
+| 7  | ＿＿＿    | ＿   | ＿＿＿        | ＿＿＿               |
+
+────────────────────────────────────────
+## 3. リスト口頭試問（グループワーク）
+────────────────────────────────────────
+
+【自分が作った3問】
+問1: ＿＿＿
+答え: ＿＿＿
+
+問2: ＿＿＿
+答え: ＿＿＿
+
+問3: ＿＿＿
+答え: ＿＿＿
+
+【全員分の出題・回答・正誤】
+- ＿＿＿さん 出題: ＿＿＿  自分の回答: ＿＿＿  正誤: ＿
+- ＿＿＿さん 出題: ＿＿＿  自分の回答: ＿＿＿  正誤: ＿
+- （以下メンバー全員分）
+
+────────────────────────────────────────
+## 4. std4-1: リスト操作（6項目）
+────────────────────────────────────────
+
+`scores = [85, 72, 90, 68, 95, 78, 88]` に対して:
+
+1. len の結果: ＿＿＿
+2. scores[2]: ＿＿＿
+3. append(82) 後: ＿＿＿
+4. scores[:3]: ＿＿＿
+5. for で合計／平均: 合計=＿＿＿  平均=＿＿＿
+6. 80点以上の要素: ＿＿＿
+
+【コード】
+```python
+＿＿＿
+```
+
+────────────────────────────────────────
+## 5. std4-2: 辞書を使ったデータ管理
+────────────────────────────────────────
+
+【コード全文】
+```python
+＿＿＿
+```
+
+【実行結果スクリーンショット】（2色以上の状態）
+＿＿＿（画像貼付）
+
+【辞書に登録した色の一覧】
+- ＿: (R, G, B)
+- ＿: (R, G, B)
+- ＿: (R, G, B)
+- ＿: (R, G, B)
+
+【辞書にないキーを押したときの動作】
+＿＿＿
+
+────────────────────────────────────────
+## 6. std4-3: 関数設計
+────────────────────────────────────────
+
+【コード全文】
+```python
+＿＿＿
+```
+
+【実行結果スクリーンショット】
+＿＿＿（画像貼付）
+
+【なぜ関数に分けたか（2〜3文）】
+＿＿＿
+
+────────────────────────────────────────
+## 7. adv4-1: 総合制作
+────────────────────────────────────────
+
+【作品タイトル】
+＿＿＿
+
+【コード全文】
+```python
+＿＿＿
+```
+
+【実行結果スクリーンショット】
+＿＿＿（画像貼付）
+
+【使用した技術の一覧】
+- リスト: ＿＿＿（どこで何のために使ったか）
+- 辞書: ＿＿＿
+- 自作関数: ＿＿＿
+- for文: ＿＿＿
+- if文: ＿＿＿
+
+【画像を使ったか / アニメーションを入れたか（推奨）】
+- 画像: ＿＿＿
+- アニメーション: ＿＿＿
+
+【工夫した点・苦労した点】
+＿＿＿
+
+【音声説明】
+- 録音ファイル名: ＿＿＿
+- Google Classroom に別途提出（リンク or 提出済みチェック）: ＿
+
+────────────────────────────────────────
+## 全体ふりかえり（任意）
+────────────────────────────────────────
+
+【今日いちばん理解できたこと】
+＿＿＿
+
+【まだモヤモヤしていること・質問したいこと】
+＿＿＿
+</pre>
+            <p style="font-size:0.8rem;color:#888;margin-top:0.5rem"><strong>使い方:</strong> このテンプレートをそのままNotionに貼り、上から順に <code>＿＿＿</code> を埋めていく。最後にNotionの「・・・」メニュー → Export → <strong>PDF</strong> でPDF化してGoogle Classroomに提出。音声ファイル（adv4-1）はPDFとは別にClassroomへ。</p>
+          </div>
+        </details>
       </div>
     </div>
   </div>
@@ -618,30 +787,30 @@ body { padding-top: 2.2rem; }
       <h2>本日の流れ <span style="font-size:0.5rem;color:#999;font-weight:400">── 5/18（日）</span></h2>
     </div>
     <div style="display:flex;gap:0.5rem;flex-wrap:wrap;font-size:0.7rem">
-      <div style="flex:1;min-width:8rem;background:#1A1A1A;border:2px solid #76B900;border-radius:0.4rem;padding:0.6rem;text-align:center">
-        <div style="font-size:1.2rem;font-weight:900;color:#76B900">13:10 - 13:40</div>
-        <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">教員による説明</div>
-        <div style="font-size:0.65rem;color:#999">データ構造 / リスト / 辞書 / 関数</div>
+      <div style="flex:1;min-width:8rem;background:#1A1A1A;border:2px solid #76B900;border-radius:0.4rem;padding:0.8rem;text-align:center">
+        <div style="font-size:0.7rem;font-weight:700;color:#76B900;letter-spacing:0.1em">STEP 0</div>
+        <div style="font-size:0.95rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">教員による説明</div>
+        <div style="font-size:0.7rem;color:#999">データ構造 / リスト / 辞書 / 関数</div>
       </div>
-      <div style="flex:1;min-width:8rem;background:#1A1A1A;border:1px solid #333;border-radius:0.4rem;padding:0.6rem;text-align:center">
-        <div style="font-size:1.2rem;font-weight:900;color:#93D500">13:40 - 14:05</div>
-        <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">1. リストの基本</div>
-        <div style="font-size:0.65rem;color:#999">リスト操作 + 口頭試問 + std4-1</div>
+      <div style="flex:1;min-width:8rem;background:#1A1A1A;border:1px solid #333;border-radius:0.4rem;padding:0.8rem;text-align:center">
+        <div style="font-size:0.7rem;font-weight:700;color:#93D500;letter-spacing:0.1em">STEP 1</div>
+        <div style="font-size:0.95rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">リストの基本</div>
+        <div style="font-size:0.7rem;color:#999">リスト操作 + 口頭試問 + std4-1</div>
       </div>
-      <div style="flex:1;min-width:8rem;background:#1A1A1A;border:1px solid #333;border-radius:0.4rem;padding:0.6rem;text-align:center">
-        <div style="font-size:1.2rem;font-weight:900;color:#93D500">14:05 - 14:30</div>
-        <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">2. 辞書の基本</div>
-        <div style="font-size:0.65rem;color:#999">辞書操作 + 口頭試問 + std4-2</div>
+      <div style="flex:1;min-width:8rem;background:#1A1A1A;border:1px solid #333;border-radius:0.4rem;padding:0.8rem;text-align:center">
+        <div style="font-size:0.7rem;font-weight:700;color:#93D500;letter-spacing:0.1em">STEP 2</div>
+        <div style="font-size:0.95rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">辞書の基本</div>
+        <div style="font-size:0.7rem;color:#999">辞書操作 + 口頭試問 + std4-2</div>
       </div>
-      <div style="flex:1;min-width:8rem;background:#1A1A1A;border:1px solid #333;border-radius:0.4rem;padding:0.6rem;text-align:center">
-        <div style="font-size:1.2rem;font-weight:900;color:#93D500">14:30 - 14:55</div>
-        <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">3. 関数の設計</div>
-        <div style="font-size:0.65rem;color:#999">関数定義 + 口頭試問 + std4-3</div>
+      <div style="flex:1;min-width:8rem;background:#1A1A1A;border:1px solid #333;border-radius:0.4rem;padding:0.8rem;text-align:center">
+        <div style="font-size:0.7rem;font-weight:700;color:#93D500;letter-spacing:0.1em">STEP 3</div>
+        <div style="font-size:0.95rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">関数の設計</div>
+        <div style="font-size:0.7rem;color:#999">関数定義 + 口頭試問 + std4-3</div>
       </div>
-      <div style="flex:1;min-width:8rem;background:#1A1A1A;border:1px solid #333;border-radius:0.4rem;padding:0.6rem;text-align:center">
-        <div style="font-size:1.2rem;font-weight:900;color:#FFB800">14:55 - 15:20</div>
-        <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">4. 発展課題</div>
-        <div style="font-size:0.65rem;color:#999">adv4-1 総合制作</div>
+      <div style="flex:1;min-width:8rem;background:#1A1A1A;border:1px solid #333;border-radius:0.4rem;padding:0.8rem;text-align:center">
+        <div style="font-size:0.7rem;font-weight:700;color:#FFB800;letter-spacing:0.1em">STEP 4</div>
+        <div style="font-size:0.95rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">発展課題</div>
+        <div style="font-size:0.7rem;color:#999">adv4-1 総合制作</div>
       </div>
     </div>
   </div>
@@ -652,7 +821,7 @@ body { padding-top: 2.2rem; }
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">0</div>
-      <h2>教員による説明 <span style="font-size:0.5rem;color:#999;font-weight:400">── 約30分</span></h2>
+      <h2>教員による説明</h2>
     </div>
 
     <div class="concept-box">
@@ -660,8 +829,371 @@ body { padding-top: 2.2rem; }
       <p>第3回までで、変数・条件分岐・繰り返し・アニメーションを学びました。今回は「データの整理」と「コードの整理」を学びます。これが次回（第5回）のCSVデータ処理の土台になります。</p>
     </div>
 
+    <!-- 前回までの復習問題（1問だけ）── Pythonインタラクティブモードで試せる -->
+    <div style="background:#1A1A1A;border:1px solid #444;border-left:3px solid #76B900;border-radius:0.4rem;padding:1rem 1.2rem;margin:1.2rem 0">
+      <p style="font-weight:700;color:#76B900;font-size:1rem;margin-bottom:0.5rem">復習問題 <span style="font-size:0.75rem;color:#999;font-weight:400">── 第3回までの内容（変数・for文・print）が身についているか確認</span></p>
+      <p style="font-size:0.92rem;color:#e0e0e0;margin-bottom:0.6rem"><code>print()</code> と <code>for</code> 文を使って、下のような<strong>3行の三角形</strong>を出力するコードを書きなさい。1行目に〇を3個、2行目に2個、3行目に1個。</p>
+
+      <div style="background:#0f1830;border:1px solid #555;border-radius:0.3rem;padding:0.8rem 1.2rem;text-align:left;margin:0.6rem 0">
+        <pre style="background:none;border:none;font-family:monospace;font-size:1.4rem;color:#FFD040;line-height:1.5;margin:0;padding:0;text-align:left">〇〇〇
+〇〇
+〇</pre>
+        <p style="font-size:0.78rem;color:#888;margin-top:0.4rem">↑ ターミナルにこう表示されればOK</p>
+      </div>
+
+      <div class="callout-tip" style="margin:0.8rem 0">
+        <h4>すぐに試せる ── Python インタラクティブモードで</h4>
+        <p style="font-size:0.88rem">ターミナルで <code>python</code> または <code>python3</code> と打つと、<code>&gt;&gt;&gt;</code> のプロンプトが出ます（これが<strong>インタラクティブモード</strong>＝対話モード）。1行ずつ打って Enter で即実行できます。<br>抜けるときは <code>exit()</code> または <code>Ctrl+D</code>。</p>
+
+        <!-- ターミナル動画風 SVG アニメーション (14秒ループ) -->
+        <div style="margin:0.8rem 0;text-align:center">
+          <svg viewBox="0 0 720 330" xmlns="http://www.w3.org/2000/svg" style="max-width:960px;width:100%;display:block;margin:0 auto;border-radius:10px;background:#0c0c0c;box-shadow:0 4px 20px rgba(0,0,0,0.6)">
+            <!-- ===== タイトルバー（macOS風） ===== -->
+            <rect x="0" y="0" width="720" height="28" fill="#2a2a2a"/>
+            <line x1="0" y1="28" x2="720" y2="28" stroke="#444" stroke-width="1"/>
+            <circle cx="18" cy="14" r="6" fill="#FF5F57"/>
+            <circle cx="38" cy="14" r="6" fill="#FEBC2E"/>
+            <circle cx="58" cy="14" r="6" fill="#28C840"/>
+            <text x="360" y="18" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="11">Terminal — Python インタラクティブモード</text>
+
+            <!-- ===== ターミナル本文（モノスペース） ===== -->
+            <g font-family="'JetBrains Mono','Menlo','Courier New',monospace" font-size="14">
+
+              <!-- 1: $ python3 -->
+              <g opacity="0">
+                <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.04;0.05;0.92;0.96;1" dur="14s" repeatCount="indefinite"/>
+                <text x="20" y="58" fill="#76B900">$</text>
+                <text x="38" y="58" fill="#e0e0e0">python3</text>
+              </g>
+
+              <!-- 2: Python バナー1行目 -->
+              <g opacity="0">
+                <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.09;0.10;0.92;0.96;1" dur="14s" repeatCount="indefinite"/>
+                <text x="20" y="80" fill="#aaa">Python 3.11.4 (main, Jun 7 2023, 10:13:09) [Clang 14.0.0]</text>
+              </g>
+
+              <!-- 3: Python バナー2行目 -->
+              <g opacity="0">
+                <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.11;0.12;0.92;0.96;1" dur="14s" repeatCount="indefinite"/>
+                <text x="20" y="100" fill="#aaa">Type "help", "copyright", "credits" or "license" for more information.</text>
+              </g>
+
+              <!-- 4a: 1つ目の >>> プロンプト -->
+              <g opacity="0">
+                <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.17;0.18;0.92;0.96;1" dur="14s" repeatCount="indefinite"/>
+                <text x="20" y="124" fill="#76B900">&gt;&gt;&gt;</text>
+              </g>
+              <!-- 4b: print("〇〇〇")（少し遅れて打たれる） -->
+              <g opacity="0">
+                <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.21;0.22;0.92;0.96;1" dur="14s" repeatCount="indefinite"/>
+                <text x="55" y="124" fill="#e0e0e0">print("<tspan fill="#FFD040">〇〇〇</tspan>")</text>
+              </g>
+
+              <!-- 5: 出力 〇〇〇 -->
+              <g opacity="0">
+                <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.25;0.26;0.92;0.96;1" dur="14s" repeatCount="indefinite"/>
+                <text x="20" y="144" fill="#FFD040">〇〇〇</text>
+              </g>
+
+              <!-- 6a: 2つ目の >>> -->
+              <g opacity="0">
+                <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.29;0.30;0.92;0.96;1" dur="14s" repeatCount="indefinite"/>
+                <text x="20" y="168" fill="#76B900">&gt;&gt;&gt;</text>
+              </g>
+              <!-- 6b: print("〇〇") -->
+              <g opacity="0">
+                <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.33;0.34;0.92;0.96;1" dur="14s" repeatCount="indefinite"/>
+                <text x="55" y="168" fill="#e0e0e0">print("<tspan fill="#FFD040">〇〇</tspan>")</text>
+              </g>
+
+              <!-- 7: 出力 〇〇 -->
+              <g opacity="0">
+                <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.37;0.38;0.92;0.96;1" dur="14s" repeatCount="indefinite"/>
+                <text x="20" y="188" fill="#FFD040">〇〇</text>
+              </g>
+
+              <!-- 8a: 3つ目の >>> -->
+              <g opacity="0">
+                <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.41;0.42;0.92;0.96;1" dur="14s" repeatCount="indefinite"/>
+                <text x="20" y="212" fill="#76B900">&gt;&gt;&gt;</text>
+              </g>
+              <!-- 8b: print("〇") -->
+              <g opacity="0">
+                <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.45;0.46;0.92;0.96;1" dur="14s" repeatCount="indefinite"/>
+                <text x="55" y="212" fill="#e0e0e0">print("<tspan fill="#FFD040">〇</tspan>")</text>
+              </g>
+
+              <!-- 9: 出力 〇 -->
+              <g opacity="0">
+                <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.49;0.50;0.92;0.96;1" dur="14s" repeatCount="indefinite"/>
+                <text x="20" y="232" fill="#FFD040">〇</text>
+              </g>
+
+              <!-- 10a: 4つ目の >>> -->
+              <g opacity="0">
+                <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.54;0.55;0.92;0.96;1" dur="14s" repeatCount="indefinite"/>
+                <text x="20" y="256" fill="#76B900">&gt;&gt;&gt;</text>
+              </g>
+              <!-- 10b: exit() -->
+              <g opacity="0">
+                <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.58;0.59;0.92;0.96;1" dur="14s" repeatCount="indefinite"/>
+                <text x="55" y="256" fill="#e0e0e0">exit()</text>
+              </g>
+
+              <!-- 11: シェルに戻る $ + 点滅カーソル -->
+              <g opacity="0">
+                <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.63;0.64;0.92;0.96;1" dur="14s" repeatCount="indefinite"/>
+                <text x="20" y="280" fill="#76B900">$</text>
+                <rect x="40" y="268" width="9" height="15" fill="#e0e0e0">
+                  <animate attributeName="opacity" values="1;0;1" keyTimes="0;0.5;1" dur="0.9s" repeatCount="indefinite"/>
+                </rect>
+              </g>
+
+              <!-- ステータステキスト（右下に「実演中」など） -->
+              <text x="700" y="316" text-anchor="end" fill="#444" font-family="sans-serif" font-size="10">▶ 14秒ループ実演</text>
+
+            </g>
+          </svg>
+          <p style="font-size:0.78rem;color:#888;margin-top:0.4rem">▲ ターミナルで実際にこの順に打つだけ ── 結果は1行ずつすぐ画面に出る</p>
+        </div>
+
+        <pre><span class="code-label">Terminal（手で打つときの例）</span>
+$ python3
+Python 3.x.x ...
+&gt;&gt;&gt; print(<span class="str">"〇〇〇"</span>)
+〇〇〇
+&gt;&gt;&gt; <span class="cmt"># ↑ こんなふうに1行ずつ試せる</span></pre>
+      </div>
+
+      <p style="font-size:0.85rem;color:#aaa">ヒント: 文字列は <code>"〇" * 3</code> のように<strong>掛け算で繰り返せる</strong>（結果は <code>"〇〇〇"</code>）。<code>for</code> 文を使うと、各行の〇の個数を <code>3 → 2 → 1</code> と変えられる。</p>
+
+      <!-- 解答ゲート（パスワード式） -->
+      <div id="ans-review1-gate" style="margin-top:0.8rem;padding:0.7rem 0.9rem;background:#1a1a1a;border:1px solid #555;border-radius:0.3rem">
+        <p style="font-size:0.88rem;color:#ccc;margin-bottom:0.5rem"><strong style="color:#76B900">解答を見るにはパスワードを入力</strong> ── 教員から授業中に伝えられるパスワードを入れてください。</p>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center">
+          <input type="password" id="ans-review1-pw" placeholder="パスワード" style="background:#0a0a0a;color:#e0e0e0;border:1px solid #555;border-radius:0.25rem;padding:0.4rem 0.7rem;font-size:0.9rem;font-family:monospace;min-width:10rem" onkeydown="if(event.key==='Enter'){checkAnsReview1();event.preventDefault();}">
+          <button type="button" onclick="checkAnsReview1()" style="background:#76B900;color:#0a1a0a;font-weight:700;font-size:0.88rem;border:none;border-radius:0.25rem;padding:0.45rem 1rem;cursor:pointer">解答を表示</button>
+          <span id="ans-review1-err" style="display:none;color:#FF8888;font-size:0.85rem;font-weight:700">✗ パスワードが違います</span>
+        </div>
+      </div>
+      <script>
+        function checkAnsReview1(){
+          var pw = document.getElementById('ans-review1-pw').value;
+          if (pw === 'hasegawa') {
+            document.getElementById('ans-review1-gate').style.display = 'none';
+            document.getElementById('ans-review1-content').style.display = 'block';
+          } else {
+            var err = document.getElementById('ans-review1-err');
+            err.style.display = 'inline';
+            setTimeout(function(){ err.style.display = 'none'; }, 2500);
+          }
+        }
+      </script>
+
+      <div id="ans-review1-content" style="display:none;margin-top:0.5rem;padding:0.7rem 0.9rem;background:#0a1a0a;border-left:3px solid #76B900;border-radius:0.3rem">
+
+          <p style="font-size:0.88rem;color:#e0e0e0;margin-bottom:0.4rem"><strong>解答例（1）: いちばんシンプル ── 3回 print するだけ</strong></p>
+          <pre><span class="code-label">Python（インタラクティブモード）</span>
+&gt;&gt;&gt; <span class="fn">print</span>(<span class="str">"〇〇〇"</span>)
+〇〇〇
+&gt;&gt;&gt; <span class="fn">print</span>(<span class="str">"〇〇"</span>)
+〇〇
+&gt;&gt;&gt; <span class="fn">print</span>(<span class="str">"〇"</span>)
+〇</pre>
+          <p style="font-size:0.82rem;color:#aaa;margin-top:0.4rem">ベタ書きだけど、これでも答えとしては正解。ただし行数が増えると大変。</p>
+
+          <p style="font-size:0.88rem;color:#e0e0e0;margin-top:0.8rem;margin-bottom:0.4rem"><strong>解答例（2）: range() で繰り返す</strong></p>
+          <pre><span class="code-label">Python（インタラクティブモード）</span>
+&gt;&gt;&gt; <span class="kw">for</span> row <span class="kw">in</span> <span class="fn">range</span>(<span class="num">3</span>):
+<span class="op">...</span>     <span class="fn">print</span>(<span class="str">"〇"</span> <span class="op">*</span> (<span class="num">3</span> <span class="op">-</span> row))
+<span class="op">...</span>
+〇〇〇
+〇〇
+〇</pre>
+          <p style="font-size:0.82rem;color:#aaa;margin-top:0.4rem"><code>range(3)</code> は <code>0, 1, 2</code> を生成。<code>3 - row</code> で個数を <code>3, 2, 1</code> と変える。文字列 × 整数で <code>"〇" * 3 == "〇〇〇"</code>。</p>
+
+          <p style="font-size:0.88rem;color:#e0e0e0;margin-top:0.8rem;margin-bottom:0.4rem"><strong>派生: 積み上げる方向も簡単</strong> ── <code>print("〇" * i)</code> で同じパターンの「逆向き」が作れる</p>
+          <pre><span class="code-label">Python（インタラクティブモード）</span>
+&gt;&gt;&gt; <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">4</span>):
+<span class="op">...</span>     <span class="fn">print</span>(<span class="str">"〇"</span> <span class="op">*</span> i)
+<span class="op">...</span>
+
+〇
+〇〇
+〇〇〇</pre>
+          <p style="font-size:0.82rem;color:#aaa;margin-top:0.4rem"><code>range(4)</code> は <code>0, 1, 2, 3</code> を生成。<code>i</code> をそのまま個数に使うと <code>0, 1, 2, 3</code> 個の〇が積み上がる（最初の <code>i=0</code> は空行）。<strong>このループ＋掛け算のパターンが分かれば、ピラミッド・階段・グラフのバーなど色々作れる。</strong></p>
+          <p style="font-size:0.82rem;color:#aaa;margin-top:0.4rem">問題のゴール（減る向き）に揃えたいなら <code>range(3, 0, -1)</code> で <code>3, 2, 1</code> を作る手もある:</p>
+          <pre><span class="code-label">Python（インタラクティブモード）</span>
+&gt;&gt;&gt; <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">3</span>, <span class="num">0</span>, <span class="op">-</span><span class="num">1</span>):
+<span class="op">...</span>     <span class="fn">print</span>(<span class="str">"〇"</span> <span class="op">*</span> i)
+<span class="op">...</span>
+〇〇〇
+〇〇
+〇</pre>
+
+          <div class="callout-tip" style="margin-top:0.9rem;border-left-color:#76B900">
+            <h4>でも、もっと楽に書ける ── リストを使うと便利！</h4>
+            <p style="font-size:0.88rem;color:#e0e0e0">各行の個数 <code>3, 2, 1</code> を計算で出すのではなく、<strong>最初からリストに書いておく</strong>と、コードがそのまま「設計図」になる:</p>
+            <pre><span class="code-label">Python（インタラクティブモード）── 今日の本命</span>
+&gt;&gt;&gt; <span class="kw">for</span> n <span class="kw">in</span> [<span class="num">3</span>, <span class="num">2</span>, <span class="num">1</span>]:
+<span class="op">...</span>     <span class="fn">print</span>(<span class="str">"〇"</span> <span class="op">*</span> n)
+<span class="op">...</span>
+〇〇〇
+〇〇
+〇</pre>
+            <p style="font-size:0.85rem;color:#ccc;margin-top:0.5rem">この <code>[3, 2, 1]</code> がまさに今日のテーマ「<strong>リスト</strong>」。</p>
+            <ul style="padding-left:1.2rem;font-size:0.85rem;color:#ccc;line-height:1.8;margin-top:0.3rem">
+              <li>形を変えたい？ → リストを書き換えるだけ: <code>[1, 3, 5, 3, 1]</code> でひし形、<code>[2, 4, 6]</code> で逆三角形</li>
+              <li>計算で個数を出さなくていい ── 設計と実装が分離する</li>
+              <li>あとから読んだとき「3, 2, 1個並べたいんだな」が一目で分かる</li>
+            </ul>
+            <p style="font-size:0.85rem;color:#76B900;font-weight:700;margin-top:0.6rem">→ こうやってデータを「リストにまとめる」のが今日学ぶこと。</p>
+          </div>
+
+      </div>
+    </div>
+
     <div class="analogy">
       変数が「1つの箱」だとすると、リストは「引き出しが並んだ棚」、辞書は「見出し付きの辞典」、関数は「レシピ（材料を入れると料理が出てくる）」です。
+    </div>
+
+    <!-- SVG: 4つのメタファー（変数=箱 / リスト=引き出し棚 / 辞書=辞典 / 関数=レシピ） + SMILアニメーション -->
+    <div style="margin:1.5rem 0;text-align:center">
+      <svg viewBox="0 0 480 440" style="max-width:960px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr-recipe" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#76B900"/>
+          </marker>
+        </defs>
+
+        <!-- ====== Panel 1: 変数 = 1つの箱 (TL) ====== -->
+        <g>
+          <text x="120" y="28" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="15" font-weight="700">変数</text>
+          <text x="120" y="46" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="11">＝ 1つの箱</text>
+          <!-- 箱本体 -->
+          <rect x="70" y="62" width="100" height="100" rx="6" fill="#2a2a2a" stroke="#555" stroke-width="2"/>
+          <!-- 箱のフタ線 -->
+          <line x1="70" y1="82" x2="170" y2="82" stroke="#555" stroke-width="1" stroke-dasharray="3,2"/>
+          <!-- ラベル: x -->
+          <text x="120" y="77" text-anchor="middle" fill="#888" font-family="monospace" font-size="10">name: x</text>
+          <!-- 中身の値（パルス） -->
+          <text x="120" y="130" text-anchor="middle" fill="#76B900" font-family="monospace" font-size="28" font-weight="700">5
+            <animate attributeName="opacity" values="1;0.35;1" dur="1.8s" repeatCount="indefinite"/>
+          </text>
+          <!-- 下キャプション -->
+          <text x="120" y="190" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="13">x = 5</text>
+        </g>
+
+        <!-- ====== Panel 2: リスト = 引き出しが並んだ棚 (TR) ====== -->
+        <g transform="translate(240, 0)">
+          <text x="120" y="28" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="15" font-weight="700">リスト</text>
+          <text x="120" y="46" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="11">＝ 引き出しが並んだ棚</text>
+          <!-- 棚の外枠 -->
+          <rect x="20" y="62" width="200" height="100" rx="4" fill="none" stroke="#555" stroke-width="1.5"/>
+          <!-- 4 引き出し -->
+          <g font-family="monospace">
+            <rect x="28" y="70" width="44" height="84" rx="3" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+            <text x="50" y="86" text-anchor="middle" fill="#888" font-size="10">[0]</text>
+            <text x="50" y="120" text-anchor="middle" fill="#e0e0e0" font-size="14" font-weight="700">A</text>
+            <circle cx="50" cy="142" r="2.5" fill="#666"/>
+
+            <rect x="76" y="70" width="44" height="84" rx="3" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+            <text x="98" y="86" text-anchor="middle" fill="#888" font-size="10">[1]</text>
+            <text x="98" y="120" text-anchor="middle" fill="#e0e0e0" font-size="14" font-weight="700">B</text>
+            <circle cx="98" cy="142" r="2.5" fill="#666"/>
+
+            <rect x="124" y="70" width="44" height="84" rx="3" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+            <text x="146" y="86" text-anchor="middle" fill="#888" font-size="10">[2]</text>
+            <text x="146" y="120" text-anchor="middle" fill="#e0e0e0" font-size="14" font-weight="700">C</text>
+            <circle cx="146" cy="142" r="2.5" fill="#666"/>
+
+            <rect x="172" y="70" width="44" height="84" rx="3" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+            <text x="194" y="86" text-anchor="middle" fill="#888" font-size="10">[3]</text>
+            <text x="194" y="120" text-anchor="middle" fill="#e0e0e0" font-size="14" font-weight="700">D</text>
+            <circle cx="194" cy="142" r="2.5" fill="#666"/>
+          </g>
+          <!-- ハイライト枠が[0]→[1]→[2]→[3]を順に走る -->
+          <rect y="70" width="44" height="84" rx="3" fill="none" stroke="#76B900" stroke-width="2.5">
+            <animate attributeName="x" values="28;76;124;172;28" keyTimes="0;0.25;0.5;0.75;1" dur="4s" repeatCount="indefinite" calcMode="discrete"/>
+          </rect>
+          <!-- 下キャプション -->
+          <text x="120" y="190" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="13">for i in range(4): ...</text>
+        </g>
+
+        <!-- ====== Panel 3: 辞書 = 見出し付きの辞典 (BL) ====== -->
+        <g transform="translate(0, 220)">
+          <text x="120" y="28" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="15" font-weight="700">辞書</text>
+          <text x="120" y="46" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="11">＝ 見出し付きの辞典</text>
+          <!-- 辞典の枠 -->
+          <rect x="30" y="62" width="180" height="100" rx="4" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+          <!-- 中央のページ折れ線 -->
+          <line x1="120" y1="62" x2="120" y2="162" stroke="#3a3a3a" stroke-width="1"/>
+          <!-- 3行のエントリ -->
+          <g font-family="monospace" font-size="11">
+            <text x="42" y="84" fill="#76B900" font-weight="700">"name"</text>
+            <text x="113" y="84" text-anchor="middle" fill="#888">→</text>
+            <text x="128" y="84" fill="#e0e0e0">"太郎"</text>
+
+            <text x="42" y="112" fill="#76B900" font-weight="700">"age"</text>
+            <text x="113" y="112" text-anchor="middle" fill="#888">→</text>
+            <text x="128" y="112" fill="#e0e0e0">20</text>
+
+            <text x="42" y="140" fill="#76B900" font-weight="700">"grade"</text>
+            <text x="113" y="140" text-anchor="middle" fill="#888">→</text>
+            <text x="128" y="140" fill="#e0e0e0">"B2"</text>
+          </g>
+          <!-- ハイライト（3行を順にループ） -->
+          <rect x="34" width="172" height="20" rx="3" fill="none" stroke="#76B900" stroke-width="1.8">
+            <animate attributeName="y" values="70;98;126;70" keyTimes="0;0.33;0.66;1" dur="3s" repeatCount="indefinite" calcMode="discrete"/>
+          </rect>
+          <!-- 下キャプション -->
+          <text x="120" y="190" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="13">d["name"] → "太郎"</text>
+        </g>
+
+        <!-- ====== Panel 4: 関数 = レシピ (BR) ====== -->
+        <g transform="translate(240, 220)">
+          <text x="120" y="28" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="15" font-weight="700">関数</text>
+          <text x="120" y="46" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="11">＝ レシピ（材料→料理）</text>
+
+          <!-- 材料ボックス（左） -->
+          <rect x="14" y="92" width="48" height="48" rx="4" fill="#1a1a1a" stroke="#555" stroke-width="1.2"/>
+          <text x="38" y="156" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="10">材料</text>
+          <!-- 材料の中身（円） -->
+          <circle cx="38" cy="116" r="6" fill="#76B900"/>
+
+          <!-- レシピ箱（中央） -->
+          <rect x="76" y="78" width="88" height="76" rx="6" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+          <text x="120" y="108" text-anchor="middle" fill="#e0e0e0" font-family="monospace" font-size="11" font-weight="700">cook( )</text>
+          <text x="120" y="126" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="9">レシピ</text>
+          <text x="120" y="146" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="9">（処理）</text>
+
+          <!-- 料理ボックス（右） -->
+          <rect x="178" y="92" width="48" height="48" rx="4" fill="#1a1a1a" stroke="#555" stroke-width="1.2"/>
+          <text x="202" y="156" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="10">料理</text>
+
+          <!-- 矢印（材料→レシピ） -->
+          <line x1="62" y1="116" x2="74" y2="116" stroke="#76B900" stroke-width="1.5" marker-end="url(#arr-recipe)"/>
+          <!-- 矢印（レシピ→料理） -->
+          <line x1="166" y1="116" x2="178" y2="116" stroke="#76B900" stroke-width="1.5" marker-end="url(#arr-recipe)"/>
+
+          <!-- アニメーション: 材料 ● が レシピ箱を通って 料理 ★ になって右に届く -->
+          <!-- フェーズ1: 入力の緑●が左→中央へ -->
+          <circle cx="38" cy="116" r="5" fill="#76B900">
+            <animate attributeName="cx" values="38;38;120;120" keyTimes="0;0.1;0.35;1" dur="3.5s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.1;0.35;0.42;1" dur="3.5s" repeatCount="indefinite"/>
+          </circle>
+          <!-- フェーズ2: 出力の星型が中央→右へ -->
+          <polygon points="0,-6 1.8,-1.8 6,-1.8 2.5,1.2 4,6 0,3 -4,6 -2.5,1.2 -6,-1.8 -1.8,-1.8" fill="#76B900">
+            <animateTransform attributeName="transform" type="translate" values="120,116;120,116;202,116;202,116" keyTimes="0;0.55;0.85;1" dur="3.5s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.55;0.62;0.85;1" dur="3.5s" repeatCount="indefinite"/>
+          </polygon>
+
+          <!-- 下キャプション -->
+          <text x="120" y="190" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="13">cook("材料") → 料理</text>
+        </g>
+
+      </svg>
+      <p style="font-size:0.78rem;color:#888;margin-top:0.4rem">▲ 緑のハイライトが移動 / 材料が料理に変わる ── データの「整理方法」と「処理の流れ」のメタファー</p>
     </div>
 
     <!-- CS/DS基礎: データ構造と関数 -->
@@ -683,12 +1215,12 @@ body { padding-top: 2.2rem; }
       <h4 style="color:#76B900;margin-top:1.5rem;margin-bottom:0.5rem">関数とは</h4>
       <p>処理のまとまりに名前を付けたものです。<strong>引数</strong>（材料）を受け取り、<strong>処理</strong>（調理）をして、<strong>戻り値</strong>（料理）を返します。</p>
 
-      <div style="display:flex;gap:0.5rem;align-items:center;justify-content:center;margin:1rem 0;flex-wrap:wrap;font-size:0.8rem">
-        <span style="background:#1a2e0a;color:#76B900;padding:0.3rem 0.8rem;border-radius:0.3rem;font-weight:700">引数（入力）</span>
-        <span style="color:#76B900;font-size:1.2rem">&rarr;</span>
-        <span style="background:#0a1a2e;color:#4FC3F7;padding:0.3rem 0.8rem;border-radius:0.3rem;font-weight:700">関数（処理）</span>
-        <span style="color:#76B900;font-size:1.2rem">&rarr;</span>
-        <span style="background:#2e1a0a;color:#FFB800;padding:0.3rem 0.8rem;border-radius:0.3rem;font-weight:700">戻り値（出力）</span>
+      <div style="display:flex;gap:0.5rem;align-items:center;justify-content:center;margin:1rem 0;flex-wrap:wrap;font-size:0.9rem">
+        <span style="background:#1a1a1a;color:#e0e0e0;border:1px solid #444;padding:0.35rem 0.9rem;border-radius:0.3rem;font-weight:700">引数（入力）</span>
+        <span style="color:#888;font-size:1.2rem">&rarr;</span>
+        <span style="background:#1a1a1a;color:#e0e0e0;border:1px solid #444;padding:0.35rem 0.9rem;border-radius:0.3rem;font-weight:700">関数（処理）</span>
+        <span style="color:#888;font-size:1.2rem">&rarr;</span>
+        <span style="background:#1a1a1a;color:#e0e0e0;border:1px solid #444;padding:0.35rem 0.9rem;border-radius:0.3rem;font-weight:700">戻り値（出力）</span>
       </div>
 
       <h4 style="color:#76B900;margin-top:1.5rem;margin-bottom:0.5rem">なぜ関数に分割するか</h4>
@@ -701,49 +1233,119 @@ body { padding-top: 2.2rem; }
 
       <!-- SVG: データ構造の概念図 Variable → List → Dictionary → Function -->
       <div style="margin:1.5rem 0;text-align:center">
-        <svg viewBox="0 0 620 150" style="max-width:620px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 620 150" style="max-width:1240px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <marker id="arrow-concept" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
               <path d="M0,0 L8,3 L0,6" fill="#76B900"/>
             </marker>
           </defs>
           <!-- 変数 -->
-          <rect x="16" y="35" width="110" height="80" rx="8" fill="none" stroke="#76B900" stroke-width="2"/>
-          <text x="71" y="62" text-anchor="middle" fill="#76B900" font-family="sans-serif" font-size="14" font-weight="700">変数</text>
-          <text x="71" y="82" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="11">単一の値</text>
+          <rect x="16" y="35" width="110" height="80" rx="8" fill="none" stroke="#555" stroke-width="1.5"/>
+          <text x="71" y="62" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="14" font-weight="700">変数</text>
+          <text x="71" y="82" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="11">単一の値</text>
           <rect x="41" y="92" width="60" height="16" rx="3" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
-          <text x="71" y="104" text-anchor="middle" fill="#93D500" font-family="monospace" font-size="10">x = 5</text>
+          <text x="71" y="104" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="10">x = 5</text>
           <!-- 矢印1 -->
           <line x1="130" y1="75" x2="155" y2="75" stroke="#76B900" stroke-width="2" marker-end="url(#arrow-concept)"/>
           <!-- リスト -->
-          <rect x="160" y="35" width="120" height="80" rx="8" fill="none" stroke="#4FC3F7" stroke-width="2"/>
-          <text x="220" y="62" text-anchor="middle" fill="#4FC3F7" font-family="sans-serif" font-size="14" font-weight="700">リスト</text>
-          <text x="220" y="82" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="11">複数の値を順番に</text>
+          <rect x="160" y="35" width="120" height="80" rx="8" fill="none" stroke="#555" stroke-width="1.5"/>
+          <text x="220" y="62" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="14" font-weight="700">リスト</text>
+          <text x="220" y="82" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="11">複数の値を順番に</text>
           <rect x="175" y="92" width="22" height="16" rx="3" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
-          <text x="186" y="104" text-anchor="middle" fill="#93D500" font-family="monospace" font-size="9">1</text>
+          <text x="186" y="104" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="9">1</text>
           <rect x="200" y="92" width="22" height="16" rx="3" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
-          <text x="211" y="104" text-anchor="middle" fill="#93D500" font-family="monospace" font-size="9">2</text>
+          <text x="211" y="104" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="9">2</text>
           <rect x="225" y="92" width="22" height="16" rx="3" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
-          <text x="236" y="104" text-anchor="middle" fill="#93D500" font-family="monospace" font-size="9">3</text>
+          <text x="236" y="104" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="9">3</text>
           <rect x="250" y="92" width="22" height="16" rx="3" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
-          <text x="261" y="104" text-anchor="middle" fill="#93D500" font-family="monospace" font-size="9">4</text>
+          <text x="261" y="104" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="9">4</text>
           <!-- 矢印2 -->
           <line x1="284" y1="75" x2="309" y2="75" stroke="#76B900" stroke-width="2" marker-end="url(#arrow-concept)"/>
           <!-- 辞書 -->
-          <rect x="314" y="35" width="140" height="80" rx="8" fill="none" stroke="#FFB800" stroke-width="2"/>
-          <text x="384" y="62" text-anchor="middle" fill="#FFB800" font-family="sans-serif" font-size="14" font-weight="700">辞書</text>
-          <text x="384" y="82" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="11">名前付きの値</text>
-          <text x="384" y="104" text-anchor="middle" fill="#93D500" font-family="monospace" font-size="9">"name":"太郎"</text>
+          <rect x="314" y="35" width="140" height="80" rx="8" fill="none" stroke="#555" stroke-width="1.5"/>
+          <text x="384" y="62" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="14" font-weight="700">辞書</text>
+          <text x="384" y="82" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="11">名前付きの値</text>
+          <text x="384" y="104" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="9">"name":"太郎"</text>
           <!-- 矢印3 -->
           <line x1="458" y1="75" x2="483" y2="75" stroke="#76B900" stroke-width="2" marker-end="url(#arrow-concept)"/>
           <!-- 関数 -->
-          <rect x="488" y="35" width="116" height="80" rx="8" fill="none" stroke="#FF5252" stroke-width="2"/>
-          <text x="546" y="62" text-anchor="middle" fill="#FF5252" font-family="sans-serif" font-size="14" font-weight="700">関数</text>
-          <text x="546" y="82" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="11">処理をまとめる</text>
-          <text x="546" y="104" text-anchor="middle" fill="#93D500" font-family="monospace" font-size="9">def f(x):</text>
+          <rect x="488" y="35" width="116" height="80" rx="8" fill="none" stroke="#555" stroke-width="1.5"/>
+          <text x="546" y="62" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="14" font-weight="700">関数</text>
+          <text x="546" y="82" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="11">処理をまとめる</text>
+          <text x="546" y="104" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="9">def f(x):</text>
           <!-- 下部ラベル -->
           <text x="310" y="140" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="11">データの「整理方法」が広がっていくイメージ</text>
         </svg>
+      </div>
+
+      <!-- CSVデータ ＝ 辞書のリスト の予告 -->
+      <h4 style="color:#76B900;margin-top:1.5rem;margin-bottom:0.5rem">次回（第5回）のCSVデータは「辞書のリスト」で表現できる</h4>
+      <p>CSVは表形式のデータです。<strong>1行＝1つの辞書</strong>（列名がキー、セルが値）にして、<strong>全行をリストにまとめる</strong>と扱いやすくなります。これが <code>list[dict]</code> ＝ <strong>辞書のリスト</strong> です。</p>
+
+      <div style="margin:1rem 0;text-align:center">
+        <svg viewBox="0 0 620 200" style="max-width:1240px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arr-csv" markerWidth="7" markerHeight="6" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L7,3 L0,6 Z" fill="#76B900"/>
+            </marker>
+          </defs>
+
+          <!-- 左: CSVファイル -->
+          <text x="120" y="22" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="13" font-weight="700">CSV ファイル</text>
+          <rect x="20" y="32" width="200" height="140" rx="6" fill="#2a2a2a" stroke="#555" stroke-width="1.2"/>
+          <g font-family="monospace" font-size="11" fill="#ccc">
+            <text x="32" y="52">name,age,grade</text>
+            <line x1="32" y1="58" x2="208" y2="58" stroke="#444" stroke-width="0.8"/>
+            <text x="32" y="76">太郎,20,B2</text>
+            <text x="32" y="98">花子,21,B3</text>
+            <text x="32" y="120">次郎,19,B1</text>
+          </g>
+          <text x="120" y="158" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="10">カンマ区切りの表データ</text>
+
+          <!-- 矢印: 読み込み・変換 -->
+          <line x1="226" y1="100" x2="270" y2="100" stroke="#76B900" stroke-width="2" marker-end="url(#arr-csv)"/>
+          <text x="248" y="92" text-anchor="middle" fill="#76B900" font-family="sans-serif" font-size="10" font-weight="700">読込</text>
+
+          <!-- 右: 辞書のリスト -->
+          <text x="450" y="22" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="13" font-weight="700">Python: 辞書のリスト</text>
+          <rect x="278" y="32" width="324" height="140" rx="6" fill="none" stroke="#555" stroke-width="1.5"/>
+          <text x="290" y="50" fill="#888" font-family="monospace" font-size="10">data = [</text>
+          <g font-family="monospace" font-size="10">
+            <rect x="298" y="58" width="290" height="22" rx="3" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+            <text x="306" y="73" fill="#ccc"><tspan fill="#76B900">{</tspan>"name":"太郎", "age":20, "grade":"B2"<tspan fill="#76B900">}</tspan>,</text>
+            <rect x="298" y="84" width="290" height="22" rx="3" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+            <text x="306" y="99" fill="#ccc"><tspan fill="#76B900">{</tspan>"name":"花子", "age":21, "grade":"B3"<tspan fill="#76B900">}</tspan>,</text>
+            <rect x="298" y="110" width="290" height="22" rx="3" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+            <text x="306" y="125" fill="#ccc"><tspan fill="#76B900">{</tspan>"name":"次郎", "age":19, "grade":"B1"<tspan fill="#76B900">}</tspan></text>
+          </g>
+          <text x="290" y="148" fill="#888" font-family="monospace" font-size="10">]</text>
+          <text x="450" y="166" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="10">1行 = 1辞書、全体をリストでまとめる</text>
+
+          <!-- 順番ハイライト -->
+          <rect x="298" width="290" height="22" rx="3" fill="none" stroke="#76B900" stroke-width="2">
+            <animate attributeName="y" values="58;84;110;58" keyTimes="0;0.33;0.66;1" dur="3s" repeatCount="indefinite" calcMode="discrete"/>
+          </rect>
+          <!-- CSVの行ハイライト -->
+          <rect x="26" width="190" height="22" rx="3" fill="none" stroke="#76B900" stroke-width="2">
+            <animate attributeName="y" values="62;84;106;62" keyTimes="0;0.33;0.66;1" dur="3s" repeatCount="indefinite" calcMode="discrete"/>
+          </rect>
+
+          <!-- 下キャプション -->
+          <text x="310" y="190" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="11">CSVの各行が辞書になり、全体がリストになる ── これが「辞書のリスト」</text>
+        </svg>
+      </div>
+
+      <div class="callout-tip">
+        <h4>第5回で書くコードのイメージ</h4>
+        <pre><span class="code-label">Python ── 第5回プレビュー</span>
+<span class="kw">import</span> csv
+
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"students.csv"</span>) <span class="kw">as</span> f:
+    data <span class="op">=</span> <span class="fn">list</span>(csv.<span class="fn">DictReader</span>(f))
+
+<span class="cmt"># data は「辞書のリスト」になっている</span>
+<span class="kw">for</span> row <span class="kw">in</span> data:
+    <span class="fn">print</span>(row[<span class="str">"name"</span>], row[<span class="str">"age"</span>])</pre>
       </div>
 
       <div class="notion-submit">
@@ -803,25 +1405,21 @@ uv pip install py5</pre>
   <div class="container" style="text-align:center">
     <div style="font-size:1.5rem;font-weight:900;color:#76B900;margin-bottom:0.5rem">ここから先はグループで進めてください</div>
     <p style="font-size:0.85rem;color:#93D500;margin-bottom:1rem">この資料を上から順に読みながら、グループで協力して演習を進めましょう</p>
-    <div style="display:inline-flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;font-size:0.7rem">
-      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
+    <div style="display:inline-flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;font-size:0.85rem">
+      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.5rem 1rem;text-align:center">
         <div style="color:#76B900;font-weight:700">1. リスト</div>
-        <div style="color:#999">約25分</div>
       </div>
       <div style="color:#76B900;display:flex;align-items:center">&rarr;</div>
-      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
+      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.5rem 1rem;text-align:center">
         <div style="color:#76B900;font-weight:700">2. 辞書</div>
-        <div style="color:#999">約25分</div>
       </div>
       <div style="color:#76B900;display:flex;align-items:center">&rarr;</div>
-      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
+      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.5rem 1rem;text-align:center">
         <div style="color:#76B900;font-weight:700">3. 関数</div>
-        <div style="color:#999">約25分</div>
       </div>
       <div style="color:#76B900;display:flex;align-items:center">&rarr;</div>
-      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
+      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.5rem 1rem;text-align:center">
         <div style="color:#76B900;font-weight:700">4. 発展課題</div>
-        <div style="color:#999">約25分</div>
       </div>
     </div>
   </div>
@@ -832,7 +1430,7 @@ uv pip install py5</pre>
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">1</div>
-      <h2>リストの基本 <span style="font-size:0.5rem;color:#999;font-weight:400">── グループ演習・約25分</span></h2>
+      <h2>リストの基本 <span style="font-size:0.5rem;color:#999;font-weight:400">── グループ演習</span></h2>
     </div>
 
     <div class="concept-box">
@@ -846,7 +1444,7 @@ uv pip install py5</pre>
 
     <!-- SVG: リスト/配列の視覚化 -->
     <div style="margin:1.5rem 0;text-align:center">
-      <svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg" style="max-width:600px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
+      <svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg" style="max-width:1200px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
         <text x="300" y="28" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700" font-family="sans-serif">リスト（list）の構造: インデックスと要素</text>
         <text x="30" y="60" fill="#ccc" font-size="11" font-family="sans-serif">fruits = ["りんご", "バナナ", "みかん"]</text>
         <!-- boxes -->
@@ -862,15 +1460,15 @@ uv pip install py5</pre>
         <text x="280" y="112" text-anchor="middle" fill="#e0e0e0" font-size="14" font-weight="500" font-family="sans-serif">"バナナ"</text>
         <text x="420" y="112" text-anchor="middle" fill="#e0e0e0" font-size="14" font-weight="500" font-family="sans-serif">"みかん"</text>
         <!-- access example -->
-        <line x1="140" y1="135" x2="140" y2="160" stroke="#FFB800" stroke-width="1.5" stroke-dasharray="4"/>
-        <text x="140" y="178" text-anchor="middle" fill="#FFB800" font-size="11" font-family="monospace">fruits[0]</text>
-        <text x="140" y="195" text-anchor="middle" fill="#ccc" font-size="10" font-family="sans-serif">→ "りんご"</text>
+        <line x1="140" y1="135" x2="140" y2="160" stroke="#888" stroke-width="1.5" stroke-dasharray="4"/>
+        <text x="140" y="178" text-anchor="middle" fill="#ccc" font-size="11" font-family="monospace">fruits[0]</text>
+        <text x="140" y="195" text-anchor="middle" fill="#999" font-size="10" font-family="sans-serif">→ "りんご"</text>
         <!-- negative index -->
-        <text x="420" y="178" text-anchor="middle" fill="#FFB800" font-size="11" font-family="monospace">fruits[-1]</text>
-        <text x="420" y="195" text-anchor="middle" fill="#ccc" font-size="10" font-family="sans-serif">→ "みかん"</text>
-        <line x1="420" y1="135" x2="420" y2="160" stroke="#FFB800" stroke-width="1.5" stroke-dasharray="4"/>
+        <text x="420" y="178" text-anchor="middle" fill="#ccc" font-size="11" font-family="monospace">fruits[-1]</text>
+        <text x="420" y="195" text-anchor="middle" fill="#999" font-size="10" font-family="sans-serif">→ "みかん"</text>
+        <line x1="420" y1="135" x2="420" y2="160" stroke="#888" stroke-width="1.5" stroke-dasharray="4"/>
         <!-- len -->
-        <text x="540" y="112" fill="#93D500" font-size="11" font-family="monospace">len = 3</text>
+        <text x="540" y="112" fill="#ccc" font-size="11" font-family="monospace">len = 3</text>
       </svg>
     </div>
 
@@ -933,25 +1531,25 @@ fruits <span class="op">=</span> [<span class="str">"りんご"</span>, <span cl
 
       <!-- SVG: for文のイテレーション -->
       <div style="margin:1rem 0;text-align:center">
-        <svg viewBox="0 0 520 170" xmlns="http://www.w3.org/2000/svg" style="max-width:520px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
+        <svg viewBox="0 0 520 170" xmlns="http://www.w3.org/2000/svg" style="max-width:1040px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
           <text x="260" y="22" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700" font-family="sans-serif">for fruit in fruits: の実行フロー</text>
           <!-- step boxes -->
           <rect x="20" y="40" width="140" height="40" rx="6" fill="none" stroke="#555" stroke-width="1.5"/>
           <rect x="185" y="40" width="140" height="40" rx="6" fill="none" stroke="#555" stroke-width="1.5"/>
           <rect x="350" y="40" width="140" height="40" rx="6" fill="none" stroke="#555" stroke-width="1.5"/>
-          <text x="90" y="55" text-anchor="middle" fill="#ccc" font-size="10" font-family="sans-serif">1回目</text>
-          <text x="90" y="72" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="500" font-family="monospace">fruit="りんご"</text>
-          <text x="255" y="55" text-anchor="middle" fill="#ccc" font-size="10" font-family="sans-serif">2回目</text>
-          <text x="255" y="72" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="500" font-family="monospace">fruit="バナナ"</text>
-          <text x="420" y="55" text-anchor="middle" fill="#ccc" font-size="10" font-family="sans-serif">3回目</text>
-          <text x="420" y="72" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="500" font-family="monospace">fruit="みかん"</text>
+          <text x="90" y="55" text-anchor="middle" fill="#999" font-size="10" font-family="sans-serif">1回目</text>
+          <text x="90" y="72" text-anchor="middle" fill="#e0e0e0" font-size="12" font-weight="500" font-family="monospace">fruit="りんご"</text>
+          <text x="255" y="55" text-anchor="middle" fill="#999" font-size="10" font-family="sans-serif">2回目</text>
+          <text x="255" y="72" text-anchor="middle" fill="#e0e0e0" font-size="12" font-weight="500" font-family="monospace">fruit="バナナ"</text>
+          <text x="420" y="55" text-anchor="middle" fill="#999" font-size="10" font-family="sans-serif">3回目</text>
+          <text x="420" y="72" text-anchor="middle" fill="#e0e0e0" font-size="12" font-weight="500" font-family="monospace">fruit="みかん"</text>
           <!-- arrows -->
           <line x1="163" y1="60" x2="182" y2="60" stroke="#76B900" stroke-width="1.5" marker-end="url(#arr4)"/>
           <line x1="328" y1="60" x2="347" y2="60" stroke="#76B900" stroke-width="1.5" marker-end="url(#arr4)"/>
           <!-- output -->
-          <text x="90" y="108" text-anchor="middle" fill="#93D500" font-size="11" font-family="monospace">print("りんご")</text>
-          <text x="255" y="108" text-anchor="middle" fill="#93D500" font-size="11" font-family="monospace">print("バナナ")</text>
-          <text x="420" y="108" text-anchor="middle" fill="#93D500" font-size="11" font-family="monospace">print("みかん")</text>
+          <text x="90" y="108" text-anchor="middle" fill="#ccc" font-size="11" font-family="monospace">print("りんご")</text>
+          <text x="255" y="108" text-anchor="middle" fill="#ccc" font-size="11" font-family="monospace">print("バナナ")</text>
+          <text x="420" y="108" text-anchor="middle" fill="#ccc" font-size="11" font-family="monospace">print("みかん")</text>
           <line x1="90" y1="82" x2="90" y2="95" stroke="#555" stroke-width="1" stroke-dasharray="3"/>
           <line x1="255" y1="82" x2="255" y2="95" stroke="#555" stroke-width="1" stroke-dasharray="3"/>
           <line x1="420" y1="82" x2="420" y2="95" stroke="#555" stroke-width="1" stroke-dasharray="3"/>
@@ -971,6 +1569,167 @@ fruits <span class="op">=</span> [<span class="str">"りんご"</span>, <span cl
         <tr><td>スライス</td><td><code>list[1:3]</code></td><td>範囲で取り出す</td></tr>
         <tr><td>繰り返し</td><td><code>for x in list:</code></td><td>1つずつ取り出す</td></tr>
       </table>
+    </div>
+
+    <!-- リスト操作の練習問題（解答はトグルで隠す） -->
+    <div class="card" id="list-practice">
+      <div class="card-header">
+        <span class="tag tag-note">ノート</span>
+        <h3>リスト操作の練習問題 <span style="font-size:0.6rem;color:#999;font-weight:400">── まず自力で考え、▶ 解答を見る で答え合わせ</span></h3>
+      </div>
+
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.8rem">以下の問題を順に解いてください。各問題の <strong>「▶ 解答を見る」</strong> をクリックすると、答えと解説が開きます。<strong>必ず先に自分で答えを出してから</strong>開きましょう。</p>
+
+      <!-- Q1: インデックス取得 -->
+      <div style="background:#1A1A1A;border:1px solid #444;border-left:3px solid #76B900;border-radius:0.3rem;padding:0.9rem 1rem;margin:0.8rem 0">
+        <p style="font-weight:700;color:#76B900;font-size:0.95rem;margin-bottom:0.4rem">問1: インデックスで取得</p>
+        <pre><span class="code-label">Python</span>
+animals <span class="op">=</span> [<span class="str">"犬"</span>, <span class="str">"猫"</span>, <span class="str">"うさぎ"</span>, <span class="str">"ハムスター"</span>]
+<span class="fn">print</span>(animals[<span class="num">2</span>])</pre>
+        <p style="font-size:0.88rem;color:#ccc;margin-top:0.5rem">この <code>print</code> は何を出力しますか？</p>
+        <details style="margin-top:0.5rem">
+          <summary style="cursor:pointer;color:#76B900;font-weight:700;font-size:0.88rem;user-select:none">▶ 解答を見る</summary>
+          <div style="margin-top:0.5rem;padding:0.6rem 0.8rem;background:#0a1a0a;border-left:3px solid #76B900;border-radius:0.3rem">
+            <p style="font-size:0.88rem;color:#e0e0e0"><strong>答え:</strong> <code>うさぎ</code></p>
+            <p style="font-size:0.82rem;color:#aaa;margin-top:0.3rem">解説: インデックスは0始まり。<code>[0]→"犬"</code>, <code>[1]→"猫"</code>, <code>[2]→"うさぎ"</code> です。</p>
+          </div>
+        </details>
+      </div>
+
+      <!-- Q2: 負のインデックス -->
+      <div style="background:#1A1A1A;border:1px solid #444;border-left:3px solid #76B900;border-radius:0.3rem;padding:0.9rem 1rem;margin:0.8rem 0">
+        <p style="font-weight:700;color:#76B900;font-size:0.95rem;margin-bottom:0.4rem">問2: 末尾から取得</p>
+        <pre><span class="code-label">Python</span>
+nums <span class="op">=</span> [<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>, <span class="num">40</span>, <span class="num">50</span>]
+<span class="fn">print</span>(nums[<span class="num">-1</span>])
+<span class="fn">print</span>(nums[<span class="num">-2</span>])</pre>
+        <p style="font-size:0.88rem;color:#ccc;margin-top:0.5rem">それぞれ何が出力されますか？</p>
+        <details style="margin-top:0.5rem">
+          <summary style="cursor:pointer;color:#76B900;font-weight:700;font-size:0.88rem;user-select:none">▶ 解答を見る</summary>
+          <div style="margin-top:0.5rem;padding:0.6rem 0.8rem;background:#0a1a0a;border-left:3px solid #76B900;border-radius:0.3rem">
+            <p style="font-size:0.88rem;color:#e0e0e0"><strong>答え:</strong> <code>50</code>（改行）<code>40</code></p>
+            <p style="font-size:0.82rem;color:#aaa;margin-top:0.3rem">解説: 負のインデックスは末尾から数える。<code>[-1]</code> は最後の要素 <code>50</code>、<code>[-2]</code> はその1つ前の <code>40</code>。</p>
+          </div>
+        </details>
+      </div>
+
+      <!-- Q3: append と len -->
+      <div style="background:#1A1A1A;border:1px solid #444;border-left:3px solid #76B900;border-radius:0.3rem;padding:0.9rem 1rem;margin:0.8rem 0">
+        <p style="font-weight:700;color:#76B900;font-size:0.95rem;margin-bottom:0.4rem">問3: append と len</p>
+        <pre><span class="code-label">Python</span>
+data <span class="op">=</span> [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]
+data.<span class="fn">append</span>(<span class="num">99</span>)
+data.<span class="fn">append</span>(<span class="num">100</span>)
+<span class="fn">print</span>(data)
+<span class="fn">print</span>(<span class="fn">len</span>(data))</pre>
+        <p style="font-size:0.88rem;color:#ccc;margin-top:0.5rem">2つの <code>print</code> はそれぞれ何を出力しますか？</p>
+        <details style="margin-top:0.5rem">
+          <summary style="cursor:pointer;color:#76B900;font-weight:700;font-size:0.88rem;user-select:none">▶ 解答を見る</summary>
+          <div style="margin-top:0.5rem;padding:0.6rem 0.8rem;background:#0a1a0a;border-left:3px solid #76B900;border-radius:0.3rem">
+            <p style="font-size:0.88rem;color:#e0e0e0"><strong>答え:</strong> <code>[1, 2, 3, 99, 100]</code>（改行）<code>5</code></p>
+            <p style="font-size:0.82rem;color:#aaa;margin-top:0.3rem">解説: <code>append</code> は末尾に追加。2回呼んだので要素は元の3個＋2個＝5個。<code>len</code> は要素数を返す。</p>
+          </div>
+        </details>
+      </div>
+
+      <!-- Q4: スライス -->
+      <div style="background:#1A1A1A;border:1px solid #444;border-left:3px solid #76B900;border-radius:0.3rem;padding:0.9rem 1rem;margin:0.8rem 0">
+        <p style="font-weight:700;color:#76B900;font-size:0.95rem;margin-bottom:0.4rem">問4: スライス</p>
+        <pre><span class="code-label">Python</span>
+letters <span class="op">=</span> [<span class="str">"a"</span>, <span class="str">"b"</span>, <span class="str">"c"</span>, <span class="str">"d"</span>, <span class="str">"e"</span>, <span class="str">"f"</span>]
+<span class="fn">print</span>(letters[<span class="num">1</span>:<span class="num">4</span>])
+<span class="fn">print</span>(letters[:<span class="num">3</span>])
+<span class="fn">print</span>(letters[<span class="num">3</span>:])</pre>
+        <p style="font-size:0.88rem;color:#ccc;margin-top:0.5rem">3つのスライスの結果はそれぞれ何ですか？</p>
+        <details style="margin-top:0.5rem">
+          <summary style="cursor:pointer;color:#76B900;font-weight:700;font-size:0.88rem;user-select:none">▶ 解答を見る</summary>
+          <div style="margin-top:0.5rem;padding:0.6rem 0.8rem;background:#0a1a0a;border-left:3px solid #76B900;border-radius:0.3rem">
+            <p style="font-size:0.88rem;color:#e0e0e0"><strong>答え:</strong></p>
+            <pre style="margin-top:0.3rem"><span class="code-label">出力</span>
+[<span class="str">'b'</span>, <span class="str">'c'</span>, <span class="str">'d'</span>]
+[<span class="str">'a'</span>, <span class="str">'b'</span>, <span class="str">'c'</span>]
+[<span class="str">'d'</span>, <span class="str">'e'</span>, <span class="str">'f'</span>]</pre>
+            <p style="font-size:0.82rem;color:#aaa;margin-top:0.3rem">解説: <code>[1:4]</code> は<strong>1番目から4番目の手前まで</strong>（4は含まない）。<code>[:3]</code> は最初から3番目の手前まで。<code>[3:]</code> は3番目から最後まで。</p>
+          </div>
+        </details>
+      </div>
+
+      <!-- Q5: for文で合計 -->
+      <div style="background:#1A1A1A;border:1px solid #444;border-left:3px solid #76B900;border-radius:0.3rem;padding:0.9rem 1rem;margin:0.8rem 0">
+        <p style="font-weight:700;color:#76B900;font-size:0.95rem;margin-bottom:0.4rem">問5: for文で合計を求める</p>
+        <pre><span class="code-label">Python</span>
+scores <span class="op">=</span> [<span class="num">80</span>, <span class="num">90</span>, <span class="num">70</span>, <span class="num">60</span>]
+total <span class="op">=</span> <span class="num">0</span>
+<span class="kw">for</span> s <span class="kw">in</span> scores:
+    total <span class="op">+=</span> s
+<span class="fn">print</span>(total)</pre>
+        <p style="font-size:0.88rem;color:#ccc;margin-top:0.5rem"><code>print(total)</code> は何を出力しますか？</p>
+        <details style="margin-top:0.5rem">
+          <summary style="cursor:pointer;color:#76B900;font-weight:700;font-size:0.88rem;user-select:none">▶ 解答を見る</summary>
+          <div style="margin-top:0.5rem;padding:0.6rem 0.8rem;background:#0a1a0a;border-left:3px solid #76B900;border-radius:0.3rem">
+            <p style="font-size:0.88rem;color:#e0e0e0"><strong>答え:</strong> <code>300</code></p>
+            <p style="font-size:0.82rem;color:#aaa;margin-top:0.3rem">解説: <code>total</code> に各点数を順に足していく。80+90+70+60 = 300。<code>+=</code> は「右の値を足してから代入し直す」演算子。</p>
+          </div>
+        </details>
+      </div>
+
+      <!-- Q6: for文 + if文 -->
+      <div style="background:#1A1A1A;border:1px solid #444;border-left:3px solid #76B900;border-radius:0.3rem;padding:0.9rem 1rem;margin:0.8rem 0">
+        <p style="font-weight:700;color:#76B900;font-size:0.95rem;margin-bottom:0.4rem">問6: for文 + if文で条件抽出</p>
+        <pre><span class="code-label">Python</span>
+nums <span class="op">=</span> [<span class="num">3</span>, <span class="num">8</span>, <span class="num">15</span>, <span class="num">2</span>, <span class="num">22</span>, <span class="num">7</span>]
+<span class="kw">for</span> n <span class="kw">in</span> nums:
+    <span class="kw">if</span> n <span class="op">&gt;=</span> <span class="num">10</span>:
+        <span class="fn">print</span>(n)</pre>
+        <p style="font-size:0.88rem;color:#ccc;margin-top:0.5rem">どの値が出力されますか？</p>
+        <details style="margin-top:0.5rem">
+          <summary style="cursor:pointer;color:#76B900;font-weight:700;font-size:0.88rem;user-select:none">▶ 解答を見る</summary>
+          <div style="margin-top:0.5rem;padding:0.6rem 0.8rem;background:#0a1a0a;border-left:3px solid #76B900;border-radius:0.3rem">
+            <p style="font-size:0.88rem;color:#e0e0e0"><strong>答え:</strong> <code>15</code>（改行）<code>22</code></p>
+            <p style="font-size:0.82rem;color:#aaa;margin-top:0.3rem">解説: 10以上の要素だけ表示。3, 8, 2, 7 は10未満なのでスキップ。15 と 22 だけが条件を満たす。</p>
+          </div>
+        </details>
+      </div>
+
+      <!-- Q7: 書いてみよう（応用） -->
+      <div style="background:#1A1A1A;border:1px solid #444;border-left:3px solid #FFB800;border-radius:0.3rem;padding:0.9rem 1rem;margin:0.8rem 0">
+        <p style="font-weight:700;color:#FFB800;font-size:0.95rem;margin-bottom:0.4rem">問7（応用）: コードを書く</p>
+        <p style="font-size:0.88rem;color:#ccc">リスト <code>nums = [4, 7, 2, 9, 5]</code> の<strong>平均値</strong>を計算して <code>print</code> するコードを書いてください。</p>
+        <details style="margin-top:0.5rem">
+          <summary style="cursor:pointer;color:#FFB800;font-weight:700;font-size:0.88rem;user-select:none">▶ 解答を見る</summary>
+          <div style="margin-top:0.5rem;padding:0.6rem 0.8rem;background:#1a1a0a;border-left:3px solid #FFB800;border-radius:0.3rem">
+            <p style="font-size:0.88rem;color:#e0e0e0"><strong>答え（解答例）:</strong></p>
+            <pre style="margin-top:0.3rem"><span class="code-label">Python</span>
+nums <span class="op">=</span> [<span class="num">4</span>, <span class="num">7</span>, <span class="num">2</span>, <span class="num">9</span>, <span class="num">5</span>]
+total <span class="op">=</span> <span class="num">0</span>
+<span class="kw">for</span> n <span class="kw">in</span> nums:
+    total <span class="op">+=</span> n
+average <span class="op">=</span> total <span class="op">/</span> <span class="fn">len</span>(nums)
+<span class="fn">print</span>(average)   <span class="cmt"># 5.4</span></pre>
+            <p style="font-size:0.82rem;color:#aaa;margin-top:0.3rem">解説: 合計 4+7+2+9+5=27 を要素数 5 で割って 5.4。<code>sum(nums) / len(nums)</code> でも同じ結果になります（より短い書き方）。</p>
+          </div>
+        </details>
+      </div>
+
+      <div class="notion-submit">
+        <div><strong>Notionに記録:</strong> 問1〜問7の自分の答えと、解答を見たあとの「合っていた / 間違えた」をそれぞれ記録してください。<br>
+        間違えた問題には、次の2点を一言ずつメモしましょう:
+        <ul style="padding-left:1.4rem;margin-top:0.4rem;font-size:0.88rem;line-height:1.8">
+          <li><strong>なぜ間違えたか</strong>（例: インデックスを1始まりだと勘違いした／<code>append</code> の戻り値を <code>print</code> しちゃった）</li>
+          <li><strong>どこが分からなかったか</strong>（例: スライスの「終端は含まない」がピンと来ない／<code>+=</code> の意味があやふや）</li>
+        </ul>
+        <div style="background:#0a1a0a;border-left:3px solid #76B900;border-radius:0.3rem;padding:0.6rem 0.9rem;margin-top:0.6rem;font-size:0.85rem;color:#ccc">
+          <strong style="color:#76B900">この2つを書くと何が起きる？</strong>
+          <ul style="padding-left:1.2rem;margin-top:0.3rem;line-height:1.8">
+            <li><strong>「なぜ」</strong> = 思い込みや勘違いの<strong>パターン</strong>が見えるようになる → 同じミスを繰り返さなくなる</li>
+            <li><strong>「どこ」</strong> = 自分の<strong>理解の穴</strong>がはっきりする → 次に何を復習・質問すればいいかが具体化する</li>
+            <li>テスト前に見返すと、自分専用の<strong>「弱点リスト」</strong>として使える ── 教科書を全部読み直すより圧倒的に効率がいい</li>
+            <li>言語化することで「分かったつもり」を防げる ── 説明できないものは、まだ分かっていない</li>
+          </ul>
+        </div>
+        <div style="margin-top:0.5rem;font-size:0.8rem;color:#FF6B00"><span class="sa-check-tag" style="display:inline-block;margin-left:0.5rem;background:#FF6B00;color:#fff;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px;vertical-align:middle">SA確認</span> SAさんのOKがもらえたら次に進んでください（授業時間外はSA確認不要）</div>
+        </div>
+      </div>
     </div>
 
     <!-- py5でリストを使う例 -->
@@ -1007,6 +1766,412 @@ py5.<span class="fn">run_sketch</span>()</pre>
       <div class="try-it">
         <h4>やってみよう</h4>
         <p>上のコードを実行し、色の数を増やしたり円のサイズを変えてみましょう。結果のスクリーンショットをNotionに記録してください。</p>
+      </div>
+    </div>
+
+    <!-- py5で画像を表示する例 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-note">ノート</span>
+        <h3>py5で画像を表示する</h3>
+      </div>
+
+      <p>図形だけでなく、PNG/JPEG などの画像ファイルも貼り込めます。手順は3ステップです。</p>
+      <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2">
+        <li>スケッチと同じフォルダに画像ファイル（例: <code>star.png</code>）を置く</li>
+        <li><code>setup()</code> 内で <code>py5.load_image("star.png")</code> で読み込み、変数に保存する</li>
+        <li><code>py5.image(img, x, y)</code> で左上座標を指定して描画する（幅・高さも渡せる）</li>
+      </ol>
+
+      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.4rem;padding:0.8rem 1rem;margin:1rem 0;display:flex;gap:1rem;align-items:center;flex-wrap:wrap">
+        <img src="images/star.png" alt="星画像（star.png）" style="width:64px;height:64px;background:#2a2a2a;border:1px solid #444;border-radius:6px;padding:4px">
+        <div style="flex:1;min-width:14rem">
+          <p style="font-size:0.9rem;font-weight:700;color:#76B900;margin-bottom:0.3rem">サンプル画像をダウンロード</p>
+          <p style="font-size:0.85rem;color:#ccc;margin-bottom:0.5rem">下のボタンから <code>star.png</code> を入手し、スケッチ（<code>show_image.py</code> / <code>image_list.py</code> など）と<strong>同じフォルダ</strong>に保存してください。</p>
+          <a href="images/star.png" download="star.png" style="display:inline-block;background:#76B900;color:#0a1a0a;font-weight:700;font-size:0.85rem;padding:0.45rem 1rem;border-radius:0.3rem;text-decoration:none">⬇ star.png をダウンロード</a>
+        </div>
+      </div>
+
+      <pre><span class="code-label">Python ── show_image.py</span>
+<span class="cmt"># 画像を1枚だけ表示する最小例</span>
+<span class="kw">import</span> py5
+
+img <span class="op">=</span> <span class="kw">None</span>
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    <span class="kw">global</span> img
+    py5.<span class="fn">size</span>(<span class="num">500</span>, <span class="num">320</span>)
+    py5.<span class="fn">background</span>(<span class="num">20</span>, <span class="num">30</span>, <span class="num">60</span>)
+    img <span class="op">=</span> py5.<span class="fn">load_image</span>(<span class="str">"star.png"</span>)
+    py5.<span class="fn">image</span>(img, <span class="num">200</span>, <span class="num">110</span>, <span class="num">100</span>, <span class="num">100</span>)  <span class="cmt"># x, y, w, h</span>
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="concept-box">
+        <h4>実行結果</h4>
+        <p style="font-size:0.85rem;color:#aaa;margin-bottom:0.6rem">上のコードを実行すると、<strong>500×320</strong> の濃紺キャンバスの中央付近に <strong>100×100</strong> の星画像が1枚表示されます。</p>
+        <img src="images/week04_show_image.png" alt="show_image.py の実行結果 ── 濃紺背景に星画像が1枚表示される" style="display:block;width:100%;max-width:500px;border:1px solid #333;border-radius:0.4rem">
+
+        <!-- 座標の説明 SVG -->
+        <div style="margin-top:0.8rem">
+          <p style="font-size:0.82rem;color:#888;margin-bottom:0.3rem"><strong style="color:#76B900">座標の見方</strong> ── <code>py5.image(img, 200, 110, 100, 100)</code> の引数は (x, y, 幅, 高さ)。左上が原点 (0, 0)、x は右に、y は下に増える。</p>
+          <svg viewBox="0 0 500 320" style="max-width:500px;width:100%;display:block;background:#0f1830;border:1px solid #444;border-radius:6px" xmlns="http://www.w3.org/2000/svg">
+            <!-- 画像の外枠（半透明の星位置） -->
+            <rect x="200" y="110" width="100" height="100" fill="rgba(255,210,60,0.18)" stroke="#FFD040" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <!-- 原点 -->
+            <circle cx="0" cy="0" r="5" fill="#76B900"/>
+            <text x="10" y="18" fill="#76B900" font-family="monospace" font-size="12" font-weight="700">(0, 0) 原点</text>
+            <!-- (200, 110) のラベル -->
+            <circle cx="200" cy="110" r="4" fill="#76B900"/>
+            <text x="206" y="105" fill="#76B900" font-family="monospace" font-size="11" font-weight="700">(200, 110) ← image の左上</text>
+            <!-- 幅・高さの矢印 -->
+            <line x1="200" y1="225" x2="300" y2="225" stroke="#76B900" stroke-width="1.2"/>
+            <line x1="200" y1="222" x2="200" y2="228" stroke="#76B900" stroke-width="1.2"/>
+            <line x1="300" y1="222" x2="300" y2="228" stroke="#76B900" stroke-width="1.2"/>
+            <text x="250" y="240" text-anchor="middle" fill="#76B900" font-family="monospace" font-size="11">幅 100</text>
+            <line x1="315" y1="110" x2="315" y2="210" stroke="#76B900" stroke-width="1.2"/>
+            <line x1="312" y1="110" x2="318" y2="110" stroke="#76B900" stroke-width="1.2"/>
+            <line x1="312" y1="210" x2="318" y2="210" stroke="#76B900" stroke-width="1.2"/>
+            <text x="322" y="164" fill="#76B900" font-family="monospace" font-size="11">高さ 100</text>
+            <!-- キャンバスサイズ表示 -->
+            <text x="492" y="312" text-anchor="end" fill="#666" font-family="monospace" font-size="10">canvas: 500 × 320</text>
+            <!-- 中央の星アイコン (簡易表現) -->
+            <polygon points="250,135 256,153 275,153 260,165 266,184 250,173 234,184 240,165 225,153 244,153" fill="#FFD040" opacity="0.7"/>
+          </svg>
+        </div>
+
+        <ul class="point-list" style="margin-top:0.6rem">
+          <li><strong>第1引数 <code>img</code></strong>: <code>load_image()</code> で読み込んだ画像オブジェクト</li>
+          <li><strong>第2・3引数 <code>200, 110</code></strong>: 表示位置（画像の<strong>左上の座標</strong>）</li>
+          <li><strong>第4・5引数 <code>100, 100</code></strong>: 表示サイズ（幅・高さ、ピクセル単位）── ここを省略すると元画像のサイズで表示される</li>
+        </ul>
+      </div>
+
+      <div class="callout-tip">
+        <h4>ポイント: load_image はsetup()の中で呼ぶ</h4>
+        <p><code>load_image</code> は py5 のスケッチが起動した後でしか使えません。<strong>setup()の外（モジュール先頭）で呼ぶとエラー</strong>になるので注意。読み込んだ画像は <code>global</code> 変数に入れて、draw() からも使えるようにします。</p>
+      </div>
+
+      <div class="callout-tip">
+        <h4>ポイント: パスとimage_mode</h4>
+        <p>ファイル名だけで読めないときは、絶対パス（例: <code>"/Users/.../star.png"</code>）で指定してください。<code>py5.image_mode(py5.CENTER)</code> を呼ぶと <code>py5.image(img, x, y, w, h)</code> の (x,y) が「画像の中心」になり、座標計算がラクになります。</p>
+      </div>
+    </div>
+
+    <!-- py5でリストの座標に画像を並べる -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-note">ノート</span>
+        <h3>py5でリストを使う: 座標リストに画像を並べる</h3>
+      </div>
+
+      <p>座標を <strong>(x, y) のタプルのリスト</strong> にして、for文で1つずつ取り出して画像を貼ります。「円のリスト描画」と構造はまったく同じ ── 描画関数を <code>circle</code> から <code>image</code> に置き換えるだけです。</p>
+
+      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.4rem;padding:0.8rem 1rem;margin:1rem 0;display:flex;gap:1rem;align-items:center;flex-wrap:wrap">
+        <img src="images/star.png" alt="星画像（star.png）" style="width:64px;height:64px;background:#2a2a2a;border:1px solid #444;border-radius:6px;padding:4px">
+        <div style="flex:1;min-width:14rem">
+          <p style="font-size:0.9rem;font-weight:700;color:#76B900;margin-bottom:0.3rem">サンプル画像をダウンロード</p>
+          <p style="font-size:0.85rem;color:#ccc;margin-bottom:0.5rem">下のボタンから <code>star.png</code> をダウンロードし、スケッチと同じフォルダ（<code>~/MD1/no4/</code>）に置いてください。</p>
+          <a href="images/star.png" download="star.png" style="display:inline-block;background:#76B900;color:#0a1a0a;font-weight:700;font-size:0.85rem;padding:0.45rem 1rem;border-radius:0.3rem;text-decoration:none">⬇ star.png をダウンロード</a>
+        </div>
+      </div>
+
+      <div class="callout-tip">
+        <h4>画像の置き場所</h4>
+        <p>このサンプルでは <code>load_image("star.png")</code> と相対パスで書いています。<strong>スケッチ（image_list.py）と同じフォルダ</strong> に <code>star.png</code> を置けばこれで読めます。別フォルダに置いた場合は、絶対パスか相対パスで指定してください。</p>
+        <pre><span class="code-label">Terminal ── 配置の確認</span>
+~/MD1/
+└── no4/
+      ├── image_list.py
+      └── star.png   <span class="cmt"># ← image_list.py と同じ階層に置く</span></pre>
+      </div>
+
+      <pre><span class="code-label">Python ── image_list.py</span>
+<span class="cmt"># 5つの座標に星の画像を表示する</span>
+<span class="kw">import</span> py5
+
+positions <span class="op">=</span> [(<span class="num">80</span>, <span class="num">90</span>), (<span class="num">220</span>, <span class="num">60</span>), (<span class="num">360</span>, <span class="num">130</span>), (<span class="num">140</span>, <span class="num">220</span>), (<span class="num">300</span>, <span class="num">240</span>)]
+img <span class="op">=</span> <span class="kw">None</span>
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    <span class="kw">global</span> img
+    py5.<span class="fn">size</span>(<span class="num">500</span>, <span class="num">320</span>)
+    py5.<span class="fn">background</span>(<span class="num">20</span>, <span class="num">30</span>, <span class="num">60</span>)
+    img <span class="op">=</span> py5.<span class="fn">load_image</span>(<span class="str">"star.png"</span>)
+    py5.<span class="fn">image_mode</span>(py5.CENTER)
+    <span class="kw">for</span> x, y <span class="kw">in</span> positions:
+        py5.<span class="fn">image</span>(img, x, y, <span class="num">70</span>, <span class="num">70</span>)
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="concept-box">
+        <h4>実行画面</h4>
+        <p style="font-size:0.85rem;color:#aaa;margin-bottom:0.6rem">上のコードを実行すると、リストに書いた5つの (x, y) 座標に星画像が並びます。</p>
+        <img src="images/week04_image_list.png" alt="リスト座標に画像を並べた実行画面" style="display:block;width:100%;max-width:500px;border:1px solid #333;border-radius:0.4rem">
+      </div>
+
+      <div class="callout-tip">
+        <h4>ポイント: for x, y in positions</h4>
+        <p>タプルのリストに対する for文は、<code>for x, y in positions:</code> と書くだけで各タプルを2変数に <strong>同時に分解（アンパック）</strong>できます。<code>positions[i][0]</code> のような書き方より圧倒的に読みやすいので、座標リストではこちらを使いましょう。</p>
+      </div>
+
+      <div class="try-it">
+        <h4>やってみよう</h4>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2">
+          <li>座標を増やす／減らす、画像サイズ（最後の引数）を変えてみる</li>
+          <li>別の画像（自分で用意したPNG）に差し替えてみる</li>
+          <li>余裕があれば、リスト要素を <code>(x, y, size)</code> の3要素タプルに拡張し、画像ごとにサイズを変える</li>
+        </ol>
+        <p>結果のスクリーンショットをNotionに記録してください。</p>
+      </div>
+    </div>
+
+    <!-- py5で画像をアニメーションさせる（前回の復習） -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-note">ノート</span>
+        <h3>py5で画像をアニメーションさせる <span style="font-size:0.6rem;color:#999;font-weight:400">── 前回（第3回）の復習</span></h3>
+      </div>
+
+      <p>第3回で学んだ <code>setup()</code> + <code>draw()</code> のパターンを画像に適用すれば、<strong>画像も動かせます</strong>。図形のときと同じく、座標の変数を <code>draw()</code> の中で毎フレーム少しずつ変えるだけ。</p>
+
+      <pre><span class="code-label">Python ── image_move.py</span>
+<span class="cmt"># 星の画像を右に動かす（前回の「円が右に動く」と同じ構造）</span>
+<span class="kw">import</span> py5
+
+img <span class="op">=</span> <span class="kw">None</span>
+x <span class="op">=</span> <span class="num">60</span>
+y <span class="op">=</span> <span class="num">120</span>
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    <span class="kw">global</span> img
+    py5.<span class="fn">size</span>(<span class="num">500</span>, <span class="num">240</span>)
+    img <span class="op">=</span> py5.<span class="fn">load_image</span>(<span class="str">"star.png"</span>)
+    py5.<span class="fn">image_mode</span>(py5.CENTER)
+
+<span class="kw">def</span> <span class="fn">draw</span>():
+    <span class="kw">global</span> x
+    py5.<span class="fn">background</span>(<span class="num">20</span>, <span class="num">30</span>, <span class="num">60</span>)  <span class="cmt"># 毎フレーム背景で消す</span>
+    py5.<span class="fn">image</span>(img, x, y, <span class="num">70</span>, <span class="num">70</span>)
+    x <span class="op">+=</span> <span class="num">3</span>  <span class="cmt"># 毎フレーム3pxずつ右へ</span>
+    <span class="kw">if</span> x <span class="op">&gt;</span> py5.width <span class="op">+</span> <span class="num">40</span>:
+        x <span class="op">=</span> <span class="op">-</span><span class="num">40</span>  <span class="cmt"># 画面右端まで来たら左から再登場</span>
+
+py5.<span class="fn">run_sketch</span>()</pre>
+
+      <div class="concept-box">
+        <h4>実行画面（時間の経過を1枚に重ねた図）</h4>
+        <p style="font-size:0.85rem;color:#aaa;margin-bottom:0.6rem">同じ星画像が <code>x += 3</code> によって毎フレーム右に進んでいきます。下図はフレーム0/30/60/90/120を半透明で重ねた様子。</p>
+        <img src="images/week04_image_anim.png" alt="画像が右に動くアニメーションの実行画面（複数フレーム重ね合わせ）" style="display:block;width:100%;max-width:500px;border:1px solid #333;border-radius:0.4rem">
+      </div>
+
+      <div class="callout-tip">
+        <h4>ポイント: なぜ background() を draw() の最初に呼ぶ？</h4>
+        <p><code>draw()</code> は毎フレーム呼ばれるので、何も消さないと前のフレームの画像が画面に残り続け「残像」になります。<code>py5.background()</code> を最初に呼ぶことで<strong>毎フレーム画面をリセット</strong>し、新しい位置にだけ画像が見えるようになります。</p>
+
+        <!-- SVG: background() なし／あり の比較アニメ -->
+        <div style="margin:1rem 0;text-align:center">
+          <svg viewBox="0 0 620 280" style="max-width:1240px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" xmlns="http://www.w3.org/2000/svg">
+            <!-- ====== 左パネル: background() なし → 残像が残る ====== -->
+            <text x="155" y="26" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="13" font-weight="700">background() なし</text>
+            <text x="155" y="44" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="11">前フレームが残る → 残像</text>
+            <!-- キャンバス枠 -->
+            <rect x="20" y="56" width="270" height="120" rx="4" fill="#0f1830" stroke="#555" stroke-width="1.5"/>
+
+            <!-- 残像の星（複数）: 時刻をずらして次々と現れて残る -->
+            <g fill="#FFD040" opacity="0.85">
+              <!-- 位置1 -->
+              <polygon points="40,116 44.2,123 52,124 46,129 47.5,137 40,133 32.5,137 34,129 28,124 35.8,123" opacity="0">
+                <animate attributeName="opacity" values="0;0.9;0.9;0" keyTimes="0;0.08;0.95;1" dur="5s" repeatCount="indefinite"/>
+              </polygon>
+              <polygon points="75,116 79.2,123 87,124 81,129 82.5,137 75,133 67.5,137 69,129 63,124 70.8,123" opacity="0">
+                <animate attributeName="opacity" values="0;0;0.9;0.9;0" keyTimes="0;0.12;0.22;0.95;1" dur="5s" repeatCount="indefinite"/>
+              </polygon>
+              <polygon points="110,116 114.2,123 122,124 116,129 117.5,137 110,133 102.5,137 104,129 98,124 105.8,123" opacity="0">
+                <animate attributeName="opacity" values="0;0;0.9;0.9;0" keyTimes="0;0.22;0.32;0.95;1" dur="5s" repeatCount="indefinite"/>
+              </polygon>
+              <polygon points="145,116 149.2,123 157,124 151,129 152.5,137 145,133 137.5,137 139,129 133,124 140.8,123" opacity="0">
+                <animate attributeName="opacity" values="0;0;0.9;0.9;0" keyTimes="0;0.32;0.42;0.95;1" dur="5s" repeatCount="indefinite"/>
+              </polygon>
+              <polygon points="180,116 184.2,123 192,124 186,129 187.5,137 180,133 172.5,137 174,129 168,124 175.8,123" opacity="0">
+                <animate attributeName="opacity" values="0;0;0.9;0.9;0" keyTimes="0;0.42;0.52;0.95;1" dur="5s" repeatCount="indefinite"/>
+              </polygon>
+              <polygon points="215,116 219.2,123 227,124 221,129 222.5,137 215,133 207.5,137 209,129 203,124 210.8,123" opacity="0">
+                <animate attributeName="opacity" values="0;0;0.9;0.9;0" keyTimes="0;0.52;0.62;0.95;1" dur="5s" repeatCount="indefinite"/>
+              </polygon>
+              <polygon points="250,116 254.2,123 262,124 256,129 257.5,137 250,133 242.5,137 244,129 238,124 245.8,123" opacity="0">
+                <animate attributeName="opacity" values="0;0;0.9;0.9;0" keyTimes="0;0.62;0.72;0.95;1" dur="5s" repeatCount="indefinite"/>
+              </polygon>
+            </g>
+
+            <!-- 残像説明 -->
+            <text x="155" y="196" text-anchor="middle" fill="#FF8888" font-family="sans-serif" font-size="11" font-weight="700">⚠ 過去のフレームが消えずに積み重なる</text>
+            <!-- コード -->
+            <rect x="30" y="210" width="250" height="56" rx="4" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+            <text x="40" y="228" fill="#888" font-family="monospace" font-size="11">def draw():</text>
+            <text x="56" y="244" fill="#FF8888" font-family="monospace" font-size="11"># background() なし</text>
+            <text x="56" y="260" fill="#ccc" font-family="monospace" font-size="11">py5.image(img, x, y)</text>
+
+            <!-- ====== 右パネル: background() あり → きれい ====== -->
+            <text x="465" y="26" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="13" font-weight="700">background() あり</text>
+            <text x="465" y="44" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="11">毎フレーム画面リセット → きれい</text>
+            <!-- キャンバス枠 -->
+            <rect x="330" y="56" width="270" height="120" rx="4" fill="#0f1830" stroke="#555" stroke-width="1.5"/>
+
+            <!-- 1つの星だけがスムーズに動く -->
+            <g fill="#FFD040">
+              <polygon points="0,-10 3,-3 11,-2 5,3 6.5,11 0,6 -6.5,11 -5,3 -11,-2 -3,-3">
+                <animateTransform attributeName="transform" type="translate" values="350,116;590,116;350,116" keyTimes="0;0.5;1" dur="5s" repeatCount="indefinite"/>
+              </polygon>
+            </g>
+            <!-- 「リセット」を示す微妙なフラッシュ（任意） -->
+            <rect x="330" y="56" width="270" height="120" rx="4" fill="#FFFFFF" opacity="0">
+              <animate attributeName="opacity" values="0;0.06;0;0" keyTimes="0;0.02;0.05;1" dur="0.1s" repeatCount="indefinite"/>
+            </rect>
+
+            <!-- 説明 -->
+            <text x="465" y="196" text-anchor="middle" fill="#76B900" font-family="sans-serif" font-size="11" font-weight="700">✓ 新しい位置だけが表示される</text>
+            <!-- コード -->
+            <rect x="340" y="210" width="250" height="56" rx="4" fill="#2a2a2a" stroke="#76B900" stroke-width="1.2"/>
+            <text x="350" y="228" fill="#888" font-family="monospace" font-size="11">def draw():</text>
+            <text x="366" y="244" fill="#76B900" font-family="monospace" font-size="11">py5.background(20, 30, 60)</text>
+            <text x="366" y="260" fill="#ccc" font-family="monospace" font-size="11">py5.image(img, x, y)</text>
+          </svg>
+          <p style="font-size:0.8rem;color:#888;margin-top:0.4rem">▲ 左: <code>background()</code> なし ── 星が動くたびに過去の姿が残る／右: <code>background()</code> あり ── 毎フレーム消してから描くので1つだけ見える</p>
+        </div>
+      </div>
+
+      <div class="callout-tip">
+        <h4>ポイント: load_image は setup()、image は draw()</h4>
+        <p>画像の<strong>読み込みは重い処理</strong>なので setup() で1回だけ。draw() の中で毎フレーム load_image すると激重になります。読み込んだ img を <code>global</code> で共有して、draw() では描画のみ行います。</p>
+
+        <!-- SVG: 悪い例（draw内でload_image）／ 良い例（setupでload_image） の比較 -->
+        <div style="margin:1rem 0;text-align:center">
+          <svg viewBox="0 0 620 320" style="max-width:1240px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="arr-bad" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto">
+                <path d="M0,0 L6,2.5 L0,5 Z" fill="#FF8888"/>
+              </marker>
+              <marker id="arr-good" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto">
+                <path d="M0,0 L6,2.5 L0,5 Z" fill="#76B900"/>
+              </marker>
+            </defs>
+
+            <!-- ====== 左パネル: 悪い例（draw内で load_image） ====== -->
+            <text x="155" y="26" text-anchor="middle" fill="#FF8888" font-family="sans-serif" font-size="13" font-weight="700">✗ 悪い例: draw() で毎回 load_image</text>
+
+            <!-- ファイル -->
+            <g>
+              <rect x="22" y="58" width="50" height="60" rx="4" fill="#2a2a2a" stroke="#555" stroke-width="1.2"/>
+              <path d="M22,68 L62,68 L72,58" fill="none" stroke="#555" stroke-width="1.2"/>
+              <text x="47" y="92" text-anchor="middle" fill="#888" font-family="monospace" font-size="10">star</text>
+              <text x="47" y="106" text-anchor="middle" fill="#888" font-family="monospace" font-size="10">.png</text>
+              <text x="47" y="132" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="9">ディスク</text>
+            </g>
+
+            <!-- 矢印 (ファイル→draw) ─ 毎フレーム赤くパルス -->
+            <line x1="76" y1="88" x2="118" y2="88" stroke="#FF8888" stroke-width="2" marker-end="url(#arr-bad)">
+              <animate attributeName="opacity" values="1;0.2;1;0.2;1;0.2;1;0.2;1;0.2" dur="2s" repeatCount="indefinite"/>
+            </line>
+            <text x="97" y="78" text-anchor="middle" fill="#FF8888" font-family="sans-serif" font-size="9" font-weight="700">×60/秒</text>
+
+            <!-- draw() 箱 -->
+            <rect x="120" y="58" width="170" height="100" rx="6" fill="#2a2a2a" stroke="#FF8888" stroke-width="1.5"/>
+            <text x="205" y="78" text-anchor="middle" fill="#FF8888" font-family="monospace" font-size="12" font-weight="700">def draw():</text>
+            <!-- load_image (重い処理 / 大きいブロック) -->
+            <rect x="132" y="86" width="146" height="26" rx="3" fill="#3a1010" stroke="#FF8888" stroke-width="1.2">
+              <animate attributeName="opacity" values="1;0.4;1;0.4;1;0.4;1;0.4;1;0.4" dur="2s" repeatCount="indefinite"/>
+            </rect>
+            <text x="205" y="103" text-anchor="middle" fill="#FF8888" font-family="monospace" font-size="11" font-weight="700">load_image(...)  ← 重い</text>
+            <!-- image (軽い処理) -->
+            <rect x="132" y="118" width="146" height="22" rx="3" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+            <text x="205" y="134" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="11">py5.image(img,x,y)</text>
+
+            <!-- 警告ラベル -->
+            <text x="155" y="178" text-anchor="middle" fill="#FF8888" font-family="sans-serif" font-size="11" font-weight="700">⚠ 1秒に60回ファイル読込</text>
+            <text x="155" y="194" text-anchor="middle" fill="#FF8888" font-family="sans-serif" font-size="11" font-weight="700">→ 激重・カクカク</text>
+
+            <!-- FPS表示 -->
+            <rect x="62" y="216" width="186" height="38" rx="6" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+            <text x="80" y="240" fill="#888" font-family="sans-serif" font-size="10">実測 FPS:</text>
+            <text x="160" y="240" fill="#FF8888" font-family="monospace" font-size="18" font-weight="900">
+              <tspan>5</tspan>
+              <animate attributeName="opacity" values="1;0.3;1" dur="0.3s" repeatCount="indefinite"/>
+            </text>
+            <text x="200" y="240" fill="#888" font-family="sans-serif" font-size="11">FPS</text>
+            <text x="155" y="270" text-anchor="middle" fill="#FF8888" font-family="sans-serif" font-size="11" font-weight="700">😣 カクカク</text>
+
+            <!-- 仕切り線 -->
+            <line x1="310" y1="20" x2="310" y2="300" stroke="#444" stroke-dasharray="4,3" stroke-width="1"/>
+
+            <!-- ====== 右パネル: 良い例（setupでload_image） ====== -->
+            <text x="465" y="26" text-anchor="middle" fill="#76B900" font-family="sans-serif" font-size="13" font-weight="700">✓ 良い例: setup() で1回だけ load_image</text>
+
+            <!-- ファイル -->
+            <g>
+              <rect x="332" y="48" width="50" height="60" rx="4" fill="#2a2a2a" stroke="#555" stroke-width="1.2"/>
+              <path d="M332,58 L372,58 L382,48" fill="none" stroke="#555" stroke-width="1.2"/>
+              <text x="357" y="82" text-anchor="middle" fill="#888" font-family="monospace" font-size="10">star</text>
+              <text x="357" y="96" text-anchor="middle" fill="#888" font-family="monospace" font-size="10">.png</text>
+              <text x="357" y="122" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="9">ディスク</text>
+            </g>
+
+            <!-- 矢印 ファイル→setup ─ 最初の1回だけ点灯 -->
+            <line x1="386" y1="78" x2="418" y2="78" stroke="#76B900" stroke-width="2" marker-end="url(#arr-good)">
+              <animate attributeName="opacity" values="1;1;0.15;0.15" keyTimes="0;0.1;0.15;1" dur="3s" repeatCount="indefinite"/>
+            </line>
+            <text x="402" y="68" text-anchor="middle" fill="#76B900" font-family="sans-serif" font-size="9" font-weight="700">×1 (最初だけ)</text>
+
+            <!-- setup() 箱 -->
+            <rect x="420" y="48" width="170" height="60" rx="6" fill="#2a2a2a" stroke="#76B900" stroke-width="1.5"/>
+            <text x="505" y="68" text-anchor="middle" fill="#76B900" font-family="monospace" font-size="12" font-weight="700">def setup():</text>
+            <rect x="432" y="76" width="146" height="22" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+            <text x="505" y="92" text-anchor="middle" fill="#76B900" font-family="monospace" font-size="11" font-weight="700">img = load_image(...)</text>
+
+            <!-- img 変数（メモリに常駐） -->
+            <rect x="455" y="120" width="100" height="36" rx="4" fill="#1a1a1a" stroke="#76B900" stroke-width="1.5"/>
+            <text x="505" y="138" text-anchor="middle" fill="#76B900" font-family="monospace" font-size="12" font-weight="700">img</text>
+            <text x="505" y="150" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="9">メモリ常駐</text>
+            <!-- setup→img の矢印 -->
+            <line x1="505" y1="110" x2="505" y2="118" stroke="#76B900" stroke-width="1.5" marker-end="url(#arr-good)"/>
+
+            <!-- draw() 箱 -->
+            <rect x="420" y="168" width="170" height="60" rx="6" fill="#2a2a2a" stroke="#76B900" stroke-width="1.5"/>
+            <text x="505" y="188" text-anchor="middle" fill="#76B900" font-family="monospace" font-size="12" font-weight="700">def draw():</text>
+            <rect x="432" y="196" width="146" height="22" rx="3" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+            <text x="505" y="212" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="11">py5.image(img,x,y)</text>
+
+            <!-- img→draw の矢印（毎フレーム緑にパルス） -->
+            <line x1="555" y1="158" x2="555" y2="168" stroke="#76B900" stroke-width="1.5" marker-end="url(#arr-good)">
+              <animate attributeName="opacity" values="1;0.3;1;0.3;1;0.3;1;0.3;1;0.3" dur="1.2s" repeatCount="indefinite"/>
+            </line>
+            <text x="595" y="166" fill="#76B900" font-family="sans-serif" font-size="9" font-weight="700">×60/秒</text>
+
+            <!-- FPS表示 -->
+            <rect x="370" y="246" width="186" height="38" rx="6" fill="#1a1a1a" stroke="#76B900" stroke-width="1"/>
+            <text x="388" y="270" fill="#888" font-family="sans-serif" font-size="10">実測 FPS:</text>
+            <text x="468" y="270" fill="#76B900" font-family="monospace" font-size="18" font-weight="900">60</text>
+            <text x="508" y="270" fill="#888" font-family="sans-serif" font-size="11">FPS</text>
+            <text x="463" y="300" text-anchor="middle" fill="#76B900" font-family="sans-serif" font-size="11" font-weight="700">😊 ぬるぬる</text>
+          </svg>
+          <p style="font-size:0.8rem;color:#888;margin-top:0.4rem">▲ 左: <code>load_image</code> を毎フレーム呼ぶ＝ディスクアクセスが秒60回 → カクカク／右: <code>setup()</code> で1回だけ読み込み、<code>img</code> をメモリに残して <code>draw()</code> から使う → ぬるぬる60FPS</p>
+        </div>
+      </div>
+
+      <div class="try-it">
+        <h4>やってみよう（リスト × 画像 × アニメーション）</h4>
+        <p>1つの画像を動かせたら、<strong>リストに格納した複数の画像を別々の速度で動かす</strong>のは簡単です。各要素を辞書 <code>{"x":..., "y":..., "vx":..., "vy":...}</code> にして、draw() の中で全要素をfor文で更新・描画してみましょう。</p>
+        <pre><span class="code-label">Python ── ヒント</span>
+stars <span class="op">=</span> [
+    {<span class="str">"x"</span>: <span class="num">50</span>,  <span class="str">"y"</span>: <span class="num">80</span>,  <span class="str">"vx"</span>: <span class="num">2</span>, <span class="str">"vy"</span>: <span class="num">1</span>},
+    {<span class="str">"x"</span>: <span class="num">200</span>, <span class="str">"y"</span>: <span class="num">150</span>, <span class="str">"vx"</span>: <span class="num">3</span>, <span class="str">"vy"</span>: <span class="num">-1</span>},
+    {<span class="str">"x"</span>: <span class="num">350</span>, <span class="str">"y"</span>: <span class="num">200</span>, <span class="str">"vx"</span>: <span class="num">-1</span>, <span class="str">"vy"</span>: <span class="num">2</span>},
+]
+<span class="cmt"># draw() の中で:</span>
+<span class="kw">for</span> s <span class="kw">in</span> stars:
+    py5.<span class="fn">image</span>(img, s[<span class="str">"x"</span>], s[<span class="str">"y"</span>], <span class="num">60</span>, <span class="num">60</span>)
+    s[<span class="str">"x"</span>] <span class="op">+=</span> s[<span class="str">"vx"</span>]
+    s[<span class="str">"y"</span>] <span class="op">+=</span> s[<span class="str">"vy"</span>]</pre>
       </div>
     </div>
 
@@ -1089,7 +2254,7 @@ scores <span class="op">=</span> [<span class="num">85</span>, <span class="num"
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">2</div>
-      <h2>辞書の基本 <span style="font-size:0.5rem;color:#999;font-weight:400">── グループ演習・約25分</span></h2>
+      <h2>辞書の基本 <span style="font-size:0.5rem;color:#999;font-weight:400">── グループ演習</span></h2>
     </div>
 
     <div class="concept-box">
@@ -1103,46 +2268,46 @@ scores <span class="op">=</span> [<span class="num">85</span>, <span class="num"
 
     <!-- SVG: リスト vs 辞書の比較図 -->
     <div style="margin:1.5rem 0;text-align:center">
-      <svg viewBox="0 0 620 180" style="max-width:620px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 620 180" style="max-width:1240px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" xmlns="http://www.w3.org/2000/svg">
         <!-- 左: リスト -->
-        <text x="155" y="28" text-anchor="middle" fill="#4FC3F7" font-family="sans-serif" font-size="15" font-weight="700">リスト (list)</text>
-        <rect x="30" y="40" width="250" height="120" rx="8" fill="none" stroke="#4FC3F7" stroke-width="1.5" stroke-dasharray="6,3"/>
+        <text x="155" y="28" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="15" font-weight="700">リスト (list)</text>
+        <rect x="30" y="40" width="250" height="120" rx="8" fill="none" stroke="#555" stroke-width="1.5" stroke-dasharray="6,3"/>
         <!-- インデックス -->
-        <text x="62" y="62" text-anchor="middle" fill="#999" font-family="monospace" font-size="10">[0]</text>
-        <text x="122" y="62" text-anchor="middle" fill="#999" font-family="monospace" font-size="10">[1]</text>
-        <text x="182" y="62" text-anchor="middle" fill="#999" font-family="monospace" font-size="10">[2]</text>
-        <text x="242" y="62" text-anchor="middle" fill="#999" font-family="monospace" font-size="10">[3]</text>
+        <text x="62" y="62" text-anchor="middle" fill="#888" font-family="monospace" font-size="10">[0]</text>
+        <text x="122" y="62" text-anchor="middle" fill="#888" font-family="monospace" font-size="10">[1]</text>
+        <text x="182" y="62" text-anchor="middle" fill="#888" font-family="monospace" font-size="10">[2]</text>
+        <text x="242" y="62" text-anchor="middle" fill="#888" font-family="monospace" font-size="10">[3]</text>
         <!-- 値ボックス -->
-        <rect x="37" y="68" width="50" height="30" rx="4" fill="#0a1a2e" stroke="#4FC3F7" stroke-width="1.5"/>
-        <text x="62" y="88" text-anchor="middle" fill="#4FC3F7" font-family="monospace" font-size="12">"A"</text>
-        <rect x="97" y="68" width="50" height="30" rx="4" fill="#0a1a2e" stroke="#4FC3F7" stroke-width="1.5"/>
-        <text x="122" y="88" text-anchor="middle" fill="#4FC3F7" font-family="monospace" font-size="12">"B"</text>
-        <rect x="157" y="68" width="50" height="30" rx="4" fill="#0a1a2e" stroke="#4FC3F7" stroke-width="1.5"/>
-        <text x="182" y="88" text-anchor="middle" fill="#4FC3F7" font-family="monospace" font-size="12">"C"</text>
-        <rect x="217" y="68" width="50" height="30" rx="4" fill="#0a1a2e" stroke="#4FC3F7" stroke-width="1.5"/>
-        <text x="242" y="88" text-anchor="middle" fill="#4FC3F7" font-family="monospace" font-size="12">"D"</text>
+        <rect x="37" y="68" width="50" height="30" rx="4" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+        <text x="62" y="88" text-anchor="middle" fill="#e0e0e0" font-family="monospace" font-size="12">"A"</text>
+        <rect x="97" y="68" width="50" height="30" rx="4" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+        <text x="122" y="88" text-anchor="middle" fill="#e0e0e0" font-family="monospace" font-size="12">"B"</text>
+        <rect x="157" y="68" width="50" height="30" rx="4" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+        <text x="182" y="88" text-anchor="middle" fill="#e0e0e0" font-family="monospace" font-size="12">"C"</text>
+        <rect x="217" y="68" width="50" height="30" rx="4" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+        <text x="242" y="88" text-anchor="middle" fill="#e0e0e0" font-family="monospace" font-size="12">"D"</text>
         <!-- アクセス例 -->
-        <text x="155" y="122" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="11">番号でアクセス</text>
-        <text x="155" y="140" text-anchor="middle" fill="#93D500" font-family="monospace" font-size="11">data[1] → "B"</text>
+        <text x="155" y="122" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="11">番号でアクセス</text>
+        <text x="155" y="140" text-anchor="middle" fill="#76B900" font-family="monospace" font-size="11">data[1] → "B"</text>
 
         <!-- 中央の VS -->
         <text x="310" y="100" text-anchor="middle" fill="#666" font-family="sans-serif" font-size="16" font-weight="700">vs</text>
 
         <!-- 右: 辞書 -->
-        <text x="465" y="28" text-anchor="middle" fill="#FFB800" font-family="sans-serif" font-size="15" font-weight="700">辞書 (dict)</text>
-        <rect x="340" y="40" width="250" height="120" rx="8" fill="none" stroke="#FFB800" stroke-width="1.5" stroke-dasharray="6,3"/>
+        <text x="465" y="28" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="15" font-weight="700">辞書 (dict)</text>
+        <rect x="340" y="40" width="250" height="120" rx="8" fill="none" stroke="#555" stroke-width="1.5" stroke-dasharray="6,3"/>
         <!-- キーと値のペア -->
-        <rect x="355" y="56" width="105" height="26" rx="4" fill="#2e1a0a" stroke="#FFB800" stroke-width="1.5"/>
-        <text x="408" y="74" text-anchor="middle" fill="#FFB800" font-family="monospace" font-size="10">"name" : "太郎"</text>
-        <rect x="470" y="56" width="105" height="26" rx="4" fill="#2e1a0a" stroke="#FFB800" stroke-width="1.5"/>
-        <text x="523" y="74" text-anchor="middle" fill="#FFB800" font-family="monospace" font-size="10">"age" : 20</text>
-        <rect x="355" y="88" width="105" height="26" rx="4" fill="#2e1a0a" stroke="#FFB800" stroke-width="1.5"/>
-        <text x="408" y="106" text-anchor="middle" fill="#FFB800" font-family="monospace" font-size="10">"grade" : "B2"</text>
-        <rect x="470" y="88" width="105" height="26" rx="4" fill="#2e1a0a" stroke="#FFB800" stroke-width="1.5"/>
-        <text x="523" y="106" text-anchor="middle" fill="#FFB800" font-family="monospace" font-size="10">"email" : "..."</text>
+        <rect x="355" y="56" width="105" height="26" rx="4" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+        <text x="408" y="74" text-anchor="middle" fill="#e0e0e0" font-family="monospace" font-size="10">"name" : "太郎"</text>
+        <rect x="470" y="56" width="105" height="26" rx="4" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+        <text x="523" y="74" text-anchor="middle" fill="#e0e0e0" font-family="monospace" font-size="10">"age" : 20</text>
+        <rect x="355" y="88" width="105" height="26" rx="4" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+        <text x="408" y="106" text-anchor="middle" fill="#e0e0e0" font-family="monospace" font-size="10">"grade" : "B2"</text>
+        <rect x="470" y="88" width="105" height="26" rx="4" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+        <text x="523" y="106" text-anchor="middle" fill="#e0e0e0" font-family="monospace" font-size="10">"email" : "..."</text>
         <!-- アクセス例 -->
-        <text x="465" y="132" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="11">名前（キー）でアクセス</text>
-        <text x="465" y="150" text-anchor="middle" fill="#93D500" font-family="monospace" font-size="11">d["name"] → "太郎"</text>
+        <text x="465" y="132" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="11">名前（キー）でアクセス</text>
+        <text x="465" y="150" text-anchor="middle" fill="#76B900" font-family="monospace" font-size="11">d["name"] → "太郎"</text>
       </svg>
     </div>
 
@@ -1290,46 +2455,6 @@ python std4_2.py</pre>
       </div>
     </div>
 
-    <!-- 口頭試問（辞書） -->
-    <div class="card group" id="dict-quiz" style="border-left:4px solid #FFB800">
-      <div class="card-header">
-        <span class="tag tag-group">グループワーク</span>
-        <h3>辞書口頭試問 <span class="exam-alert">ここで一度グループワーク</span></h3>
-      </div>
-
-      <p>辞書の操作について、グループ内で口頭試問を行います。</p>
-
-      <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:0.4rem;padding:1rem;margin:1rem 0">
-      <p style="font-size:0.75rem;color:#999;margin-top:0.5rem"><strong style="color:#93D500">注意:</strong> 出席メンバで取り組むこと。欠席またはリアルタイムに受講できなかった場合は、授業後にSlackでグループメンバに質問し回答を得ること（どうしても回答が得られなかった場合は空欄でも構わない）。</p>
-
-        <p style="color:#FFB800;font-weight:700;font-size:0.9rem;margin-bottom:0.8rem">進め方（10分）</p>
-        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2">
-          <li><strong>各自で3問作成する</strong>（3分）── 辞書に関する問題と正解を用意する</li>
-          <li><strong>出題 → 回答者が口頭で回答</strong>（7分）── 1人ずつ順番に出題し、回答者が答える</li>
-          <li><strong>出題者が正誤を判定</strong>し、必要なら正解を解説する</li>
-        </ol>
-      </div>
-
-      <div class="concept-box">
-        <h4>出題例</h4>
-        <pre><span class="code-label">Notion テンプレート</span>
-**問題:** d = {"a": 1, "b": 2} のとき、d["b"] の値は何か？
-**回答:** 2
-
-**問題:** d = {"x": 10} に キー "y"、値 20 を追加するコードは？
-**回答:** d["y"] = 20
-
-**問題:** リストと辞書の違いを1文で説明せよ
-**回答:** リストは番号（インデックス）でアクセスし、辞書はキー（名前）でアクセスする</pre>
-      </div>
-
-      <div class="notion-submit">
-        <div><strong>Notionに記録:</strong> 自分が作った3問と、全員分の出題・回答・正誤の記録を書いてください。
-        <div style="margin-top:0.4rem;font-size:0.8rem;color:#FF6B00"><span class="sa-check-tag" style="display:inline-block;margin-left:0.5rem;background:#FF6B00;color:#fff;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px;vertical-align:middle">SA確認</span> SAさんのOKがもらえたら次に進んでください（授業時間外はSA確認不要）</div>
-      </div>
-      </div>
-    </div>
-
   </div>
 </section>
 
@@ -1338,7 +2463,7 @@ python std4_2.py</pre>
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">3</div>
-      <h2>関数の設計 <span style="font-size:0.5rem;color:#999;font-weight:400">── グループ演習・約25分</span></h2>
+      <h2>関数の設計 <span style="font-size:0.5rem;color:#999;font-weight:400">── グループ演習</span></h2>
     </div>
 
     <div class="concept-box">
@@ -1360,7 +2485,7 @@ python std4_2.py</pre>
 
     <!-- SVG: 関数の構造図 (anatomy) -->
     <div style="margin:1.5rem 0;text-align:center">
-      <svg viewBox="0 0 620 200" style="max-width:620px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 620 200" style="max-width:1240px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <marker id="arrow-func" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
             <path d="M0,0 L8,3 L0,6" fill="#76B900"/>
@@ -1371,39 +2496,210 @@ python std4_2.py</pre>
         </defs>
         <!-- コード表示 -->
         <rect x="120" y="20" width="380" height="36" rx="6" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
-        <text x="140" y="44" fill="#FF5252" font-family="monospace" font-size="16" font-weight="700">def</text>
-        <text x="180" y="44" fill="#4FC3F7" font-family="monospace" font-size="16" font-weight="700">greet</text>
+        <text x="140" y="44" fill="#e0e0e0" font-family="monospace" font-size="16" font-weight="700">def</text>
+        <text x="180" y="44" fill="#e0e0e0" font-family="monospace" font-size="16" font-weight="700">greet</text>
         <text x="236" y="44" fill="#ccc" font-family="monospace" font-size="16">(</text>
-        <text x="246" y="44" fill="#FFB800" font-family="monospace" font-size="16" font-weight="700">name</text>
+        <text x="246" y="44" fill="#e0e0e0" font-family="monospace" font-size="16" font-weight="700">name</text>
         <text x="290" y="44" fill="#ccc" font-family="monospace" font-size="16">):</text>
-        <!-- ラベル矢印: def -->
-        <line x1="152" y1="60" x2="152" y2="82" stroke="#999" stroke-width="1.2"/>
-        <circle cx="152" cy="60" r="2" fill="#999"/>
-        <rect x="110" y="84" width="84" height="22" rx="4" fill="#1a0a0a" stroke="#FF5252" stroke-width="1"/>
-        <text x="152" y="99" text-anchor="middle" fill="#FF5252" font-family="sans-serif" font-size="10" font-weight="600">定義キーワード</text>
-        <!-- ラベル矢印: 関数名 -->
-        <line x1="208" y1="60" x2="208" y2="82" stroke="#999" stroke-width="1.2"/>
-        <circle cx="208" cy="60" r="2" fill="#999"/>
-        <rect x="178" y="84" width="60" height="22" rx="4" fill="#0a1a2e" stroke="#4FC3F7" stroke-width="1"/>
-        <text x="208" y="99" text-anchor="middle" fill="#4FC3F7" font-family="sans-serif" font-size="10" font-weight="600">関数名</text>
-        <!-- ラベル矢印: 引数 -->
-        <line x1="266" y1="60" x2="266" y2="82" stroke="#999" stroke-width="1.2"/>
-        <circle cx="266" cy="60" r="2" fill="#999"/>
-        <rect x="240" y="84" width="52" height="22" rx="4" fill="#2e1a0a" stroke="#FFB800" stroke-width="1"/>
-        <text x="266" y="99" text-anchor="middle" fill="#FFB800" font-family="sans-serif" font-size="10" font-weight="600">引数</text>
+        <!-- ラベル矢印: def（下段に配置して関数名と重ならないように） -->
+        <line x1="152" y1="60" x2="152" y2="106" stroke="#666" stroke-width="1.2"/>
+        <circle cx="152" cy="60" r="2" fill="#666"/>
+        <rect x="78" y="108" width="100" height="22" rx="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+        <text x="128" y="123" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="10" font-weight="600">定義キーワード</text>
+        <!-- ラベル矢印: 関数名（上段） -->
+        <line x1="208" y1="60" x2="208" y2="82" stroke="#666" stroke-width="1.2"/>
+        <circle cx="208" cy="60" r="2" fill="#666"/>
+        <rect x="184" y="84" width="56" height="22" rx="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+        <text x="212" y="99" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="10" font-weight="600">関数名</text>
+        <!-- ラベル矢印: 引数（上段） -->
+        <line x1="266" y1="60" x2="266" y2="82" stroke="#666" stroke-width="1.2"/>
+        <circle cx="266" cy="60" r="2" fill="#666"/>
+        <rect x="244" y="84" width="48" height="22" rx="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+        <text x="268" y="99" text-anchor="middle" fill="#ccc" font-family="sans-serif" font-size="10" font-weight="600">引数</text>
         <!-- フロー図: 引数 → 関数本体 → 戻り値 -->
-        <rect x="60" y="130" width="130" height="46" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="1.5"/>
-        <text x="125" y="150" text-anchor="middle" fill="#76B900" font-family="sans-serif" font-size="13" font-weight="700">引数 (入力)</text>
-        <text x="125" y="167" text-anchor="middle" fill="#93D500" font-family="monospace" font-size="10">"太郎"</text>
+        <rect x="60" y="130" width="130" height="46" rx="8" fill="#1a1a1a" stroke="#555" stroke-width="1.5"/>
+        <text x="125" y="150" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="13" font-weight="700">引数 (入力)</text>
+        <text x="125" y="167" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="10">"太郎"</text>
         <line x1="194" y1="153" x2="230" y2="153" stroke="#76B900" stroke-width="2" marker-end="url(#arrow-func)"/>
-        <rect x="235" y="130" width="150" height="46" rx="8" fill="#0a1a2e" stroke="#4FC3F7" stroke-width="1.5"/>
-        <text x="310" y="150" text-anchor="middle" fill="#4FC3F7" font-family="sans-serif" font-size="13" font-weight="700">関数本体 (処理)</text>
-        <text x="310" y="167" text-anchor="middle" fill="#93D500" font-family="monospace" font-size="10">f"こんにちは、{name}さん"</text>
+        <rect x="235" y="130" width="150" height="46" rx="8" fill="#1a1a1a" stroke="#555" stroke-width="1.5"/>
+        <text x="310" y="150" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="13" font-weight="700">関数本体 (処理)</text>
+        <text x="310" y="167" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="10">f"こんにちは、{name}さん"</text>
         <line x1="389" y1="153" x2="425" y2="153" stroke="#76B900" stroke-width="2" marker-end="url(#arrow-func)"/>
-        <rect x="430" y="130" width="130" height="46" rx="8" fill="#2e1a0a" stroke="#FFB800" stroke-width="1.5"/>
-        <text x="495" y="150" text-anchor="middle" fill="#FFB800" font-family="sans-serif" font-size="13" font-weight="700">戻り値 (出力)</text>
-        <text x="495" y="167" text-anchor="middle" fill="#93D500" font-family="monospace" font-size="10">"こんにちは、太郎さん"</text>
+        <rect x="430" y="130" width="130" height="46" rx="8" fill="#1a1a1a" stroke="#555" stroke-width="1.5"/>
+        <text x="495" y="150" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="13" font-weight="700">戻り値 (出力)</text>
+        <text x="495" y="167" text-anchor="middle" fill="#76B900" font-family="monospace" font-size="10">"こんにちは、太郎さん"</text>
       </svg>
+    </div>
+
+    <!-- SVG: 関数の動作アニメ（引数→処理→戻り値） -->
+    <div style="margin:1.5rem 0;text-align:center">
+      <p style="font-size:0.85rem;color:#888;margin-bottom:0.4rem">▼ 動きで見る ── 引数が関数に入り、処理を経て戻り値が出てくる流れ</p>
+      <svg viewBox="0 0 620 220" style="max-width:1240px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr-fn-anim" markerWidth="7" markerHeight="6" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L7,3 L0,6 Z" fill="#76B900"/>
+          </marker>
+        </defs>
+
+        <!-- 3つの「ステーション」枠 -->
+        <!-- 引数 -->
+        <rect x="30" y="70" width="140" height="80" rx="10" fill="#1a1a1a" stroke="#555" stroke-width="1.5"/>
+        <text x="100" y="58" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="13" font-weight="700">引数（入力）</text>
+        <text x="100" y="105" text-anchor="middle" fill="#888" font-family="monospace" font-size="11">name =</text>
+
+        <!-- 関数本体 -->
+        <rect x="220" y="70" width="180" height="80" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+        <text x="310" y="58" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="13" font-weight="700">関数（処理）</text>
+        <text x="310" y="100" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="11">def greet(name):</text>
+        <text x="310" y="118" text-anchor="middle" fill="#999" font-family="monospace" font-size="10">return f"こんにちは、{name}さん"</text>
+        <text x="310" y="138" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="9">受け取った値で文字列を作る</text>
+
+        <!-- 戻り値 -->
+        <rect x="450" y="70" width="140" height="80" rx="10" fill="#1a1a1a" stroke="#555" stroke-width="1.5"/>
+        <text x="520" y="58" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="13" font-weight="700">戻り値（出力）</text>
+        <text x="520" y="138" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="10">関数の答え</text>
+
+        <!-- 矢印（静的） -->
+        <line x1="172" y1="110" x2="218" y2="110" stroke="#76B900" stroke-width="2" marker-end="url(#arr-fn-anim)"/>
+        <line x1="402" y1="110" x2="448" y2="110" stroke="#76B900" stroke-width="2" marker-end="url(#arr-fn-anim)"/>
+
+        <!-- アニメ要素1: 引数 "太郎" が左から関数へ入る -->
+        <g>
+          <rect width="60" height="22" rx="4" fill="#76B900" opacity="0.9">
+            <animate attributeName="x" values="70;70;250;250;70" keyTimes="0;0.05;0.35;0.45;1" dur="4s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="118;118;118;118;118" dur="4s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;0.9;0.9;0;0" keyTimes="0;0.05;0.4;0.46;1" dur="4s" repeatCount="indefinite"/>
+          </rect>
+          <text fill="#0a1a0a" font-family="monospace" font-size="13" font-weight="700" text-anchor="middle" pointer-events="none">
+            "太郎"
+            <animate attributeName="x" values="100;100;280;280;100" keyTimes="0;0.05;0.35;0.45;1" dur="4s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="133;133;133;133;133" dur="4s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.05;0.4;0.46;1" dur="4s" repeatCount="indefinite"/>
+          </text>
+        </g>
+
+        <!-- アニメ要素2: 戻り値が関数から右へ出る -->
+        <g>
+          <rect width="140" height="22" rx="4" fill="#76B900" opacity="0.9">
+            <animate attributeName="x" values="240;240;450;450;240" keyTimes="0;0.55;0.85;0.95;1" dur="4s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="118;118;118;118;118" dur="4s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;0;0.9;0.9;0;0" keyTimes="0;0.55;0.6;0.9;0.96;1" dur="4s" repeatCount="indefinite"/>
+          </rect>
+          <text fill="#0a1a0a" font-family="monospace" font-size="10" font-weight="700" text-anchor="middle" pointer-events="none">
+            "こんにちは、太郎さん"
+            <animate attributeName="x" values="310;310;520;520;310" keyTimes="0;0.55;0.85;0.95;1" dur="4s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="133;133;133;133;133" dur="4s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.55;0.6;0.9;1" dur="4s" repeatCount="indefinite"/>
+          </text>
+        </g>
+
+        <!-- フェーズラベル -->
+        <text x="100" y="178" text-anchor="middle" fill="#76B900" font-family="sans-serif" font-size="10" font-weight="700">
+          <tspan>① 値を渡す</tspan>
+        </text>
+        <text x="310" y="178" text-anchor="middle" fill="#76B900" font-family="sans-serif" font-size="10" font-weight="700">② 関数が処理する</text>
+        <text x="520" y="178" text-anchor="middle" fill="#76B900" font-family="sans-serif" font-size="10" font-weight="700">③ 答えを返す</text>
+
+        <!-- 呼び出し例（下） -->
+        <text x="310" y="205" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="12">result = greet("太郎")   →   result == "こんにちは、太郎さん"</text>
+      </svg>
+    </div>
+
+    <!-- SVG: いろんなパターンで考える ── ? を埋めよう -->
+    <div style="margin:1.5rem 0;text-align:center">
+      <p style="font-size:0.9rem;color:#e0e0e0;margin-bottom:0.4rem"><strong style="color:#76B900">いろんなパターンで考えよう</strong> ── <strong>下の「関数の基本構文」を読んでから</strong>、緑の <code>?</code> に入る値は何かを考えよう。</p>
+      <svg viewBox="0 0 720 340" style="max-width:1240px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr-pat" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto">
+            <path d="M0,0 L6,2.5 L0,5 Z" fill="#76B900"/>
+          </marker>
+        </defs>
+
+        <!-- ヘッダ -->
+        <text x="80" y="34" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="11" font-weight="700">No.</text>
+        <text x="260" y="34" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="11" font-weight="700">関数の呼び出し（コード）</text>
+        <text x="500" y="34" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="11" font-weight="700">引数</text>
+        <text x="640" y="34" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="11" font-weight="700">戻り値</text>
+        <line x1="30" y1="44" x2="700" y2="44" stroke="#444" stroke-width="1"/>
+
+        <!-- パターン1: add(3, 5) → ? -->
+        <g>
+          <text x="80" y="76" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="14" font-weight="700">①</text>
+          <text x="260" y="76" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="14">result = add(3, 5)</text>
+          <rect x="460" y="60" width="80" height="26" rx="4" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+          <text x="500" y="78" text-anchor="middle" fill="#e0e0e0" font-family="monospace" font-size="13">3, 5</text>
+          <line x1="546" y1="73" x2="592" y2="73" stroke="#76B900" stroke-width="1.5" marker-end="url(#arr-pat)"/>
+          <rect x="600" y="60" width="80" height="26" rx="4" fill="#2a2a2a" stroke="#76B900" stroke-width="1.5"/>
+          <text x="640" y="78" text-anchor="middle" fill="#76B900" font-family="monospace" font-size="16" font-weight="700">?</text>
+        </g>
+
+        <!-- パターン2: greet("太郎") → ? -->
+        <g>
+          <text x="80" y="116" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="14" font-weight="700">②</text>
+          <text x="260" y="116" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="14">msg = greet("太郎")</text>
+          <rect x="460" y="100" width="80" height="26" rx="4" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+          <text x="500" y="118" text-anchor="middle" fill="#e0e0e0" font-family="monospace" font-size="13">"太郎"</text>
+          <line x1="546" y1="113" x2="592" y2="113" stroke="#76B900" stroke-width="1.5" marker-end="url(#arr-pat)"/>
+          <rect x="600" y="100" width="80" height="26" rx="4" fill="#2a2a2a" stroke="#76B900" stroke-width="1.5"/>
+          <text x="640" y="118" text-anchor="middle" fill="#76B900" font-family="monospace" font-size="16" font-weight="700">?</text>
+        </g>
+
+        <!-- パターン3: max(?, ?) → 100 -->
+        <g>
+          <text x="80" y="156" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="14" font-weight="700">③</text>
+          <text x="260" y="156" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="14">n = max( ?, ? )</text>
+          <rect x="460" y="140" width="80" height="26" rx="4" fill="#2a2a2a" stroke="#76B900" stroke-width="1.5"/>
+          <text x="500" y="158" text-anchor="middle" fill="#76B900" font-family="monospace" font-size="16" font-weight="700">?, ?</text>
+          <line x1="546" y1="153" x2="592" y2="153" stroke="#76B900" stroke-width="1.5" marker-end="url(#arr-pat)"/>
+          <rect x="600" y="140" width="80" height="26" rx="4" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+          <text x="640" y="158" text-anchor="middle" fill="#e0e0e0" font-family="monospace" font-size="13">100</text>
+        </g>
+
+        <!-- パターン4: len("python") → ? -->
+        <g>
+          <text x="80" y="196" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="14" font-weight="700">④</text>
+          <text x="260" y="196" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="14">x = len("python")</text>
+          <rect x="460" y="180" width="80" height="26" rx="4" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+          <text x="500" y="198" text-anchor="middle" fill="#e0e0e0" font-family="monospace" font-size="13">"python"</text>
+          <line x1="546" y1="193" x2="592" y2="193" stroke="#76B900" stroke-width="1.5" marker-end="url(#arr-pat)"/>
+          <rect x="600" y="180" width="80" height="26" rx="4" fill="#2a2a2a" stroke="#76B900" stroke-width="1.5"/>
+          <text x="640" y="198" text-anchor="middle" fill="#76B900" font-family="monospace" font-size="16" font-weight="700">?</text>
+        </g>
+
+        <!-- パターン5: ?(8, 2) → 4（=割り算） -->
+        <g>
+          <text x="80" y="236" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="14" font-weight="700">⑤</text>
+          <text x="260" y="236" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="14">y = ?(8, 2)   # 答えは 4</text>
+          <rect x="460" y="220" width="80" height="26" rx="4" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+          <text x="500" y="238" text-anchor="middle" fill="#e0e0e0" font-family="monospace" font-size="13">8, 2</text>
+          <line x1="546" y1="233" x2="592" y2="233" stroke="#76B900" stroke-width="1.5" marker-end="url(#arr-pat)"/>
+          <rect x="600" y="220" width="80" height="26" rx="4" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+          <text x="640" y="238" text-anchor="middle" fill="#e0e0e0" font-family="monospace" font-size="13">4</text>
+        </g>
+
+        <!-- パターン6: py5.circle(?, ?, ?) -->
+        <g>
+          <text x="80" y="276" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="14" font-weight="700">⑥</text>
+          <text x="260" y="276" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="14">py5.circle( ?, ?, ? )</text>
+          <rect x="460" y="260" width="80" height="26" rx="4" fill="#2a2a2a" stroke="#76B900" stroke-width="1.5"/>
+          <text x="500" y="278" text-anchor="middle" fill="#76B900" font-family="monospace" font-size="16" font-weight="700">?, ?, ?</text>
+          <line x1="546" y1="273" x2="592" y2="273" stroke="#76B900" stroke-width="1.5" marker-end="url(#arr-pat)"/>
+          <rect x="600" y="260" width="80" height="26" rx="4" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+          <text x="640" y="278" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="11">なし</text>
+        </g>
+
+        <!-- 行ハイライト（順に動く） -->
+        <rect x="32" width="666" height="32" rx="4" fill="none" stroke="#76B900" stroke-width="2" opacity="0.6">
+          <animate attributeName="y" values="60;100;140;180;220;260;60" keyTimes="0;0.166;0.333;0.5;0.666;0.833;1" dur="9s" repeatCount="indefinite" calcMode="discrete"/>
+        </rect>
+
+        <!-- 下のヒント -->
+        <line x1="30" y1="296" x2="700" y2="296" stroke="#444" stroke-width="1"/>
+        <text x="360" y="316" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="11">
+          <tspan fill="#76B900" font-weight="700">考えるヒント</tspan>: 引数 → 関数（処理） → 戻り値 の流れを意識する。⑥のように戻り値が「なし」の関数もある（描画系など）
+        </text>
+      </svg>
+      <p style="font-size:0.8rem;color:#888;margin-top:0.4rem">▲ 緑のハイライトが順に各パターンを巡る ── <code>?</code> に何が入るかをグループで考えよう</p>
     </div>
 
     <!-- 関数の基本 -->
@@ -1485,6 +2781,12 @@ result <span class="op">=</span> <span class="fn">add</span>(<span class="num">3
 
 py5.<span class="fn">run_sketch</span>()</pre>
 
+      <div class="concept-box">
+        <h4>実行結果</h4>
+        <p style="font-size:0.85rem;color:#aaa;margin-bottom:0.6rem">空色の背景に、<strong>壁と屋根の色が違う家が3軒</strong>並びます。<code>draw_house()</code> を3回呼んでいるだけ ── 関数を1度書けば、引数を変えるだけで何軒でも描ける。</p>
+        <img src="images/week04_draw_houses.png" alt="draw_houses.py の実行結果 ── 空色の背景に色違いの家が3軒並ぶ" style="display:block;width:100%;max-width:600px;border:1px solid #333;border-radius:0.4rem">
+      </div>
+
       <div class="callout-info">
         <h4>関数化のメリット</h4>
         <p>もし関数を使わなかったら、壁と屋根の描画コードを3回コピー＆ペーストする必要があります。関数化すると:</p>
@@ -1512,41 +2814,41 @@ py5.<span class="fn">run_sketch</span>()</pre>
 
       <!-- SVG: データフロー図 リスト[辞書,...] → 関数 → 結果 -->
       <div style="margin:1.5rem 0;text-align:center">
-        <svg viewBox="0 0 620 170" style="max-width:620px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 620 170" style="max-width:1240px;width:100%;background:#1A1A1A;border:1px solid #333;border-radius:12px" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <marker id="arrow-flow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
               <path d="M0,0 L8,3 L0,6" fill="#76B900"/>
             </marker>
           </defs>
           <!-- リスト[辞書, 辞書, ...] -->
-          <rect x="20" y="25" width="210" height="120" rx="10" fill="none" stroke="#4FC3F7" stroke-width="2"/>
-          <text x="125" y="20" text-anchor="middle" fill="#4FC3F7" font-family="sans-serif" font-size="12" font-weight="700">リスト [ ]</text>
+          <rect x="20" y="25" width="210" height="120" rx="10" fill="none" stroke="#555" stroke-width="1.5"/>
+          <text x="125" y="20" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="12" font-weight="700">リスト [ ]</text>
           <!-- 辞書1 -->
-          <rect x="32" y="35" width="186" height="30" rx="5" fill="#2e1a0a" stroke="#FFB800" stroke-width="1.2"/>
-          <text x="125" y="55" text-anchor="middle" fill="#FFB800" font-family="monospace" font-size="10">{"x":100, "y":150, "size":60}</text>
+          <rect x="32" y="35" width="186" height="30" rx="5" fill="#2a2a2a" stroke="#555" stroke-width="1.2"/>
+          <text x="125" y="55" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="10">{"x":100, "y":150, "size":60}</text>
           <!-- 辞書2 -->
-          <rect x="32" y="72" width="186" height="30" rx="5" fill="#2e1a0a" stroke="#FFB800" stroke-width="1.2"/>
-          <text x="125" y="92" text-anchor="middle" fill="#FFB800" font-family="monospace" font-size="10">{"x":250, "y":150, "size":80}</text>
+          <rect x="32" y="72" width="186" height="30" rx="5" fill="#2a2a2a" stroke="#555" stroke-width="1.2"/>
+          <text x="125" y="92" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="10">{"x":250, "y":150, "size":80}</text>
           <!-- 辞書3 -->
-          <rect x="32" y="109" width="186" height="30" rx="5" fill="#2e1a0a" stroke="#FFB800" stroke-width="1.2"/>
-          <text x="125" y="129" text-anchor="middle" fill="#FFB800" font-family="monospace" font-size="10">{"x":400, "y":150, "size":50}</text>
+          <rect x="32" y="109" width="186" height="30" rx="5" fill="#2a2a2a" stroke="#555" stroke-width="1.2"/>
+          <text x="125" y="129" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="10">{"x":400, "y":150, "size":50}</text>
           <!-- 矢印 for ループ -->
           <line x1="234" y1="85" x2="272" y2="85" stroke="#76B900" stroke-width="2.5" marker-end="url(#arrow-flow)"/>
-          <text x="253" y="78" text-anchor="middle" fill="#93D500" font-family="sans-serif" font-size="10" font-weight="600">for</text>
+          <text x="253" y="78" text-anchor="middle" fill="#76B900" font-family="sans-serif" font-size="10" font-weight="600">for</text>
           <!-- 関数（処理） -->
-          <rect x="278" y="45" width="150" height="80" rx="10" fill="#0a1a2e" stroke="#4FC3F7" stroke-width="2"/>
-          <text x="353" y="72" text-anchor="middle" fill="#4FC3F7" font-family="sans-serif" font-size="14" font-weight="700">関数</text>
-          <text x="353" y="92" text-anchor="middle" fill="#93D500" font-family="monospace" font-size="11">draw_circle(data)</text>
+          <rect x="278" y="45" width="150" height="80" rx="10" fill="#1a1a1a" stroke="#555" stroke-width="1.5"/>
+          <text x="353" y="72" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="14" font-weight="700">関数</text>
+          <text x="353" y="92" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="11">draw_circle(data)</text>
           <text x="353" y="112" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="10">辞書から値を取り出し描画</text>
           <!-- 矢印 -->
           <line x1="432" y1="85" x2="470" y2="85" stroke="#76B900" stroke-width="2.5" marker-end="url(#arrow-flow)"/>
           <!-- 結果 -->
-          <rect x="476" y="45" width="124" height="80" rx="10" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
-          <text x="538" y="72" text-anchor="middle" fill="#76B900" font-family="sans-serif" font-size="14" font-weight="700">結果</text>
-          <!-- 3つの円を表現 -->
-          <circle cx="510" cy="100" r="10" fill="#FF5252" opacity="0.8"/>
-          <circle cx="538" cy="100" r="13" fill="#76B900" opacity="0.8"/>
-          <circle cx="568" cy="100" r="8" fill="#4FC3F7" opacity="0.8"/>
+          <rect x="476" y="45" width="124" height="80" rx="10" fill="#1a1a1a" stroke="#555" stroke-width="1.5"/>
+          <text x="538" y="72" text-anchor="middle" fill="#e0e0e0" font-family="sans-serif" font-size="14" font-weight="700">結果</text>
+          <!-- 3つの円を表現（中性的なグレー） -->
+          <circle cx="510" cy="100" r="10" fill="#888" opacity="0.85"/>
+          <circle cx="538" cy="100" r="13" fill="#bbb" opacity="0.85"/>
+          <circle cx="568" cy="100" r="8" fill="#888" opacity="0.85"/>
           <!-- 下部ラベル -->
           <text x="310" y="162" text-anchor="middle" fill="#999" font-family="sans-serif" font-size="11">辞書のリストを関数でループ処理するパターン</text>
         </svg>
@@ -1627,46 +2929,6 @@ python std4_3.py</pre>
       </div>
     </div>
 
-    <!-- 口頭試問（関数） -->
-    <div class="card group" id="func-quiz" style="border-left:4px solid #FFB800">
-      <div class="card-header">
-        <span class="tag tag-group">グループワーク</span>
-        <h3>関数口頭試問 <span class="exam-alert">ここで一度グループワーク</span></h3>
-      </div>
-
-      <p>関数の定義と使い方について、グループ内で口頭試問を行います。</p>
-
-      <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:0.4rem;padding:1rem;margin:1rem 0">
-      <p style="font-size:0.75rem;color:#999;margin-top:0.5rem"><strong style="color:#93D500">注意:</strong> 出席メンバで取り組むこと。欠席またはリアルタイムに受講できなかった場合は、授業後にSlackでグループメンバに質問し回答を得ること（どうしても回答が得られなかった場合は空欄でも構わない）。</p>
-
-        <p style="color:#FFB800;font-weight:700;font-size:0.9rem;margin-bottom:0.8rem">進め方（10分）</p>
-        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2">
-          <li><strong>各自で3問作成する</strong>（3分）── 関数に関する問題と正解を用意する</li>
-          <li><strong>出題 → 回答者が口頭で回答</strong>（7分）── 1人ずつ順番に出題し、回答者が答える</li>
-          <li><strong>出題者が正誤を判定</strong>し、必要なら正解を解説する</li>
-        </ol>
-      </div>
-
-      <div class="concept-box">
-        <h4>出題例</h4>
-        <pre><span class="code-label">Notion テンプレート</span>
-**問題:** def add(a, b): return a + b のとき、add(3, 7) の戻り値は？
-**回答:** 10
-
-**問題:** 引数にデフォルト値を設定するには、defの行にどう書くか？
-**回答:** def f(x=初期値): のように = で指定する
-
-**問題:** 同じ描画を5回繰り返すとき、関数を使う利点は何か？
-**回答:** コードの重複がなくなり、修正が1か所で済む（DRY原則）</pre>
-      </div>
-
-      <div class="notion-submit">
-        <div><strong>Notionに記録:</strong> 自分が作った3問と、全員分の出題・回答・正誤の記録を書いてください。
-        <div style="margin-top:0.4rem;font-size:0.8rem;color:#FF6B00"><span class="sa-check-tag" style="display:inline-block;margin-left:0.5rem;background:#FF6B00;color:#fff;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px;vertical-align:middle">SA確認</span> SAさんのOKがもらえたら次に進んでください（授業時間外はSA確認不要）</div>
-      </div>
-      </div>
-    </div>
-
   </div>
 </section>
 
@@ -1675,7 +2937,7 @@ python std4_3.py</pre>
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#FFB800">4</div>
-      <h2>発展課題 <span style="font-size:0.5rem;color:#999;font-weight:400">── 約25分</span></h2>
+      <h2>発展課題</h2>
     </div>
 
     <div class="card advanced" id="adv4-1">
@@ -1696,6 +2958,11 @@ python std4_3.py</pre>
           <li><strong>if文</strong>を1つ以上使用する</li>
           <li><strong>音声説明</strong>（1〜2分）: 作品の工夫点・使った技術を説明する</li>
         </ol>
+        <p style="margin-top:0.8rem;font-size:0.95rem"><strong>推奨要件（できれば取り入れる）:</strong></p>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2">
+          <li><strong>画像（load_image / image）</strong>を1枚以上使う</li>
+          <li><strong>draw() によるアニメーション</strong>（前回の復習）で、画像 or 図形が動く・変化する</li>
+        </ol>
       </div>
 
       <div class="concept-box">
@@ -1705,6 +2972,9 @@ python std4_3.py</pre>
           <li><strong>星座ビューワー:</strong> 星の座標リストと星座名の辞書から星座を描画</li>
           <li><strong>カラーパレットツール:</strong> 色名辞書とキー入力で、画面にカラーパレットを表示</li>
           <li><strong>ミニゲーム:</strong> リストで敵の座標を管理し、キー入力で操作するゲーム</li>
+          <li><strong>泳ぐ魚たち:</strong> 魚画像のリストを <code>{"x","y","vx","vy"}</code> の辞書で管理し、画面端で跳ね返るアニメ</li>
+          <li><strong>シューティング風:</strong> 自機（画像）をキーで操作し、敵画像のリストが上から降ってくる</li>
+          <li><strong>絵本めくり:</strong> 画像リストとキー入力で、ページが切り替わる紙芝居</li>
         </ul>
       </div>
 
@@ -1787,6 +3057,163 @@ document.querySelectorAll(':not(pre) > code').forEach(function(code) {
     });
   });
 });
+</script>
+
+<!-- セクション折りたたみトグル -->
+<style>
+.section-toggle-btn {
+  margin-left: auto;
+  background: #1a2e0a;
+  color: #76B900;
+  border: 1px solid #4A7A00;
+  border-radius: 0.3rem;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: inherit;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.section-toggle-btn:hover { background: #2a4e1a; }
+.section-toggle-btn .chevron { display: inline-block; transition: transform 0.2s; font-size: 0.7rem; }
+.section-toggle-btn.collapsed .chevron { transform: rotate(-90deg); }
+.section-toggle-btn.collapsed .label-open { display: none; }
+.section-toggle-btn .label-close { display: none; }
+.section-toggle-btn.collapsed .label-close { display: inline; }
+.section-header { cursor: default; }
+.section-header.has-toggle { cursor: pointer; user-select: none; }
+.section-header.has-toggle:hover h2 { color: #93D500; }
+.section-body-hidden { display: none !important; }
+
+.section-toggle-all {
+  display: inline-flex;
+  gap: 0.5rem;
+  margin: 0.8rem 0;
+  flex-wrap: wrap;
+}
+.section-toggle-all button {
+  background: #1a1a1a;
+  color: #76B900;
+  border: 1px solid #4A7A00;
+  border-radius: 0.3rem;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+.section-toggle-all button:hover { background: #2a4e1a; }
+</style>
+<script>
+(function(){
+  // 対象: id付きセクション
+  var sections = document.querySelectorAll('section[id]');
+  var togglers = [];
+
+  sections.forEach(function(section){
+    var container = section.querySelector(':scope > .container');
+    if (!container) return;
+    var header = container.querySelector(':scope > .section-header');
+    if (!header) return;
+
+    // section-header の後ろを全部「body」とみなして包む
+    var bodyNodes = [];
+    var node = header.nextElementSibling;
+    while (node) {
+      bodyNodes.push(node);
+      node = node.nextElementSibling;
+    }
+    if (bodyNodes.length === 0) return;
+
+    var bodyWrap = document.createElement('div');
+    bodyWrap.className = 'section-body';
+    bodyNodes.forEach(function(n){ bodyWrap.appendChild(n); });
+    container.appendChild(bodyWrap);
+
+    // トグルボタン
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'section-toggle-btn';
+    btn.innerHTML = '<span class="chevron">▼</span><span class="label-open">閉じる</span><span class="label-close">開く</span>';
+    btn.setAttribute('aria-expanded', 'true');
+    header.classList.add('has-toggle');
+    header.appendChild(btn);
+
+    function setCollapsed(collapsed){
+      if (collapsed) {
+        bodyWrap.classList.add('section-body-hidden');
+        btn.classList.add('collapsed');
+        btn.setAttribute('aria-expanded', 'false');
+      } else {
+        bodyWrap.classList.remove('section-body-hidden');
+        btn.classList.remove('collapsed');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    function toggle(e){
+      // ボタン以外がクリックされたときも反応するが、内部リンク等は除外
+      if (e && e.target && (e.target.tagName === 'A' || e.target.tagName === 'INPUT')) return;
+      setCollapsed(!bodyWrap.classList.contains('section-body-hidden'));
+    }
+
+    btn.addEventListener('click', function(e){ e.stopPropagation(); toggle(); });
+    header.addEventListener('click', toggle);
+
+    togglers.push({ set: setCollapsed });
+  });
+
+  // 「すべて開く / すべて閉じる」ボタンを最初のセクションの前に挿入
+  if (togglers.length > 1) {
+    var firstSec = document.querySelector('section[id="sec-schedule"]') || sections[0];
+    var bar = document.createElement('div');
+    bar.className = 'section-toggle-all';
+    bar.innerHTML = '<button type="button" data-act="open">▼ すべて開く</button>' +
+                    '<button type="button" data-act="close">▶ すべて閉じる</button>';
+    if (firstSec && firstSec.parentNode) {
+      firstSec.parentNode.insertBefore(bar, firstSec);
+    }
+    bar.addEventListener('click', function(e){
+      var act = e.target && e.target.getAttribute('data-act');
+      if (!act) return;
+      togglers.forEach(function(t){ t.set(act === 'close'); });
+    });
+  }
+
+  // ハッシュ付き URL (#sec-list 等) で開かれたら、その章を必ず開いておく
+  if (location.hash) {
+    var t = document.querySelector(location.hash);
+    if (t) {
+      var sec = t.closest('section[id]');
+      if (sec) {
+        var body = sec.querySelector(':scope > .container > .section-body');
+        var btn = sec.querySelector(':scope > .container > .section-header > .section-toggle-btn');
+        if (body) body.classList.remove('section-body-hidden');
+        if (btn) { btn.classList.remove('collapsed'); btn.setAttribute('aria-expanded','true'); }
+      }
+    }
+  }
+
+  // 章内リンクから飛ばれたら、対応する章を開く
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(){
+      setTimeout(function(){
+        var t = document.querySelector(a.getAttribute('href'));
+        if (!t) return;
+        var sec = t.closest('section[id]');
+        if (!sec) return;
+        var body = sec.querySelector(':scope > .container > .section-body');
+        var btn = sec.querySelector(':scope > .container > .section-header > .section-toggle-btn');
+        if (body) body.classList.remove('section-body-hidden');
+        if (btn) { btn.classList.remove('collapsed'); btn.setAttribute('aria-expanded','true'); }
+      }, 0);
+    });
+  });
+})();
 </script>
 
 </body>
