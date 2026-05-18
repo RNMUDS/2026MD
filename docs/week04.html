@@ -2443,6 +2443,41 @@ py5.<span class="fn">run_sketch</span>()</pre>
         </ol>
       </div>
 
+      <div class="callout-tip">
+        <h4>ヒント: 要件③「キー名の表示」のやり方</h4>
+        <p>上の <code>dict_color.py</code> は <strong>色（RGB）</strong> だけをグローバル変数で覚えていました。要件③をクリアするには「<strong>今押されているキーの文字</strong>」も別の変数で覚えておく必要があります。</p>
+        <ol style="padding-left:1.2rem;font-size:0.88rem;line-height:1.9;margin-top:0.5rem">
+          <li>グローバル変数 <code>current_key</code> を用意し、初期値を <code>""</code>（空文字列）にする</li>
+          <li><code>key_pressed()</code> の中で、辞書に存在するキーだったら <code>current_key</code> にそのキーを代入する</li>
+          <li><code>draw()</code> の中で <code>py5.text(current_key, x, y)</code> を呼び、画面に表示する</li>
+        </ol>
+        <pre style="margin-top:0.8rem"><span class="code-label">Python ── ヒント (要件③の追加部分だけ)</span>
+current_color <span class="op">=</span> (<span class="num">255</span>, <span class="num">255</span>, <span class="num">255</span>)
+current_key <span class="op">=</span> <span class="str">""</span>  <span class="cmt"># ← 追加: 今選ばれているキー名を覚える</span>
+
+<span class="kw">def</span> <span class="fn">draw</span>():
+    py5.<span class="fn">background</span>(<span class="num">200</span>)
+    py5.<span class="fn">fill</span>(<span class="op">*</span>current_color)
+    py5.<span class="fn">circle</span>(<span class="num">200</span>, <span class="num">150</span>, <span class="num">100</span>)
+    <span class="cmt"># ↓ 文字を表示する3行</span>
+    py5.<span class="fn">fill</span>(<span class="num">0</span>)              <span class="cmt"># 文字の色（黒）</span>
+    py5.<span class="fn">text_size</span>(<span class="num">24</span>)        <span class="cmt"># 文字の大きさ</span>
+    py5.<span class="fn">text</span>(current_key, <span class="num">20</span>, <span class="num">40</span>)  <span class="cmt"># (文字, x, y)</span>
+
+<span class="kw">def</span> <span class="fn">key_pressed</span>():
+    <span class="kw">global</span> current_color, current_key  <span class="cmt"># ← current_keyも追加</span>
+    key <span class="op">=</span> <span class="fn">str</span>(py5.key)
+    <span class="kw">if</span> key <span class="kw">in</span> color_dict:
+        current_color <span class="op">=</span> color_dict[key]
+        current_key <span class="op">=</span> key   <span class="cmt"># ← 押されたキーを覚える</span></pre>
+        <p style="font-size:0.85rem;color:#aaa;margin-top:0.6rem"><strong>つまずきポイント:</strong></p>
+        <ul style="padding-left:1.2rem;font-size:0.85rem;line-height:1.8;color:#ccc">
+          <li><code>py5.text()</code> を呼ぶ直前の <code>py5.fill()</code> が <strong>文字の色</strong> になる（円の塗り色と同じ <code>fill()</code> なので、上書きしないと文字が円と同色になり見えなくなる）</li>
+          <li><code>global</code> 宣言に <code>current_key</code> も追加し忘れると、関数の中で <code>UnboundLocalError</code> になる</li>
+          <li>「キー名」ではなく <strong>色の名前（"red" など）</strong> を表示したい場合は、辞書を <code>{'r': {'name':'red', 'rgb':(255,0,0)}, ...}</code> のような<strong>入れ子辞書</strong>にする方法もある（発展）</li>
+        </ul>
+      </div>
+
       <pre><span class="code-label">Terminal</span>
 <span class="fn">cd</span> ~/MD1/no4
 <span class="fn">source</span> .venv/bin/activate
