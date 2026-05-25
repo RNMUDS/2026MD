@@ -577,12 +577,14 @@ body { padding-top: 2.2rem; }
       <div class="submission-items">
         <a href="#sec-task0" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-pre">予習</span>Task 0<br>関数・時系列・CSV・py5 を熟読</a>
         <a href="#sec-task1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-group">口頭試問</span>Task 1<br>関数理解の口頭確認（第1回 Q1〜Q5・第2回 Q6〜Q10）</a>
-        <a href="#sec-task2" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std5-1<br>opencode 動作スクリーンショット 2枚</a>
-        <a href="#sec-task3" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std5-2<br>UFO横揺れアニメ＋移動平均（PDF）</a>
+        <a href="#sec-task2" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std5-1<br>opencode 動作の <strong>画面録画（mp4）</strong></a>
+        <a href="#sec-task3" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std5-2<br>UFO アニメ動作の <strong>画面録画（mp4）</strong>＋レポート PDF</a>
         <a href="#sec-task4" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv5-1<br>自分のスマホで測ったセンサデータでアニメ作品（PDF＋動画）</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.85rem;color:#93D500">
-        <strong>提出方法:</strong> Wordフォーマットで作成 → PDFにエクスポート → Google Classroomに<strong>PDF 1ファイル</strong>を提出
+        <strong>提出方法:</strong><br>
+        ・<strong>std5-1:</strong> 画面録画を <strong>ffmpeg で mp4 に変換</strong> → Google Classroom に <strong>mp4 1本</strong><br>
+        ・<strong>std5-2:</strong> mp4 動画 + Wordで作成して PDF にエクスポートしたレポート → Classroom に <strong>mp4 + PDF の2点</strong>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:0.5rem;font-size:0.85rem;color:#FFB800">
         <strong>📅 提出期限（今回から変更）:</strong><br>
@@ -682,16 +684,60 @@ body { padding-top: 2.2rem; }
   border-bottom: 1px dashed #444;
   height: 1.2em;
 }
+
+/* Section toggle (details/summary) */
+details.task-section { margin: 0; padding: 0; }
+details.task-section > summary {
+  list-style: none;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+}
+details.task-section > summary::-webkit-details-marker { display: none; }
+details.task-section > summary::marker { display: none; content: ''; }
+details.task-section > summary::after {
+  content: '▼ クリックで閉じる';
+  position: absolute;
+  right: 0.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #76B900;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: rgba(118,185,0,0.1);
+  border: 1px solid rgba(118,185,0,0.3);
+  border-radius: 4px;
+  padding: 0.2rem 0.55rem;
+  white-space: nowrap;
+}
+details.task-section:not([open]) > summary::after {
+  content: '▶ クリックで開く';
+  color: #FFB800;
+  background: rgba(255,184,0,0.1);
+  border-color: rgba(255,184,0,0.3);
+}
+details.task-section > summary:hover::after {
+  background: rgba(118,185,0,0.2);
+}
+details.task-section:not([open]) > summary:hover::after {
+  background: rgba(255,184,0,0.2);
+}
+details.task-section > summary .section-header {
+  margin-bottom: 0;
+}
 </style>
 
 <!-- ============ TASK 0: 予習（授業内自習） ============ -->
 <section id="sec-task0">
   <div class="container">
-    <div class="section-header">
-      <div class="section-num" style="background:#4FC3F7">0</div>
-      <h2>予習 ── 関数・時系列データ・CSV・py5 で CSV を読む <span style="font-size:0.55rem;color:#999;font-weight:400">── 各自で熟読</span></h2>
-      <span class="tag tag-pre">自習</span>
-    </div>
+    <details class="task-section" open>
+      <summary>
+        <div class="section-header">
+          <div class="section-num" style="background:#4FC3F7">0</div>
+          <h2>予習 ── 関数・時系列データ・CSV・py5 で CSV を読む <span style="font-size:0.55rem;color:#999;font-weight:400">── 各自で熟読</span></h2>
+          <span class="tag tag-pre">自習</span>
+        </div>
+      </summary>
 
     <!-- 冒頭注意 -->
     <div style="background:linear-gradient(135deg,#0a1822,#0a2233);border:2px solid #4FC3F7;border-radius:14px;padding:1.2rem 1.5rem;margin-bottom:1.5rem;font-size:1.02rem;line-height:1.7">
@@ -1219,17 +1265,21 @@ py5.<span class="fn">run_sketch</span>()</pre>
 ※ 1つも無ければ「分からない点なし」と記載</pre>
       </div>
     </div>
+    </details>
   </div>
 </section>
 
 <!-- ============ TASK 1: 関数理解の口頭確認グループワーク ============ -->
 <section id="sec-task1">
   <div class="container">
-    <div class="section-header">
-      <div class="section-num" style="background:#4FC3F7">1</div>
-      <h2>関数理解の口頭確認グループワーク <span style="font-size:0.55rem;color:#999;font-weight:400">── 全員必須・最初にやる</span></h2>
-      <span class="tag tag-group">必修</span>
-    </div>
+    <details class="task-section" open>
+      <summary>
+        <div class="section-header">
+          <div class="section-num" style="background:#4FC3F7">1</div>
+          <h2>関数理解の口頭確認グループワーク <span style="font-size:0.55rem;color:#999;font-weight:400">── 全員必須・最初にやる</span></h2>
+          <span class="tag tag-group">必修</span>
+        </div>
+      </summary>
 
     <div class="card group">
       <div class="card-header">
@@ -1544,6 +1594,7 @@ result <span class="op">=</span> <span class="fn">average</span>(<span class="nu
         <div><strong>SA確認:</strong> 第1回・第2回ともに全員が1問以上回答し，判定表を Notion に記録できたら<span style="display:inline-block;margin-left:0.5rem;background:#FF6B00;color:#fff;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px">SA確認</span> を受け，Task 2 に進む．</div>
       </div>
     </div>
+    </details>
   </div>
 </section>
 
@@ -1552,11 +1603,14 @@ result <span class="op">=</span> <span class="fn">average</span>(<span class="nu
   <!-- 旧 anchor 互換 -->
   <a id="sec-std5-1" style="display:block;height:0"></a>
   <div class="container">
-    <div class="section-header">
-      <div class="section-num" style="background:#4FC3F7">2</div>
-      <h2>バイブコーディング解説と opencode の導入</h2>
-      <span class="tag tag-standard">std5-1</span>
-    </div>
+    <details class="task-section" open>
+      <summary>
+        <div class="section-header">
+          <div class="section-num" style="background:#4FC3F7">2</div>
+          <h2>バイブコーディング解説と opencode の導入</h2>
+          <span class="tag tag-standard">std5-1</span>
+        </div>
+      </summary>
 
     <!-- 2-0: バイブコーディングとは -->
     <div class="card standard">
@@ -1919,13 +1973,38 @@ hello world を Python で書いてください。</pre>
       </div>
 
       <div style="background:#0a1a2e;border:1px solid #4FC3F7;border-radius:10px;padding:1rem 1.2rem;margin-top:1.5rem">
-        <h4 style="color:#4FC3F7;margin-bottom:0.5rem">std5-1 提出物（スクリーンショット2枚）</h4>
+        <h4 style="color:#4FC3F7;margin-bottom:0.5rem">std5-1 提出物（画面録画 mp4 ── 1ファイル）</h4>
         <ul class="point-list">
-          <li><strong>1.</strong> <code>opencode --version</code> の実行結果（バージョン番号が見える）</li>
-          <li><strong>2.</strong> 起動した opencode が <strong>練習プロンプト1か2に返答した画面</strong></li>
+          <li><strong>1.</strong> <code>opencode --version</code> を実行してバージョン番号が表示される様子</li>
+          <li><strong>2.</strong> 起動した opencode に <strong>練習プロンプト1か2</strong> を投げて応答が返ってくるまでの様子</li>
         </ul>
+        <p style="font-size:0.85rem;color:#bbb;margin:0.5rem 0 0">この2つを <strong>連続して1本の動画</strong> に収める．長さは 20〜60秒程度．録画方法は下の「画面録画と mp4 変換」を参照．</p>
+      </div>
+
+      <!-- 録画方法 -->
+      <div style="background:#1a1a0a;border:1px solid #FFB800;border-radius:10px;padding:1rem 1.2rem;margin-top:1rem">
+        <h4 style="color:#FFB800;margin-bottom:0.5rem">📹 画面録画と mp4 変換（std5-1 / std5-2 共通）</h4>
+        <ol style="padding-left:1.4rem;font-size:0.93rem;line-height:1.8;margin:0">
+          <li><strong>録画開始:</strong> <code>⌘ + Shift + 5</code> → 範囲を選んで「収録」．不要部分は同じツールでトリミング</li>
+          <li>保存される拡張子は <strong><code>.mov</code></strong> でファイルが大きい．Classroom 提出のため <strong>必ず <code>.mp4</code> に変換</strong> する</li>
+          <li><strong>ffmpeg を入れる</strong>（初回のみ）<br>
+            <pre style="margin:0.4rem 0"><span class="code-label">Terminal ── ffmpeg インストール</span>
+brew install ffmpeg</pre>
+          </li>
+          <li><strong>mp4 に変換</strong><br>
+            <pre style="margin:0.4rem 0"><span class="code-label">Terminal ── mov → mp4 変換（容量削減）</span>
+ffmpeg -i 元のファイル名.mov 作成するファイル名.mp4</pre>
+            <p style="font-size:0.85rem;margin:0.3rem 0 0">→ 同じフォルダに <strong>軽い mp4</strong> が出力される．<code>元のファイル名.mov</code> は実際のファイル名（スペースがあれば <code>"..."</code> で囲む）</p>
+          </li>
+          <li>変換後のサイズが大きすぎる（数十MB超）場合はビットレート指定:<br>
+            <pre style="margin:0.4rem 0"><span class="code-label">Terminal ── ビットレート指定で更に圧縮</span>
+ffmpeg -i 元のファイル名.mov -vcodec h264 -b:v 1000k 作成するファイル名.mp4</pre>
+          </li>
+          <li>提出するのは <strong>mp4 ファイル</strong> のみ（mov は提出しない）</li>
+        </ol>
       </div>
     </div>
+    </details>
   </div>
 </section>
 
@@ -1934,11 +2013,14 @@ hello world を Python で書いてください。</pre>
   <!-- 旧 anchor 互換 -->
   <a id="sec-std5-2" style="display:block;height:0"></a>
   <div class="container">
-    <div class="section-header">
-      <div class="section-num" style="background:#FFB800">3</div>
-      <h2>加速度センサと時系列データ: UFO横揺れアニメ＋移動平均</h2>
-      <span class="tag tag-standard">std5-2</span>
-    </div>
+    <details class="task-section" open>
+      <summary>
+        <div class="section-header">
+          <div class="section-num" style="background:#FFB800">3</div>
+          <h2>加速度センサと時系列データ: UFO横揺れアニメ＋移動平均</h2>
+          <span class="tag tag-standard">std5-2</span>
+        </div>
+      </summary>
 
     <!-- 3-1: 加速度センサ・時系列データの基礎 -->
     <div class="card standard">
@@ -1991,11 +2073,18 @@ timestamp,AccY
       <p>opencode に対して下のことを <strong>自分の言葉で</strong> 指示する．プロンプト例は参考のみ．そのままコピーせず，自分の文に直してから使うとよい．<strong>個人で取り組むが，グループ内で詰まりは共有する</strong>．</p>
 
       <div class="concept-box">
-        <h4>用意するもの（教員から配布 → <code>~/MD1/no5/</code> に置く）</h4>
+        <h4>用意するもの（下のリンクからダウンロード → <code>~/MD1/no5/</code> に置く）</h4>
         <ul class="point-list">
-          <li><code>acc_y.csv</code> ─ 加速度センサのY軸 疑似時系列データ</li>
-          <li><code>ufo.png</code> ─ UFO の画像</li>
+          <li>
+            <a href="assets/acc_y.csv" download style="color:#76B900;font-weight:700">⬇ acc_y.csv をダウンロード</a>
+            ─ 加速度センサのY軸 疑似時系列データ（2,400行・約30KB・50Hz想定で48秒分）
+          </li>
+          <li>
+            <a href="assets/ufo.png" download style="color:#76B900;font-weight:700">⬇ ufo.png をダウンロード</a>
+            ─ UFO の画像（320×180・透過PNG）
+          </li>
         </ul>
+        <p style="font-size:0.85rem;color:#bbb;margin:0.4rem 0 0">右クリック → 「リンク先を保存」でも可．保存後，必ず <code>~/MD1/no5/</code> フォルダに置くこと（py5 スクリプトと同じフォルダ）．</p>
       </div>
 
       <h4 style="color:#76B900;margin-top:1rem">作りたい動き</h4>
@@ -2093,13 +2182,14 @@ timestamp,AccY
       </div>
 
       <div style="background:#0a1a2e;border:1px solid #4FC3F7;border-radius:10px;padding:1rem 1.2rem;margin-top:1.5rem">
-        <h4 style="color:#4FC3F7;margin-bottom:0.5rem">std5-2 提出物（Word→PDF 1ファイル）</h4>
+        <h4 style="color:#4FC3F7;margin-bottom:0.5rem">std5-2 提出物（mp4 動画 + Word→PDF 1ファイル）</h4>
         <ul class="point-list">
-          <li><strong>1. 完成コード全文</strong>（Step A + Step B 統合版）</li>
-          <li><strong>2. スクリーンショット2枚</strong>: Step A（ガタガタ版）と Step B（なめらか版）の実行画面</li>
-          <li><strong>3. opencode との対話ログ</strong>: 最初・途中・最後の3プロンプト</li>
-          <li><strong>4. 観察メモ</strong>: 移動平均の <strong>窓幅を変えると</strong> 動きがどう変わったか（例: 3 / 5 / 11 / 21）</li>
+          <li><strong>1. 画面録画（mp4）</strong>: Step A（ガタガタ版）と Step B（なめらか版）の <strong>実行アニメーションを連続収録</strong> ．長さ 20〜60秒程度</li>
+          <li><strong>2. 完成コード全文</strong>（Step A + Step B 統合版）── PDF に貼り付け</li>
+          <li><strong>3. opencode との対話ログ</strong>: 最初・途中・最後の3プロンプト── PDF に貼り付け</li>
+          <li><strong>4. 観察メモ</strong>: 移動平均の <strong>窓幅を変えると</strong> 動きがどう変わったか（例: 3 / 5 / 11 / 21）── PDF に貼り付け</li>
         </ul>
+        <p style="font-size:0.85rem;color:#bbb;margin:0.5rem 0 0">録画は <code>⌘ + Shift + 5</code> → <strong>必ず <code>ffmpeg</code> で mp4 に変換</strong>（手順は std5-1 の「📹 画面録画と mp4 変換」を参照）．Classroom に <strong>mp4 動画ファイル</strong> と <strong>レポート PDF</strong> の2点を提出．</p>
       </div>
 
       <h4 style="color:#76B900;margin-top:1.5rem">Word / Notion テンプレート</h4>
@@ -2109,9 +2199,9 @@ timestamp,AccY
 ### 完成コード
 （コード全文を貼り付け）
 
-### 実行結果
-Step A（センサ値そのまま・ガタガタ）: （スクショ）
-Step B（移動平均で平滑化・なめらか）: （スクショ）
+### 実行結果（画面録画 mp4 を別途 Classroom に提出）
+動画ファイル名:
+収録内容: Step A（ガタガタ版）→ Step B（なめらか版）の順で動かす様子を1本に
 
 ### opencode との対話ログ
 - 最初のプロンプト:
@@ -2130,6 +2220,7 @@ Step B（移動平均で平滑化・なめらか）: （スクショ）
         <div><strong>SA確認:</strong> Step B（なめらか版）まで動いたら SA に <strong>Step A と Step B の動きの違い</strong> を見てもらう．<span style="display:inline-block;margin-left:0.5rem;background:#FF6B00;color:#fff;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px">SA確認</span></div>
       </div>
     </div>
+    </details>
   </div>
 </section>
 
@@ -2137,11 +2228,14 @@ Step B（移動平均で平滑化・なめらか）: （スクショ）
 <section id="sec-task4">
   <a id="adv5-1" style="display:block;height:0"></a>
   <div class="container">
-    <div class="section-header">
-      <div class="section-num" style="background:#FFB800">4</div>
-      <h2>発展課題: 自分のスマホで測ったセンサデータで <strong>自由作品</strong> をつくる</h2>
-      <span class="tag tag-advanced">adv5-1</span>
-    </div>
+    <details class="task-section" open>
+      <summary>
+        <div class="section-header">
+          <div class="section-num" style="background:#FFB800">4</div>
+          <h2>発展課題: 自分のスマホで測ったセンサデータで <strong>自由作品</strong> をつくる</h2>
+          <span class="tag tag-advanced">adv5-1</span>
+        </div>
+      </summary>
 
     <!-- 4-0: 課題概要 -->
     <div class="card advanced">
@@ -2272,6 +2366,7 @@ Step B（移動平均で平滑化・なめらか）: （スクショ）
     <div class="notion-submit">
       <div><strong>提出先:</strong> Google Classroom（PDF + 動画 + CSV）<span style="display:inline-block;margin-left:0.5rem;background:#FFB800;color:#1a1a1a;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px">adv5-1</span></div>
     </div>
+    </details>
   </div>
 </section>
 
