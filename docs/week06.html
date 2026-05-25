@@ -504,9 +504,9 @@ body { padding-top: 2.2rem; }
 <nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week01.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week02.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week03.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week04.html">4</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week05.html">5</a> <a style="color:#76B900;background:rgba(118,185,0,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="week06.html">6</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week07.html">7</a> </div>
   <a href="#sec-schedule">日程</a>
   <a href="#sec-task0">予習</a>
-  <a href="#sec-task1">口頭試問</a>
-  <a href="#sec-teacher">0. 説明</a>
+  <a href="#sec-teacher">予習解説</a>
   <a href="#sec-howsound">音のしくみ</a>
+  <a href="#sec-task1">口頭試問</a>
   <a href="#sec-mp3">1. MP3再生</a>
   <a href="#sec-sine">2. 音を作る</a>
   <a href="#sec-std6-1" class="nav-assignment">std6-1</a>
@@ -756,177 +756,12 @@ body { padding-top: 2.2rem; }
   </div>
 </section>
 
-<!-- ============ TASK 1: 音とFFT理解の口頭確認グループワーク ============ -->
-<section id="sec-task1">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-num" style="background:#4FC3F7">問</div>
-      <h2>音とFFT理解の口頭確認グループワーク <span style="font-size:0.55rem;color:#999;font-weight:400">── 全員必須・最初にやる</span></h2>
-    </div>
-
-    <div class="card group">
-      <div class="card-header">
-        <h3>音とFFTの考え方を1人ずつ口頭で説明する（第1回・第2回の2ラウンド）</h3>
-        <span class="tag tag-group">グループ</span>
-      </div>
-
-      <p>本日の演習（音生成・FFT可視化・和音）の <strong>土台は予習の4概念</strong>．書ける／読めるだけでなく <strong>言葉で説明できる</strong> ことをグループで確認する．<strong>第1回（基本5問）→ 第2回（応用5問）</strong> の2ラウンド実施．全員が <strong>各回で最低1問</strong> 口頭説明できたら次のセクションへ進む．</p>
-
-      <div class="concept-box">
-        <h4>進め方（ルール）</h4>
-        <ol style="padding-left:1.5rem;font-size:0.95rem">
-          <li>くじか席順で <strong>1人目の出題者</strong> を決める</li>
-          <li>出題者が問題を1つ選び，<strong>左隣の人</strong> に向けて出題する</li>
-          <li><strong>回答者は出題者の左隣の人</strong>（毎回必ず左隣）</li>
-          <li>回答者は <strong>30〜60秒で口頭説明</strong> する</li>
-          <li><strong>出題者と他のグループメンバ</strong>（回答者以外の全員）で答えを <strong>○ / ×</strong> の2択で判定</li>
-          <li>次は <strong>1つ左にずれて新しい出題者</strong>（= 前の回答者が次の出題者）</li>
-          <li>全員1問終わったら <strong>第2回</strong> に進む．第2回は第1回と違う問題を選ぶ</li>
-          <li><strong>全員が第1回・第2回ともに1問以上回答できた</strong> らクリア</li>
-        </ol>
-      </div>
-
-      <!-- ルール図 -->
-      <h4 style="color:#76B900;margin-top:1.2rem">役割の図解（上から見たグループ配置）</h4>
-      <div style="margin:1rem 0;text-align:center">
-        <svg viewBox="0 0 640 420" xmlns="http://www.w3.org/2000/svg" style="max-width:640px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
-          <text x="320" y="28" text-anchor="middle" fill="#4FC3F7" font-size="14" font-weight="700" font-family="sans-serif">出題者 → 左隣が回答 → 残りで判定</text>
-          <rect x="250" y="55" width="140" height="70" rx="10" fill="rgba(255,184,0,0.2)" stroke="#FFB800" stroke-width="2"/>
-          <text x="320" y="82" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" font-family="sans-serif">出題者</text>
-          <text x="320" y="102" text-anchor="middle" fill="#ccc" font-size="11" font-family="sans-serif">Aさん</text>
-          <text x="320" y="118" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">問題を選んで出題</text>
-          <rect x="430" y="175" width="180" height="70" rx="10" fill="rgba(79,195,247,0.2)" stroke="#4FC3F7" stroke-width="2"/>
-          <text x="520" y="202" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" font-family="sans-serif">回答者（左隣）</text>
-          <text x="520" y="222" text-anchor="middle" fill="#ccc" font-size="11" font-family="sans-serif">Bさん</text>
-          <text x="520" y="238" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">30〜60秒で口頭説明</text>
-          <rect x="250" y="295" width="140" height="70" rx="10" fill="rgba(155,89,182,0.18)" stroke="#9b59b6" stroke-width="2"/>
-          <text x="320" y="322" text-anchor="middle" fill="#9b59b6" font-size="13" font-weight="700" font-family="sans-serif">判定者</text>
-          <text x="320" y="342" text-anchor="middle" fill="#ccc" font-size="11" font-family="sans-serif">Cさん</text>
-          <text x="320" y="358" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">○か×か判定</text>
-          <rect x="30" y="175" width="140" height="70" rx="10" fill="rgba(155,89,182,0.18)" stroke="#9b59b6" stroke-width="2"/>
-          <text x="100" y="202" text-anchor="middle" fill="#9b59b6" font-size="13" font-weight="700" font-family="sans-serif">判定者</text>
-          <text x="100" y="222" text-anchor="middle" fill="#ccc" font-size="11" font-family="sans-serif">Dさん</text>
-          <text x="100" y="238" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">○か×か判定</text>
-          <path d="M 380,95 Q 480,110 500,175" fill="none" stroke="#FFB800" stroke-width="2.5" marker-end="url(#arrRule6)"/>
-          <text x="445" y="140" fill="#FFB800" font-size="12" font-weight="700" font-family="sans-serif">① 出題</text>
-          <path d="M 430,200 L 390,200" fill="none" stroke="#4FC3F7" stroke-width="2" stroke-dasharray="4,3"/>
-          <text x="395" y="190" fill="#4FC3F7" font-size="10" font-family="sans-serif">② 回答</text>
-          <path d="M 170,210 L 230,210" fill="none" stroke="#9b59b6" stroke-width="2" stroke-dasharray="3,3" marker-end="url(#arrRule6b)"/>
-          <path d="M 320,295 L 320,255" fill="none" stroke="#9b59b6" stroke-width="2" stroke-dasharray="3,3" marker-end="url(#arrRule6b)"/>
-          <text x="200" y="280" fill="#9b59b6" font-size="11" font-weight="700" font-family="sans-serif">③ 判定 ○/×</text>
-          <text x="320" y="395" text-anchor="middle" fill="#999" font-size="10.5" font-family="sans-serif">次のラウンドは <tspan fill="#FFB800" font-weight="700">B が出題者</tspan>（= 1つ左隣にずれる）．毎回回答者は出題者の左隣．</text>
-          <defs>
-            <marker id="arrRule6" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto"><path d="M0,0 L9,3.5 L0,7" fill="#FFB800"/></marker>
-            <marker id="arrRule6b" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#9b59b6"/></marker>
-          </defs>
-        </svg>
-      </div>
-
-      <div class="callout-info" style="font-size:0.9rem">
-        <h4>なぜ「左隣」が図の右側？</h4>
-        <p>図は <strong>上から見たグループ配置</strong>．Aさんが中央を向いて座っているとき，<strong>Aさんの左手側</strong> は図の <strong>右側</strong> にあたる．これがAさんの「左隣の人（=Bさん）」．</p>
-      </div>
-
-      <div class="callout-info">
-        <h4>判定のルール</h4>
-        <ul class="point-list">
-          <li>判定者は <strong>出題者と他のグループメンバ（回答者以外）全員</strong></li>
-          <li>判定は <strong>○（正解）か ×（不正解）の2択のみ</strong>．「△」は無し</li>
-          <li>分からなければ <strong>解答例や教材を見ながら</strong> 判定してOK</li>
-          <li>×だった場合，出題者や他のメンバが <strong>正しい答えを口頭で説明</strong> してから次へ</li>
-        </ul>
-      </div>
-
-      <!-- 第1回 -->
-      <h3 style="color:#4FC3F7;margin-top:2rem;font-size:1.15rem;border-bottom:2px solid #4FC3F7;padding-bottom:0.4rem">📘 第1回（口頭試問1）── 音のデジタル化・正弦波</h3>
-
-      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #4FC3F7;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
-        <p style="margin:0"><strong style="color:#4FC3F7">Q1.</strong> 「音をコンピュータで扱う」とはどういうことか？ <strong>AD変換</strong> と <strong>DA変換</strong> の違いを説明せよ．</p>
-      </div>
-      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #4FC3F7;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
-        <p style="margin:0"><strong style="color:#4FC3F7">Q2.</strong> <strong>サンプリングレート 44,100Hz</strong> とは何を意味するか？ レートを下げると音はどうなるか？</p>
-      </div>
-      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #4FC3F7;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
-        <p style="margin:0"><strong style="color:#4FC3F7">Q3.</strong> 音の三要素「高さ・大きさ・音色」は，それぞれ波の何で決まるか？</p>
-      </div>
-      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #4FC3F7;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
-        <p style="margin:0 0 0.5rem"><strong style="color:#4FC3F7">Q4.</strong> 次のコードの <code>frequency</code> を 440 から 880 に変えると，鳴る音はどう変わるか？</p>
-<pre><span class="code-label">Python ── Q4</span>
-wave <span class="op">=</span> np.<span class="fn">sin</span>(<span class="num">2</span> <span class="op">*</span> np.pi <span class="op">*</span> frequency <span class="op">*</span> t)</pre>
-      </div>
-      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #4FC3F7;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
-        <p style="margin:0"><strong style="color:#4FC3F7">Q5.</strong> 正弦波の <strong>振幅</strong>（波の高さ）を大きくすると音の何が変わるか？ 「正弦波＝純音」とはどういう意味か？</p>
-      </div>
-
-      <!-- 第2回 -->
-      <h3 style="color:#76B900;margin-top:2.5rem;font-size:1.15rem;border-bottom:2px solid #76B900;padding-bottom:0.4rem">📗 第2回（口頭試問2）── FFT・和音</h3>
-
-      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #76B900;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
-        <p style="margin:0"><strong style="color:#76B900">Q6.</strong> <strong>FFT</strong> は何をする手法か？ FFTを使うと音について何が分かるか？</p>
-      </div>
-      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #76B900;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
-        <p style="margin:0 0 0.5rem"><strong style="color:#76B900">Q7.</strong> 次の行で <strong>前半だけ</strong>（<code>[:WINDOW // 2]</code>）取り出しているのはなぜか？</p>
-<pre><span class="code-label">Python ── Q7</span>
-magnitude <span class="op">=</span> np.<span class="fn">abs</span>(fft[:WINDOW <span class="op">//</span> <span class="num">2</span>])</pre>
-      </div>
-      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #76B900;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
-        <p style="margin:0"><strong style="color:#76B900">Q8.</strong> <code>WINDOW = 4096</code> のように窓のサイズを <strong>2のべき乗</strong> にするのはなぜか？</p>
-      </div>
-      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #76B900;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
-        <p style="margin:0"><strong style="color:#76B900">Q9.</strong> ドミソ（C・E・G）が美しく協和して聞こえるのはなぜか？ ミ/ド，ソ/ド の周波数比を使って説明せよ．</p>
-      </div>
-      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #76B900;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
-        <p style="margin:0"><strong style="color:#76B900">Q10.</strong> 「ド＋ド#」を重ねると濁って聞こえる（不協和音）のはなぜか？ 協和音との違いを周波数比から説明せよ．</p>
-      </div>
-
-      <!-- Notion 判定表テンプレート -->
-      <div style="background:#0a1a0a;border:2px solid #76B900;border-radius:12px;padding:1.2rem 1.5rem;margin-top:1.5rem">
-        <h4 style="color:#76B900;font-size:1.05rem;margin-bottom:0.6rem">📝 Notion に記述する項目（Task 1）</h4>
-        <p style="margin-bottom:0.6rem;font-size:0.95rem"><strong>誰が何を出題し，誰が回答し，○か×か</strong> を <strong>表形式</strong> で記録する．第1回・第2回 それぞれ分けて記入．</p>
-        <h5 style="color:#FFB800;margin-top:0.8rem;margin-bottom:0.4rem;font-size:0.95rem">表示例（こんな形で書く）</h5>
-        <table style="font-size:0.95rem;margin:0.4rem 0">
-          <tr><th>ラウンド</th><th>出題者</th><th>問題番号</th><th>回答者（左隣）</th><th>判定</th></tr>
-          <tr><td>第1回</td><td>田中</td><td>Q1</td><td>佐藤</td><td style="color:#76B900;font-weight:700;text-align:center">○</td></tr>
-          <tr><td>第1回</td><td>佐藤</td><td>Q3</td><td>鈴木</td><td style="color:#FF5252;font-weight:700;text-align:center">×</td></tr>
-          <tr><td>第2回</td><td>鈴木</td><td>Q7</td><td>山田</td><td style="color:#76B900;font-weight:700;text-align:center">○</td></tr>
-          <tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>
-        </table>
-        <h5 style="color:#FFB800;margin-top:1rem;margin-bottom:0.4rem;font-size:0.95rem">Notion テンプレート（コピペ用）</h5>
-<pre style="margin:0.4rem 0"><span class="code-label">Notion テンプレート ── Task 1</span>## Task 1 口頭試問 判定結果
-
-### 第1回（口頭試問1）── 音のデジタル化・正弦波
-| 出題者 | 問題番号 | 回答者（左隣） | 判定 |
-|--------|----------|----------------|------|
-|        | Q        |                | ○/× |
-|        | Q        |                | ○/× |
-|        | Q        |                | ○/× |
-|        | Q        |                | ○/× |
-
-### 第2回（口頭試問2）── FFT・和音
-| 出題者 | 問題番号 | 回答者（左隣） | 判定 |
-|--------|----------|----------------|------|
-|        | Q        |                | ○/× |
-|        | Q        |                | ○/× |
-|        | Q        |                | ○/× |
-|        | Q        |                | ○/× |
-
-### グループでの気づき・SAに質問したいこと
-- </pre>
-      </div>
-
-      <div class="notion-submit">
-        <div><strong>SA確認:</strong> 第1回・第2回ともに全員が1問以上回答し，判定表を Notion に記録できたら<span style="display:inline-block;margin-left:0.5rem;background:#FF6B00;color:#fff;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px">SA確認</span> を受けて次に進む．</div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ============ 0. TEACHER EXPLANATION ============ -->
 <section id="sec-teacher">
   <div class="container">
     <div class="section-header">
-      <div class="section-num" style="background:#76B900">0</div>
-      <h2>教員による説明 <span style="font-size:0.5rem;color:#999;font-weight:400">── 約30分</span></h2>
+      <div class="section-num" style="background:#4A7A00">予</div>
+      <h2>予習（解説）── 各自で熟読 <span style="font-size:0.5rem;color:#999;font-weight:400">── 授業前に学習してくること</span></h2>
     </div>
 
     <div class="card" style="border-left:4px solid #76B900">
@@ -936,9 +771,10 @@ magnitude <span class="op">=</span> np.<span class="fn">abs</span>(fft[:WINDOW <
       </div>
 
       <div class="concept-box">
-        <h4>本日の流れ</h4>
+        <h4>本日の流れ（予習 → 授業）</h4>
         <ol style="padding-left:1.5rem;font-size:0.95rem;margin-top:0.5rem">
-          <li style="margin-bottom:0.4rem"><strong>教員による説明（30分）:</strong> AD/DA変換、音のデジタル表現、FFTの概念紹介</li>
+          <li style="margin-bottom:0.4rem"><strong>予習（各自で学習）:</strong> AD/DA変換、音のデジタル表現、FFTの概念（この解説と「音のしくみ」を授業前に読んでくる）</li>
+          <li style="margin-bottom:0.4rem"><strong>口頭試問:</strong> 予習内容を1人ずつ口頭で説明（講師からもランダムに出題）</li>
           <li style="margin-bottom:0.4rem"><strong>グループディスカッション:</strong>「音をコンピュータで扱うためにはどうすればいいか？」</li>
           <li style="margin-bottom:0.4rem"><strong>Step 1〜2:</strong> pydubでMP3再生、正弦波で音を生成</li>
           <li style="margin-bottom:0.4rem"><strong>Step 3:</strong> キーボードピアノ（std6-1）</li>
@@ -1110,8 +946,8 @@ brew install ffmpeg</pre>
       <p style="font-size:0.9rem"><code>ffmpeg</code> は動画・音声を変換するコマンドラインツールです。pydubがMP3やWAVなどのファイルを読み書きするために内部で使用します。<code>brew install ffmpeg</code> で一度インストールすればOKです。</p>
     </div>
 
-    <div style="background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:1rem 1.2rem;margin-top:1.5rem;text-align:center;font-size:1rem;color:#76B900;font-weight:700">
-      ── ここから先はグループで進めてください ──
+    <div style="background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:1rem 1.2rem;margin-top:1.5rem;text-align:center;font-size:0.95rem;color:#76B900;font-weight:700">
+      ── 次の「音のしくみ」も予習として読み，口頭試問に備えること ──
     </div>
   </div>
 </section>
@@ -1386,6 +1222,171 @@ brew install ffmpeg</pre>
       <div class="callout-info" style="font-size:0.92rem">
         <h4>まとめ：音がコンピュータに入るまで</h4>
         <p style="margin:0">空気の振動（①）→ なめらかな波＝アナログ（②）→ 時間をとびとびに＝標本化（③）→ 高さをとびとびに＝量子化（④）→ 0と1へ符号化 → 中身は正弦波の足し算（⑤⑥）→ FFTで周波数に分解して可視化（⑦）。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TASK 1: 音とFFT理解の口頭確認グループワーク ============ -->
+<section id="sec-task1">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">問</div>
+      <h2>音とFFT理解の口頭確認グループワーク <span style="font-size:0.55rem;color:#999;font-weight:400">── 全員必須・予習のあとに行う</span></h2>
+    </div>
+
+    <div class="card group">
+      <div class="card-header">
+        <h3>音とFFTの考え方を1人ずつ口頭で説明する（第1回・第2回の2ラウンド）</h3>
+        <span class="tag tag-group">グループ</span>
+      </div>
+
+      <p>本日の演習（音生成・FFT可視化・和音）の <strong>土台は予習の4概念</strong>．書ける／読めるだけでなく <strong>言葉で説明できる</strong> ことをグループで確認する．<strong>第1回（基本5問）→ 第2回（応用5問）</strong> の2ラウンド実施．全員が <strong>各回で最低1問</strong> 口頭説明できたら次のセクションへ進む．</p>
+
+      <div class="concept-box">
+        <h4>進め方（ルール）</h4>
+        <ol style="padding-left:1.5rem;font-size:0.95rem">
+          <li>くじか席順で <strong>1人目の出題者</strong> を決める</li>
+          <li>出題者が問題を1つ選び，<strong>左隣の人</strong> に向けて出題する</li>
+          <li><strong>回答者は出題者の左隣の人</strong>（毎回必ず左隣）</li>
+          <li>回答者は <strong>30〜60秒で口頭説明</strong> する</li>
+          <li><strong>出題者と他のグループメンバ</strong>（回答者以外の全員）で答えを <strong>○ / ×</strong> の2択で判定</li>
+          <li>次は <strong>1つ左にずれて新しい出題者</strong>（= 前の回答者が次の出題者）</li>
+          <li>全員1問終わったら <strong>第2回</strong> に進む．第2回は第1回と違う問題を選ぶ</li>
+          <li><strong>全員が第1回・第2回ともに1問以上回答できた</strong> らクリア</li>
+        </ol>
+      </div>
+
+      <!-- ルール図 -->
+      <h4 style="color:#76B900;margin-top:1.2rem">役割の図解（上から見たグループ配置）</h4>
+      <div style="margin:1rem 0;text-align:center">
+        <svg viewBox="0 0 640 420" xmlns="http://www.w3.org/2000/svg" style="max-width:640px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
+          <text x="320" y="28" text-anchor="middle" fill="#4FC3F7" font-size="14" font-weight="700" font-family="sans-serif">出題者 → 左隣が回答 → 残りで判定</text>
+          <rect x="250" y="55" width="140" height="70" rx="10" fill="rgba(255,184,0,0.2)" stroke="#FFB800" stroke-width="2"/>
+          <text x="320" y="82" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" font-family="sans-serif">出題者</text>
+          <text x="320" y="102" text-anchor="middle" fill="#ccc" font-size="11" font-family="sans-serif">Aさん</text>
+          <text x="320" y="118" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">問題を選んで出題</text>
+          <rect x="430" y="175" width="180" height="70" rx="10" fill="rgba(79,195,247,0.2)" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="520" y="202" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" font-family="sans-serif">回答者（左隣）</text>
+          <text x="520" y="222" text-anchor="middle" fill="#ccc" font-size="11" font-family="sans-serif">Bさん</text>
+          <text x="520" y="238" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">30〜60秒で口頭説明</text>
+          <rect x="250" y="295" width="140" height="70" rx="10" fill="rgba(155,89,182,0.18)" stroke="#9b59b6" stroke-width="2"/>
+          <text x="320" y="322" text-anchor="middle" fill="#9b59b6" font-size="13" font-weight="700" font-family="sans-serif">判定者</text>
+          <text x="320" y="342" text-anchor="middle" fill="#ccc" font-size="11" font-family="sans-serif">Cさん</text>
+          <text x="320" y="358" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">○か×か判定</text>
+          <rect x="30" y="175" width="140" height="70" rx="10" fill="rgba(155,89,182,0.18)" stroke="#9b59b6" stroke-width="2"/>
+          <text x="100" y="202" text-anchor="middle" fill="#9b59b6" font-size="13" font-weight="700" font-family="sans-serif">判定者</text>
+          <text x="100" y="222" text-anchor="middle" fill="#ccc" font-size="11" font-family="sans-serif">Dさん</text>
+          <text x="100" y="238" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">○か×か判定</text>
+          <path d="M 380,95 Q 480,110 500,175" fill="none" stroke="#FFB800" stroke-width="2.5" marker-end="url(#arrRule6)"/>
+          <text x="445" y="140" fill="#FFB800" font-size="12" font-weight="700" font-family="sans-serif">① 出題</text>
+          <path d="M 430,200 L 390,200" fill="none" stroke="#4FC3F7" stroke-width="2" stroke-dasharray="4,3"/>
+          <text x="395" y="190" fill="#4FC3F7" font-size="10" font-family="sans-serif">② 回答</text>
+          <path d="M 170,210 L 230,210" fill="none" stroke="#9b59b6" stroke-width="2" stroke-dasharray="3,3" marker-end="url(#arrRule6b)"/>
+          <path d="M 320,295 L 320,255" fill="none" stroke="#9b59b6" stroke-width="2" stroke-dasharray="3,3" marker-end="url(#arrRule6b)"/>
+          <text x="200" y="280" fill="#9b59b6" font-size="11" font-weight="700" font-family="sans-serif">③ 判定 ○/×</text>
+          <text x="320" y="395" text-anchor="middle" fill="#999" font-size="10.5" font-family="sans-serif">次のラウンドは <tspan fill="#FFB800" font-weight="700">B が出題者</tspan>（= 1つ左隣にずれる）．毎回回答者は出題者の左隣．</text>
+          <defs>
+            <marker id="arrRule6" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto"><path d="M0,0 L9,3.5 L0,7" fill="#FFB800"/></marker>
+            <marker id="arrRule6b" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#9b59b6"/></marker>
+          </defs>
+        </svg>
+      </div>
+
+      <div class="callout-info" style="font-size:0.9rem">
+        <h4>なぜ「左隣」が図の右側？</h4>
+        <p>図は <strong>上から見たグループ配置</strong>．Aさんが中央を向いて座っているとき，<strong>Aさんの左手側</strong> は図の <strong>右側</strong> にあたる．これがAさんの「左隣の人（=Bさん）」．</p>
+      </div>
+
+      <div class="callout-info">
+        <h4>判定のルール</h4>
+        <ul class="point-list">
+          <li>判定者は <strong>出題者と他のグループメンバ（回答者以外）全員</strong></li>
+          <li>判定は <strong>○（正解）か ×（不正解）の2択のみ</strong>．「△」は無し</li>
+          <li>分からなければ <strong>解答例や教材を見ながら</strong> 判定してOK</li>
+          <li>×だった場合，出題者や他のメンバが <strong>正しい答えを口頭で説明</strong> してから次へ</li>
+        </ul>
+      </div>
+
+      <!-- 第1回 -->
+      <h3 style="color:#4FC3F7;margin-top:2rem;font-size:1.15rem;border-bottom:2px solid #4FC3F7;padding-bottom:0.4rem">📘 第1回（口頭試問1）── 音のデジタル化・正弦波</h3>
+
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #4FC3F7;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
+        <p style="margin:0"><strong style="color:#4FC3F7">Q1.</strong> 「音をコンピュータで扱う」とはどういうことか？ <strong>AD変換</strong> と <strong>DA変換</strong> の違いを説明せよ．</p>
+      </div>
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #4FC3F7;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
+        <p style="margin:0"><strong style="color:#4FC3F7">Q2.</strong> <strong>サンプリングレート 44,100Hz</strong> とは何を意味するか？ レートを下げると音はどうなるか？</p>
+      </div>
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #4FC3F7;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
+        <p style="margin:0"><strong style="color:#4FC3F7">Q3.</strong> 音の三要素「高さ・大きさ・音色」は，それぞれ波の何で決まるか？</p>
+      </div>
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #4FC3F7;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
+        <p style="margin:0 0 0.5rem"><strong style="color:#4FC3F7">Q4.</strong> 次のコードの <code>frequency</code> を 440 から 880 に変えると，鳴る音はどう変わるか？</p>
+<pre><span class="code-label">Python ── Q4</span>
+wave <span class="op">=</span> np.<span class="fn">sin</span>(<span class="num">2</span> <span class="op">*</span> np.pi <span class="op">*</span> frequency <span class="op">*</span> t)</pre>
+      </div>
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #4FC3F7;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
+        <p style="margin:0"><strong style="color:#4FC3F7">Q5.</strong> 正弦波の <strong>振幅</strong>（波の高さ）を大きくすると音の何が変わるか？ 「正弦波＝純音」とはどういう意味か？</p>
+      </div>
+
+      <!-- 第2回 -->
+      <h3 style="color:#76B900;margin-top:2.5rem;font-size:1.15rem;border-bottom:2px solid #76B900;padding-bottom:0.4rem">📗 第2回（口頭試問2）── FFT・和音</h3>
+
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #76B900;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
+        <p style="margin:0"><strong style="color:#76B900">Q6.</strong> <strong>FFT</strong> は何をする手法か？ FFTを使うと音について何が分かるか？</p>
+      </div>
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #76B900;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
+        <p style="margin:0 0 0.5rem"><strong style="color:#76B900">Q7.</strong> 次の行で <strong>前半だけ</strong>（<code>[:WINDOW // 2]</code>）取り出しているのはなぜか？</p>
+<pre><span class="code-label">Python ── Q7</span>
+magnitude <span class="op">=</span> np.<span class="fn">abs</span>(fft[:WINDOW <span class="op">//</span> <span class="num">2</span>])</pre>
+      </div>
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #76B900;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
+        <p style="margin:0"><strong style="color:#76B900">Q8.</strong> <code>WINDOW = 4096</code> のように窓のサイズを <strong>2のべき乗</strong> にするのはなぜか？</p>
+      </div>
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #76B900;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
+        <p style="margin:0"><strong style="color:#76B900">Q9.</strong> ドミソ（C・E・G）が美しく協和して聞こえるのはなぜか？ ミ/ド，ソ/ド の周波数比を使って説明せよ．</p>
+      </div>
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #76B900;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
+        <p style="margin:0"><strong style="color:#76B900">Q10.</strong> 「ド＋ド#」を重ねると濁って聞こえる（不協和音）のはなぜか？ 協和音との違いを周波数比から説明せよ．</p>
+      </div>
+
+      <!-- Notion 判定表テンプレート -->
+      <div style="background:#0a1a0a;border:2px solid #76B900;border-radius:12px;padding:1.2rem 1.5rem;margin-top:1.5rem">
+        <h4 style="color:#76B900;font-size:1.05rem;margin-bottom:0.6rem">📝 Notion に記述する項目（Task 1）</h4>
+        <p style="margin-bottom:0.6rem;font-size:0.95rem"><strong>誰が何を出題し，誰が回答し，○か×か</strong> を <strong>表形式</strong> で記録する．第1回・第2回 それぞれ分けて記入．</p>
+        <h5 style="color:#FFB800;margin-top:0.8rem;margin-bottom:0.4rem;font-size:0.95rem">表示例（こんな形で書く）</h5>
+        <table style="font-size:0.95rem;margin:0.4rem 0">
+          <tr><th>ラウンド</th><th>出題者</th><th>問題番号</th><th>回答者（左隣）</th><th>判定</th></tr>
+          <tr><td>第1回</td><td>田中</td><td>Q1</td><td>佐藤</td><td style="color:#76B900;font-weight:700;text-align:center">○</td></tr>
+          <tr><td>第1回</td><td>佐藤</td><td>Q3</td><td>鈴木</td><td style="color:#FF5252;font-weight:700;text-align:center">×</td></tr>
+          <tr><td>第2回</td><td>鈴木</td><td>Q7</td><td>山田</td><td style="color:#76B900;font-weight:700;text-align:center">○</td></tr>
+          <tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>
+        </table>
+        <h5 style="color:#FFB800;margin-top:1rem;margin-bottom:0.4rem;font-size:0.95rem">Notion テンプレート（コピペ用）</h5>
+<pre style="margin:0.4rem 0"><span class="code-label">Notion テンプレート ── Task 1</span>## Task 1 口頭試問 判定結果
+
+### 第1回（口頭試問1）── 音のデジタル化・正弦波
+| 出題者 | 問題番号 | 回答者（左隣） | 判定 |
+|--------|----------|----------------|------|
+|        | Q        |                | ○/× |
+|        | Q        |                | ○/× |
+|        | Q        |                | ○/× |
+|        | Q        |                | ○/× |
+
+### 第2回（口頭試問2）── FFT・和音
+| 出題者 | 問題番号 | 回答者（左隣） | 判定 |
+|--------|----------|----------------|------|
+|        | Q        |                | ○/× |
+|        | Q        |                | ○/× |
+|        | Q        |                | ○/× |
+|        | Q        |                | ○/× |
+
+### グループでの気づき・SAに質問したいこと
+- </pre>
+      </div>
+
+      <div class="notion-submit">
+        <div><strong>SA確認:</strong> 第1回・第2回ともに全員が1問以上回答し，判定表を Notion に記録できたら<span style="display:inline-block;margin-left:0.5rem;background:#FF6B00;color:#fff;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px">SA確認</span> を受けて次に進む．</div>
       </div>
     </div>
   </div>
