@@ -577,14 +577,14 @@ body { padding-top: 2.2rem; }
       <div class="submission-items">
         <a href="#sec-task0" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-pre">予習</span>Task 0<br>関数・時系列・CSV・py5 を熟読</a>
         <a href="#sec-task1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-group">口頭試問</span>Task 1<br>関数理解の口頭確認（第1回 Q1〜Q5・第2回 Q6〜Q10）</a>
-        <a href="#sec-task2" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std5-1<br>opencode 動作の <strong>画面録画（mp4）</strong></a>
-        <a href="#sec-task3" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std5-2<br>UFO アニメ動作の <strong>画面録画（mp4）</strong>＋レポート PDF</a>
+        <a href="#sec-std5-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std5-1<br>Step A: UFO横揺れアニメ（mp4）</a>
+        <a href="#sec-std5-2" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std5-2<br>Step B: 移動平均でなめらか（mp4＋PDF）</a>
         <a href="#sec-task4" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv5-1<br>自分のスマホで測ったセンサデータでアニメ作品（PDF＋動画）</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.85rem;color:#93D500">
         <strong>提出方法:</strong><br>
-        ・<strong>std5-1:</strong> 画面録画を <strong>ffmpeg で mp4 に変換</strong> → Google Classroom に <strong>mp4 1本</strong><br>
-        ・<strong>std5-2:</strong> mp4 動画 + Wordで作成して PDF にエクスポートしたレポート → Classroom に <strong>mp4 + PDF の2点</strong>
+        ・<strong>std5-1 (Step A):</strong> UFO横揺れアニメの画面録画を <strong>ffmpeg で mp4 に変換</strong> → Classroom に <strong>mp4 1本</strong><br>
+        ・<strong>std5-2 (Step B):</strong> 移動平均でなめらかにしたアニメの mp4 + Word→PDF レポート → Classroom に <strong>mp4 + PDF の2点</strong>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:0.5rem;font-size:0.85rem;color:#FFB800">
         <strong>📅 提出期限（今回から変更）:</strong><br>
@@ -1600,15 +1600,13 @@ result <span class="op">=</span> <span class="fn">average</span>(<span class="nu
 
 <!-- ============ TASK 2: バイブコーディング解説 + opencode 導入 ============ -->
 <section id="sec-task2">
-  <!-- 旧 anchor 互換 -->
-  <a id="sec-std5-1" style="display:block;height:0"></a>
   <div class="container">
     <details class="task-section" open>
       <summary>
         <div class="section-header">
           <div class="section-num" style="background:#4FC3F7">2</div>
           <h2>バイブコーディング解説と opencode の導入</h2>
-          <span class="tag tag-standard">std5-1</span>
+          <span class="tag tag-pre">準備</span>
         </div>
       </summary>
 
@@ -1968,36 +1966,9 @@ hello world を Python で書いてください。</pre>
         </ul>
       </div>
 
-      <div style="background:#0a1a2e;border:1px solid #4FC3F7;border-radius:10px;padding:1rem 1.2rem;margin-top:1.5rem">
-        <h4 style="color:#4FC3F7;margin-bottom:0.5rem">std5-1 提出物（画面録画 mp4 ── 1ファイル）</h4>
-        <ul class="point-list">
-          <li><strong>1.</strong> <code>opencode --version</code> を実行してバージョン番号が表示される様子</li>
-          <li><strong>2.</strong> 起動した opencode に <strong>練習プロンプト1か2</strong> を投げて応答が返ってくるまでの様子</li>
-        </ul>
-        <p style="font-size:0.85rem;color:#bbb;margin:0.5rem 0 0">この2つを <strong>連続して1本の動画</strong> に収める．長さは 20〜60秒程度．録画方法は下の「画面録画と mp4 変換」を参照．</p>
-      </div>
-
-      <!-- 録画方法 -->
-      <div style="background:#1a1a0a;border:1px solid #FFB800;border-radius:10px;padding:1rem 1.2rem;margin-top:1rem">
-        <h4 style="color:#FFB800;margin-bottom:0.5rem">📹 画面録画と mp4 変換（std5-1 / std5-2 共通）</h4>
-        <ol style="padding-left:1.4rem;font-size:0.93rem;line-height:1.8;margin:0">
-          <li><strong>録画開始:</strong> <code>⌘ + Shift + 5</code> → 範囲を選んで「収録」．不要部分は同じツールでトリミング</li>
-          <li>保存される拡張子は <strong><code>.mov</code></strong> でファイルが大きい．Classroom 提出のため <strong>必ず <code>.mp4</code> に変換</strong> する</li>
-          <li><strong>ffmpeg を入れる</strong>（初回のみ）<br>
-            <pre style="margin:0.4rem 0"><span class="code-label">Terminal ── ffmpeg インストール</span>
-brew install ffmpeg</pre>
-          </li>
-          <li><strong>mp4 に変換</strong><br>
-            <pre style="margin:0.4rem 0"><span class="code-label">Terminal ── mov → mp4 変換（容量削減）</span>
-ffmpeg -i 元のファイル名.mov 作成するファイル名.mp4</pre>
-            <p style="font-size:0.85rem;margin:0.3rem 0 0">→ 同じフォルダに <strong>軽い mp4</strong> が出力される．<code>元のファイル名.mov</code> は実際のファイル名（スペースがあれば <code>"..."</code> で囲む）</p>
-          </li>
-          <li>変換後のサイズが大きすぎる（数十MB超）場合はビットレート指定:<br>
-            <pre style="margin:0.4rem 0"><span class="code-label">Terminal ── ビットレート指定で更に圧縮</span>
-ffmpeg -i 元のファイル名.mov -vcodec h264 -b:v 1000k 作成するファイル名.mp4</pre>
-          </li>
-          <li>提出するのは <strong>mp4 ファイル</strong> のみ（mov は提出しない）</li>
-        </ol>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:10px;padding:1rem 1.2rem;margin-top:1.5rem">
+        <h4 style="color:#93D500;margin-bottom:0.5rem">📦 このセクションは「準備」</h4>
+        <p style="font-size:0.9rem;margin:0">opencode を入れて動かすところまでは <strong>標準課題ではない</strong>．次の Task 3 で作る <strong>Step A（std5-1）/ Step B（std5-2）</strong> のための土台．バージョン表示と練習プロンプトに返答が返ってくることを SA に見せて確認したら次へ．</p>
       </div>
     </div>
     </details>
@@ -2006,8 +1977,6 @@ ffmpeg -i 元のファイル名.mov -vcodec h264 -b:v 1000k 作成するファ�
 
 <!-- ============ TASK 3: 加速度センサ + UFO横揺れアニメ + 移動平均 ============ -->
 <section id="sec-task3">
-  <!-- 旧 anchor 互換 -->
-  <a id="sec-std5-2" style="display:block;height:0"></a>
   <div class="container">
     <details class="task-section" open>
       <summary>
@@ -2022,7 +1991,6 @@ ffmpeg -i 元のファイル名.mov -vcodec h264 -b:v 1000k 作成するファ�
     <div class="card standard">
       <div class="card-header">
         <h3>3-1. 加速度センサと時系列データの基礎</h3>
-        <span class="tag tag-standard">std5-2</span>
         <span class="tag tag-standard">解説</span>
       </div>
 
@@ -2060,10 +2028,12 @@ timestamp,AccY
       </div>
     </div>
 
-    <!-- 3-2: Step A 基本アニメ -->
+    <!-- 3-2: Step A 基本アニメ ── std5-1 -->
+    <a id="sec-std5-1" style="display:block;height:0"></a>
     <div class="card standard">
       <div class="card-header">
         <h3>3-2. Step A: UFO横揺れアニメを opencode で作る</h3>
+        <span class="tag tag-standard">std5-1</span>
         <span class="tag tag-standard">実習</span>
       </div>
 
@@ -2133,9 +2103,18 @@ timestamp,AccY
           <li>機密情報・個人情報は <strong>プロンプトに含めない</strong></li>
         </ul>
       </div>
+
+      <div style="background:#0a1a2e;border:1px solid #4FC3F7;border-radius:10px;padding:1rem 1.2rem;margin-top:1.5rem">
+        <h4 style="color:#4FC3F7;margin-bottom:0.5rem">std5-1 提出物（画面録画 mp4 ── 1ファイル）</h4>
+        <ul class="point-list">
+          <li><strong>Step A の動作中のアニメ</strong>（UFO が左→右に進み，AccY でガタガタ縦揺れする様子）を <strong>10〜30秒</strong> 録画</li>
+        </ul>
+        <p style="font-size:0.85rem;color:#bbb;margin:0.5rem 0 0">録画方法は std5-2 の「📹 画面録画と mp4 変換」を参照．<strong>必ず mp4 に変換</strong> してから Classroom に提出．</p>
+      </div>
     </div>
 
-    <!-- 3-3: Step B 移動平均 -->
+    <!-- 3-3: Step B 移動平均 ── std5-2 -->
+    <a id="sec-std5-2" style="display:block;height:0"></a>
     <div class="card standard">
       <div class="card-header">
         <h3>3-3. Step B: 移動平均で「なめらか」にする</h3>
@@ -2182,12 +2161,35 @@ timestamp,AccY
       <div style="background:#0a1a2e;border:1px solid #4FC3F7;border-radius:10px;padding:1rem 1.2rem;margin-top:1.5rem">
         <h4 style="color:#4FC3F7;margin-bottom:0.5rem">std5-2 提出物（mp4 動画 + Word→PDF 1ファイル）</h4>
         <ul class="point-list">
-          <li><strong>1. 画面録画（mp4）</strong>: Step A（ガタガタ版）と Step B（なめらか版）の <strong>実行アニメーションを連続収録</strong> ．長さ 20〜60秒程度</li>
+          <li><strong>1. 画面録画（mp4）</strong>: Step B（なめらか版）の <strong>実行アニメーションを収録</strong> ．長さ 10〜30秒</li>
           <li><strong>2. 完成コード全文</strong>（Step A + Step B 統合版）── PDF に貼り付け</li>
           <li><strong>3. opencode との対話ログ</strong>: 最初・途中・最後の3プロンプト── PDF に貼り付け</li>
           <li><strong>4. 観察メモ</strong>: 移動平均の <strong>窓幅を変えると</strong> 動きがどう変わったか（例: 3 / 5 / 11 / 21）── PDF に貼り付け</li>
         </ul>
-        <p style="font-size:0.85rem;color:#bbb;margin:0.5rem 0 0">録画は <code>⌘ + Shift + 5</code> → <strong>必ず <code>ffmpeg</code> で mp4 に変換</strong>（手順は std5-1 の「📹 画面録画と mp4 変換」を参照）．Classroom に <strong>mp4 動画ファイル</strong> と <strong>レポート PDF</strong> の2点を提出．</p>
+        <p style="font-size:0.85rem;color:#bbb;margin:0.5rem 0 0">Classroom に <strong>mp4 動画ファイル</strong> と <strong>レポート PDF</strong> の2点を提出．</p>
+      </div>
+
+      <!-- 録画方法（std5-1 / std5-2 共通） -->
+      <div style="background:#1a1a0a;border:1px solid #FFB800;border-radius:10px;padding:1rem 1.2rem;margin-top:1rem">
+        <h4 style="color:#FFB800;margin-bottom:0.5rem">📹 画面録画と mp4 変換（std5-1 / std5-2 共通）</h4>
+        <ol style="padding-left:1.4rem;font-size:0.93rem;line-height:1.8;margin:0">
+          <li><strong>録画開始:</strong> <code>⌘ + Shift + 5</code> → 範囲を選んで「収録」．不要部分は同じツールでトリミング</li>
+          <li>保存される拡張子は <strong><code>.mov</code></strong> でファイルが大きい．Classroom 提出のため <strong>必ず <code>.mp4</code> に変換</strong> する</li>
+          <li><strong>ffmpeg を入れる</strong>（初回のみ）<br>
+            <pre style="margin:0.4rem 0"><span class="code-label">Terminal ── ffmpeg インストール</span>
+brew install ffmpeg</pre>
+          </li>
+          <li><strong>mp4 に変換</strong><br>
+            <pre style="margin:0.4rem 0"><span class="code-label">Terminal ── mov → mp4 変換（容量削減）</span>
+ffmpeg -i 元のファイル名.mov 作成するファイル名.mp4</pre>
+            <p style="font-size:0.85rem;margin:0.3rem 0 0">→ 同じフォルダに <strong>軽い mp4</strong> が出力される．<code>元のファイル名.mov</code> は実際のファイル名（スペースがあれば <code>"..."</code> で囲む）</p>
+          </li>
+          <li>変換後のサイズが大きすぎる（数十MB超）場合はビットレート指定:<br>
+            <pre style="margin:0.4rem 0"><span class="code-label">Terminal ── ビットレート指定で更に圧縮</span>
+ffmpeg -i 元のファイル名.mov -vcodec h264 -b:v 1000k 作成するファイル名.mp4</pre>
+          </li>
+          <li>提出するのは <strong>mp4 ファイル</strong> のみ（mov は提出しない）</li>
+        </ol>
       </div>
 
       <h4 style="color:#76B900;margin-top:1.5rem">Word / Notion テンプレート</h4>
@@ -2341,14 +2343,10 @@ timestamp,AccY
           <ul style="margin-top:0.3rem">
             <li>作品タイトル / コンセプト（何を再現したか）</li>
             <li>使ったアプリ名・選んだ理由・取得したセンサ（加速度／ジャイロ など）</li>
-            <li>センサ値 → 画面の動き の <strong>マッピング設計</strong></li>
             <li>opencode に投げた <strong>プロンプトのうち効いたもの</strong>（自分の言葉で）</li>
             <li>完成 py5 スクリプト（コード貼り付け）</li>
-            <li>作品スクリーンショット 1〜2枚</li>
-            <li>振り返り（うまくいった点／詰まった点／次やるなら何を変えるか）</li>
           </ul>
         </li>
-        <li><strong>使ったセンサデータの CSV</strong>（数MB以下に切り詰めて）</li>
       </ul>
       <div class="callout-info">
         <h4>評価のポイント</h4>
@@ -2362,7 +2360,7 @@ timestamp,AccY
     </div>
 
     <div class="notion-submit">
-      <div><strong>提出先:</strong> Google Classroom（PDF + 動画 + CSV）<span style="display:inline-block;margin-left:0.5rem;background:#FFB800;color:#1a1a1a;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px">adv5-1</span></div>
+      <div><strong>提出先:</strong> Google Classroom（動画 + レポート PDF）<span style="display:inline-block;margin-left:0.5rem;background:#FFB800;color:#1a1a1a;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px">adv5-1</span></div>
     </div>
     </details>
   </div>
