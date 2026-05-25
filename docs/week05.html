@@ -548,7 +548,7 @@ body { padding-top: 2.2rem; }
   <a href="#sec-schedule">提出</a>
   <a href="#sec-task0" class="nav-pre">0. 予習</a>
   <a href="#sec-task1">1. 口頭試問</a>
-  <a href="#sec-task2" class="nav-assignment">2. AI+opencode</a>
+  <a href="#sec-task2" class="nav-pre">2. opencode 準備</a>
   <a href="#sec-task3" class="nav-assignment">3. 加速度+UFO</a>
   <a href="#sec-task4" class="nav-assignment">4. 発展課題</a>
   <a href="#answers-section">解答例</a>
@@ -578,20 +578,20 @@ body { padding-top: 2.2rem; }
         <a href="#sec-task0" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-pre">予習</span>Task 0<br>関数・時系列・CSV・py5 を熟読</a>
         <a href="#sec-task1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-group">口頭試問</span>Task 1<br>関数理解の口頭確認（第1回 Q1〜Q5・第2回 Q6〜Q10）</a>
         <a href="#sec-std5-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std5-1<br>Step A: UFO横揺れアニメ（mp4）</a>
-        <a href="#sec-std5-2" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std5-2<br>Step B: 移動平均でなめらか（mp4＋PDF）</a>
+        <a href="#sec-std5-2" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std5-2<br>Step B: 移動平均でなめらか（mp4）</a>
         <a href="#sec-task4" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv5-1<br>自分のスマホで測ったセンサデータでアニメ作品（PDF＋動画）</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.85rem;color:#93D500">
         <strong>提出方法:</strong><br>
         ・<strong>std5-1 (Step A):</strong> UFO横揺れアニメの画面録画を <strong>ffmpeg で mp4 に変換</strong> → Classroom に <strong>mp4 1本</strong><br>
-        ・<strong>std5-2 (Step B):</strong> 移動平均でなめらかにしたアニメの mp4 + Word→PDF レポート → Classroom に <strong>mp4 + PDF の2点</strong>
+        ・<strong>std5-2 (Step B):</strong> 移動平均でなめらかにしたアニメの画面録画を <strong>ffmpeg で mp4 に変換</strong> → Classroom に <strong>mp4 1本</strong>
       </div>
-      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:0.5rem;font-size:0.85rem;color:#FFB800">
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:0.5rem;font-size:0.85rem;color:#E0E0E0">
         <strong>📅 提出期限（今回から変更）:</strong><br>
         ・<strong>標準課題（std5-1 / std5-2）:</strong> <strong>授業日 当日 23:59</strong>（5/25(月) 23:59）<br>
-        ・<strong>発展課題:</strong> 従来どおり（公開後の指定期限まで）
+        ・<strong style="color:#FFB800">発展課題:</strong> 従来どおり（公開後の指定期限まで）
       </div>
-      <div style="background:#2e1a0a;border:1px solid #FFB800;border-radius:8px;padding:0.8rem 1rem;margin-top:0.5rem;font-size:0.9rem;color:#FFB800">
+      <div style="background:#1a1a1a;border:1px solid #444;border-radius:8px;padding:0.8rem 1rem;margin-top:0.5rem;font-size:0.9rem;color:#E0E0E0">
         <strong>⚠️ グループワークに参加できなかった者へ:</strong><br>
         欠席等でグループワークに参加できなかった場合は，<strong>すべての問い（Task 0 の予習チェック・Task 1 の口頭試問 第1回 Q1〜Q5・第2回 Q6〜Q10）を自分で解答し</strong> ，Notion に記録して提出すること．
       </div>
@@ -1826,7 +1826,7 @@ opencode</pre>
     <div class="card standard">
       <div class="card-header">
         <h3>2-3. opencode の使い方（イメージ図）</h3>
-        <span class="tag tag-standard">標準</span>
+        <span class="tag tag-pre">解説</span>
       </div>
 
       <div style="margin:1rem 0;text-align:center">
@@ -1982,8 +1982,9 @@ hello world を Python で書いてください。</pre>
       <summary>
         <div class="section-header">
           <div class="section-num" style="background:#FFB800">3</div>
-          <h2>加速度センサと時系列データ: UFO横揺れアニメ＋移動平均</h2>
+          <span class="tag tag-standard">std5-1</span>
           <span class="tag tag-standard">std5-2</span>
+          <h2>加速度センサと時系列データ: UFO横揺れアニメ＋移動平均</h2>
         </div>
       </summary>
 
@@ -2159,14 +2160,11 @@ timestamp,AccY
       </div>
 
       <div style="background:#0a1a2e;border:1px solid #4FC3F7;border-radius:10px;padding:1rem 1.2rem;margin-top:1.5rem">
-        <h4 style="color:#4FC3F7;margin-bottom:0.5rem">std5-2 提出物（mp4 動画 + Word→PDF 1ファイル）</h4>
+        <h4 style="color:#4FC3F7;margin-bottom:0.5rem">std5-2 提出物（画面録画 mp4 ── 1ファイル）</h4>
         <ul class="point-list">
-          <li><strong>1. 画面録画（mp4）</strong>: Step B（なめらか版）の <strong>実行アニメーションを収録</strong> ．長さ 10〜30秒</li>
-          <li><strong>2. 完成コード全文</strong>（Step A + Step B 統合版）── PDF に貼り付け</li>
-          <li><strong>3. opencode との対話ログ</strong>: 最初・途中・最後の3プロンプト── PDF に貼り付け</li>
-          <li><strong>4. 観察メモ</strong>: 移動平均の <strong>窓幅を変えると</strong> 動きがどう変わったか（例: 3 / 5 / 11 / 21）── PDF に貼り付け</li>
+          <li><strong>Step B（なめらか版）の動作中アニメ</strong>を <strong>10〜30秒</strong> 録画</li>
         </ul>
-        <p style="font-size:0.85rem;color:#bbb;margin:0.5rem 0 0">Classroom に <strong>mp4 動画ファイル</strong> と <strong>レポート PDF</strong> の2点を提出．</p>
+        <p style="font-size:0.85rem;color:#bbb;margin:0.5rem 0 0">Classroom に <strong>mp4 ファイル 1本</strong> を提出．窓幅を変えて試した観察は授業中に各自で確認．</p>
       </div>
 
       <!-- 録画方法（std5-1 / std5-2 共通） -->
@@ -2191,30 +2189,6 @@ ffmpeg -i 元のファイル名.mov -vcodec h264 -b:v 1000k 作成するファ�
           <li>提出するのは <strong>mp4 ファイル</strong> のみ（mov は提出しない）</li>
         </ol>
       </div>
-
-      <h4 style="color:#76B900;margin-top:1.5rem">Word / Notion テンプレート</h4>
-      <pre><span class="code-label">テンプレート ── std5-2</span>
-## std5-2: UFO横揺れアニメ ＋ 移動平均で平滑化
-
-### 完成コード
-（コード全文を貼り付け）
-
-### 実行結果（画面録画 mp4 を別途 Classroom に提出）
-動画ファイル名:
-収録内容: Step A（ガタガタ版）→ Step B（なめらか版）の順で動かす様子を1本に
-
-### opencode との対話ログ
-- 最初のプロンプト:
-- 途中のプロンプト:
-- 最後のプロンプト:
-- 合計往復数:
-
-### 観察メモ
-- window=3 のとき:
-- window=5 のとき:
-- window=11 のとき:
-- window=21 のとき:
-- どの窓幅が一番見やすかったか、その理由:</pre>
 
       <div class="notion-submit">
         <div><strong>SA確認:</strong> Step B（なめらか版）まで動いたら SA に <strong>Step A と Step B の動きの違い</strong> を見てもらう．<span style="display:inline-block;margin-left:0.5rem;background:#FF6B00;color:#fff;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px">SA確認</span></div>
@@ -2369,10 +2343,13 @@ ffmpeg -i 元のファイル名.mov -vcodec h264 -b:v 1000k 作成するファ�
 <!-- ============ 解答例 ============ -->
 <section id="answers-section" data-release="2026-05-25T23:59">
   <div class="container" id="sec-answers">
-    <div class="section-header">
-      <div class="section-num" style="background:#4A7A00">A</div>
-      <h2>解答例</h2>
-    </div>
+    <details class="task-section">
+      <summary>
+        <div class="section-header">
+          <div class="section-num" style="background:#4A7A00">A</div>
+          <h2>解答例</h2>
+        </div>
+      </summary>
 
     <p style="font-size:0.9rem;color:#999;margin-bottom:1.5rem">標準課題・発展課題の解答例は提出期限後（5/25 23:59〜）に公開されます．口頭試問の答えは下のトグルから随時確認できます．</p>
 
@@ -2492,6 +2469,7 @@ result <span class="op">=</span> <span class="fn">average</span>(<span class="nu
 
     <div id="answers-encrypted" data-cipher="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"></div><!-- /answers-content -->
 
+    </details>
   </div>
 </section>
 
