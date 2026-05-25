@@ -550,6 +550,7 @@ body { padding-top: 2.2rem; }
   <a href="#sec-task1">1. 口頭試問</a>
   <a href="#sec-task2" class="nav-assignment">2. AI+opencode</a>
   <a href="#sec-task3" class="nav-assignment">3. 加速度+UFO</a>
+  <a href="#sec-task4" class="nav-assignment">4. 発展課題</a>
   <a href="#answers-section">解答例</a>
 </nav>
 
@@ -574,9 +575,11 @@ body { padding-top: 2.2rem; }
     <div class="submission-box">
       <h3>提出ガイド</h3>
       <div class="submission-items">
+        <a href="#sec-task0" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-pre">予習</span>Task 0<br>関数・時系列・CSV・py5 を熟読</a>
+        <a href="#sec-task1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-group">口頭試問</span>Task 1<br>関数理解の口頭確認（第1回 Q1〜Q5・第2回 Q6〜Q10）</a>
         <a href="#sec-task2" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std5-1<br>opencode 動作スクリーンショット 2枚</a>
         <a href="#sec-task3" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std5-2<br>UFO横揺れアニメ＋移動平均（PDF）</a>
-        <div class="sub-item"><span class="sub-count">0</span><span class="tag tag-advanced">発展課題</span>授業終了後公開</div>
+        <a href="#sec-task4" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv5-1<br>自分のスマホで測ったセンサデータでアニメ作品（PDF＋動画）</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.85rem;color:#93D500">
         <strong>提出方法:</strong> Wordフォーマットで作成 → PDFにエクスポート → Google Classroomに<strong>PDF 1ファイル</strong>を提出
@@ -686,14 +689,14 @@ body { padding-top: 2.2rem; }
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#4FC3F7">0</div>
-      <h2>予習 ── 関数・時系列データ・CSV・py5 で CSV を読む <span style="font-size:0.55rem;color:#999;font-weight:400">── 約25分・各自で熟読</span></h2>
+      <h2>予習 ── 関数・時系列データ・CSV・py5 で CSV を読む <span style="font-size:0.55rem;color:#999;font-weight:400">── 各自で熟読</span></h2>
       <span class="tag tag-pre">自習</span>
     </div>
 
     <!-- 冒頭注意 -->
     <div style="background:linear-gradient(135deg,#0a1822,#0a2233);border:2px solid #4FC3F7;border-radius:14px;padding:1.2rem 1.5rem;margin-bottom:1.5rem;font-size:1.02rem;line-height:1.7">
       <h3 style="color:#4FC3F7;font-size:1.1rem;margin-bottom:0.5rem">📌 本日の進め方</h3>
-      <p style="margin:0">本来であれば <strong>予習として授業前に各自が学習する</strong> 内容だが，今回に限っては <strong>授業時間内に熟読し，各自で作業する</strong>．分からない箇所はメモして，Task 1 の口頭試問でグループメンバや SA に質問しよう．25分を目安に読み進める．</p>
+      <p style="margin:0">本来であれば <strong>予習として授業前に各自が学習する</strong> 内容だが，今回に限っては <strong>授業時間内に熟読し，各自で作業する</strong>．分からない箇所はメモして，Task 1 の口頭試問でグループメンバや SA に質問しよう．</p>
     </div>
 
     <!-- 0-1. 関数 -->
@@ -991,87 +994,78 @@ py5.<span class="fn">run_sketch</span>()</pre>
       <p style="font-size:0.9rem;color:#ccc">CSV ファイルが <strong>1行ずつの文字列リスト</strong> になり，<strong>カンマで分割</strong> され，<strong>数値に変換</strong> されて <strong>蓄積</strong> されるまでの流れ．次の図を見てからコードを読むと一気に理解しやすい．</p>
 
       <div style="margin:1rem 0;text-align:center">
-        <svg viewBox="0 0 720 2080" xmlns="http://www.w3.org/2000/svg" style="max-width:720px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
-          <text x="360" y="56" text-anchor="middle" fill="#4FC3F7" font-size="28" font-weight="700" font-family="sans-serif">py5 で CSV を読み込む 6ステップ</text>
+        <svg viewBox="0 0 720 1830" xmlns="http://www.w3.org/2000/svg" style="max-width:720px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
+          <text x="360" y="56" text-anchor="middle" fill="#4FC3F7" font-size="24" font-weight="700" font-family="sans-serif">py5 で CSV を読み込む 6ステップ</text>
 
           <!-- ─────────── Step 1: CSV ファイル ─────────── -->
           <rect x="90" y="110" width="540" height="236" rx="10" fill="rgba(150,150,150,0.08)" stroke="#888" stroke-width="2"/>
-          <text x="110" y="160" fill="#bbb" font-size="24" font-weight="700" font-family="sans-serif">📄 Step 1. CSV ファイル（acc_y.csv の中身）</text>
-          <text x="110" y="210" fill="#888" font-size="21" font-family="'JetBrains Mono',monospace">timestamp,AccY     ← ヘッダ行（列名）</text>
-          <text x="110" y="248" fill="#FFB800" font-size="21" font-family="'JetBrains Mono',monospace">0.00,-0.12</text>
-          <text x="110" y="284" fill="#FFB800" font-size="21" font-family="'JetBrains Mono',monospace">0.01,0.34</text>
-          <text x="110" y="320" fill="#FFB800" font-size="21" font-family="'JetBrains Mono',monospace">0.02,1.56          ← データ行（時刻と加速度）</text>
+          <text x="110" y="160" fill="#bbb" font-size="19" font-weight="700" font-family="sans-serif">📄 Step 1. CSV ファイル（acc_y.csv の中身）</text>
+          <text x="110" y="210" fill="#888" font-size="17" font-family="'JetBrains Mono',monospace">timestamp,AccY     ← ヘッダ行（列名）</text>
+          <text x="110" y="248" fill="#FFB800" font-size="17" font-family="'JetBrains Mono',monospace">0.00,-0.12</text>
+          <text x="110" y="284" fill="#FFB800" font-size="17" font-family="'JetBrains Mono',monospace">0.01,0.34</text>
+          <text x="110" y="320" fill="#FFB800" font-size="17" font-family="'JetBrains Mono',monospace">0.02,1.56          ← データ行（時刻と加速度）</text>
 
           <!-- arrow 1 -->
           <line x1="360" y1="356" x2="360" y2="436" stroke="#76B900" stroke-width="2" marker-end="url(#arrFlow)"/>
           <rect x="100" y="366" width="520" height="44" rx="4" fill="#0a1a0a" stroke="#76B900" stroke-width="1"/>
-          <text x="360" y="396" text-anchor="middle" fill="#76B900" font-size="22" font-family="'JetBrains Mono',monospace">lines = py5.load_strings("acc_y.csv")</text>
+          <text x="360" y="396" text-anchor="middle" fill="#76B900" font-size="17" font-family="'JetBrains Mono',monospace">lines = py5.load_strings("acc_y.csv")</text>
 
           <!-- ─────────── Step 2: 文字列リスト ─────────── -->
           <rect x="90" y="450" width="540" height="236" rx="10" fill="rgba(79,195,247,0.1)" stroke="#4FC3F7" stroke-width="2"/>
-          <text x="110" y="500" fill="#4FC3F7" font-size="24" font-weight="700" font-family="sans-serif">📋 Step 2. 1行=1要素の文字列リスト（lines）</text>
-          <text x="110" y="550" fill="#ccc" font-size="22" font-family="'JetBrains Mono',monospace">lines = [</text>
-          <text x="130" y="586" fill="#888" font-size="22" font-family="'JetBrains Mono',monospace">"timestamp,AccY",       ← lines[0] はヘッダ</text>
-          <text x="130" y="622" fill="#FFB800" font-size="22" font-family="'JetBrains Mono',monospace">"0.00,-0.12",  "0.01,0.34",  "0.02,1.56",  ...</text>
-          <text x="110" y="658" fill="#ccc" font-size="22" font-family="'JetBrains Mono',monospace">]</text>
+          <text x="110" y="500" fill="#4FC3F7" font-size="19" font-weight="700" font-family="sans-serif">📋 Step 2. 1行=1要素の文字列リスト（lines）</text>
+          <text x="110" y="550" fill="#ccc" font-size="17" font-family="'JetBrains Mono',monospace">lines = [</text>
+          <text x="130" y="586" fill="#888" font-size="17" font-family="'JetBrains Mono',monospace">"timestamp,AccY",       ← lines[0] はヘッダ</text>
+          <text x="130" y="622" fill="#FFB800" font-size="17" font-family="'JetBrains Mono',monospace">"0.00,-0.12",  "0.01,0.34",  "0.02,1.56",  ...</text>
+          <text x="110" y="658" fill="#ccc" font-size="17" font-family="'JetBrains Mono',monospace">]</text>
 
           <!-- arrow 2 -->
           <line x1="360" y1="696" x2="360" y2="776" stroke="#76B900" stroke-width="2" marker-end="url(#arrFlow)"/>
           <rect x="120" y="706" width="480" height="44" rx="4" fill="#0a1a0a" stroke="#76B900" stroke-width="1"/>
-          <text x="360" y="736" text-anchor="middle" fill="#76B900" font-size="22" font-family="'JetBrains Mono',monospace">for line in lines[1:]:    ← [1:] でヘッダ除外</text>
+          <text x="360" y="736" text-anchor="middle" fill="#76B900" font-size="17" font-family="'JetBrains Mono',monospace">for line in lines[1:]:    ← [1:] でヘッダ除外</text>
 
           <!-- ─────────── Step 3: 1行ずつ取り出す ─────────── -->
           <rect x="90" y="790" width="540" height="156" rx="10" fill="rgba(79,195,247,0.08)" stroke="#4FC3F7" stroke-width="2" stroke-dasharray="5,3"/>
-          <text x="110" y="840" fill="#4FC3F7" font-size="24" font-weight="700" font-family="sans-serif">🔁 Step 3. for ループで 1行ずつ取り出す（変数 line）</text>
-          <text x="110" y="890" fill="#ccc" font-size="22" font-family="'JetBrains Mono',monospace">line = <tspan fill="#FFB800">"0.00,-0.12"</tspan></text>
-          <text x="110" y="924" fill="#999" font-size="19" font-family="sans-serif">※ 1回目は "0.00,-0.12"，2回目は "0.01,0.34"… と1行ずつ繰り返す</text>
+          <text x="110" y="840" fill="#4FC3F7" font-size="19" font-weight="700" font-family="sans-serif">🔁 Step 3. for ループで 1行ずつ取り出す（変数 line）</text>
+          <text x="110" y="890" fill="#ccc" font-size="17" font-family="'JetBrains Mono',monospace">line = <tspan fill="#FFB800">"0.00,-0.12"</tspan></text>
+          <text x="110" y="924" fill="#999" font-size="15" font-family="sans-serif">※ 1回目は "0.00,-0.12"，2回目は "0.01,0.34"… と1行ずつ繰り返す</text>
 
           <!-- arrow 3 -->
           <line x1="360" y1="956" x2="360" y2="1036" stroke="#76B900" stroke-width="2" marker-end="url(#arrFlow)"/>
           <rect x="160" y="966" width="400" height="44" rx="4" fill="#0a1a0a" stroke="#76B900" stroke-width="1"/>
-          <text x="360" y="996" text-anchor="middle" fill="#76B900" font-size="22" font-family="'JetBrains Mono',monospace">parts = line.split(",")</text>
+          <text x="360" y="996" text-anchor="middle" fill="#76B900" font-size="17" font-family="'JetBrains Mono',monospace">parts = line.split(",")</text>
 
           <!-- ─────────── Step 4: カンマで分割 ─────────── -->
           <rect x="90" y="1050" width="540" height="156" rx="10" fill="rgba(118,185,0,0.1)" stroke="#76B900" stroke-width="2"/>
-          <text x="110" y="1100" fill="#76B900" font-size="24" font-weight="700" font-family="sans-serif">✂️ Step 4. カンマで分割して 2つの文字列リスト（parts）</text>
-          <text x="110" y="1150" fill="#ccc" font-size="22" font-family="'JetBrains Mono',monospace">parts = [<tspan fill="#FFB800">"0.00"</tspan>, <tspan fill="#FFB800">"-0.12"</tspan>]</text>
-          <text x="110" y="1186" fill="#999" font-size="19" font-family="sans-serif">parts[0]=時刻（文字列）, parts[1]=AccY（文字列）　← まだ文字列！</text>
+          <text x="110" y="1100" fill="#76B900" font-size="19" font-weight="700" font-family="sans-serif">✂️ Step 4. カンマで分割して 2つの文字列リスト（parts）</text>
+          <text x="110" y="1150" fill="#ccc" font-size="17" font-family="'JetBrains Mono',monospace">parts = [<tspan fill="#FFB800">"0.00"</tspan>, <tspan fill="#FFB800">"-0.12"</tspan>]</text>
+          <text x="110" y="1186" fill="#999" font-size="15" font-family="sans-serif">parts[0]=時刻（文字列）, parts[1]=AccY（文字列）　← まだ文字列！</text>
 
           <!-- arrow 4 -->
           <line x1="360" y1="1216" x2="360" y2="1296" stroke="#76B900" stroke-width="2" marker-end="url(#arrFlow)"/>
           <rect x="160" y="1226" width="400" height="44" rx="4" fill="#0a1a0a" stroke="#76B900" stroke-width="1"/>
-          <text x="360" y="1256" text-anchor="middle" fill="#76B900" font-size="22" font-family="'JetBrains Mono',monospace">value = float(parts[1])</text>
+          <text x="360" y="1256" text-anchor="middle" fill="#76B900" font-size="17" font-family="'JetBrains Mono',monospace">value = float(parts[1])</text>
 
           <!-- ─────────── Step 5: float で数値に変換 ─────────── -->
           <rect x="90" y="1310" width="540" height="156" rx="10" fill="rgba(255,184,0,0.1)" stroke="#FFB800" stroke-width="2"/>
-          <text x="110" y="1360" fill="#FFB800" font-size="24" font-weight="700" font-family="sans-serif">🔢 Step 5. parts[1] を数値（float）に変換</text>
-          <text x="110" y="1412" fill="#ccc" font-size="22" font-family="'JetBrains Mono',monospace">value = <tspan fill="#FFB800" font-size="28" font-weight="700">-0.12</tspan></text>
-          <text x="110" y="1446" fill="#999" font-size="19" font-family="sans-serif">文字列 "-0.12" → 数値 -0.12 に変換．これで計算に使える数値になった！</text>
+          <text x="110" y="1360" fill="#FFB800" font-size="19" font-weight="700" font-family="sans-serif">🔢 Step 5. parts[1] を数値（float）に変換</text>
+          <text x="110" y="1412" fill="#ccc" font-size="17" font-family="'JetBrains Mono',monospace">value = <tspan fill="#FFB800" font-size="22" font-weight="700">-0.12</tspan></text>
+          <text x="110" y="1446" fill="#999" font-size="15" font-family="sans-serif">文字列 "-0.12" → 数値 -0.12 に変換．これで計算に使える数値になった！</text>
 
           <!-- arrow 5 -->
           <line x1="360" y1="1476" x2="360" y2="1556" stroke="#76B900" stroke-width="2" marker-end="url(#arrFlow)"/>
           <rect x="160" y="1486" width="400" height="44" rx="4" fill="#0a1a0a" stroke="#76B900" stroke-width="1"/>
-          <text x="360" y="1516" text-anchor="middle" fill="#76B900" font-size="22" font-family="'JetBrains Mono',monospace">values.append(value)</text>
+          <text x="360" y="1516" text-anchor="middle" fill="#76B900" font-size="17" font-family="'JetBrains Mono',monospace">values.append(value)</text>
 
           <!-- ─────────── Step 6: 蓄積したリスト ─────────── -->
           <rect x="90" y="1570" width="540" height="236" rx="10" fill="rgba(155,89,182,0.12)" stroke="#9b59b6" stroke-width="2"/>
-          <text x="110" y="1620" fill="#9b59b6" font-size="24" font-weight="700" font-family="sans-serif">📦 Step 6. values リストに数値が蓄積されていく（最終状態）</text>
-          <text x="110" y="1676" fill="#ccc" font-size="22" font-family="'JetBrains Mono',monospace">values = [<tspan fill="#FFB800" font-weight="700">-0.12, 0.34, 1.56, ...</tspan>]</text>
-          <text x="110" y="1730" fill="#bbb" font-size="20" font-family="sans-serif">→ 全行ぶんを処理し終えると，AccY の数値だけが時間順に並んだリストができる</text>
-          <text x="110" y="1762" fill="#bbb" font-size="20" font-family="sans-serif">　 これを使って Task 3 では UFO の縦位置を決める</text>
+          <text x="110" y="1620" fill="#9b59b6" font-size="19" font-weight="700" font-family="sans-serif">📦 Step 6. values リストに数値が蓄積されていく（最終状態）</text>
+          <text x="110" y="1676" fill="#ccc" font-size="17" font-family="'JetBrains Mono',monospace">values = [<tspan fill="#FFB800" font-weight="700">-0.12, 0.34, 1.56, ...</tspan>]</text>
+          <text x="110" y="1730" fill="#bbb" font-size="16" font-family="sans-serif">→ 全行ぶんを処理し終えると，AccY の数値だけが時間順に並んだリストができる</text>
+          <text x="110" y="1762" fill="#bbb" font-size="16" font-family="sans-serif">　 これを使って Task 3 では UFO の縦位置を決める</text>
 
           <!-- ループの繰り返し説明（右側に縦の矢印） -->
           <path d="M 660,1120 Q 690,1120 690,880 Q 690,840 660,840" fill="none" stroke="#4FC3F7" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#arrLoop)"/>
-          <text x="670" y="990" fill="#4FC3F7" font-size="20" font-family="sans-serif" transform="rotate(90 670 990)">次の行へ繰り返し</text>
-
-          <!-- 凡例 -->
-          <rect x="90" y="1880" width="540" height="160" rx="8" fill="rgba(255,255,255,0.04)" stroke="#444"/>
-          <text x="110" y="1924" fill="#bbb" font-size="22" font-weight="700">凡例（色の意味）</text>
-          <rect x="110" y="1953" width="22" height="22" fill="rgba(150,150,150,0.3)" stroke="#888"/><text x="140" y="1974" fill="#bbb" font-size="20">ファイル（生テキスト）</text>
-          <rect x="270" y="1953" width="22" height="22" fill="rgba(79,195,247,0.3)" stroke="#4FC3F7"/><text x="300" y="1974" fill="#bbb" font-size="20">文字列・文字列リスト</text>
-          <rect x="450" y="1953" width="22" height="22" fill="rgba(118,185,0,0.3)" stroke="#76B900"/><text x="480" y="1974" fill="#bbb" font-size="20">分割後の配列</text>
-          <rect x="110" y="1997" width="22" height="22" fill="rgba(255,184,0,0.3)" stroke="#FFB800"/><text x="140" y="2018" fill="#bbb" font-size="20">数値（float）</text>
-          <rect x="270" y="1997" width="22" height="22" fill="rgba(155,89,182,0.3)" stroke="#9b59b6"/><text x="300" y="2018" fill="#bbb" font-size="20">最終的なリスト</text>
+          <text x="670" y="990" fill="#4FC3F7" font-size="16" font-family="sans-serif" transform="rotate(90 670 990)">次の行へ繰り返し</text>
 
           <defs>
             <marker id="arrFlow" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#76B900"/></marker>
@@ -1233,7 +1227,7 @@ py5.<span class="fn">run_sketch</span>()</pre>
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#4FC3F7">1</div>
-      <h2>関数理解の口頭確認グループワーク <span style="font-size:0.55rem;color:#999;font-weight:400">── 約30分・全員必須・最初にやる</span></h2>
+      <h2>関数理解の口頭確認グループワーク <span style="font-size:0.55rem;color:#999;font-weight:400">── 全員必須・最初にやる</span></h2>
       <span class="tag tag-group">必修</span>
     </div>
 
@@ -1560,14 +1554,14 @@ result <span class="op">=</span> <span class="fn">average</span>(<span class="nu
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#4FC3F7">2</div>
-      <h2>バイブコーディング解説と opencode の導入 <span style="font-size:0.55rem;color:#999;font-weight:400">── 約30分</span></h2>
+      <h2>バイブコーディング解説と opencode の導入</h2>
       <span class="tag tag-standard">std5-1</span>
     </div>
 
     <!-- 2-0: バイブコーディングとは -->
     <div class="card standard">
       <div class="card-header">
-        <h3>2-0. バイブコーディングとは何か（5分）</h3>
+        <h3>2-0. バイブコーディングとは何か</h3>
         <span class="tag tag-standard">解説</span>
       </div>
 
@@ -1619,7 +1613,7 @@ result <span class="op">=</span> <span class="fn">average</span>(<span class="nu
     <!-- 2-1: ツール選択肢 -->
     <div class="card standard">
       <div class="card-header">
-        <h3>2-1. AIコーディングツールの選択肢（5分）</h3>
+        <h3>2-1. AIコーディングツールの選択肢</h3>
         <span class="tag tag-standard">解説</span>
       </div>
 
@@ -1664,7 +1658,6 @@ result <span class="op">=</span> <span class="fn">average</span>(<span class="nu
         <ul class="point-list">
           <li><strong>全員が同じ環境</strong> を実質ゼロ円で用意できる</li>
           <li><strong>モデル差し替えが自由</strong>（あとで Claude / GPT などに切替えられる）</li>
-          <li>卒業後に有料ツールへ移っても <strong>同じ操作感</strong></li>
         </ul>
       </div>
     </div>
@@ -1676,12 +1669,12 @@ result <span class="op">=</span> <span class="fn">average</span>(<span class="nu
         <span class="tag tag-standard">実習</span>
       </div>
 
-      <p>opencode 公式のインストールスクリプトを <strong>curl で取得して bash に流す</strong> 方式．以下を <strong>1ステップずつ</strong> 進める．分からなければ <strong>立ち止まって SA を呼ぶ</strong> ．先に進まない．</p>
+      <p>Homebrew で <strong>1コマンド</strong> インストールする．以下を <strong>1ステップずつ</strong> 進める．分からなければ <strong>立ち止まって SA を呼ぶ</strong> ．先に進まない．</p>
 
       <h4 style="color:#76B900;margin-top:1rem">実行イメージ（タイプアニメ）</h4>
       <div class="term" aria-label="terminal animation">
-        <span class="row r1"><span class="prompt">$</span> curl -fsSL https://opencode.ai/install | bash</span>
-        <span class="row r2"><span class="out">Installing opencode version: 1.x.x</span></span>
+        <span class="row r1"><span class="prompt">$</span> brew install opencode</span>
+        <span class="row r2"><span class="out">Installing opencode...</span></span>
         <span class="row r3"><span class="prompt">$</span> opencode --version</span>
         <span class="row r4"><span class="out">opencode 1.x.x</span></span>
         <span class="row r5"><span class="prompt">$</span> opencode</span>
@@ -1689,11 +1682,10 @@ result <span class="op">=</span> <span class="fn">average</span>(<span class="nu
 
       <!-- Step 0 -->
       <h4 style="color:#76B900;margin-top:1.5rem">Step 0. 前提を確認する</h4>
-      <p>下の2つのコマンドで，必要なツールがあるか確認．</p>
+      <p>下のコマンドで Homebrew があるか確認．</p>
       <pre><span class="code-label">Terminal ── 前提チェック</span>
-curl --version
 brew --version</pre>
-      <p style="font-size:0.9rem">→ どちらも何かしらバージョンが表示されればOK．「command not found」が出るものがあれば <strong>SAを呼ぶ</strong> ．</p>
+      <p style="font-size:0.9rem">→ バージョンが表示されればOK．「command not found」なら <strong>SAを呼ぶ</strong> ．</p>
 
       <details>
         <summary style="cursor:pointer;color:#76B900;padding:0.5rem 0.8rem;background:#0a1a0a;border-radius:6px;display:inline-block;font-size:0.85rem">▶ Homebrew が無い場合の入れ方</summary>
@@ -1721,40 +1713,25 @@ pwd</pre>
 
       <!-- Step 2 -->
       <h4 style="color:#76B900;margin-top:1.5rem">Step 2. opencode をインストール</h4>
-      <p>opencode 公式の install スクリプトをワンライナーで実行する．数十秒〜1分でダウンロード・展開される．</p>
+      <p>Homebrew で1コマンドで入れる．数十秒〜1分でダウンロード・展開される．PATH も自動で通る．</p>
       <pre><span class="code-label">Terminal ── opencode インストール</span>
-curl -fsSL https://opencode.ai/install | bash</pre>
-
-      <div class="callout-warning">
-        <h4>パイプして bash に流すのは危険じゃないの？</h4>
-        <p>「読まずに実行する」典型例で，本来は危険な習慣．授業では opencode 公式（<code>opencode.ai</code>）であることを教員が事前確認しているので使用するが，<strong>自分の開発では</strong> <code>curl ... -o install.sh</code> でいったん保存して <strong>中身を見てから</strong> 実行する習慣を持つ．</p>
-      </div>
-
-      <p style="font-size:0.9rem;margin-top:0.5rem">インストールが完了すると，最後に <strong>「Add the following to your shell rc」</strong> のような案内が表示される．これを次の Step 3 で実行する．</p>
+brew install opencode</pre>
 
       <!-- Step 3 -->
-      <h4 style="color:#76B900;margin-top:1.5rem">Step 3. PATH を通す</h4>
-      <p>opencode のバイナリは <code>~/.opencode/bin/</code> に入る．ここを <strong>PATH に追加</strong> しないと <code>opencode</code> コマンドが呼べない．</p>
-      <pre><span class="code-label">Terminal ── PATH 追記</span>
-echo 'export PATH="$HOME/.opencode/bin:$PATH"' &gt;&gt; ~/.zshrc
-source ~/.zshrc</pre>
-      <p style="font-size:0.9rem">→ <code>source</code> で .zshrc を読み直す．新しいターミナルタブを開いてもよい．</p>
-
-      <!-- Step 4 -->
-      <h4 style="color:#76B900;margin-top:1.5rem">Step 4. インストール成功を確認</h4>
+      <h4 style="color:#76B900;margin-top:1.5rem">Step 3. インストール成功を確認</h4>
       <pre><span class="code-label">Terminal ── バージョン確認</span>
 opencode --version</pre>
-      <p style="font-size:0.9rem">→ <code>opencode 1.x.x</code> のように表示されれば成功．「command not found」なら Step 3 の PATH 追記がうまく行っていない．</p>
+      <p style="font-size:0.9rem">→ <code>opencode 1.x.x</code> のように表示されれば成功．「command not found」なら新しいターミナルタブで再試行．</p>
 
-      <!-- Step 5 -->
-      <h4 style="color:#76B900;margin-top:1.5rem">Step 5. opencode を起動</h4>
+      <!-- Step 4 -->
+      <h4 style="color:#76B900;margin-top:1.5rem">Step 4. opencode を起動</h4>
       <pre><span class="code-label">Terminal ── 起動</span>
 cd ~/MD1/no5
 opencode</pre>
       <p style="font-size:0.9rem">→ TUI（ターミナル内 UI）が立ち上がる．初回はモデル選択画面が出る．</p>
 
-      <!-- Step 6 -->
-      <h4 style="color:#76B900;margin-top:1.5rem">Step 6. モデルを選ぶ（<strong>DeepSeek V4 Flash Free</strong>）</h4>
+      <!-- Step 5 -->
+      <h4 style="color:#76B900;margin-top:1.5rem">Step 5. モデルを選ぶ（<strong>DeepSeek V4 Flash Free</strong>）</h4>
       <p>opencode の初回モデル選択画面で，<strong>DeepSeek V4 Flash Free</strong> を選ぶ．<strong>APIキーの取得は不要</strong>．opencode が無料モデル経由で接続してくれる．</p>
       <ol style="padding-left:1.4rem;font-size:0.95rem">
         <li>モデル一覧から矢印キー（↑↓）で <strong>DeepSeek V4 Flash Free</strong> を探す</li>
@@ -1779,7 +1756,7 @@ opencode</pre>
       <h4 style="color:#76B900;margin-top:1.5rem">困ったときのチェックリスト</h4>
       <table style="font-size:0.88rem">
         <tr><th>症状</th><th>対処</th></tr>
-        <tr><td><code>command not found: opencode</code></td><td>PATH が通っていない．Step 3 を再実行 → 新しいターミナルタブで再試行</td></tr>
+        <tr><td><code>command not found: opencode</code></td><td>新しいターミナルタブを開いて再試行．それでもダメなら <code>brew install opencode</code> をもう一度</td></tr>
         <tr><td><code>Permission denied</code> / <code>EACCES</code></td><td><code>sudo</code> は付けない．SAを呼ぶ</td></tr>
         <tr><td>モデル一覧に DeepSeek が出ない</td><td>opencode を一度終了して再起動．新しいターミナルタブで <code>opencode</code></td></tr>
         <tr><td><code>rate limit exceeded</code></td><td>Free 枠の利用上限に達した．時間を置くか SA に連絡</td></tr>
@@ -1790,9 +1767,9 @@ opencode</pre>
       <div class="callout-tip">
         <h4>進捗チェック（自己確認）</h4>
         <ul class="point-list">
-          <li>☐ Step 4 で <code>opencode --version</code> が動いた</li>
-          <li>☐ Step 5 で opencode の TUI が立ち上がった</li>
-          <li>☐ Step 6 で <strong>DeepSeek V4 Flash Free</strong> を選んでプロンプト欄が見える</li>
+          <li>☐ Step 3 で <code>opencode --version</code> が動いた</li>
+          <li>☐ Step 4 で opencode の TUI が立ち上がった</li>
+          <li>☐ Step 5 で <strong>DeepSeek V4 Flash Free</strong> を選んでプロンプト欄が見える</li>
         </ul>
       </div>
     </div>
@@ -1854,15 +1831,6 @@ opencode</pre>
         </ol>
         <p style="font-size:0.85rem;color:#999;margin-top:0.3rem">3〜4往復で目的に辿りつくのが普通．完璧なプロンプトを目指さず雑に投げて反応を見る．</p>
       </div>
-
-      <div class="callout-warning">
-        <h4>そのまま使わない</h4>
-        <ul class="point-list">
-          <li>ファイル削除・パッケージ追加の命令が混ざっていないか</li>
-          <li>APIキーが直書きされていないか</li>
-          <li>関数の意味を自分の言葉で説明できるか</li>
-        </ul>
-      </div>
     </div>
 
     <!-- 2-3: 実行スクショ -->
@@ -1872,7 +1840,7 @@ opencode</pre>
         <span class="tag tag-standard">参考</span>
       </div>
 
-      <p>実際にターミナルで opencode を起動している様子（約 37 秒・音声なし）．再生して画面遷移を確認してから自分のターミナルで試そう．</p>
+      <p>実際にターミナルで opencode を起動している様子（音声なし）．再生して画面遷移を確認してから自分のターミナルで試そう．</p>
 
       <div class="shot-frame">
         <video
@@ -1893,7 +1861,7 @@ opencode</pre>
     <!-- 2-4: 実際の使用例 -->
     <div class="card standard">
       <div class="card-header">
-        <h3>2-5. 実際の使用例（動画・約2分）</h3>
+        <h3>2-5. 実際の使用例（動画）</h3>
         <span class="tag tag-standard">参考</span>
       </div>
 
@@ -1925,10 +1893,6 @@ opencode</pre>
         </ul>
       </div>
 
-      <div class="callout-tip">
-        <h4>動画と同じことを自分でやってみたい人へ</h4>
-        <p>授業の <a href="#sec-task2" style="color:#93D500">2-6 練習プロンプト</a> をまずクリアしてから，<strong>動画と同じ指示</strong> を打ってみると流れが体験できる．いきなり UFO のプロンプト（§3）に入る前のウォームアップに最適．</p>
-      </div>
     </div>
 
     <!-- 2-5: 練習プロンプト -->
@@ -1972,21 +1936,21 @@ hello world を Python で書いてください。</pre>
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#FFB800">3</div>
-      <h2>加速度センサと時系列データ: UFO横揺れアニメ＋移動平均 <span style="font-size:0.55rem;color:#999;font-weight:400">── 約40分</span></h2>
+      <h2>加速度センサと時系列データ: UFO横揺れアニメ＋移動平均</h2>
       <span class="tag tag-standard">std5-2</span>
     </div>
 
     <!-- 3-1: 加速度センサ・時系列データの基礎 -->
     <div class="card standard">
       <div class="card-header">
-        <h3>3-1. 加速度センサと時系列データの基礎（5分）</h3>
+        <h3>3-1. 加速度センサと時系列データの基礎</h3>
         <span class="tag tag-standard">解説</span>
       </div>
 
-      <p>今日のデータ <code>acc_y.csv</code> は <strong>スマートフォンの加速度センサ</strong> から取得したと仮定した疑似データ．データサイエンス（DS）とコンピュータサイエンス（CS）の両面から <strong>時系列データの扱い方</strong> を学ぶ．</p>
+      <p>今日のデータ <code>acc_y.csv</code> は <strong>スマートフォンの加速度センサ</strong> から取得したと仮定した疑似データ．データサイエンスとコンピュータサイエンスの両面から <strong>時系列データの扱い方</strong> を学ぶ．</p>
 
       <div class="concept-box">
-        <h4>加速度センサとは（DS視点）</h4>
+        <h4>加速度センサとは</h4>
         <ul class="point-list">
           <li>スマホ・スマートウォッチ・自動車・地震計などに入っている</li>
           <li>X / Y / Z の3軸の <strong>加速度（m/s²）</strong> を時間ごとに記録</li>
@@ -1995,7 +1959,7 @@ hello world を Python で書いてください。</pre>
       </div>
 
       <div class="concept-box">
-        <h4>時系列データとは（CS視点）</h4>
+        <h4>時系列データとは</h4>
         <ul class="point-list">
           <li><strong>「時刻」と「値」のペア</strong> が時間順に並んだデータ列</li>
           <li>典型フォーマット: <code>CSV</code>（カンマ区切り）．1行＝1サンプル</li>
@@ -2020,7 +1984,7 @@ timestamp,AccY
     <!-- 3-2: Step A 基本アニメ -->
     <div class="card standard">
       <div class="card-header">
-        <h3>3-2. Step A: UFO横揺れアニメを opencode で作る（15分）</h3>
+        <h3>3-2. Step A: UFO横揺れアニメを opencode で作る</h3>
         <span class="tag tag-standard">実習</span>
       </div>
 
@@ -2060,15 +2024,10 @@ timestamp,AccY
         </svg>
       </div>
 
-      <pre><span class="code-label">プロンプト例（参考・自分の言葉で書き換える）</span>
-py5 を使った Python コードを書いてください。
-
-- ウィンドウは 800x400
-- ufo.png を読み込む
-- acc_y.csv を読み込む（先頭行はヘッダ、AccY 列を使う）
-- UFO が画面の左端から右端へ、時間とともに横方向に進む
-- 縦方向は AccY の値を -10..10 → 0..400 に変換した位置
-- すべてのフレームを表示し終わったら停止</pre>
+      <div class="callout-info">
+        <h4>プロンプトは自分で考える</h4>
+        <p>欲しい動作（ウィンドウサイズ・UFO の動き・CSV のどの列を使うか・終了条件 など）を <strong>自分の言葉で</strong> opencode に指示しよう．サンプル文をそのまま貼らないこと．迷ったら隣の人と何を書くか相談してから打つ．</p>
+      </div>
 
       <div class="try-it">
         <h4>動作確認ポイント</h4>
@@ -2093,7 +2052,7 @@ py5 を使った Python コードを書いてください。
     <!-- 3-3: Step B 移動平均 -->
     <div class="card advanced">
       <div class="card-header">
-        <h3>3-3. Step B: 移動平均で「なめらか」にする（15分）</h3>
+        <h3>3-3. Step B: 移動平均で「なめらか」にする</h3>
         <span class="tag tag-advanced">実習</span>
       </div>
 
@@ -2174,6 +2133,148 @@ Step B（移動平均で平滑化・なめらか）: （スクショ）
   </div>
 </section>
 
+<!-- ============ TASK 4: 発展課題 adv5-1 ============ -->
+<section id="sec-task4">
+  <a id="adv5-1" style="display:block;height:0"></a>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">4</div>
+      <h2>発展課題: 自分のスマホで測ったセンサデータで <strong>自由作品</strong> をつくる</h2>
+      <span class="tag tag-advanced">adv5-1</span>
+    </div>
+
+    <!-- 4-0: 課題概要 -->
+    <div class="card advanced">
+      <div class="card-header">
+        <h3>4-0. 課題の主旨</h3>
+        <span class="tag tag-advanced">必読</span>
+      </div>
+      <p>授業で使った <code>acc_y.csv</code> は「与えられたデータ」だった．発展課題では <strong>自分でセンサデータを集めるところから</strong> やる．</p>
+      <ol style="padding-left:1.4rem;font-size:0.95rem;line-height:1.8">
+        <li>スマートフォンで <strong>加速度・ジャイロ・回転などのセンサ値を取得できるアプリ</strong> を <strong>自分で探して</strong> インストールする．</li>
+        <li>自分の手で動かす／歩く／揺らす などして <strong>センサデータを記録</strong> し，CSV としてエクスポート（または手作業で書き出し）する．</li>
+        <li>そのデータを使って <strong>「再現したい動き」のあるアニメーション作品</strong> を py5 でつくる．題材は完全に自由．</li>
+      </ol>
+      <p style="margin-top:0.6rem">標準課題の UFO のように <strong>センサ値 → 画面の動き</strong> へマッピングするのが土台．<strong>opencode（バイブコーディング）</strong>で AI に手伝ってもらってOK．</p>
+    </div>
+
+    <!-- 4-1: 例: 蛍の作品 -->
+    <div class="card advanced">
+      <div class="card-header">
+        <h3>4-1. 作品例: 「夜空を飛ぶ蛍」</h3>
+        <span class="tag tag-advanced">サンプル</span>
+      </div>
+      <p>イメージしやすいよう，1つだけ例を示す．<strong>これをそのまま作る必要はない</strong> ──自分のオリジナル作品を考えよう．</p>
+
+      <div style="background:#0F0F1A;border:1px solid #4A3A6A;border-radius:10px;padding:1rem 1.2rem;margin:0.8rem 0">
+        <h4 style="color:#C39BD3;margin:0 0 0.5rem">🪲 例: 蛍の動きをスマホで再現</h4>
+        <ul class="point-list" style="margin:0">
+          <li><strong>センサの取り方:</strong> スマホを手のひらに乗せ，<strong>ふらふらと不規則に揺らしながら</strong> 30〜60秒間，加速度（XYZ）を記録する．</li>
+          <li><strong>マッピング:</strong> 加速度 X → 蛍の <strong>横方向の漂い</strong>，加速度 Y → <strong>上下のふわふわ</strong>，加速度の大きさ → <strong>光の強さ（明滅）</strong>．</li>
+          <li><strong>背景:</strong> 真っ暗な夜空（黒〜濃紺のグラデーション）．星をいくつか点で描く．</li>
+          <li><strong>蛍:</strong> 小さな黄緑色の光の玉．中心は明るく，周囲はぼんやり光るグロー（半透明の円を重ねる）．</li>
+          <li><strong>移動平均</strong> をかけて動きをなめらかに．蛍が <strong>ふわっと</strong> 漂う感じになる．</li>
+          <li>応用: 蛍を <strong>複数匹</strong> 出して，それぞれ少しずつ <strong>時間をずらして</strong> 同じデータを再生 → 群れのように見える．</li>
+        </ul>
+      </div>
+
+      <p style="font-size:0.88rem;color:#999">他のアイデア例（自分でもっと面白い題材を考えよう）:</p>
+      <ul style="font-size:0.9rem;color:#bbb;padding-left:1.4rem;margin:0">
+        <li>水面に落ちた葉が <strong>波で揺れる</strong>（ゆっくり歩いて記録した加速度を使う）</li>
+        <li>鳥が <strong>羽ばたきながら飛ぶ</strong>（スマホを縦に小刻みに振る）</li>
+        <li>音楽に合わせて <strong>踊るキャラクター</strong>（スマホをリズミカルに動かす）</li>
+        <li>嵐の中で <strong>傘がひっくり返る</strong>（スマホを激しくランダムに動かす）</li>
+        <li>くらげ・桜の花びら・雪・泡・魚 … 「ゆらぎ」のあるものは何でも</li>
+      </ul>
+    </div>
+
+    <!-- 4-2: アプリの探し方 -->
+    <div class="card advanced">
+      <div class="card-header">
+        <h3>4-2. センサデータ取得アプリの探し方</h3>
+        <span class="tag tag-advanced">調査</span>
+      </div>
+      <p>アプリは <strong>自分で探す</strong> ことが課題の一部．App Store / Google Play で「加速度センサ」「accelerometer」「sensor logger」などで検索し，<strong>CSV エクスポートできる</strong> ものを選ぶと楽．</p>
+
+      <div class="callout-tip">
+        <h4>選ぶときのチェックポイント</h4>
+        <ul class="point-list">
+          <li>無料で使えるか（または学生にとって許容範囲か）</li>
+          <li>加速度・ジャイロなど <strong>必要なセンサ</strong> が取れるか</li>
+          <li>記録したデータを <strong>CSV / 表形式で書き出せる</strong> か（メール送信，AirDrop，クラウド保存などの手段）</li>
+          <li>サンプリングレート（1秒に何回記録するか）が選べるとなお良い</li>
+          <li>レビュー・運営元・プライバシーポリシーをざっと確認</li>
+        </ul>
+      </div>
+
+      <div class="callout-warning">
+        <h4>個人情報・センサ取得時の注意</h4>
+        <ul class="point-list">
+          <li>アプリのアクセス権限要求は内容を読んでから許可する</li>
+          <li>動画や位置情報を <strong>記録しないアプリ</strong> を選ぶと安心</li>
+          <li>取得したセンサデータも <strong>個人を特定できる情報</strong> になり得る（歩行パターン等）．SNSに公開する場合は自分の身体情報が含まれていないか考える</li>
+        </ul>
+      </div>
+
+      <p style="font-size:0.88rem;color:#999;margin-top:0.6rem">※ 教員から特定のアプリを <strong>推奨はしない</strong> ── 「自分で探して比較する」 という調査も学びの一部．</p>
+    </div>
+
+    <!-- 4-3: 進め方 -->
+    <div class="card advanced">
+      <div class="card-header">
+        <h3>4-3. 進め方（推奨手順）</h3>
+        <span class="tag tag-advanced">手順</span>
+      </div>
+      <ol style="padding-left:1.4rem;font-size:0.95rem;line-height:1.9">
+        <li><strong>作品のコンセプトを決める</strong>（先に絵を決める）．「何が」「どう動く」かをひと言で言えるようにする．</li>
+        <li><strong>必要な動きの種類</strong> を考える（ふわふわ／ガタガタ／円を描く／ジャンプ …）．それに合うセンサ操作を決める．</li>
+        <li><strong>アプリを探してインストール</strong>．試しに数秒記録 → CSV で取り出せるか確認する．</li>
+        <li><strong>本番のデータを記録</strong>．長すぎず（30〜90秒程度）扱いやすい長さで．</li>
+        <li>CSV を <code>~/MD1/no5/</code> など作業フォルダに置く．列名・行数を確認．</li>
+        <li><strong>opencode で py5 アニメを実装</strong>．センサ値 → 画面上の何かの動きにマッピング．必要なら <strong>移動平均</strong> で滑らかにする．</li>
+        <li>動きを観察 → コンセプトに合うようにパラメータ（窓幅・色・サイズ・スピード）を調整．</li>
+        <li>完成したら <strong>画面録画</strong>（macOS: ⌘+Shift+5）で 10〜30秒の動画を作る．</li>
+      </ol>
+    </div>
+
+    <!-- 4-4: 提出物 -->
+    <div class="card advanced">
+      <div class="card-header">
+        <h3>4-4. 提出物</h3>
+        <span class="tag tag-advanced">提出</span>
+      </div>
+      <ul class="point-list" style="font-size:0.95rem;line-height:1.8">
+        <li><strong>作品の画面録画</strong>（10〜30秒の <code>.mp4</code> または <code>.mov</code>） ── Google Classroom にアップロード</li>
+        <li><strong>レポート PDF（1ファイル）</strong> に以下を含める:
+          <ul style="margin-top:0.3rem">
+            <li>作品タイトル / コンセプト（何を再現したか）</li>
+            <li>使ったアプリ名・選んだ理由・取得したセンサ（加速度／ジャイロ など）</li>
+            <li>センサ値 → 画面の動き の <strong>マッピング設計</strong></li>
+            <li>opencode に投げた <strong>プロンプトのうち効いたもの</strong>（自分の言葉で）</li>
+            <li>完成 py5 スクリプト（コード貼り付け）</li>
+            <li>作品スクリーンショット 1〜2枚</li>
+            <li>振り返り（うまくいった点／詰まった点／次やるなら何を変えるか）</li>
+          </ul>
+        </li>
+        <li><strong>使ったセンサデータの CSV</strong>（数MB以下に切り詰めて）</li>
+      </ul>
+      <div class="callout-info">
+        <h4>評価のポイント</h4>
+        <ul class="point-list">
+          <li>「センサ値 → 動き」の <strong>対応づけが意図的</strong> で説明できる（適当に繋いだだけではない）</li>
+          <li>コンセプトと表現が <strong>一致</strong> している（蛍なら「ふわっとした漂い」が見える，など）</li>
+          <li>移動平均などの <strong>時系列処理</strong> を1つ以上使っている</li>
+          <li>AI に丸投げではなく <strong>自分で調整した形跡</strong> がある</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="notion-submit">
+      <div><strong>提出先:</strong> Google Classroom（PDF + 動画 + CSV）<span style="display:inline-block;margin-left:0.5rem;background:#FFB800;color:#1a1a1a;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px">adv5-1</span></div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ 解答例 ============ -->
 <section id="answers-section" data-release="2026-05-25T23:59">
   <div class="container" id="sec-answers">
@@ -2182,7 +2283,119 @@ Step B（移動平均で平滑化・なめらか）: （スクショ）
       <h2>解答例</h2>
     </div>
 
-    <p style="font-size:0.9rem;color:#999;margin-bottom:1.5rem">解答例は提出期限後（5/25 23:59〜）に公開されます．</p>
+    <p style="font-size:0.9rem;color:#999;margin-bottom:1.5rem">標準課題・発展課題の解答例は提出期限後（5/25 23:59〜）に公開されます．口頭試問の答えは下のトグルから随時確認できます．</p>
+
+    <!-- 口頭試問 解答（トグル） -->
+    <div style="background:#0F1418;border:1px solid #2a3a4a;border-radius:10px;padding:1rem 1.2rem;margin-bottom:1.5rem">
+      <h3 style="color:#4FC3F7;margin:0 0 0.6rem;font-size:1.05rem">📘 Task 1 口頭試問の答え</h3>
+      <p style="font-size:0.85rem;color:#999;margin:0 0 0.8rem">グループで口頭確認したあとの答え合わせ用．まず自分で答えてから開くこと．</p>
+
+      <details style="margin:0.4rem 0">
+        <summary style="cursor:pointer;color:#4FC3F7;font-size:0.92rem">▶ Q1. 引数と戻り値</summary>
+        <div style="margin-top:0.5rem;padding-left:0.8rem;font-size:0.92rem;line-height:1.7">
+          <p><strong>引数:</strong> <code>name</code>（呼び出し時に <code>"Tanaka"</code> が渡る）．<strong>戻り値:</strong> <code>"Hello, " + name</code> で作った文字列 <code>"Hello, Tanaka"</code>．</p>
+          <p><strong>実行結果:</strong> <code>Hello, Tanaka</code> が表示される．</p>
+        </div>
+      </details>
+
+      <details style="margin:0.4rem 0">
+        <summary style="cursor:pointer;color:#4FC3F7;font-size:0.92rem">▶ Q2. 定義と呼び出し</summary>
+        <div style="margin-top:0.5rem;padding-left:0.8rem;font-size:0.92rem;line-height:1.7">
+          <p><strong>コードA:</strong> <code>say_hi()</code> を <strong>定義</strong> しただけで <strong>呼び出していない</strong> ため何も起きない．</p>
+          <p><strong>コードB:</strong> 定義の下で <code>say_hi()</code> を <strong>呼び出している</strong> ので関数の中身が実行され <code>Hi!</code> が表示される．</p>
+          <p>「定義」は関数のレシピを書くこと，「呼び出し」はそのレシピを実際に実行すること．</p>
+        </div>
+      </details>
+
+      <details style="margin:0.4rem 0">
+        <summary style="cursor:pointer;color:#4FC3F7;font-size:0.92rem">▶ Q3. デフォルト引数</summary>
+        <div style="margin-top:0.5rem;padding-left:0.8rem;font-size:0.92rem;line-height:1.7">
+          <p><strong>x = 15</strong>（<code>add(5)</code> は <code>b</code> を省略 → デフォルト値 <code>b=10</code> が使われる．<code>5 + 10 = 15</code>）</p>
+          <p><strong>y = 25</strong>（<code>add(5, 20)</code> は <code>b=20</code> を明示．<code>5 + 20 = 25</code>）</p>
+          <p>引数にデフォルト値があると <strong>省略可能</strong> になる．</p>
+        </div>
+      </details>
+
+      <details style="margin:0.4rem 0">
+        <summary style="cursor:pointer;color:#4FC3F7;font-size:0.92rem">▶ Q4. 関数のメリット</summary>
+        <div style="margin-top:0.5rem;padding-left:0.8rem;font-size:0.92rem;line-height:1.7">
+          <ul style="padding-left:1.2rem;margin:0">
+            <li><strong>重複を減らせる</strong>（DRY 原則）．同じ計算を1か所にまとめられる．</li>
+            <li><strong>修正が1か所</strong> で済む（例: 税率が 10%→8% に変わっても <code>add_tax</code> 内だけ直せばよい）．</li>
+            <li><strong>名前で意味が分かる</strong>．<code>add_tax(100)</code> は読むだけで「税込価格を求める」と分かる．</li>
+            <li><strong>テストや再利用</strong> がしやすい．</li>
+          </ul>
+        </div>
+      </details>
+
+      <details style="margin:0.4rem 0">
+        <summary style="cursor:pointer;color:#4FC3F7;font-size:0.92rem">▶ Q5. リストを処理する関数</summary>
+        <div style="margin-top:0.5rem;padding-left:0.8rem;font-size:0.92rem;line-height:1.7">
+          <p><strong>何をする関数か:</strong> 渡されたリストの各要素を2倍にした新しいリストを返す．</p>
+          <ol style="padding-left:1.2rem;margin:0">
+            <li><code>result = []</code> で空のリストを用意．</li>
+            <li><code>for v in values</code> で <code>values</code> から1つずつ取り出す（1→2→3）．</li>
+            <li>各 <code>v</code> に対して <code>new_value = v * 2</code> を計算．</li>
+            <li><code>result.append(new_value)</code> で末尾に追加．</li>
+            <li>ループ終了後に <code>result</code> を返す．</li>
+          </ol>
+          <p><strong>実行結果:</strong> <code>[2, 4, 6]</code></p>
+        </div>
+      </details>
+
+      <details style="margin:0.4rem 0">
+        <summary style="cursor:pointer;color:#76B900;font-size:0.92rem">▶ Q6. 複数引数（BMI）</summary>
+        <div style="margin-top:0.5rem;padding-left:0.8rem;font-size:0.92rem;line-height:1.7">
+          <p><strong>引数: 2個．</strong> <code>weight</code>（体重 kg），<code>height</code>（身長 m）．</p>
+          <p>計算: <code>60 / (1.70 * 1.70) = 60 / 2.89 ≈ 20.76</code></p>
+          <p><strong>my_bmi ≈ 20.76</strong>（おおよそ 20〜21 と答えられればOK）．</p>
+        </div>
+      </details>
+
+      <details style="margin:0.4rem 0">
+        <summary style="cursor:pointer;color:#76B900;font-size:0.92rem">▶ Q7. 戻り値がない関数</summary>
+        <div style="margin-top:0.5rem;padding-left:0.8rem;font-size:0.92rem;line-height:1.7">
+          <p><strong>result には <code>None</code> が入る．</strong> <code>show_message</code> は <code>print</code> しているだけで <code>return</code> が無い．Python では <code>return</code> が無い関数は自動で <code>None</code> を返す．</p>
+          <p><strong>違い:</strong> 戻り値がある関数は <strong>計算結果を呼び出し元に返す</strong>（変数に代入できる）．戻り値が無い関数は <strong>動作だけが目的</strong> で，値を受け取っても意味のあるデータは入らない．</p>
+        </div>
+      </details>
+
+      <details style="margin:0.4rem 0">
+        <summary style="cursor:pointer;color:#76B900;font-size:0.92rem">▶ Q8. スコープ</summary>
+        <div style="margin-top:0.5rem;padding-left:0.8rem;font-size:0.92rem;line-height:1.7">
+          <p><code>result</code> は <code>150</code> と表示される．その次の <code>print(x)</code> は <code>NameError: name 'x' is not defined</code> でエラー．</p>
+          <p><strong>理由:</strong> <code>x</code> は <code>calculate()</code> の <strong>中で定義されたローカル変数</strong>．関数を抜けると <code>x</code> は消える．関数の <strong>外</strong> からは見えない（これを <strong>スコープ</strong> と呼ぶ）．</p>
+        </div>
+      </details>
+
+      <details style="margin:0.4rem 0">
+        <summary style="cursor:pointer;color:#76B900;font-size:0.92rem">▶ Q9. 関数の中から関数を呼ぶ</summary>
+        <div style="margin-top:0.5rem;padding-left:0.8rem;font-size:0.92rem;line-height:1.7">
+          <ol style="padding-left:1.2rem;margin:0">
+            <li><code>add_three(1, 2, 3)</code> を呼び出す．</li>
+            <li>中で <code>add(1, 2)</code> が呼ばれて <code>first = 3</code>．</li>
+            <li>次に <code>add(3, 3)</code> が呼ばれて <code>total = 6</code>．</li>
+            <li><code>return total</code> で <code>6</code> を返す．</li>
+          </ol>
+          <p><strong>最終的な値: 6</strong></p>
+        </div>
+      </details>
+
+      <details style="margin:0.4rem 0">
+        <summary style="cursor:pointer;color:#76B900;font-size:0.92rem">▶ Q10. average(a, b) の解答例</summary>
+        <div style="margin-top:0.5rem;padding-left:0.8rem;font-size:0.92rem;line-height:1.7">
+<pre style="margin:0.4rem 0"><span class="code-label">Python ── Q10 解答例</span>
+<span class="kw">def</span> <span class="fn">average</span>(a, b):
+    total <span class="op">=</span> a <span class="op">+</span> b
+    answer <span class="op">=</span> total <span class="op">/</span> <span class="num">2</span>
+    <span class="kw">return</span> answer
+
+result <span class="op">=</span> <span class="fn">average</span>(<span class="num">10</span>, <span class="num">20</span>)
+<span class="fn">print</span>(result)  <span class="cmt"># → 15.0</span></pre>
+          <p>口頭で「<code>def</code> から始めて関数名と引数」「足す」「2で割る」「<code>return</code>」の4つが言えていれば正解．</p>
+        </div>
+      </details>
+    </div>
 
     <div id="answers-locked" style="display:none"></div>
 
