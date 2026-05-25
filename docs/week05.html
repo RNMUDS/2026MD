@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>第5回: 時系列データと加速度センサの基礎 | MD1</title>
+<title>第5回: 時系列データ × バイブコーディング | MD1</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -20,7 +20,6 @@ body {
   overflow-wrap: anywhere;
   word-break: normal;
 }
-/* Media and embeds should never overflow their container */
 img, video, iframe, svg, canvas { max-width: 100%; height: auto; }
 
 /* ============ LAYOUT ============ */
@@ -61,7 +60,7 @@ section + section { border-top: 1px solid #222; }
   line-height: 1.3;
   margin-bottom: 0.75rem;
 }
-.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 700px; }
 
 /* ============ SUBMISSION BOX ============ */
 .submission-box {
@@ -80,34 +79,34 @@ section + section { border-top: 1px solid #222; }
 }
 .submission-items {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
-  gap: 0.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0.8rem;
 }
 .sub-item {
   display: flex; flex-direction: column; align-items: center;
   text-align: center;
-  gap: 0.3rem;
+  gap: 0.5rem;
   background: #1a1a1a;
   border: 1px solid #333;
-  border-radius: 0.4rem;
-  padding: 0.6rem 0.4rem;
-  font-size: 0.55rem;
+  border-radius: 0.6rem;
+  padding: 1rem 0.8rem;
+  font-size: 1.05rem; /* 約 16pt（17px）─ 最低16pt 要件を満たす */
   font-weight: 500;
-  line-height: 1.3;
+  line-height: 1.5;
 }
-.sub-item .sub-count {
-  margin-bottom: 0.1rem;
-}
+.sub-item .sub-count { margin-bottom: 0.2rem; }
 .sub-item .tag {
-  margin-bottom: 0.15rem;
+  margin-bottom: 0.3rem;
+  font-size: 0.85rem; /* sub-item 内タグも読みやすく */
+  padding: 0.2rem 0.7rem;
 }
 .sub-count {
   background: #76B900;
   color: white;
-  border-radius: 0.2rem;
-  min-width: 1.5rem; height: 1.5rem;
+  border-radius: 0.3rem;
+  min-width: 2rem; height: 2rem;
   display: flex; align-items: center; justify-content: center;
-  font-size: 0.7rem; font-weight: 700;
+  font-size: 1.1rem; font-weight: 700;
 }
 
 /* ============ TAGS ============ */
@@ -125,6 +124,7 @@ section + section { border-top: 1px solid #222; }
 .tag-standard  { background: #0a1a2e; color: #4FC3F7; }
 .tag-advanced  { background: #2e1a0a; color: #FFB800; }
 .tag-group     { background: #1a2e0a; color: #76B900; }
+.tag-pre       { background: rgba(79,195,247,0.18); color: #4FC3F7; }
 
 /* ============ EXAM ALERT TAG ============ */
 .exam-alert {
@@ -149,6 +149,7 @@ section + section { border-top: 1px solid #222; }
 .section-header {
   display: flex; align-items: center; gap: 0.75rem;
   margin-bottom: 1.5rem;
+  flex-wrap: wrap;
 }
 .section-num {
   width: 2.5rem; height: 2.5rem;
@@ -177,6 +178,7 @@ section + section { border-top: 1px solid #222; }
   margin-bottom: 1rem;
   padding-bottom: 0.75rem;
   border-bottom: 2px solid #222;
+  flex-wrap: wrap;
 }
 .card-header h3 { font-size: 1.1rem; font-weight: 700; }
 .card.standard  { border-left: 4px solid #76B900; }
@@ -252,9 +254,9 @@ pre .op { color: #93D500; }
   font-weight: 500;
 }
 
-/* inline code */
 :not(pre) > code {
   font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
   background: rgba(108,99,255,0.15);
   padding: 0.15em 0.45em;
   border-radius: 5px;
@@ -336,7 +338,7 @@ details summary::before {
 details[open] summary::before { transform: rotate(90deg); }
 details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
 
-/* ============ WARNING / DANGER CALLOUT ============ */
+/* ============ CALLOUTS ============ */
 .callout-danger {
   background: rgba(255, 82, 82, 0.08);
   border: 1px solid rgba(255, 82, 82, 0.3);
@@ -345,9 +347,7 @@ details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
   padding: 1rem 1.2rem;
   margin: 1rem 0;
 }
-.callout-danger h4 {
-  color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
-}
+.callout-danger h4 { color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
 .callout-warning {
   background: rgba(255, 184, 0, 0.08);
   border: 1px solid rgba(255, 184, 0, 0.3);
@@ -356,9 +356,7 @@ details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
   padding: 1rem 1.2rem;
   margin: 1rem 0;
 }
-.callout-warning h4 {
-  color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
-}
+.callout-warning h4 { color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
 .callout-info {
   background: rgba(108, 99, 255, 0.08);
   border: 1px solid rgba(108, 99, 255, 0.3);
@@ -367,9 +365,7 @@ details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
   padding: 1rem 1.2rem;
   margin: 1rem 0;
 }
-.callout-info h4 {
-  color: #76B900; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
-}
+.callout-info h4 { color: #76B900; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
 .callout-tip {
   background: rgba(155, 89, 182, 0.08);
   border: 1px solid rgba(155, 89, 182, 0.3);
@@ -378,9 +374,7 @@ details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
   padding: 1rem 1.2rem;
   margin: 1rem 0;
 }
-.callout-tip h4 {
-  color: #93D500; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
-}
+.callout-tip h4 { color: #93D500; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
 
 /* ============ FOOTER ============ */
 footer {
@@ -423,7 +417,7 @@ a.sub-item:hover {
   border-color: #76B900;
 }
 
-/* ============ SECTION NAV (always visible at top) ============ */
+/* ============ SECTION NAV ============ */
 .section-nav {
   position: fixed;
   top: 0;
@@ -440,9 +434,8 @@ a.sub-item:hover {
   gap: 0.3rem;
   flex-wrap: wrap;
 }
-/* Push body content down to make room for fixed nav */
 body { padding-top: 2.2rem; }
-.section-nav a { 
+.section-nav a {
   color: #999;
   text-decoration: none;
   font-size: 0.45rem;
@@ -455,9 +448,8 @@ body { padding-top: 2.2rem; }
 .section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
 .section-nav a.nav-assignment { color: #93D500; }
 .section-nav a.nav-exam { color: #FFB800; }
+.section-nav a.nav-pre { color: #4FC3F7; }
 
-/* ============ SCROLL TARGET OFFSET ============ */
-/* Account for fixed nav (~2.2rem) so anchor jumps land below it */
 [id] { scroll-margin-top: 3.5rem; }
 
 /* ============ TRY-IT BOX ============ */
@@ -483,30 +475,81 @@ body { padding-top: 2.2rem; }
   margin: 0.3rem 0.2rem;
   font-size: 0.85rem;
 }
-.keyword-box .kw-term {
-  color: #76B900; font-weight: 700; white-space: nowrap;
+.keyword-box .kw-term { color: #76B900; font-weight: 700; white-space: nowrap; }
+.keyword-box .kw-desc { color: #ccc; font-size: 0.8rem; }
+
+/* ============ AGENDA TABLE ============ */
+.agenda {
+  width: 100%;
+  font-size: 0.92rem;
 }
-.keyword-box .kw-desc {
-  color: #ccc; font-size: 0.8rem;
+.agenda th { background: rgba(108, 99, 255, 0.2); color: #4FC3F7; }
+.agenda td.time { color: #FFB800; font-weight: 700; white-space: nowrap; }
+
+/* ============ COMPARE BLOCK (vibe) ============ */
+.compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+  margin: 1rem 0;
+}
+.compare > div {
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  font-size: 0.92rem;
+}
+.compare .good { background: rgba(118,185,0,0.08); border: 1px solid #4A7A00; }
+.compare .bad  { background: rgba(255, 82, 82, 0.08); border: 1px solid #FF5252; }
+.compare h4 { font-weight: 700; margin-bottom: 0.4rem; font-size: 0.95rem; }
+.compare .good h4 { color: #76B900; }
+.compare .bad  h4 { color: #FF5252; }
+@media (max-width: 640px) {
+  .compare { grid-template-columns: 1fr; }
 }
 
-/* ============ REDUCED MOTION ============ */
+/* ============ PRE-LINK PANEL ============ */
+.pre-link-panel {
+  background: linear-gradient(135deg, #0a2233, #0a1822);
+  border: 1px solid #4FC3F7;
+  border-radius: 12px;
+  padding: 0.9rem 1.2rem;
+  margin: 1rem 0;
+  display: flex; align-items: center; gap: 0.8rem;
+  font-size: 0.92rem;
+}
+.pre-link-panel a {
+  color: #4FC3F7; font-weight: 700; text-decoration: none;
+  white-space: nowrap;
+}
+.pre-link-panel a:hover { text-decoration: underline; }
+.pre-link-panel::before { content: '\1F4DA'; font-size: 1.1rem; }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   details summary::before { transition: none; }
+  .exam-alert { animation: none; }
 }
 </style>
 </head>
 <body>
 
 <!-- ============ SECTION NAV ============ -->
-<nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week01.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week02.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week03.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week04.html">4</a> <a style="color:#76B900;background:rgba(118,185,0,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="week05.html">5</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week06.html">6</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week07.html">7</a> </div>
-  <a href="#sec-schedule">日程</a>
-  <a href="#sec-teacher">0. 説明</a>
-  <a href="#sec-std5-1" class="nav-assignment">std5-1</a>
-  <a href="#sec-std5-2" class="nav-assignment">std5-2</a>
-  <a href="#sec-exam" class="nav-exam">口頭試問</a>
-  <a href="#sec-cs">CS/DS基礎</a>
+<nav class="section-nav">
+  <div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem">
+    <span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span>
+    <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week01.html">1</a>
+    <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week02.html">2</a>
+    <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week03.html">3</a>
+    <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week04.html">4</a>
+    <a style="color:#76B900;background:rgba(118,185,0,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="week05.html">5</a>
+    <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week06.html">6</a>
+    <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week07.html">7</a>
+  </div>
+  <a href="#sec-schedule">提出</a>
+  <a href="#sec-task0" class="nav-pre">0. 予習</a>
+  <a href="#sec-task1">1. 口頭試問</a>
+  <a href="#sec-task2" class="nav-assignment">2. AI+opencode</a>
+  <a href="#sec-task3" class="nav-assignment">3. 加速度+UFO</a>
   <a href="#answers-section">解答例</a>
 </nav>
 
@@ -517,147 +560,336 @@ body { padding-top: 2.2rem; }
     <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.1rem;white-space:nowrap">武蔵野大学データサイエンス学部</p>
     <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.3rem;white-space:nowrap">武蔵野大学国際データサイエンス学部（通信教育部）</p>
     <p style="font-size:0.95rem;opacity:0.85;margin-bottom:1rem">中村 亮太</p>
-    <h1>MD1 第5回: 時系列データと加速度センサの基礎</h1>
-    <p style="white-space:nowrap">CSVデータを読み込み、加速度センサの値をpy5で可視化する</p>
+    <h1>MD1 第5回: 時系列データ × バイブコーディング</h1>
+    <p style="white-space:normal">CSVデータを読み込み，加速度センサの値をAIコーディングアシスタント opencode の支援で py5 アニメに仕上げる．</p>
     <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:0.3rem;padding:0.4rem 0.8rem;margin-top:1rem;font-size:0.7rem;display:inline-block">
-      <strong>対象環境:</strong> Apple M1 / M2 / M3 / M4 / M5 チップ搭載 Mac ｜ macOS Tahoe 26.4.1
+      <strong>対象環境:</strong> Apple M1 / M2 / M3 / M4 / M5 チップ搭載 Mac ｜ macOS Tahoe
     </div>
   </div>
 </header>
 
 <!-- ============ SUBMISSION GUIDE ============ -->
-<section id="sec-schedule" style="padding-top:2rem;padding-bottom:0">
+<section id="sec-schedule" style="padding-top:1.5rem;padding-bottom:0">
   <div class="container">
     <div class="submission-box">
       <h3>提出ガイド</h3>
       <div class="submission-items">
-        <a href="#sec-std5-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std5-1<br>スクリーンショット2枚</a>
-        <a href="#sec-std5-2" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std5-2<br>Wordレポート（PDF）</a>
+        <a href="#sec-task2" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std5-1<br>opencode 動作スクリーンショット 2枚</a>
+        <a href="#sec-task3" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std5-2<br>UFO横揺れアニメ＋移動平均（PDF）</a>
         <div class="sub-item"><span class="sub-count">0</span><span class="tag tag-advanced">発展課題</span>授業終了後公開</div>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.85rem;color:#93D500">
         <strong>提出方法:</strong> Wordフォーマットで作成 → PDFにエクスポート → Google Classroomに<strong>PDF 1ファイル</strong>を提出
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:0.5rem;font-size:0.85rem;color:#FFB800">
-        <strong>提出期限:</strong> 6/1(月) 13:10（第6回授業開始まで）
+        <strong>📅 提出期限（今回から変更）:</strong><br>
+        ・<strong>標準課題（std5-1 / std5-2）:</strong> <strong>授業日 当日 23:59</strong>（5/25(月) 23:59）<br>
+        ・<strong>発展課題:</strong> 従来どおり（公開後の指定期限まで）
+      </div>
+      <div style="background:#2e1a0a;border:1px solid #FFB800;border-radius:8px;padding:0.8rem 1rem;margin-top:0.5rem;font-size:0.9rem;color:#FFB800">
+        <strong>⚠️ グループワークに参加できなかった者へ:</strong><br>
+        欠席等でグループワークに参加できなかった場合は，<strong>すべての問い（Task 0 の予習チェック・Task 1 の口頭試問 第1回 Q1〜Q5・第2回 Q6〜Q10）を自分で解答し</strong> ，Notion に記録して提出すること．
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ 0. TEACHER EXPLANATION ============ -->
-<section id="sec-teacher">
+<!-- ============ STYLE EXTENSIONS for week05 simplified ============ -->
+<style>
+/* Terminal animation */
+.term {
+  background: #0A0A0A;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 1rem 1.2rem 1.2rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: #e0e0e0;
+  margin: 1rem 0;
+  position: relative;
+  overflow: hidden;
+}
+.term::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 1rem;
+  background: linear-gradient(90deg, #ff5f56 12px, transparent 12px, transparent 24px, #ffbd2e 36px, transparent 36px, transparent 48px, #27c93f 60px, transparent 60px);
+  background-repeat: no-repeat;
+  margin-bottom: 0.5rem;
+  opacity: 0.7;
+}
+.term .row {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 0.12em solid #76B900;
+  width: 0;
+  animation: termtype 2.4s steps(40, end) forwards;
+}
+.term .row.r2 { animation-delay: 2.4s; }
+.term .row.r3 { animation-delay: 4.8s; }
+.term .row.r4 { animation-delay: 7.2s; }
+.term .row.r5 { animation-delay: 9.6s; border-right-color: transparent; }
+.term .prompt { color: #76B900; }
+.term .out { color: #93D500; }
+@keyframes termtype { to { width: 100%; } }
+@media (prefers-reduced-motion: reduce) {
+  .term .row { width: 100%; animation: none; border-right: 0; }
+}
+
+/* Captured screenshot frame */
+.shot-frame {
+  background: #0A0A0A;
+  border: 1px dashed #555;
+  border-radius: 12px;
+  padding: 0.5rem;
+  margin: 1rem 0;
+  text-align: center;
+}
+.shot-frame img { max-width: 100%; border-radius: 8px; display: block; margin: 0 auto; }
+.shot-frame .shot-caption { color: #999; font-size: 0.8rem; margin-top: 0.5rem; }
+.shot-frame.placeholder {
+  aspect-ratio: 16/9;
+  display: flex; align-items: center; justify-content: center;
+  color: #777; font-size: 0.85rem;
+  flex-direction: column; gap: 0.5rem;
+}
+
+/* Speaker rotation grid */
+.speakers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+.speakers .slot {
+  background: #141414;
+  border: 1px solid #4FC3F7;
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.85rem;
+}
+.speakers .slot .ord { color: #4FC3F7; font-weight: 700; font-size: 0.7rem; display: block; }
+.speakers .slot .name { color: #ccc; font-size: 0.9rem; }
+.speakers .slot .blank-line {
+  display: block; margin-top: 0.3rem;
+  border-bottom: 1px dashed #444;
+  height: 1.2em;
+}
+</style>
+
+<!-- ============ TASK 0: 予習（授業内自習） ============ -->
+<section id="sec-task0">
   <div class="container">
     <div class="section-header">
-      <div class="section-num" style="background:#76B900">0</div>
-      <h2>教員による説明 <span style="font-size:0.5rem;color:#999;font-weight:400">── 約30分</span></h2>
+      <div class="section-num" style="background:#4FC3F7">0</div>
+      <h2>予習 ── 関数・時系列データ・CSV・py5 で CSV を読む <span style="font-size:0.55rem;color:#999;font-weight:400">── 約25分・各自で熟読</span></h2>
+      <span class="tag tag-pre">自習</span>
     </div>
 
-    <div class="card" style="border-left:4px solid #76B900">
+    <!-- 冒頭注意 -->
+    <div style="background:linear-gradient(135deg,#0a1822,#0a2233);border:2px solid #4FC3F7;border-radius:14px;padding:1.2rem 1.5rem;margin-bottom:1.5rem;font-size:1.02rem;line-height:1.7">
+      <h3 style="color:#4FC3F7;font-size:1.1rem;margin-bottom:0.5rem">📌 本日の進め方</h3>
+      <p style="margin:0">本来であれば <strong>予習として授業前に各自が学習する</strong> 内容だが，今回に限っては <strong>授業時間内に熟読し，各自で作業する</strong>．分からない箇所はメモして，Task 1 の口頭試問でグループメンバや SA に質問しよう．25分を目安に読み進める．</p>
+    </div>
+
+    <!-- 0-1. 関数 -->
+    <div class="card standard">
       <div class="card-header">
-        <h3>時系列データ・加速度センサ・Jupyter Notebook</h3>
-        <span class="tag tag-note">ノート</span>
+        <h3>0-1. 関数（function）とは</h3>
+        <span class="tag tag-standard">自習</span>
       </div>
 
-      <div class="concept-box">
-        <h4>本日の流れ</h4>
-        <ol style="padding-left:1.5rem;font-size:0.95rem;margin-top:0.5rem">
-          <li style="margin-bottom:0.4rem"><strong>時系列データとは:</strong> 時間の経過に沿って記録されたデータ（センサ値、株価、気温など）</li>
-          <li style="margin-bottom:0.4rem"><strong>加速度センサの仕組み:</strong> 3軸（X/Y/Z）で重力・動きを検出、スマートフォンにも搭載</li>
-          <li style="margin-bottom:0.4rem"><strong>CSVとJSON:</strong> 表形式データの2つの代表的フォーマット</li>
-          <li><strong>Jupyter Notebook:</strong> コードと実行結果を1つのドキュメントにまとめる対話型環境</li>
-        </ol>
-      </div>
-
-      <!-- 時系列データ -->
-      <div class="concept-box" style="margin-top:1rem">
-        <h4>時系列データ（Time Series Data）</h4>
-        <p>時間の経過とともに記録されたデータを<strong>時系列データ</strong>と呼びます。一定間隔でデータを取得することを<strong>サンプリング</strong>、その頻度を<strong>サンプリングレート</strong>（例: 100Hz = 1秒間に100回取得）と呼びます。</p>
-      </div>
+      <p><strong>関数</strong> はプログラミングの最も基本的な「部品」．<strong>「入力」を受け取り → 「処理」をして → 「出力」を返す</strong> ひとまとまり．</p>
 
       <div class="analogy">
-        体温計で毎朝体温を測り記録するのと同じです。1日1回なら「サンプリングレート = 1回/日」です。加速度センサは1秒間に数十〜数百回測定します。
+        <strong>自動販売機</strong> をイメージしよう．「ボタンを押す（入力）」→「中で機械が動く（処理）」→「ジュースが出てくる（出力）」．これがまさに関数の動き．「お金とボタン」が <strong>引数</strong>，「出てくるジュース」が <strong>戻り値</strong>．
       </div>
 
-      <!-- 加速度センサ -->
-      <div class="concept-box" style="margin-top:1rem">
-        <h4>加速度センサ（Accelerometer）</h4>
-        <p>物体にかかる加速度を3軸（X: 左右、Y: 上下、Z: 前後）で測定するセンサです。静止状態でも重力加速度（約9.81 m/s&sup2;）がZ軸方向に検出されます。</p>
-        <table>
-          <tr><th>軸</th><th>方向</th><th>スマホを水平に持ったとき</th></tr>
-          <tr><td><strong>X</strong></td><td>左右</td><td>左右に傾けると変化</td></tr>
-          <tr><td><strong>Y</strong></td><td>上下</td><td>前後に傾けると変化</td></tr>
-          <tr><td><strong>Z</strong></td><td>前後（垂直）</td><td>静止時 &asymp; 9.81 m/s&sup2;</td></tr>
-        </table>
+      <h4 style="color:#76B900;margin-top:1rem">なぜ関数を使うのか</h4>
+      <ul class="point-list">
+        <li>同じ処理を <strong>何度も書かなくて済む</strong>（消費税の計算を3回書く必要がない）</li>
+        <li>名前をつけて <strong>意味を分かりやすく</strong> できる（<code>add_tax</code> という名前を見ただけで何の処理か分かる）</li>
+        <li>修正するときも <strong>1か所だけ直せばよい</strong></li>
+      </ul>
+
+      <h4 style="color:#76B900;margin-top:1rem">Python の関数の書き方（基本構文）</h4>
+<pre><span class="code-label">Python ── 関数の基本形</span>
+<span class="kw">def</span> 関数名(引数):
+    処理
+    <span class="kw">return</span> 戻り値</pre>
+
+      <ul class="point-list">
+        <li><code>def</code> は <strong>define（定義する）</strong> の略．「関数を作りますよ」という宣言</li>
+        <li><strong>関数名</strong> は半角英数字．分かりやすい名前をつける（例: <code>add</code>，<code>greet</code>）</li>
+        <li><code>(引数)</code> は <strong>関数に渡すデータ</strong>．無くてもよい．複数なら <code>,</code> で区切る</li>
+        <li>関数の中身は <strong>4スペースのインデント</strong>（字下げ）で書く</li>
+        <li><code>return</code> で <strong>計算結果を返す</strong>．無い場合は <code>None</code>（何もない）が返る</li>
+      </ul>
+
+      <h4 style="color:#76B900;margin-top:1rem">最も簡単な例</h4>
+<pre><span class="code-label">Python ── 数を2乗する関数</span>
+<span class="kw">def</span> <span class="fn">square</span>(x):
+    answer <span class="op">=</span> x <span class="op">*</span> x
+    <span class="kw">return</span> answer
+
+result <span class="op">=</span> <span class="fn">square</span>(<span class="num">5</span>)
+<span class="fn">print</span>(result)   <span class="cmt"># 25 と表示される</span></pre>
+
+      <ul class="point-list">
+        <li><code>def square(x):</code> ─ 引数 <code>x</code> を受け取る関数 <code>square</code> を <strong>定義</strong></li>
+        <li><code>answer = x * x</code> ─ <code>x</code> を2乗して <code>answer</code> に入れる</li>
+        <li><code>return answer</code> ─ <code>answer</code> を呼び出した側に <strong>返す</strong></li>
+        <li><code>result = square(5)</code> ─ 関数 <code>square</code> を <strong>呼び出し</strong>，戻り値を <code>result</code> に受け取る</li>
+        <li><code>print(result)</code> ─ <code>result</code>（=25）を画面に表示</li>
+      </ul>
+
+      <div class="callout-tip">
+        <h4>✅ 0-1 チェック問題</h4>
+        <ol style="padding-left:1.4rem">
+          <li>「引数」と「戻り値」を，自分の言葉で1行ずつ説明できるか？
+            <details style="margin-top:0.4rem">
+              <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
+              <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
+                <strong>引数</strong>: 関数を呼び出すときに <strong>外から渡すデータ（入力）</strong>．関数の <code>(   )</code> の中に書く．<br>
+                <strong>戻り値</strong>: 関数が処理した結果として <strong>呼び出した側に返すデータ（出力）</strong>．<code>return</code> の後ろに書いた値．
+              </div>
+            </details>
+          </li>
+          <li>下のコードを実行すると何が表示されるか？答えてから実行して確認．
+<pre style="margin-top:0.4rem"><span class="code-label">Python ── 確認問題</span>
+<span class="kw">def</span> <span class="fn">triple</span>(n):
+    answer <span class="op">=</span> n <span class="op">*</span> <span class="num">3</span>
+    <span class="kw">return</span> answer
+
+<span class="fn">print</span>(<span class="fn">triple</span>(<span class="num">7</span>))</pre>
+            <details style="margin-top:0.4rem">
+              <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
+              <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
+                <strong>21</strong> と表示される．<br>
+                理由: <code>triple(7)</code> で引数 <code>n</code> に 7 が入り，関数内で <code>answer = 7 * 3 = 21</code> が計算され，<code>return answer</code> で 21 が返る．それを <code>print</code> が表示．
+              </div>
+            </details>
+          </li>
+          <li><code>def</code> は何の英単語の略か？
+            <details style="margin-top:0.4rem">
+              <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
+              <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
+                <strong>define</strong>（定義する）の略．「これから関数を定義します」という宣言．
+              </div>
+            </details>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- 0-2. 時系列データ -->
+    <div class="card standard">
+      <div class="card-header">
+        <h3>0-2. 時系列データ（time series data）とは</h3>
+        <span class="tag tag-standard">自習</span>
       </div>
 
-      <!-- CSV vs JSON -->
-      <div class="concept-box" style="margin-top:1rem">
-        <h4>データ形式: CSV と JSON</h4>
-        <table>
-          <tr><th>項目</th><th>CSV</th><th>JSON</th></tr>
-          <tr><td>正式名</td><td>Comma-Separated Values</td><td>JavaScript Object Notation</td></tr>
-          <tr><td>構造</td><td>表形式（行と列）</td><td>キーと値のペア（階層構造可）</td></tr>
-          <tr><td>可読性</td><td>シンプル、Excelで開ける</td><td>構造化されたデータに適する</td></tr>
-          <tr><td>用途</td><td>センサデータ、統計データ</td><td>API通信、設定ファイル</td></tr>
-        </table>
+      <p><strong>時系列データ</strong> は，<strong>時間順に並んだ値の列</strong> のこと．「いつ」「いくつだった」を時間順に並べたデータ．</p>
+
+      <div class="analogy">
+        体温を1日3回（朝・昼・夜）測って記録した表．これは時間順に体温が並んでいるので時系列データ．SNS の毎時のフォロワー数の変化や，ゲームのスコア履歴も同じ．
       </div>
 
-      <!-- SVG: CSV → 2D配列の視覚化 -->
-      <div style="margin:1.5rem 0;text-align:center">
-        <svg viewBox="0 0 620 200" xmlns="http://www.w3.org/2000/svg" style="max-width:620px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
-          <text x="310" y="24" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" font-family="sans-serif">CSVファイル → 2D配列（表形式）への変換</text>
-          <!-- CSV text side -->
-          <text x="30" y="52" fill="#ccc" font-size="11" font-family="monospace">timestamp,AccY</text>
-          <text x="30" y="70" fill="#e0e0e0" font-size="11" font-family="monospace">0.00,-0.12</text>
-          <text x="30" y="88" fill="#e0e0e0" font-size="11" font-family="monospace">0.01,0.34</text>
-          <text x="30" y="106" fill="#e0e0e0" font-size="11" font-family="monospace">0.02,1.56</text>
-          <text x="30" y="124" fill="#616161" font-size="11" font-family="monospace">...</text>
-          <text x="80" y="150" fill="#ccc" font-size="10" font-family="sans-serif">CSVファイル（テキスト）</text>
-          <!-- arrow -->
-          <line x1="195" y1="88" x2="240" y2="88" stroke="#76B900" stroke-width="2" marker-end="url(#arr5)"/>
-          <text x="218" y="80" text-anchor="middle" fill="#76B900" font-size="10" font-family="sans-serif">split(",")</text>
-          <!-- table side -->
-          <rect x="260" y="38" width="130" height="24" rx="4" fill="rgba(118,185,0,0.15)" stroke="#76B900" stroke-width="1"/>
-          <text x="295" y="55" fill="#76B900" font-size="10" font-weight="700" font-family="monospace">timestamp</text>
-          <text x="370" y="55" fill="#76B900" font-size="10" font-weight="700" font-family="monospace">AccY</text>
-          <rect x="260" y="64" width="130" height="22" rx="0" fill="none" stroke="#555" stroke-width="1"/>
-          <rect x="260" y="88" width="130" height="22" rx="0" fill="none" stroke="#555" stroke-width="1"/>
-          <rect x="260" y="112" width="130" height="22" rx="0" fill="none" stroke="#555" stroke-width="1"/>
-          <text x="295" y="80" fill="#e0e0e0" font-size="10" font-family="monospace">0.00</text>
-          <text x="370" y="80" fill="#FFB800" font-size="10" font-family="monospace">-0.12</text>
-          <text x="295" y="104" fill="#e0e0e0" font-size="10" font-family="monospace">0.01</text>
-          <text x="370" y="104" fill="#FFB800" font-size="10" font-family="monospace">0.34</text>
-          <text x="295" y="128" fill="#e0e0e0" font-size="10" font-family="monospace">0.02</text>
-          <text x="370" y="128" fill="#FFB800" font-size="10" font-family="monospace">1.56</text>
-          <text x="325" y="150" fill="#ccc" font-size="10" font-family="sans-serif">表形式データ</text>
-          <!-- remap arrow -->
-          <line x1="410" y1="88" x2="450" y2="88" stroke="#FFB800" stroke-width="2" marker-end="url(#arr5b)"/>
-          <text x="430" y="80" text-anchor="middle" fill="#FFB800" font-size="9" font-family="sans-serif">remap</text>
-          <!-- screen coords -->
-          <rect x="465" y="55" width="130" height="100" rx="8" fill="none" stroke="#93D500" stroke-width="1.5"/>
-          <text x="530" y="48" text-anchor="middle" fill="#93D500" font-size="10" font-family="sans-serif">py5 画面 (400x400)</text>
-          <circle cx="490" cy="120" r="5" fill="#4FC3F7"/>
-          <circle cx="510" cy="95" r="5" fill="#4FC3F7"/>
-          <circle cx="530" cy="72" r="5" fill="#4FC3F7"/>
-          <text x="530" y="170" text-anchor="middle" fill="#ccc" font-size="10" font-family="sans-serif">可視化（円の座標）</text>
-          <defs>
-            <marker id="arr5" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#76B900"/></marker>
-            <marker id="arr5b" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#FFB800"/></marker>
-          </defs>
+      <h4 style="color:#76B900;margin-top:1rem">身近な時系列データの例</h4>
+      <table style="font-size:0.92rem">
+        <tr><th>分野</th><th>時系列データの例</th><th>記録間隔</th></tr>
+        <tr><td>天気</td><td>気温・湿度・気圧</td><td>1時間ごと</td></tr>
+        <tr><td>健康</td><td>心拍数・歩数（Apple Watch）</td><td>1秒〜1分ごと</td></tr>
+        <tr><td>経済</td><td>株価・為替レート</td><td>ミリ秒ごと</td></tr>
+        <tr><td>スマホ</td><td>加速度・ジャイロセンサ</td><td>1/100秒ごと</td></tr>
+        <tr><td>地震</td><td>地震計の振動</td><td>1/1000秒ごと</td></tr>
+      </table>
+
+      <h4 style="color:#76B900;margin-top:1rem">グラフにすると分かりやすい</h4>
+      <p>時系列データは <strong>横軸=時間，縦軸=値</strong> の折れ線グラフで可視化されることが多い．</p>
+
+      <div style="margin:1rem 0;text-align:center">
+        <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg" style="max-width:600px;width:100%;background:#1A1A1A;border-radius:10px;border:1px solid #333">
+          <text x="300" y="20" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" font-family="sans-serif">時系列データのイメージ（例：1日の気温変化）</text>
+          <line x1="40" y1="170" x2="560" y2="170" stroke="#666" stroke-width="1"/>
+          <line x1="40" y1="40" x2="40" y2="170" stroke="#666" stroke-width="1"/>
+          <text x="300" y="195" text-anchor="middle" fill="#999" font-size="11" font-family="sans-serif">時間（時）</text>
+          <text x="20" y="105" text-anchor="middle" fill="#999" font-size="11" font-family="sans-serif" transform="rotate(-90 20 105)">気温（°C）</text>
+          <polyline points="60,150 120,140 180,120 240,90 300,60 360,55 420,75 480,100 540,130" fill="none" stroke="#FFB800" stroke-width="2"/>
+          <g fill="#FFB800">
+            <circle cx="60" cy="150" r="3"/><circle cx="120" cy="140" r="3"/><circle cx="180" cy="120" r="3"/>
+            <circle cx="240" cy="90" r="3"/><circle cx="300" cy="60" r="3"/><circle cx="360" cy="55" r="3"/>
+            <circle cx="420" cy="75" r="3"/><circle cx="480" cy="100" r="3"/><circle cx="540" cy="130" r="3"/>
+          </g>
+          <text x="60" y="185" text-anchor="middle" fill="#999" font-size="9">6</text>
+          <text x="180" y="185" text-anchor="middle" fill="#999" font-size="9">10</text>
+          <text x="300" y="185" text-anchor="middle" fill="#999" font-size="9">14</text>
+          <text x="420" y="185" text-anchor="middle" fill="#999" font-size="9">18</text>
+          <text x="540" y="185" text-anchor="middle" fill="#999" font-size="9">22</text>
         </svg>
       </div>
 
-      <!-- キーワード解説 -->
-      <div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin:0.5rem 0">
-        <span class="keyword-box"><span class="kw-term">CSV</span><span class="kw-desc">Comma-Separated Values: カンマ区切りの表形式データ</span></span>
-        <span class="keyword-box"><span class="kw-term">サンプリングレート</span><span class="kw-desc">1秒間にデータを取得する回数 (Hz)</span></span>
-        <span class="keyword-box"><span class="kw-term">remap()</span><span class="kw-desc">値の範囲を別の範囲に線形変換する関数</span></span>
-        <span class="keyword-box"><span class="kw-term">欠損値</span><span class="kw-desc">記録されなかったデータ。CSVでは空セル</span></span>
-        <span class="keyword-box"><span class="kw-term">外れ値</span><span class="kw-desc">他と比べて極端に大きい/小さい異常な値</span></span>
+      <h4 style="color:#76B900;margin-top:1rem">時系列データを扱う基本ステップ</h4>
+      <ol style="padding-left:1.4rem;font-size:0.95rem">
+        <li><strong>記録（センサ・システムが値を時間順に保存）</strong></li>
+        <li><strong>読み込み（ファイルや DB からプログラムに取り込む）</strong></li>
+        <li><strong>欠損・外れ値を除去</strong></li>
+        <li><strong>平滑化（移動平均などでなめらかにする）</strong> ← Task 3 でやる</li>
+        <li><strong>可視化・予測・異常検知</strong></li>
+      </ol>
+
+      <div class="callout-tip">
+        <h4>✅ 0-2 チェック問題</h4>
+        <ol style="padding-left:1.4rem">
+          <li>時系列データの身近な例を <strong>3つ</strong> 挙げよ（上の表以外でもOK）
+            <details style="margin-top:0.4rem">
+              <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
+              <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
+                <strong>答えの例</strong>: SNSのフォロワー数の変化／ゲームのスコア履歴／駅の乗降客数／Spotifyの再生回数／家計簿の月別支出／YouTube動画の視聴回数推移／メールの受信数／自分の体重の毎朝の記録 など．<br>
+                <span style="color:#999;font-size:0.85rem">→ 「時間順に並んだ数値」になっていれば何でも時系列データ．</span>
+              </div>
+            </details>
+          </li>
+          <li>時系列データを折れ線グラフにするとき，<strong>横軸</strong> と <strong>縦軸</strong> はそれぞれ何になるか？
+            <details style="margin-top:0.4rem">
+              <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
+              <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
+                <strong>横軸 = 時間</strong>（時刻や経過秒数）<br>
+                <strong>縦軸 = 値</strong>（記録された数値．気温なら℃，加速度なら m/s² など）
+              </div>
+            </details>
+          </li>
+          <li>今日のTask 3で扱う <code>acc_y.csv</code> は何の時系列データか？
+            <details style="margin-top:0.4rem">
+              <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
+              <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
+                <strong>スマートフォンの加速度センサ Y軸</strong> の時系列データ．時間と共に変化する加速度の値が並んでいる．<code>acc</code> = acceleration（加速度），<code>y</code> = Y軸．
+              </div>
+            </details>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- 0-3. CSV -->
+    <div class="card standard">
+      <div class="card-header">
+        <h3>0-3. CSV ファイルとは</h3>
+        <span class="tag tag-standard">自習</span>
       </div>
 
-      <pre><span class="code-label">CSV ── acc_y.csv の例</span>
+      <p><strong>CSV</strong> は <strong>C</strong>omma <strong>S</strong>eparated <strong>V</strong>alues の略．<strong>カンマで区切られた値</strong> がそのまま並んだテキストファイル．拡張子は <code>.csv</code>．</p>
+
+      <div class="analogy">
+        Excel の表をシンプルなテキストで保存したもの．スプレッドシートの「行」が <strong>1行のテキスト</strong>，「列」が <strong>カンマで区切られた値</strong> に対応する．Excel でも開けるし，メモ帳で開いて中身を直接読むこともできる．
+      </div>
+
+      <h4 style="color:#76B900;margin-top:1rem">CSV の典型的な構造</h4>
+<pre><span class="code-label">acc_y.csv の例</span>
 timestamp,AccY
 0.00,-0.12
 0.01,0.34
@@ -665,624 +897,1292 @@ timestamp,AccY
 0.03,2.78
 0.04,3.21</pre>
 
-      <pre><span class="code-label">JSON ── 同じデータのJSON表現</span>
-[
-  {<span class="str">"timestamp"</span>: <span class="num">0.00</span>, <span class="str">"AccY"</span>: <span class="num">-0.12</span>},
-  {<span class="str">"timestamp"</span>: <span class="num">0.01</span>, <span class="str">"AccY"</span>: <span class="num">0.34</span>},
-  {<span class="str">"timestamp"</span>: <span class="num">0.02</span>, <span class="str">"AccY"</span>: <span class="num">1.56</span>}
-]</pre>
+      <ul class="point-list">
+        <li><strong>1行目はヘッダー</strong>（列の名前）になっていることが多い．この例では <code>timestamp</code>（時刻）と <code>AccY</code>（Y軸加速度）</li>
+        <li><strong>2行目以降が実データ</strong>．1行が1サンプル</li>
+        <li>列同士は <strong>カンマ（,）</strong> で区切る．スペースは入れないことが多い</li>
+        <li>数値も文字もそのまま書く．文字列にだけ <code>"</code>（クオート）を付けることもある</li>
+      </ul>
 
-      <!-- 欠損値・外れ値 -->
-      <div class="concept-box" style="margin-top:1rem">
-        <h4>欠損値と外れ値</h4>
-        <ul class="point-list" style="margin-top:0.5rem">
-          <li><strong>欠損値（Missing Value）:</strong> データが記録されなかった箇所。CSVでは空のセル（<code>0.03,</code>）として現れる</li>
-          <li><strong>外れ値（Outlier）:</strong> 他のデータと比べて極端に大きい・小さい値。センサの誤作動やノイズが原因のことが多い</li>
+      <h4 style="color:#76B900;margin-top:1rem">CSV が広く使われる理由</h4>
+      <ul class="point-list">
+        <li><strong>シンプル</strong>: ただのテキストファイルなのでメモ帳でも見られる</li>
+        <li><strong>互換性が高い</strong>: Excel, Google Sheets, Python, R など何でも読める</li>
+        <li><strong>軽い</strong>: バイナリより容量が小さい</li>
+        <li><strong>人間も読める</strong>: 何のデータか目で見て分かる</li>
+      </ul>
+
+      <div class="callout-warning">
+        <h4>注意：CSV のよくある罠</h4>
+        <ul class="point-list">
+          <li>セルに <strong>カンマが含まれる文字列</strong>（住所など）は区切りと混同される</li>
+          <li>センサデータでは値が <strong>欠けている行</strong> がよくある（例: <code>0.06,</code> のように空白）</li>
+          <li>外れ値（極端に大きい・小さい値）も混ざることがある</li>
         </ul>
       </div>
 
-      <!-- SVG: 欠損値と外れ値 -->
-      <div style="margin:1.5rem 0;text-align:center">
-        <svg viewBox="0 0 620 200" xmlns="http://www.w3.org/2000/svg" style="max-width:620px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
-          <text x="310" y="22" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" font-family="sans-serif">欠損値と外れ値のイメージ</text>
-          <!-- Axes -->
-          <line x1="50" y1="170" x2="590" y2="170" stroke="#555" stroke-width="1"/>
-          <line x1="50" y1="170" x2="50" y2="40" stroke="#555" stroke-width="1"/>
-          <text x="310" y="192" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">時間 (timestamp)</text>
-          <text x="30" y="105" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif" transform="rotate(-90,30,105)">AccY</text>
-          <!-- Normal data line -->
-          <polyline points="80,120 130,110 180,115 230,105 330,100 380,108 430,112 480,106 530,110 570,115" fill="none" stroke="#76B900" stroke-width="2"/>
-          <!-- Normal dots -->
-          <circle cx="80" cy="120" r="4" fill="#76B900"/>
-          <circle cx="130" cy="110" r="4" fill="#76B900"/>
-          <circle cx="180" cy="115" r="4" fill="#76B900"/>
-          <circle cx="230" cy="105" r="4" fill="#76B900"/>
-          <circle cx="330" cy="100" r="4" fill="#76B900"/>
-          <circle cx="380" cy="108" r="4" fill="#76B900"/>
-          <circle cx="430" cy="112" r="4" fill="#76B900"/>
-          <circle cx="480" cy="106" r="4" fill="#76B900"/>
-          <circle cx="530" cy="110" r="4" fill="#76B900"/>
-          <circle cx="570" cy="115" r="4" fill="#76B900"/>
-          <!-- Missing value gap -->
-          <line x1="230" y1="105" x2="330" y2="100" stroke="#76B900" stroke-width="2" stroke-dasharray="6,4"/>
-          <rect x="255" y="88" width="50" height="18" rx="3" fill="#1A1A1A" stroke="#FF5252" stroke-width="1"/>
-          <text x="280" y="100" text-anchor="middle" fill="#FF5252" font-size="9" font-weight="700" font-family="sans-serif">欠損値</text>
-          <text x="280" y="80" text-anchor="middle" fill="#999" font-size="8" font-family="monospace">0.03,</text>
-          <!-- Outlier spike -->
-          <circle cx="480" cy="50" r="5" fill="#FFB800"/>
-          <line x1="480" y1="106" x2="480" y2="55" stroke="#FFB800" stroke-width="1.5" stroke-dasharray="3,2"/>
-          <rect x="490" y="42" width="50" height="18" rx="3" fill="#1A1A1A" stroke="#FFB800" stroke-width="1"/>
-          <text x="515" y="54" text-anchor="middle" fill="#FFB800" font-size="9" font-weight="700" font-family="sans-serif">外れ値</text>
-          <!-- Legend -->
-          <rect x="80" y="38" width="8" height="8" rx="2" fill="#76B900"/>
-          <text x="94" y="46" fill="#ccc" font-size="9" font-family="sans-serif">正常データ</text>
-          <rect x="160" y="38" width="8" height="8" rx="2" fill="#FF5252"/>
-          <text x="174" y="46" fill="#ccc" font-size="9" font-family="sans-serif">欠損（データなし）</text>
-          <rect x="265" y="38" width="8" height="8" rx="2" fill="#FFB800"/>
-          <text x="279" y="46" fill="#ccc" font-size="9" font-family="sans-serif">外れ値（異常に大きい）</text>
-        </svg>
-      </div>
-
-      <!-- ログデータ -->
-      <div class="concept-box" style="margin-top:1rem">
-        <h4>ログデータ</h4>
-        <p>システムやアプリケーションの動作を時系列で記録したデータを<strong>ログ（Log）</strong>と呼びます。センサデータもログデータの一種です。タイムスタンプ付きで記録されるため、後から「いつ何が起きたか」を分析できます。</p>
-      </div>
-
-      <!-- Jupyter Notebook -->
-      <div class="callout-info" style="margin-top:1rem">
-        <h4>Jupyter Notebook / JupyterLab</h4>
-        <p>コードを「セル」単位で実行し、結果をすぐに確認できる対話型開発環境です。データ分析・可視化に広く使われています。今回は JupyterLab を使ってpy5のコードを実行します。</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ GROUP WORK DIVIDER ============ -->
-<section style="padding:2rem 0;background:linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a)">
-  <div class="container" style="text-align:center">
-    <div style="font-size:1.5rem;font-weight:900;color:#76B900;margin-bottom:0.5rem">ここから先はグループで進めてください</div>
-    <p style="font-size:0.85rem;color:#93D500;margin-bottom:1rem">この資料を上から順に読みながら、グループで協力して演習を進めましょう</p>
-    <div style="display:inline-flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;font-size:0.7rem">
-      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
-        <div style="color:#76B900;font-weight:700">1. std5-1</div>
-        <div style="color:#999">約50分</div>
-      </div>
-      <div style="color:#76B900;display:flex;align-items:center">&rarr;</div>
-      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
-        <div style="color:#76B900;font-weight:700">2. std5-2</div>
-        <div style="color:#999">約50分</div>
-      </div>
-      <div style="color:#76B900;display:flex;align-items:center">&rarr;</div>
-      <div style="background:#1A1A1A;border:1px solid #76B900;border-radius:0.3rem;padding:0.4rem 0.8rem;text-align:center">
-        <div style="color:#76B900;font-weight:700">3. 口頭試問</div>
-        <div style="color:#999">約10分</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 1. std5-1 グループワーク1 ============ -->
-<section id="sec-std5-1">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-num" style="background:#4FC3F7">1</div>
-      <h2>std5-1: グループワーク1 ─ Jupyter環境構築 + CSVデータ表示（約50分）</h2>
-    </div>
-
-    <!-- 環境構築 -->
-    <div class="card" style="border-left:4px solid #76B900">
-      <div class="card-header">
-        <h3>Step 1: 環境構築</h3>
-        <span class="tag tag-note">ノート</span>
-      </div>
-
-      <p>ターミナルを開き、以下のコマンドを<strong>1行ずつ</strong>実行してください。</p>
-
-      <pre><span class="code-label">Terminal</span>
-<span class="fn">cd</span> ~/MD1
-<span class="fn">mkdir</span> no5
-<span class="fn">cd</span> no5
-<span class="fn">uv</span> venv
-<span class="fn">source</span> .venv/bin/activate
-<span class="fn">uv</span> pip install py5 jupyterlab
-<span class="fn">code</span> .</pre>
-
-      <div class="callout-info">
-        <h4>uv を使う理由</h4>
-        <p><code>uv</code> は <code>pip</code> より高速なPythonパッケージマネージャです。この授業では <code>pip</code> の代わりに <code>uv</code> を使います。仮想環境（<code>.venv</code>）を作ることで、プロジェクトごとにパッケージを分離できます。</p>
-      </div>
-
-      <p style="margin-top:1rem">VSCodeが開いたら、<strong>新しいファイル</strong>を作成し <code>step5.ipynb</code> という名前で保存してください。これがJupyter Notebookファイルです。</p>
-
-      <div class="callout-warning">
-        <h4>カーネルの選択</h4>
-        <p><code>step5.ipynb</code> を開いたとき、右上の「カーネルの選択」で <code>~/MD1/no5/.venv</code> のPythonを選択してください。これを忘れると <code>py5</code> が見つからずエラーになります。</p>
+      <div class="callout-tip">
+        <h4>✅ 0-3 チェック問題</h4>
+        <ol style="padding-left:1.4rem">
+          <li><strong>CSV</strong> を英単語に展開し，日本語の意味を答えよ
+            <details style="margin-top:0.4rem">
+              <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
+              <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
+                <strong>Comma Separated Values</strong>（カンマで区切られた値）
+              </div>
+            </details>
+          </li>
+          <li>CSV ファイルの <strong>1行目</strong> に何が書かれていることが多いか？
+            <details style="margin-top:0.4rem">
+              <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
+              <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
+                <strong>ヘッダ行（列の名前）</strong>．例: <code>timestamp,AccY</code> のように，各列が何のデータかを示す名前が書かれている．
+              </div>
+            </details>
+          </li>
+          <li>下の CSV は <strong>何列</strong> あるか？ また <strong>データ行は何行</strong> あるか？
+<pre style="margin-top:0.4rem"><span class="code-label">CSV ── 確認問題</span>
+date,temperature,humidity
+2026-05-01,22.5,60
+2026-05-02,24.1,55
+2026-05-03,21.8,65</pre>
+            <details style="margin-top:0.4rem">
+              <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
+              <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
+                <strong>列: 3列</strong>（<code>date</code> / <code>temperature</code> / <code>humidity</code>）<br>
+                <strong>データ行: 3行</strong>（1行目はヘッダなので除外．2〜4行目の5/1, 5/2, 5/3 の3日分）
+              </div>
+            </details>
+          </li>
+        </ol>
       </div>
     </div>
 
-    <!-- CSVファイルの準備 -->
-    <div class="card" style="border-left:4px solid #76B900">
-      <div class="card-header">
-        <h3>Step 2: CSVファイルの準備</h3>
-        <span class="tag tag-note">ノート</span>
-      </div>
-
-      <p>Google Drive から <code>acc_y.csv</code> をダウンロードし、<code>~/MD1/no5/</code> フォルダに配置してください。</p>
-
-      <div class="callout-info">
-        <h4>acc_y.csv の構造</h4>
-        <p>1行目がヘッダー（列名）、2行目以降がデータです。</p>
-      </div>
-
-      <pre><span class="code-label">CSV ── acc_y.csv</span>
-timestamp,AccY
-0.00,-0.12
-0.01,0.34
-0.02,1.56
-...</pre>
-
-      <p style="margin-top:0.5rem">ファイル配置を確認しましょう:</p>
-      <pre><span class="code-label">Directory Tree</span>
-~/MD1/no5/
-  ├── .venv/
-  ├── step5.ipynb
-  └── acc_y.csv</pre>
-    </div>
-
-    <!-- ベースコード -->
+    <!-- 0-4. py5 で CSV を読む -->
     <div class="card standard">
       <div class="card-header">
-        <h3>Step 3: ベースコード ─ CSVデータの表示</h3>
-        <span class="tag tag-standard">標準課題</span>
+        <h3>0-4. py5 で CSV を読み取る簡易コード</h3>
+        <span class="tag tag-standard">自習</span>
       </div>
 
-      <p>以下のコードを <code>step5.ipynb</code> のセルに入力して実行してください。CSVファイルの先頭5行が表示されます。</p>
+      <p><strong>py5</strong> は，グラフィック・アニメーション・インタラクションを <strong>簡単に書ける Python ライブラリ</strong>．授業 Task 3 で UFO を動かすときに使う．まずは「py5 で CSV を読んで値を取り出すだけ」の最小コードを読んで，動きを理解しよう．</p>
 
-      <pre><span class="code-label">Python ── ベースコード</span>
+      <h4 style="color:#76B900;margin-top:1rem">py5 の基本構造（覚えておくと楽）</h4>
+<pre><span class="code-label">Python ── py5 の最小スケッチ</span>
 <span class="kw">import</span> py5
 
-lines <span class="op">=</span> []
-
 <span class="kw">def</span> <span class="fn">setup</span>():
+    <span class="cmt"># 最初に1回だけ呼ばれる（初期化）</span>
     py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">400</span>)
-    <span class="kw">global</span> lines
-    lines <span class="op">=</span> py5.<span class="fn">load_strings</span>(<span class="str">"acc_y.csv"</span>)
 
 <span class="kw">def</span> <span class="fn">draw</span>():
-    <span class="kw">global</span> lines
+    <span class="cmt"># 毎フレーム呼ばれる（描画）</span>
     py5.<span class="fn">background</span>(<span class="num">255</span>)
-    py5.<span class="fn">fill</span>(<span class="num">0</span>)
-    py5.<span class="fn">text_size</span>(<span class="num">18</span>)
-    margin <span class="op">=</span> <span class="num">0</span>
-    line_height <span class="op">=</span> <span class="num">18</span>
-    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):
-        line <span class="op">=</span> lines[i].<span class="fn">strip</span>()
-        columns <span class="op">=</span> line.<span class="fn">split</span>(<span class="str">','</span>)
-        text <span class="op">=</span> <span class="str">f"</span>{columns[<span class="num">0</span>]}<span class="str"> : </span>{columns[<span class="num">1</span>]}<span class="str">"</span>
-        py5.<span class="fn">text</span>(text, margin, margin <span class="op">+</span> i <span class="op">*</span> line_height)
 
 py5.<span class="fn">run_sketch</span>()</pre>
 
-      <div class="try-it">
-        <h4>やってみよう</h4>
-        <p>上のベースコードを <code>step5.ipynb</code> にコピーして実行してみましょう。表示結果のスクリーンショットをNotionに記録してください。</p>
-      </div>
+      <ul class="point-list">
+        <li><code>setup()</code> ─ プログラム開始時に <strong>1回だけ</strong> 呼ばれる．ウィンドウサイズ設定，ファイル読み込みなどをここで</li>
+        <li><code>draw()</code> ─ <strong>毎秒60回ほど自動で繰り返し</strong> 呼ばれる．アニメーション描画はここで</li>
+        <li><code>py5.run_sketch()</code> ─ スケッチ（プログラム）を <strong>開始する</strong> ためのおまじない</li>
+      </ul>
 
-      <div class="callout-danger">
-        <h4>問題点に気づきましたか？</h4>
-        <p>このコードには2つの問題があります。実行して確認しましょう:</p>
-        <ul class="point-list" style="margin-top:0.5rem">
-          <li><strong>問題1:</strong> <code>margin = 0</code> のため、テキストが画面の左上に張り付いて見切れている</li>
-          <li><strong>問題2:</strong> 5行しか表示されず、ヘッダー行も含まれている</li>
-        </ul>
-      </div>
+      <h4 style="color:#76B900;margin-top:1rem">処理の流れ（絵で理解）</h4>
+      <p style="font-size:0.9rem;color:#ccc">CSV ファイルが <strong>1行ずつの文字列リスト</strong> になり，<strong>カンマで分割</strong> され，<strong>数値に変換</strong> されて <strong>蓄積</strong> されるまでの流れ．次の図を見てからコードを読むと一気に理解しやすい．</p>
 
-      <h4 style="color:#4FC3F7;margin-top:1.5rem;margin-bottom:0.5rem">修正課題1: margin を修正する</h4>
-      <p><code>margin</code> と <code>line_height</code> の値を調整して、テキストが画面内に収まるようにしてください。表示行数も増やしてみましょう。</p>
+      <div style="margin:1rem 0;text-align:center">
+        <svg viewBox="0 0 720 2080" xmlns="http://www.w3.org/2000/svg" style="max-width:720px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
+          <text x="360" y="56" text-anchor="middle" fill="#4FC3F7" font-size="28" font-weight="700" font-family="sans-serif">py5 で CSV を読み込む 6ステップ</text>
 
-      <h4 style="color:#4FC3F7;margin-top:1.5rem;margin-bottom:0.5rem">修正課題2: AccY列のみを表示する</h4>
-      <p>ヘッダー行（1行目）をスキップし、AccY列（<code>columns[1]</code>）の値だけを表示するように修正してください。</p>
+          <!-- ─────────── Step 1: CSV ファイル ─────────── -->
+          <rect x="90" y="110" width="540" height="236" rx="10" fill="rgba(150,150,150,0.08)" stroke="#888" stroke-width="2"/>
+          <text x="110" y="160" fill="#bbb" font-size="24" font-weight="700" font-family="sans-serif">📄 Step 1. CSV ファイル（acc_y.csv の中身）</text>
+          <text x="110" y="210" fill="#888" font-size="21" font-family="'JetBrains Mono',monospace">timestamp,AccY     ← ヘッダ行（列名）</text>
+          <text x="110" y="248" fill="#FFB800" font-size="21" font-family="'JetBrains Mono',monospace">0.00,-0.12</text>
+          <text x="110" y="284" fill="#FFB800" font-size="21" font-family="'JetBrains Mono',monospace">0.01,0.34</text>
+          <text x="110" y="320" fill="#FFB800" font-size="21" font-family="'JetBrains Mono',monospace">0.02,1.56          ← データ行（時刻と加速度）</text>
 
-      <details>
-        <summary>ヒント: margin の修正</summary>
-        <div class="answer-content">
-          <p><code>margin = 20</code> のように余白を設定し、<code>line_height = 22</code> に増やすと読みやすくなります。</p>
-          <p><code>range(5)</code> を <code>range(len(lines))</code> や <code>range(min(20, len(lines)))</code> に変えると表示行数を増やせます。</p>
-        </div>
-      </details>
+          <!-- arrow 1 -->
+          <line x1="360" y1="356" x2="360" y2="436" stroke="#76B900" stroke-width="2" marker-end="url(#arrFlow)"/>
+          <rect x="100" y="366" width="520" height="44" rx="4" fill="#0a1a0a" stroke="#76B900" stroke-width="1"/>
+          <text x="360" y="396" text-anchor="middle" fill="#76B900" font-size="22" font-family="'JetBrains Mono',monospace">lines = py5.load_strings("acc_y.csv")</text>
 
-      <details>
-        <summary>ヒント: ヘッダースキップ</summary>
-        <div class="answer-content">
-          <p>ヘッダーをスキップするには、ループの開始を <code>range(1, ...)</code> にします。AccYだけを表示するには <code>columns[1]</code> のみを使います。</p>
-          <pre><span class="code-label">Python ── ヒント</span>
-<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">min</span>(<span class="num">20</span>, <span class="fn">len</span>(lines))):
-    line <span class="op">=</span> lines[i].<span class="fn">strip</span>()
-    columns <span class="op">=</span> line.<span class="fn">split</span>(<span class="str">','</span>)
-    y_value <span class="op">=</span> columns[<span class="num">1</span>]
-    py5.<span class="fn">text</span>(y_value, margin, margin <span class="op">+</span> (i <span class="op">-</span> <span class="num">1</span>) <span class="op">*</span> line_height)</pre>
-        </div>
-      </details>
+          <!-- ─────────── Step 2: 文字列リスト ─────────── -->
+          <rect x="90" y="450" width="540" height="236" rx="10" fill="rgba(79,195,247,0.1)" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="110" y="500" fill="#4FC3F7" font-size="24" font-weight="700" font-family="sans-serif">📋 Step 2. 1行=1要素の文字列リスト（lines）</text>
+          <text x="110" y="550" fill="#ccc" font-size="22" font-family="'JetBrains Mono',monospace">lines = [</text>
+          <text x="130" y="586" fill="#888" font-size="22" font-family="'JetBrains Mono',monospace">"timestamp,AccY",       ← lines[0] はヘッダ</text>
+          <text x="130" y="622" fill="#FFB800" font-size="22" font-family="'JetBrains Mono',monospace">"0.00,-0.12",  "0.01,0.34",  "0.02,1.56",  ...</text>
+          <text x="110" y="658" fill="#ccc" font-size="22" font-family="'JetBrains Mono',monospace">]</text>
 
-      <div style="background:#0a1a2e;border:1px solid #4FC3F7;border-radius:10px;padding:1rem 1.2rem;margin-top:1.5rem">
-        <h4 style="color:#4FC3F7;margin-bottom:0.5rem">std5-1 提出物</h4>
-        <ul class="point-list" style="margin-top:0.5rem">
-          <li><strong>スクリーンショット1:</strong> margin修正後の表示画面</li>
-          <li><strong>スクリーンショット2:</strong> AccY列のみ表示の画面</li>
-        </ul>
-        <p style="font-size:0.85rem;color:#999;margin-top:0.5rem">2枚のスクリーンショットをGoogle Classroomに提出してください。</p>
-      </div>
+          <!-- arrow 2 -->
+          <line x1="360" y1="696" x2="360" y2="776" stroke="#76B900" stroke-width="2" marker-end="url(#arrFlow)"/>
+          <rect x="120" y="706" width="480" height="44" rx="4" fill="#0a1a0a" stroke="#76B900" stroke-width="1"/>
+          <text x="360" y="736" text-anchor="middle" fill="#76B900" font-size="22" font-family="'JetBrains Mono',monospace">for line in lines[1:]:    ← [1:] でヘッダ除外</text>
 
-      <h4 style="color:#76B900;margin-top:1.5rem;margin-bottom:0.5rem">Notion テンプレート</h4>
-      <pre><span class="code-label">Notion テンプレート ── std5-1</span>
-## std5-1: CSVデータ表示の修正
+          <!-- ─────────── Step 3: 1行ずつ取り出す ─────────── -->
+          <rect x="90" y="790" width="540" height="156" rx="10" fill="rgba(79,195,247,0.08)" stroke="#4FC3F7" stroke-width="2" stroke-dasharray="5,3"/>
+          <text x="110" y="840" fill="#4FC3F7" font-size="24" font-weight="700" font-family="sans-serif">🔁 Step 3. for ループで 1行ずつ取り出す（変数 line）</text>
+          <text x="110" y="890" fill="#ccc" font-size="22" font-family="'JetBrains Mono',monospace">line = <tspan fill="#FFB800">"0.00,-0.12"</tspan></text>
+          <text x="110" y="924" fill="#999" font-size="19" font-family="sans-serif">※ 1回目は "0.00,-0.12"，2回目は "0.01,0.34"… と1行ずつ繰り返す</text>
 
-### 修正1: margin の調整
-- 変更した値: margin = __, line_height = __
-- 表示行数: __行
+          <!-- arrow 3 -->
+          <line x1="360" y1="956" x2="360" y2="1036" stroke="#76B900" stroke-width="2" marker-end="url(#arrFlow)"/>
+          <rect x="160" y="966" width="400" height="44" rx="4" fill="#0a1a0a" stroke="#76B900" stroke-width="1"/>
+          <text x="360" y="996" text-anchor="middle" fill="#76B900" font-size="22" font-family="'JetBrains Mono',monospace">parts = line.split(",")</text>
 
-### 修正2: AccY列のみ表示
-- 変更したコード箇所の説明:
-- ヘッダーをスキップする方法:
+          <!-- ─────────── Step 4: カンマで分割 ─────────── -->
+          <rect x="90" y="1050" width="540" height="156" rx="10" fill="rgba(118,185,0,0.1)" stroke="#76B900" stroke-width="2"/>
+          <text x="110" y="1100" fill="#76B900" font-size="24" font-weight="700" font-family="sans-serif">✂️ Step 4. カンマで分割して 2つの文字列リスト（parts）</text>
+          <text x="110" y="1150" fill="#ccc" font-size="22" font-family="'JetBrains Mono',monospace">parts = [<tspan fill="#FFB800">"0.00"</tspan>, <tspan fill="#FFB800">"-0.12"</tspan>]</text>
+          <text x="110" y="1186" fill="#999" font-size="19" font-family="sans-serif">parts[0]=時刻（文字列）, parts[1]=AccY（文字列）　← まだ文字列！</text>
 
-### スクリーンショット
-1. margin修正後の画面
-2. AccY列のみ表示の画面</pre>
-    </div>
+          <!-- arrow 4 -->
+          <line x1="360" y1="1216" x2="360" y2="1296" stroke="#76B900" stroke-width="2" marker-end="url(#arrFlow)"/>
+          <rect x="160" y="1226" width="400" height="44" rx="4" fill="#0a1a0a" stroke="#76B900" stroke-width="1"/>
+          <text x="360" y="1256" text-anchor="middle" fill="#76B900" font-size="22" font-family="'JetBrains Mono',monospace">value = float(parts[1])</text>
 
-  </div>
-</section>
+          <!-- ─────────── Step 5: float で数値に変換 ─────────── -->
+          <rect x="90" y="1310" width="540" height="156" rx="10" fill="rgba(255,184,0,0.1)" stroke="#FFB800" stroke-width="2"/>
+          <text x="110" y="1360" fill="#FFB800" font-size="24" font-weight="700" font-family="sans-serif">🔢 Step 5. parts[1] を数値（float）に変換</text>
+          <text x="110" y="1412" fill="#ccc" font-size="22" font-family="'JetBrains Mono',monospace">value = <tspan fill="#FFB800" font-size="28" font-weight="700">-0.12</tspan></text>
+          <text x="110" y="1446" fill="#999" font-size="19" font-family="sans-serif">文字列 "-0.12" → 数値 -0.12 に変換．これで計算に使える数値になった！</text>
 
-<!-- ============ 2. std5-2 グループワーク2 ============ -->
-<section id="sec-std5-2">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-num" style="background:#4FC3F7">2</div>
-      <h2>std5-2: グループワーク2 ─ 時系列データアニメーション（約50分）</h2>
-    </div>
+          <!-- arrow 5 -->
+          <line x1="360" y1="1476" x2="360" y2="1556" stroke="#76B900" stroke-width="2" marker-end="url(#arrFlow)"/>
+          <rect x="160" y="1486" width="400" height="44" rx="4" fill="#0a1a0a" stroke="#76B900" stroke-width="1"/>
+          <text x="360" y="1516" text-anchor="middle" fill="#76B900" font-size="22" font-family="'JetBrains Mono',monospace">values.append(value)</text>
 
-    <!-- アニメーションの基本 -->
-    <div class="card" style="border-left:4px solid #76B900">
-      <div class="card-header">
-        <h3>Step 1: CSVデータでアニメーション</h3>
-        <span class="tag tag-note">ノート</span>
-      </div>
+          <!-- ─────────── Step 6: 蓄積したリスト ─────────── -->
+          <rect x="90" y="1570" width="540" height="236" rx="10" fill="rgba(155,89,182,0.12)" stroke="#9b59b6" stroke-width="2"/>
+          <text x="110" y="1620" fill="#9b59b6" font-size="24" font-weight="700" font-family="sans-serif">📦 Step 6. values リストに数値が蓄積されていく（最終状態）</text>
+          <text x="110" y="1676" fill="#ccc" font-size="22" font-family="'JetBrains Mono',monospace">values = [<tspan fill="#FFB800" font-weight="700">-0.12, 0.34, 1.56, ...</tspan>]</text>
+          <text x="110" y="1730" fill="#bbb" font-size="20" font-family="sans-serif">→ 全行ぶんを処理し終えると，AccY の数値だけが時間順に並んだリストができる</text>
+          <text x="110" y="1762" fill="#bbb" font-size="20" font-family="sans-serif">　 これを使って Task 3 では UFO の縦位置を決める</text>
 
-      <p>CSVから読み込んだAccY値を使って、円を動かすアニメーションを作ります。</p>
+          <!-- ループの繰り返し説明（右側に縦の矢印） -->
+          <path d="M 660,1120 Q 690,1120 690,880 Q 690,840 660,840" fill="none" stroke="#4FC3F7" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#arrLoop)"/>
+          <text x="670" y="990" fill="#4FC3F7" font-size="20" font-family="sans-serif" transform="rotate(90 670 990)">次の行へ繰り返し</text>
 
-      <pre><span class="code-label">Python ── アニメーション基本コード</span>
-<span class="kw">import</span> py5
+          <!-- 凡例 -->
+          <rect x="90" y="1880" width="540" height="160" rx="8" fill="rgba(255,255,255,0.04)" stroke="#444"/>
+          <text x="110" y="1924" fill="#bbb" font-size="22" font-weight="700">凡例（色の意味）</text>
+          <rect x="110" y="1953" width="22" height="22" fill="rgba(150,150,150,0.3)" stroke="#888"/><text x="140" y="1974" fill="#bbb" font-size="20">ファイル（生テキスト）</text>
+          <rect x="270" y="1953" width="22" height="22" fill="rgba(79,195,247,0.3)" stroke="#4FC3F7"/><text x="300" y="1974" fill="#bbb" font-size="20">文字列・文字列リスト</text>
+          <rect x="450" y="1953" width="22" height="22" fill="rgba(118,185,0,0.3)" stroke="#76B900"/><text x="480" y="1974" fill="#bbb" font-size="20">分割後の配列</text>
+          <rect x="110" y="1997" width="22" height="22" fill="rgba(255,184,0,0.3)" stroke="#FFB800"/><text x="140" y="2018" fill="#bbb" font-size="20">数値（float）</text>
+          <rect x="270" y="1997" width="22" height="22" fill="rgba(155,89,182,0.3)" stroke="#9b59b6"/><text x="300" y="2018" fill="#bbb" font-size="20">最終的なリスト</text>
 
-y_values <span class="op">=</span> []
-frame_index <span class="op">=</span> <span class="num">0</span>
-
-<span class="kw">def</span> <span class="fn">setup</span>():
-    py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">400</span>)
-    lines <span class="op">=</span> py5.<span class="fn">load_strings</span>(<span class="str">"acc_y.csv"</span>)
-    <span class="kw">for</span> line <span class="kw">in</span> lines[<span class="num">1</span>:]:
-        parts <span class="op">=</span> line.<span class="fn">split</span>(<span class="str">','</span>)
-        y <span class="op">=</span> <span class="fn">float</span>(parts[<span class="num">1</span>])
-        y_values.<span class="fn">append</span>(y)
-
-<span class="kw">def</span> <span class="fn">draw</span>():
-    <span class="kw">global</span> frame_index
-    py5.<span class="fn">background</span>(<span class="num">255</span>)
-    <span class="kw">if</span> frame_index <span class="op">&lt;</span> <span class="fn">len</span>(y_values):
-        y <span class="op">=</span> y_values[frame_index]
-        py5.<span class="fn">fill</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">255</span>)
-        py5.<span class="fn">ellipse</span>(<span class="num">200</span>, y, <span class="num">30</span>, <span class="num">30</span>)
-        frame_index <span class="op">+=</span> <span class="num">1</span>
-    <span class="kw">else</span>:
-        py5.<span class="fn">no_loop</span>()
-
-py5.<span class="fn">run_sketch</span>()</pre>
-
-      <div class="callout-warning">
-        <h4>円が画面外に飛び出す？</h4>
-        <p>加速度の値は -10〜10 程度の小さな値のため、画面サイズ（400px）に対してほとんど動きません。<strong>正規化（remap）</strong>が必要です。</p>
-      </div>
-    </div>
-
-    <!-- remap -->
-    <div class="card" style="border-left:4px solid #93D500">
-      <div class="card-header">
-        <h3>Step 2: py5.remap() で値を画面に合わせる</h3>
-        <span class="tag tag-note">ノート</span>
-      </div>
-
-      <div class="concept-box">
-        <h4>正規化・remap とは</h4>
-        <p>ある範囲の値を別の範囲に変換することを<strong>正規化</strong>（remap）と呼びます。<code>py5.remap()</code> を使うと、加速度の値（例: -10〜10）を画面のY座標（0〜400）に変換できます。</p>
-      </div>
-
-      <div class="analogy">
-        温度計の目盛りと同じです。摂氏0〜100度を、温度計の0〜30cmの液柱に「変換」して表示しています。
-      </div>
-
-      <!-- SVG: remap の範囲変換 -->
-      <div style="margin:1.5rem 0;text-align:center">
-        <svg viewBox="0 0 620 180" xmlns="http://www.w3.org/2000/svg" style="max-width:620px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
-          <text x="310" y="22" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" font-family="sans-serif">py5.remap() による範囲変換</text>
-          <!-- Input range bar -->
-          <text x="70" y="52" text-anchor="middle" fill="#FFB800" font-size="10" font-weight="700" font-family="sans-serif">加速度の値</text>
-          <rect x="140" y="40" width="400" height="24" rx="6" fill="none" stroke="#FFB800" stroke-width="2"/>
-          <text x="145" y="57" fill="#ccc" font-size="10" font-family="monospace">-10</text>
-          <text x="330" y="57" text-anchor="middle" fill="#ccc" font-size="10" font-family="monospace">0</text>
-          <text x="525" y="57" text-anchor="end" fill="#ccc" font-size="10" font-family="monospace">10</text>
-          <!-- Example point on input -->
-          <circle cx="440" cy="52" r="6" fill="#4FC3F7"/>
-          <text x="440" y="37" text-anchor="middle" fill="#4FC3F7" font-size="10" font-weight="700" font-family="monospace">5</text>
-          <!-- Arrow down with remap label -->
-          <line x1="310" y1="70" x2="310" y2="100" stroke="#76B900" stroke-width="2" marker-end="url(#arr5r)"/>
-          <rect x="325" y="76" width="65" height="18" rx="4" fill="#1A1A1A" stroke="#76B900" stroke-width="1"/>
-          <text x="357" y="89" text-anchor="middle" fill="#76B900" font-size="10" font-weight="700" font-family="monospace">remap()</text>
-          <!-- Output range bar -->
-          <text x="70" y="122" text-anchor="middle" fill="#93D500" font-size="10" font-weight="700" font-family="sans-serif">画面座標</text>
-          <rect x="140" y="110" width="400" height="24" rx="6" fill="none" stroke="#93D500" stroke-width="2"/>
-          <text x="145" y="127" fill="#ccc" font-size="10" font-family="monospace">0</text>
-          <text x="330" y="127" text-anchor="middle" fill="#ccc" font-size="10" font-family="monospace">200</text>
-          <text x="525" y="127" text-anchor="end" fill="#ccc" font-size="10" font-family="monospace">400</text>
-          <!-- Example point on output -->
-          <circle cx="440" cy="122" r="6" fill="#4FC3F7"/>
-          <text x="440" y="150" text-anchor="middle" fill="#4FC3F7" font-size="10" font-weight="700" font-family="monospace">300</text>
-          <!-- Dashed connection -->
-          <line x1="440" y1="58" x2="440" y2="110" stroke="#4FC3F7" stroke-width="1" stroke-dasharray="4,3"/>
-          <!-- Formula -->
-          <text x="310" y="172" text-anchor="middle" fill="#999" font-size="9" font-family="monospace">remap(5, -10, 10, 0, 400) = 300</text>
           <defs>
-            <marker id="arr5r" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#76B900"/></marker>
+            <marker id="arrFlow" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#76B900"/></marker>
+            <marker id="arrLoop" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#4FC3F7"/></marker>
           </defs>
         </svg>
       </div>
 
-      <pre><span class="code-label">Python ── remap の使い方</span>
-<span class="cmt"># py5.remap(値, 元の最小, 元の最大, 変換先の最小, 変換先の最大)</span>
-screen_y <span class="op">=</span> py5.<span class="fn">remap</span>(y, <span class="num">-10</span>, <span class="num">10</span>, <span class="num">0</span>, <span class="num">400</span>)
-
-<span class="cmt"># 例: y = 5 の場合</span>
-<span class="cmt"># remap(5, -10, 10, 0, 400) → 300</span></pre>
-
-      <p style="margin-top:1rem"><code>draw()</code> 内の <code>y</code> を <code>py5.remap()</code> で変換してみましょう:</p>
-
-      <pre><span class="code-label">Python ── remap を適用した draw()</span>
-<span class="kw">def</span> <span class="fn">draw</span>():
-    <span class="kw">global</span> frame_index
-    py5.<span class="fn">background</span>(<span class="num">255</span>)
-    <span class="kw">if</span> frame_index <span class="op">&lt;</span> <span class="fn">len</span>(y_values):
-        y <span class="op">=</span> y_values[frame_index]
-        screen_y <span class="op">=</span> py5.<span class="fn">remap</span>(y, <span class="num">-10</span>, <span class="num">10</span>, <span class="num">0</span>, <span class="num">400</span>)
-        py5.<span class="fn">fill</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">255</span>)
-        py5.<span class="fn">ellipse</span>(<span class="num">200</span>, screen_y, <span class="num">30</span>, <span class="num">30</span>)
-        frame_index <span class="op">+=</span> <span class="num">1</span>
-    <span class="kw">else</span>:
-        py5.<span class="fn">no_loop</span>()</pre>
-    </div>
-
-    <!-- 時間軸の追加 -->
-    <div class="card" style="border-left:4px solid #93D500">
-      <div class="card-header">
-        <h3>Step 3: 時間軸を加える</h3>
-        <span class="tag tag-note">ノート</span>
-      </div>
-
-      <p>円のX座標を <code>frame_index</code> に連動させると、時間の経過に沿ってデータが流れるアニメーションになります。</p>
-
-      <pre><span class="code-label">Python ── 時間軸の追加</span>
-<span class="cmt"># X座標も frame_index から計算</span>
-screen_x <span class="op">=</span> py5.<span class="fn">remap</span>(frame_index, <span class="num">0</span>, <span class="fn">len</span>(y_values), <span class="num">0</span>, <span class="num">400</span>)
-py5.<span class="fn">ellipse</span>(screen_x, screen_y, <span class="num">10</span>, <span class="num">10</span>)</pre>
-
-      <div class="callout-tip">
-        <h4>軌跡を残すには？</h4>
-        <p><code>py5.background(255)</code> を <code>draw()</code> の先頭から削除するか、<code>py5.background(255, 20)</code>（半透明の白）に変えると、これまでの軌跡が薄く残ります。</p>
-      </div>
-
-      <!-- SVG: 軌跡の比較 before/after -->
-      <div style="margin:1.5rem 0;text-align:center">
-        <svg viewBox="0 0 620 180" xmlns="http://www.w3.org/2000/svg" style="max-width:620px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
-          <text x="310" y="22" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" font-family="sans-serif">background() の違いによる軌跡の表示</text>
-          <!-- Left panel: background(255) -->
-          <rect x="30" y="38" width="260" height="125" rx="8" fill="#fff" stroke="#333" stroke-width="1"/>
-          <text x="160" y="55" text-anchor="middle" fill="#FF5252" font-size="10" font-weight="700" font-family="monospace">background(255)</text>
-          <!-- Single dot only -->
-          <circle cx="200" cy="100" r="8" fill="#4FC3F7"/>
-          <text x="160" y="150" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">毎フレーム全消去 → 1点のみ表示</text>
-          <!-- Right panel: background(255, 20) -->
-          <rect x="330" y="38" width="260" height="125" rx="8" fill="#fff" stroke="#333" stroke-width="1"/>
-          <text x="460" y="55" text-anchor="middle" fill="#76B900" font-size="10" font-weight="700" font-family="monospace">background(255, 20)</text>
-          <!-- Trail dots with fading opacity -->
-          <circle cx="360" cy="115" r="6" fill="#4FC3F7" opacity="0.1"/>
-          <circle cx="380" cy="105" r="6" fill="#4FC3F7" opacity="0.15"/>
-          <circle cx="400" cy="95" r="6" fill="#4FC3F7" opacity="0.2"/>
-          <circle cx="420" cy="88" r="6" fill="#4FC3F7" opacity="0.3"/>
-          <circle cx="440" cy="82" r="6" fill="#4FC3F7" opacity="0.4"/>
-          <circle cx="460" cy="90" r="6" fill="#4FC3F7" opacity="0.55"/>
-          <circle cx="480" cy="100" r="6" fill="#4FC3F7" opacity="0.7"/>
-          <circle cx="500" cy="95" r="6" fill="#4FC3F7" opacity="0.85"/>
-          <circle cx="520" cy="88" r="8" fill="#4FC3F7" opacity="1"/>
-          <text x="460" y="150" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">半透明で上書き → 軌跡が残る</text>
-          <!-- Arrow between -->
-          <text x="310" y="105" text-anchor="middle" fill="#76B900" font-size="16" font-family="sans-serif">→</text>
-          <!-- Bottom label -->
-          <text x="310" y="175" text-anchor="middle" fill="#ccc" font-size="9" font-family="sans-serif">第2引数 (alpha) を小さくするほど軌跡が長く残る</text>
-        </svg>
-      </div>
-
-      <div class="try-it">
-        <h4>やってみよう</h4>
-        <p>remap の範囲を変えて円の動きがどう変わるか試しましょう。また <code>background(255, 20)</code> に変えて軌跡表示も試してみてください。変更前後をNotionに記録してください。</p>
-      </div>
-    </div>
-
-    <!-- UFO画像 -->
-    <div class="card standard">
-      <div class="card-header">
-        <h3>Step 4: UFO画像で表示する</h3>
-        <span class="tag tag-standard">標準課題</span>
-      </div>
-
-      <p>青い円の代わりにUFO画像を表示しましょう。画像ファイル（<code>ufo.png</code>）をGoogle Driveからダウンロードし、<code>~/MD1/no5/</code> に配置してください。</p>
-
-      <pre><span class="code-label">Python ── UFO画像を使ったアニメーション</span>
+      <h4 style="color:#76B900;margin-top:1rem">CSV を読み取る簡易コード（解説付き）</h4>
+<pre><span class="code-label">Python ── py5 で CSV を読む最小例</span>
 <span class="kw">import</span> py5
 
-y_values <span class="op">=</span> []
-frame_index <span class="op">=</span> <span class="num">0</span>
-ufo_img <span class="op">=</span> <span class="kw">None</span>
+<span class="cmt"># 読み込んだ AccY 値を入れる箱</span>
+values <span class="op">=</span> []
+
 
 <span class="kw">def</span> <span class="fn">setup</span>():
-    <span class="kw">global</span> ufo_img
     py5.<span class="fn">size</span>(<span class="num">400</span>, <span class="num">400</span>)
-    ufo_img <span class="op">=</span> py5.<span class="fn">load_image</span>(<span class="str">"ufo.png"</span>)
-    lines <span class="op">=</span> py5.<span class="fn">load_strings</span>(<span class="str">"acc_y.csv"</span>)
-    <span class="kw">for</span> line <span class="kw">in</span> lines[<span class="num">1</span>:]:
-        parts <span class="op">=</span> line.<span class="fn">split</span>(<span class="str">','</span>)
-        y <span class="op">=</span> <span class="fn">float</span>(parts[<span class="num">1</span>])
-        y_values.<span class="fn">append</span>(y)
 
-<span class="kw">def</span> <span class="fn">draw</span>():
-    <span class="kw">global</span> frame_index
-    py5.<span class="fn">background</span>(<span class="num">255</span>)
-    <span class="kw">if</span> frame_index <span class="op">&lt;</span> <span class="fn">len</span>(y_values):
-        y <span class="op">=</span> y_values[frame_index]
-        screen_y <span class="op">=</span> py5.<span class="fn">remap</span>(y, <span class="num">-10</span>, <span class="num">10</span>, <span class="num">0</span>, <span class="num">400</span>)
-        py5.<span class="fn">image</span>(ufo_img, <span class="num">200</span> <span class="op">-</span> <span class="num">25</span>, screen_y <span class="op">-</span> <span class="num">25</span>, <span class="num">50</span>, <span class="num">50</span>)
-        frame_index <span class="op">+=</span> <span class="num">1</span>
-    <span class="kw">else</span>:
-        py5.<span class="fn">no_loop</span>()
+    <span class="cmt"># acc_y.csv を1行ずつテキストとして読み込む</span>
+    lines <span class="op">=</span> py5.<span class="fn">load_strings</span>(<span class="str">"acc_y.csv"</span>)
+
+    <span class="cmt"># 先頭行（ヘッダー）はスキップして 2 行目から処理</span>
+    <span class="kw">for</span> line <span class="kw">in</span> lines[<span class="num">1</span>:]:
+        <span class="cmt"># カンマで分割して 2 つの部分にする</span>
+        parts <span class="op">=</span> line.<span class="fn">split</span>(<span class="str">","</span>)
+
+        <span class="cmt"># 2列目（AccY）の文字列を数値（float）に変換</span>
+        value <span class="op">=</span> <span class="fn">float</span>(parts[<span class="num">1</span>])
+
+        <span class="cmt"># values リストに追加</span>
+        values.<span class="fn">append</span>(value)
+
+    <span class="cmt"># 読み込み結果を確認するための表示</span>
+    <span class="fn">print</span>(<span class="str">"読み込んだ値の数:"</span>, <span class="fn">len</span>(values))
+    <span class="fn">print</span>(<span class="str">"最初の3個:"</span>, values[<span class="num">0</span>], values[<span class="num">1</span>], values[<span class="num">2</span>])
+
 
 py5.<span class="fn">run_sketch</span>()</pre>
 
+      <h4 style="color:#76B900;margin-top:1rem">1行ずつ丁寧に解説</h4>
+      <table style="font-size:0.88rem">
+        <tr><th>コード</th><th>意味</th></tr>
+        <tr><td><code>import py5</code></td><td>py5 ライブラリを使えるようにする</td></tr>
+        <tr><td><code>values = []</code></td><td>空のリストを用意．ここに数値を追加していく</td></tr>
+        <tr><td><code>py5.size(400, 400)</code></td><td>幅400・高さ400 のウィンドウを作る</td></tr>
+        <tr><td><code>py5.load_strings("acc_y.csv")</code></td><td>CSV ファイルを <strong>1行ずつ文字列のリスト</strong> として読む</td></tr>
+        <tr><td><code>for line in lines[1:]:</code></td><td><strong>2行目から最後</strong> まで，1行ずつ <code>line</code> に入れて繰り返し（<code>[1:]</code> は「1番目以降」の意味で，0番目のヘッダ行をスキップする）</td></tr>
+        <tr><td><code>line.split(",")</code></td><td>1行の文字列を <strong>カンマで分割</strong> してリストにする．例: <code>"0.00,-0.12"</code> → <code>["0.00", "-0.12"]</code></td></tr>
+        <tr><td><code>float(parts[1])</code></td><td>リストの <strong>2番目</strong>（インデックス1）の文字列を数値に変換．例: <code>"-0.12"</code> → <code>-0.12</code></td></tr>
+        <tr><td><code>values.append(value)</code></td><td>数値を <code>values</code> リストの <strong>末尾に追加</strong></td></tr>
+        <tr><td><code>print(...)</code></td><td>確認のため値を表示</td></tr>
+      </table>
+
       <div class="callout-info">
-        <h4>py5.image() の引数</h4>
-        <p><code>py5.image(画像, x, y, 幅, 高さ)</code> で画像を描画します。<code>x</code>, <code>y</code> は画像の<strong>左上</strong>の座標なので、中央に配置するために画像サイズの半分を引いています。</p>
+        <h4>インデックス（番号）の数え方は 0 から</h4>
+        <p>Pythonのリストは <strong>0番目</strong> から数える．<br>
+        例: <code>parts = ["0.00", "-0.12"]</code> なら <code>parts[0]</code> が <code>"0.00"</code>，<code>parts[1]</code> が <code>"-0.12"</code>．<br>
+        だから <strong>2列目を取りたいときは <code>parts[1]</code></strong> と書く．</p>
       </div>
 
-      <div style="background:#0a1a2e;border:1px solid #4FC3F7;border-radius:10px;padding:1rem 1.2rem;margin-top:1.5rem">
-        <h4 style="color:#4FC3F7;margin-bottom:0.5rem">std5-2 提出物</h4>
-        <p>以下の内容をWordレポートにまとめ、PDFで提出してください:</p>
-        <ul class="point-list" style="margin-top:0.5rem">
-          <li><strong>1. コード全文:</strong> UFO画像が加速度データに従って動く完成コード</li>
-          <li><strong>2. 実行結果:</strong> アニメーション実行中のスクリーンショット</li>
-          <li><strong>3. 工夫した点:</strong> remap の範囲調整、時間軸追加、軌跡表示など自分で工夫した内容の説明</li>
-        </ul>
+      <div class="callout-warning">
+        <h4>欠損・外れ値が混ざっていたら？</h4>
+        <p>実際のセンサデータでは <code>0.06,</code> のように <strong>値が空</strong> の行や，<strong>数字でない文字</strong> が紛れることがある．そのまま <code>float()</code> すると <strong>エラーで止まる</strong>．対策は <code>try / except</code> でスキップする：</p>
+<pre style="margin-top:0.4rem"><span class="code-label">Python ── 欠損行をスキップする書き方</span>
+<span class="kw">for</span> line <span class="kw">in</span> lines[<span class="num">1</span>:]:
+    parts <span class="op">=</span> line.<span class="fn">split</span>(<span class="str">","</span>)
+    <span class="kw">try</span>:
+        value <span class="op">=</span> <span class="fn">float</span>(parts[<span class="num">1</span>])
+        values.<span class="fn">append</span>(value)
+    <span class="kw">except</span> (ValueError, IndexError):
+        <span class="cmt"># 数値に変換できない／列が足りない行はスキップ</span>
+        <span class="kw">continue</span></pre>
+        <p style="margin-top:0.4rem;font-size:0.9rem">→ Task 3 でも opencode に「欠損行はスキップして」と指示するとこれに近いコードが生成される．</p>
       </div>
 
-      <h4 style="color:#76B900;margin-top:1.5rem;margin-bottom:0.5rem">Notion テンプレート</h4>
-      <pre><span class="code-label">Notion テンプレート ── std5-2</span>
-## std5-2: UFO時系列アニメーション
-
-### 完成コード
-（ここにコード全文を貼り付け）
-
-### 実行結果
-（スクリーンショットを貼り付け）
-
-### 工夫した点
-1. remap の範囲:
-2. 時間軸の追加: あり / なし
-3. 軌跡の表示: あり / なし
-4. その他の工夫:</pre>
+      <div class="callout-tip">
+        <h4>✅ 0-4 チェック問題</h4>
+        <ol style="padding-left:1.4rem">
+          <li><code>py5.load_strings("acc_y.csv")</code> は <strong>何を返す</strong> か？（型と中身）
+            <details style="margin-top:0.4rem">
+              <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
+              <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
+                <strong>文字列のリスト（list of strings）</strong> を返す．リストの各要素はCSVファイルの <strong>1行分のテキスト</strong>．<br>
+                例: <code>["timestamp,AccY", "0.00,-0.12", "0.01,0.34", "0.02,1.56", ...]</code>
+              </div>
+            </details>
+          </li>
+          <li><code>lines[1:]</code> の <code>[1:]</code> は何を意味するか？ なぜ <code>[0:]</code> や <code>lines</code> ではないのか？
+            <details style="margin-top:0.4rem">
+              <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
+              <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
+                <code>[1:]</code> は「<strong>インデックス1から最後まで</strong>」つまり <strong>2番目以降</strong> を取り出すスライス．<br>
+                0番目はヘッダ行（<code>"timestamp,AccY"</code>）で <strong>数値ではない</strong> ため，そのまま <code>float()</code> するとエラーになる．だから <code>[1:]</code> でヘッダをスキップする．<br>
+                <code>[0:]</code> や <code>lines</code> だとヘッダ行も処理してしまい，<code>ValueError</code> で落ちる．
+              </div>
+            </details>
+          </li>
+          <li><code>line.split(",")</code> は何のための処理か？ 例を挙げて説明せよ
+            <details style="margin-top:0.4rem">
+              <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
+              <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
+                1行の文字列を <strong>カンマで分割してリストにする</strong> 処理．CSVの各列を取り出すために使う．<br>
+                例: <code>"0.00,-0.12".split(",")</code> → <code>["0.00", "-0.12"]</code>
+              </div>
+            </details>
+          </li>
+          <li><code>float(parts[1])</code> はなぜ <strong>1</strong> なのか？ <strong>0</strong> ではダメか？
+            <details style="margin-top:0.4rem">
+              <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
+              <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
+                インデックスは <strong>0から始まる</strong>．<br>
+                <code>parts[0]</code> = 1列目 = <code>timestamp</code>（時刻）<br>
+                <code>parts[1]</code> = 2列目 = <code>AccY</code>（加速度の値）<br>
+                今回欲しいのは <strong>加速度の値</strong> なので <code>parts[1]</code>．<code>parts[0]</code> だと時刻を取ってしまうのでダメ．
+              </div>
+            </details>
+          </li>
+          <li><code>setup()</code> と <code>draw()</code> の違いを説明せよ
+            <details style="margin-top:0.4rem">
+              <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
+              <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
+                <strong><code>setup()</code></strong>: プログラム開始時に <strong>1回だけ</strong> 呼ばれる．ウィンドウサイズの設定，画像やCSVの読み込みなど <strong>準備</strong> をする．<br>
+                <strong><code>draw()</code></strong>: <strong>毎フレーム（毎秒60回程度）繰り返し</strong> 呼ばれる．アニメーションの <strong>描画</strong> をここに書く．
+              </div>
+            </details>
+          </li>
+        </ol>
+      </div>
     </div>
 
+    <!-- Notion 提出指示 -->
+    <div class="card standard">
+      <div class="card-header">
+        <h3>0-5. Notion に分からなかった点を記録する</h3>
+        <span class="tag tag-standard">提出</span>
+      </div>
+
+      <p style="margin-bottom:0.6rem;font-size:0.95rem">予習資料（0-1〜0-4）を読んで <strong>分からなかった点をリストアップ</strong> せよ．用語・コード・図の何でも可．<strong>1つも分からない点が無ければ「分からない点なし」と明記</strong> する．</p>
+
+      <div style="background:#0a1a0a;border:2px solid #76B900;border-radius:12px;padding:1.2rem 1.5rem;margin-top:1rem">
+        <h4 style="color:#76B900;font-size:1.05rem;margin-bottom:0.6rem">📝 Notion テンプレート（コピペ用）</h4>
+<pre style="margin:0.4rem 0"><span class="code-label">Notion テンプレート ── Task 0</span>
+## Task 0 予習で分からなかった点
+
+- 0-1（関数）:
+- 0-2（時系列データ）:
+- 0-3（CSV）:
+- 0-4（py5でCSV読込）:
+
+※ 1つも無ければ「分からない点なし」と記載</pre>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ============ 3. 口頭試問 ============ -->
-<section id="sec-exam">
+<!-- ============ TASK 1: 関数理解の口頭確認グループワーク ============ -->
+<section id="sec-task1">
   <div class="container">
     <div class="section-header">
-      <div class="section-num" style="background:#FF5252">3</div>
-      <h2>口頭試問</h2>
+      <div class="section-num" style="background:#4FC3F7">1</div>
+      <h2>関数理解の口頭確認グループワーク <span style="font-size:0.55rem;color:#999;font-weight:400">── 約30分・全員必須・最初にやる</span></h2>
+      <span class="tag tag-group">必修</span>
     </div>
 
     <div class="card group">
       <div class="card-header">
-        <h3>口頭試問: グループ内Q&amp;A</h3>
-        <span class="tag tag-group">口頭試問</span>
-        <span class="exam-alert">必須</span>
+        <h3>関数の動きを1人ずつ口頭で説明する（第1回・第2回の2ラウンド）</h3>
+        <span class="tag tag-group">グループ</span>
       </div>
 
-      <p>グループ内で今日学んだ内容について質問し合いましょう。互いに説明することで理解を深めます。</p>
-      <p style="font-size:0.75rem;color:#999;margin-top:0.5rem"><strong style="color:#93D500">注意:</strong> 出席メンバで取り組むこと。欠席またはリアルタイムに受講できなかった場合は、授業後にSlackでグループメンバに質問し回答を得ること（どうしても回答が得られなかった場合は空欄でも構わない）。</p>
+      <p>本日の演習（UFOアニメ・移動平均）の <strong>土台は「関数」</strong>．書ける／読めるだけでなく <strong>言葉で説明できる</strong> ことをグループで確認する．<strong>第1回（基本5問）→ 第2回（応用5問）</strong> の2ラウンド実施．全員が <strong>各回で最低1問</strong> 口頭説明できたら次のセクションへ進む．</p>
 
-      <h4 style="color:#76B900;margin-top:1rem;margin-bottom:0.5rem">質問例</h4>
-      <table>
-        <tr><th style="width:30px">#</th><th>質問</th></tr>
-        <tr><td>1</td><td>CSVとJSONの違いは何ですか？</td></tr>
-        <tr><td>2</td><td>加速度センサの3軸（X, Y, Z）はそれぞれ何を測定していますか？</td></tr>
-        <tr><td>3</td><td><code>py5.remap()</code> は何をする関数ですか？具体例を挙げてください。</td></tr>
-        <tr><td>4</td><td>サンプリングレートとは何ですか？</td></tr>
-        <tr><td>5</td><td>欠損値と外れ値の違いを説明してください。</td></tr>
-      </table>
+      <div class="concept-box">
+        <h4>進め方（ルール）</h4>
+        <ol style="padding-left:1.5rem;font-size:0.95rem">
+          <li>くじか席順で <strong>1人目の出題者</strong> を決める</li>
+          <li>出題者が問題を1つ選び，<strong>左隣の人</strong> に向けて出題する</li>
+          <li><strong>回答者は出題者の左隣の人</strong>（毎回必ず左隣）</li>
+          <li>回答者は <strong>30〜60秒で口頭説明</strong> する</li>
+          <li><strong>出題者と他のグループメンバ</strong>（回答者以外の全員）で答えを <strong>○ / ×</strong> の2択で判定</li>
+          <li>次は <strong>1つ左にずれて新しい出題者</strong> （= 前の回答者が次の出題者）</li>
+          <li>全員1問終わったら <strong>第2回</strong> に進む．第2回は第1回と違う問題を選ぶ</li>
+          <li><strong>全員が第1回・第2回ともに1問以上回答できた</strong> らクリア</li>
+        </ol>
+      </div>
 
-      <h4 style="color:#76B900;margin-top:1.5rem;margin-bottom:0.5rem">Notion記録テンプレート</h4>
-      <pre><span class="code-label">Notion テンプレート ── 口頭試問</span>
-## 口頭試問記録
+      <!-- ルール図 -->
+      <h4 style="color:#76B900;margin-top:1.2rem">役割の図解（上から見たグループ配置）</h4>
+      <div style="margin:1rem 0;text-align:center">
+        <svg viewBox="0 0 640 420" xmlns="http://www.w3.org/2000/svg" style="max-width:640px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
+          <text x="320" y="28" text-anchor="middle" fill="#4FC3F7" font-size="14" font-weight="700" font-family="sans-serif">出題者 → 左隣が回答 → 残りで判定</text>
 
-日付: 2026/05/25
-グループ名: ____
+          <!-- 出題者（上・中央を向いている） -->
+          <rect x="250" y="55" width="140" height="70" rx="10" fill="rgba(255,184,0,0.2)" stroke="#FFB800" stroke-width="2"/>
+          <text x="320" y="82" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" font-family="sans-serif">出題者</text>
+          <text x="320" y="102" text-anchor="middle" fill="#ccc" font-size="11" font-family="sans-serif">Aさん</text>
+          <text x="320" y="118" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">問題を選んで出題</text>
 
-質問者 → 回答者:
-Q1: ____
-A1: ____
+          <!-- 回答者（右 = A から見て左隣） -->
+          <rect x="430" y="175" width="180" height="70" rx="10" fill="rgba(79,195,247,0.2)" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="520" y="202" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" font-family="sans-serif">回答者（左隣）</text>
+          <text x="520" y="222" text-anchor="middle" fill="#ccc" font-size="11" font-family="sans-serif">Bさん</text>
+          <text x="520" y="238" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">30〜60秒で口頭説明</text>
 
-Q2: ____
-A2: ____
+          <!-- 判定者（下） -->
+          <rect x="250" y="295" width="140" height="70" rx="10" fill="rgba(155,89,182,0.18)" stroke="#9b59b6" stroke-width="2"/>
+          <text x="320" y="322" text-anchor="middle" fill="#9b59b6" font-size="13" font-weight="700" font-family="sans-serif">判定者</text>
+          <text x="320" y="342" text-anchor="middle" fill="#ccc" font-size="11" font-family="sans-serif">Cさん</text>
+          <text x="320" y="358" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">○か×か判定</text>
 
-感想・気づき: ____</pre>
+          <!-- 判定者（左） -->
+          <rect x="30" y="175" width="140" height="70" rx="10" fill="rgba(155,89,182,0.18)" stroke="#9b59b6" stroke-width="2"/>
+          <text x="100" y="202" text-anchor="middle" fill="#9b59b6" font-size="13" font-weight="700" font-family="sans-serif">判定者</text>
+          <text x="100" y="222" text-anchor="middle" fill="#ccc" font-size="11" font-family="sans-serif">Dさん</text>
+          <text x="100" y="238" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">○か×か判定</text>
+
+          <!-- 出題→回答の矢印（上→右） -->
+          <path d="M 380,95 Q 480,110 500,175" fill="none" stroke="#FFB800" stroke-width="2.5" marker-end="url(#arrRule)"/>
+          <text x="445" y="140" fill="#FFB800" font-size="12" font-weight="700" font-family="sans-serif">① 出題</text>
+
+          <!-- 回答→出題者への矢印（右→上） -->
+          <path d="M 430,200 L 390,200" fill="none" stroke="#4FC3F7" stroke-width="2" stroke-dasharray="4,3"/>
+          <text x="395" y="190" fill="#4FC3F7" font-size="10" font-family="sans-serif">② 回答</text>
+
+          <!-- 判定矢印（D・C → 中央） -->
+          <path d="M 170,210 L 230,210" fill="none" stroke="#9b59b6" stroke-width="2" stroke-dasharray="3,3" marker-end="url(#arrRule2)"/>
+          <path d="M 320,295 L 320,255" fill="none" stroke="#9b59b6" stroke-width="2" stroke-dasharray="3,3" marker-end="url(#arrRule2)"/>
+          <text x="200" y="280" fill="#9b59b6" font-size="11" font-weight="700" font-family="sans-serif">③ 判定 ○/×</text>
+
+          <!-- ローテーション説明 -->
+          <text x="320" y="395" text-anchor="middle" fill="#999" font-size="10.5" font-family="sans-serif">次のラウンドは <tspan fill="#FFB800" font-weight="700">B が出題者</tspan>（= 1つ左隣にずれる）．毎回回答者は出題者の左隣．</text>
+
+          <defs>
+            <marker id="arrRule" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto"><path d="M0,0 L9,3.5 L0,7" fill="#FFB800"/></marker>
+            <marker id="arrRule2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#9b59b6"/></marker>
+          </defs>
+        </svg>
+      </div>
+
+      <div class="callout-info" style="font-size:0.9rem">
+        <h4>なぜ「左隣」が図の右側？</h4>
+        <p>図は <strong>上から見たグループ配置</strong>．Aさんが中央を向いて座っているとき，<strong>Aさんの左手側</strong> は図の <strong>右側</strong> にあたる．これがAさんの「左隣の人（=Bさん）」．</p>
+      </div>
+
+      <div class="callout-info">
+        <h4>判定のルール</h4>
+        <ul class="point-list">
+          <li>判定者は <strong>出題者と他のグループメンバ（回答者以外）全員</strong></li>
+          <li>判定は <strong>○（正解）か ×（不正解）の2択のみ</strong>．「△」は無し</li>
+          <li>分からなければ <strong>解答例（Q10など）や教材を見ながら</strong> 判定してOK</li>
+          <li>×だった場合，出題者や他のメンバが <strong>正しい答えを口頭で説明</strong> してから次へ</li>
+        </ul>
+      </div>
+
+      <!-- 第1回 -->
+      <h3 style="color:#4FC3F7;margin-top:2rem;font-size:1.15rem;border-bottom:2px solid #4FC3F7;padding-bottom:0.4rem">📘 第1回（口頭試問1）── 関数の基本</h3>
+
+      <!-- Q1: 引数と戻り値 -->
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #4FC3F7;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
+        <p style="margin:0 0 0.5rem"><strong style="color:#4FC3F7">Q1.</strong> 次のコードを読み，関数の <strong>引数</strong> と <strong>戻り値</strong> を説明せよ．実行すると何が表示されるか？</p>
+<pre><span class="code-label">Python ── Q1</span>
+<span class="kw">def</span> <span class="fn">greet</span>(name):
+    message <span class="op">=</span> <span class="str">"Hello, "</span> <span class="op">+</span> name
+    <span class="kw">return</span> message
+
+result <span class="op">=</span> <span class="fn">greet</span>(<span class="str">"Tanaka"</span>)
+<span class="fn">print</span>(result)</pre>
+      </div>
+
+      <!-- Q2: 定義と呼び出し -->
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #4FC3F7;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
+        <p style="margin:0 0 0.5rem"><strong style="color:#4FC3F7">Q2.</strong> 下のコードA と コードB の違いを説明せよ．関数の <strong>定義</strong> と <strong>呼び出し</strong> の違いを自分の言葉で言うこと．</p>
+<pre><span class="code-label">Python ── Q2 コードA（実行しても何も表示されない）</span>
+<span class="kw">def</span> <span class="fn">say_hi</span>():
+    <span class="fn">print</span>(<span class="str">"Hi!"</span>)</pre>
+<pre><span class="code-label">Python ── Q2 コードB（実行すると Hi! が表示される）</span>
+<span class="kw">def</span> <span class="fn">say_hi</span>():
+    <span class="fn">print</span>(<span class="str">"Hi!"</span>)
+
+<span class="fn">say_hi</span>()</pre>
+      </div>
+
+      <!-- Q3: デフォルト引数 -->
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #4FC3F7;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
+        <p style="margin:0 0 0.5rem"><strong style="color:#4FC3F7">Q3.</strong> 次のコードを実行すると <code>x</code> と <code>y</code> はそれぞれ何になるか？ 理由も説明せよ．</p>
+<pre><span class="code-label">Python ── Q3</span>
+<span class="kw">def</span> <span class="fn">add</span>(a, b<span class="op">=</span><span class="num">10</span>):
+    answer <span class="op">=</span> a <span class="op">+</span> b
+    <span class="kw">return</span> answer
+
+x <span class="op">=</span> <span class="fn">add</span>(<span class="num">5</span>)
+y <span class="op">=</span> <span class="fn">add</span>(<span class="num">5</span>, <span class="num">20</span>)
+<span class="fn">print</span>(x)
+<span class="fn">print</span>(y)</pre>
+      </div>
+
+      <!-- Q4: 関数のメリット -->
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #4FC3F7;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
+        <p style="margin:0 0 0.5rem"><strong style="color:#4FC3F7">Q4.</strong> 下の2つのコードを見比べ，関数を作る <strong>メリット</strong> を説明せよ．</p>
+<pre><span class="code-label">Python ── Q4 関数なし（同じ計算を3回書く）</span>
+price1 <span class="op">=</span> <span class="num">100</span>
+tax1 <span class="op">=</span> price1 <span class="op">*</span> <span class="num">0.10</span>
+total1 <span class="op">=</span> price1 <span class="op">+</span> tax1
+
+price2 <span class="op">=</span> <span class="num">250</span>
+tax2 <span class="op">=</span> price2 <span class="op">*</span> <span class="num">0.10</span>
+total2 <span class="op">=</span> price2 <span class="op">+</span> tax2
+
+price3 <span class="op">=</span> <span class="num">800</span>
+tax3 <span class="op">=</span> price3 <span class="op">*</span> <span class="num">0.10</span>
+total3 <span class="op">=</span> price3 <span class="op">+</span> tax3</pre>
+<pre><span class="code-label">Python ── Q4 関数あり（同じ処理を関数化）</span>
+<span class="kw">def</span> <span class="fn">add_tax</span>(price):
+    tax <span class="op">=</span> price <span class="op">*</span> <span class="num">0.10</span>
+    total <span class="op">=</span> price <span class="op">+</span> tax
+    <span class="kw">return</span> total
+
+total1 <span class="op">=</span> <span class="fn">add_tax</span>(<span class="num">100</span>)
+total2 <span class="op">=</span> <span class="fn">add_tax</span>(<span class="num">250</span>)
+total3 <span class="op">=</span> <span class="fn">add_tax</span>(<span class="num">800</span>)</pre>
+      </div>
+
+      <!-- Q5: リストを処理する関数の動作 -->
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #4FC3F7;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
+        <p style="margin:0 0 0.5rem"><strong style="color:#4FC3F7">Q5.</strong> 次の関数は何をするか？ ループの中で何が起きているか，<strong>1ステップずつ</strong> 説明せよ．実行結果はどうなるか？</p>
+<pre><span class="code-label">Python ── Q5</span>
+<span class="kw">def</span> <span class="fn">double_each</span>(values):
+    result <span class="op">=</span> []
+    <span class="kw">for</span> v <span class="kw">in</span> values:
+        new_value <span class="op">=</span> v <span class="op">*</span> <span class="num">2</span>
+        result.<span class="fn">append</span>(new_value)
+    <span class="kw">return</span> result
+
+numbers <span class="op">=</span> [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]
+answer <span class="op">=</span> <span class="fn">double_each</span>(numbers)
+<span class="fn">print</span>(answer)</pre>
+      </div>
+
+      <!-- 第2回 -->
+      <h3 style="color:#76B900;margin-top:2.5rem;font-size:1.15rem;border-bottom:2px solid #76B900;padding-bottom:0.4rem">📗 第2回（口頭試問2）── 関数の応用</h3>
+
+      <!-- Q6: 複数引数 -->
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #76B900;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
+        <p style="margin:0 0 0.5rem"><strong style="color:#76B900">Q6.</strong> 次の関数の <strong>引数は何個</strong> あるか？ それぞれ何を意味するか？ 実行すると <code>my_bmi</code> はおおよそ何になるか？</p>
+<pre><span class="code-label">Python ── Q6</span>
+<span class="kw">def</span> <span class="fn">calc_bmi</span>(weight, height):
+    bmi <span class="op">=</span> weight <span class="op">/</span> (height <span class="op">*</span> height)
+    <span class="kw">return</span> bmi
+
+my_bmi <span class="op">=</span> <span class="fn">calc_bmi</span>(<span class="num">60</span>, <span class="num">1.70</span>)
+<span class="fn">print</span>(my_bmi)</pre>
+      </div>
+
+      <!-- Q7: 戻り値がない関数 -->
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #76B900;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
+        <p style="margin:0 0 0.5rem"><strong style="color:#76B900">Q7.</strong> 次のコードで <code>result</code> には何が入るか？ 「<strong>戻り値がある関数</strong>」と「<strong>戻り値がない関数</strong>」の違いを説明せよ．</p>
+<pre><span class="code-label">Python ── Q7</span>
+<span class="kw">def</span> <span class="fn">show_message</span>(text):
+    <span class="fn">print</span>(<span class="str">"メッセージ:"</span>, text)
+
+result <span class="op">=</span> <span class="fn">show_message</span>(<span class="str">"こんにちは"</span>)
+<span class="fn">print</span>(result)</pre>
+      </div>
+
+      <!-- Q8: 関数内の変数 (スコープ) -->
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #76B900;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
+        <p style="margin:0 0 0.5rem"><strong style="color:#76B900">Q8.</strong> 次のコードを実行するとどうなるか？ <strong>最後の <code>print(x)</code> がエラーになる理由</strong> を，関数の中と外の関係から説明せよ．</p>
+<pre><span class="code-label">Python ── Q8</span>
+<span class="kw">def</span> <span class="fn">calculate</span>():
+    x <span class="op">=</span> <span class="num">100</span>
+    y <span class="op">=</span> <span class="num">50</span>
+    answer <span class="op">=</span> x <span class="op">+</span> y
+    <span class="kw">return</span> answer
+
+result <span class="op">=</span> <span class="fn">calculate</span>()
+<span class="fn">print</span>(result)
+<span class="fn">print</span>(x)   <span class="cmt"># ← この行はエラーになる</span></pre>
+      </div>
+
+      <!-- Q9: 関数の中から関数を呼ぶ -->
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #76B900;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
+        <p style="margin:0 0 0.5rem"><strong style="color:#76B900">Q9.</strong> 次のコードで <code>add_three(1, 2, 3)</code> はどう計算されるか？ <strong>呼び出される順番</strong> を説明し，最終的な値を答えよ．</p>
+<pre><span class="code-label">Python ── Q9</span>
+<span class="kw">def</span> <span class="fn">add</span>(a, b):
+    answer <span class="op">=</span> a <span class="op">+</span> b
+    <span class="kw">return</span> answer
+
+<span class="kw">def</span> <span class="fn">add_three</span>(a, b, c):
+    first <span class="op">=</span> <span class="fn">add</span>(a, b)
+    total <span class="op">=</span> <span class="fn">add</span>(first, c)
+    <span class="kw">return</span> total
+
+result <span class="op">=</span> <span class="fn">add_three</span>(<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>)
+<span class="fn">print</span>(result)</pre>
+      </div>
+
+      <!-- Q10: 自分で関数を口頭で書き下す -->
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:3px solid #76B900;border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0">
+        <p style="margin:0 0 0.5rem"><strong style="color:#76B900">Q10.</strong> 「<strong>2つの数の平均</strong> を返す関数 <code>average(a, b)</code>」を口頭で説明し，グループのメンバに <strong>その場で書き取って</strong> もらえ．以下の順で言うこと:</p>
+        <ol style="padding-left:1.5rem;font-size:0.92rem;margin:0">
+          <li><strong>def</strong> から始めて関数名と <strong>引数</strong> を述べる</li>
+          <li>関数の中で2つの数を <strong>足す</strong></li>
+          <li>足した結果を <strong>2で割る</strong></li>
+          <li><strong>return</strong> で答えを返す</li>
+        </ol>
+        <details style="margin-top:0.6rem">
+          <summary style="cursor:pointer;color:#76B900;font-size:0.85rem">▶ 完成コードの例（最後に答え合わせ）</summary>
+<pre style="margin-top:0.4rem"><span class="code-label">Python ── Q10 解答例</span>
+<span class="kw">def</span> <span class="fn">average</span>(a, b):
+    total <span class="op">=</span> a <span class="op">+</span> b
+    answer <span class="op">=</span> total <span class="op">/</span> <span class="num">2</span>
+    <span class="kw">return</span> answer
+
+result <span class="op">=</span> <span class="fn">average</span>(<span class="num">10</span>, <span class="num">20</span>)
+<span class="fn">print</span>(result)</pre>
+        </details>
+      </div>
+
+      <div class="callout-tip">
+        <h4>判定者のチェックポイント</h4>
+        <ul class="point-list">
+          <li>用語を <strong>正確に</strong> 使っているか（引数 / 戻り値 / 定義 / 呼び出し / スコープ）</li>
+          <li>「なんとなく分かる」で済ませず <strong>具体例</strong> を出しているか</li>
+          <li>判定で迷ったら <strong>教材を見ながら</strong> 全員で確認</li>
+        </ul>
+      </div>
+
+      <div class="callout-warning">
+        <h4>分からなくても飛ばさない</h4>
+        <p>回答に詰まったら，その場で出題者・他のメンバに教えてもらう．「分からない」を共有することがこの時間の目的．×になっても次の問題に進めばOK．</p>
+      </div>
+
+      <!-- Notion 判定表テンプレート -->
+      <div style="background:#0a1a0a;border:2px solid #76B900;border-radius:12px;padding:1.2rem 1.5rem;margin-top:1.5rem">
+        <h4 style="color:#76B900;font-size:1.05rem;margin-bottom:0.6rem">📝 Notion に記述する項目（Task 1）</h4>
+        <p style="margin-bottom:0.6rem;font-size:0.95rem"><strong>誰が何を出題し，誰が回答し，○か×か</strong> を <strong>表形式</strong> で記録する．第1回・第2回 それぞれ分けて記入．</p>
+
+        <h5 style="color:#FFB800;margin-top:0.8rem;margin-bottom:0.4rem;font-size:0.95rem">表示例（こんな形で書く）</h5>
+        <table style="font-size:0.95rem;margin:0.4rem 0">
+          <tr><th>ラウンド</th><th>出題者</th><th>問題番号</th><th>回答者（左隣）</th><th>判定</th></tr>
+          <tr><td>第1回</td><td>田中</td><td>Q1</td><td>佐藤</td><td style="color:#76B900;font-weight:700;text-align:center">○</td></tr>
+          <tr><td>第1回</td><td>佐藤</td><td>Q3</td><td>鈴木</td><td style="color:#FF5252;font-weight:700;text-align:center">×</td></tr>
+          <tr><td>第1回</td><td>鈴木</td><td>Q5</td><td>山田</td><td style="color:#76B900;font-weight:700;text-align:center">○</td></tr>
+          <tr><td>第1回</td><td>山田</td><td>Q2</td><td>田中</td><td style="color:#76B900;font-weight:700;text-align:center">○</td></tr>
+          <tr><td>第2回</td><td>田中</td><td>Q7</td><td>佐藤</td><td style="color:#76B900;font-weight:700;text-align:center">○</td></tr>
+          <tr><td>第2回</td><td>佐藤</td><td>Q9</td><td>鈴木</td><td style="color:#76B900;font-weight:700;text-align:center">○</td></tr>
+          <tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>
+        </table>
+
+        <h5 style="color:#FFB800;margin-top:1rem;margin-bottom:0.4rem;font-size:0.95rem">Notion テンプレート（コピペ用）</h5>
+<pre style="margin:0.4rem 0"><span class="code-label">Notion テンプレート ── Task 1</span>
+## Task 1 口頭試問 判定結果
+
+### 第1回（口頭試問1）── 関数の基本
+| 出題者 | 問題番号 | 回答者（左隣） | 判定 |
+|--------|----------|----------------|------|
+|        | Q        |                | ○/× |
+|        | Q        |                | ○/× |
+|        | Q        |                | ○/× |
+|        | Q        |                | ○/× |
+
+### 第2回（口頭試問2）── 関数の応用
+| 出題者 | 問題番号 | 回答者（左隣） | 判定 |
+|--------|----------|----------------|------|
+|        | Q        |                | ○/× |
+|        | Q        |                | ○/× |
+|        | Q        |                | ○/× |
+|        | Q        |                | ○/× |
+
+### グループでの気づき・SAに質問したいこと
+- </pre>
+      </div>
 
       <div class="notion-submit">
-        <div><strong>Notion提出:</strong> グループの口頭試問記録をNotionに記入し、PDFで提出
-        <div style="margin-top:0.4rem;font-size:0.8rem;color:#FF6B00"><span class="sa-check-tag" style="display:inline-block;margin-left:0.5rem;background:#FF6B00;color:#fff;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px;vertical-align:middle">SA確認</span> SAさんのOKがもらえたら次に進んでください（授業時間外はSA確認不要）</div>
-      </div>
+        <div><strong>SA確認:</strong> 第1回・第2回ともに全員が1問以上回答し，判定表を Notion に記録できたら<span style="display:inline-block;margin-left:0.5rem;background:#FF6B00;color:#fff;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px">SA確認</span> を受け，Task 2 に進む．</div>
       </div>
     </div>
-
   </div>
 </section>
 
-<!-- ============ CS/DS基礎 ============ -->
-<section id="sec-cs">
+<!-- ============ TASK 2: バイブコーディング解説 + opencode 導入 ============ -->
+<section id="sec-task2">
+  <!-- 旧 anchor 互換 -->
+  <a id="sec-std5-1" style="display:block;height:0"></a>
   <div class="container">
     <div class="section-header">
-      <div class="section-num" style="background:#93D500">CS</div>
-      <h2>CS/DS基礎知識まとめ</h2>
+      <div class="section-num" style="background:#4FC3F7">2</div>
+      <h2>バイブコーディング解説と opencode の導入 <span style="font-size:0.55rem;color:#999;font-weight:400">── 約30分</span></h2>
+      <span class="tag tag-standard">std5-1</span>
     </div>
 
-    <div class="card" style="border-left:4px solid #93D500">
+    <!-- 2-0: バイブコーディングとは -->
+    <div class="card standard">
       <div class="card-header">
-        <h3>今回学んだCS/DS概念</h3>
-        <span class="tag tag-note">ノート</span>
+        <h3>2-0. バイブコーディングとは何か（5分）</h3>
+        <span class="tag tag-standard">解説</span>
       </div>
 
-      <table>
-        <tr><th>概念</th><th>説明</th></tr>
-        <tr><td><strong>CSV</strong></td><td>カンマ区切りの表形式データ。1行目がヘッダー、2行目以降がデータ</td></tr>
-        <tr><td><strong>JSON</strong></td><td>キーと値のペアで構造化されたデータ形式。API通信に広く使用</td></tr>
-        <tr><td><strong>サンプリング</strong></td><td>連続的な現象から一定間隔でデータを取得すること</td></tr>
-        <tr><td><strong>サンプリングレート</strong></td><td>1秒間に何回データを取得するか（単位: Hz）</td></tr>
-        <tr><td><strong>加速度センサ</strong></td><td>3軸（X/Y/Z）で加速度を測定。静止時はZ軸に重力加速度 &asymp; 9.81 m/s&sup2;</td></tr>
-        <tr><td><strong>欠損値</strong></td><td>データが記録されなかった箇所。分析前に処理が必要</td></tr>
-        <tr><td><strong>外れ値</strong></td><td>他と比べて極端に大きい・小さい値。ノイズや異常の可能性</td></tr>
-        <tr><td><strong>正規化（remap）</strong></td><td>ある範囲の値を別の範囲に線形変換すること</td></tr>
-        <tr><td><strong>ログデータ</strong></td><td>タイムスタンプ付きで記録されたシステムの動作記録</td></tr>
-      </table>
+      <p><strong>バイブコーディング（vibe coding）</strong> は 2025年に Andrej Karpathy が広めた呼び方．プログラミングを「文法を1行ずつ書く作業」から，<strong>「やりたいことを言葉で伝え，AIが書いたコードを読んで判断する作業」</strong> に変える開発スタイル．</p>
+
+      <div class="concept-box">
+        <h4>3つの基本ループ</h4>
+        <ol style="padding-left:1.5rem;font-size:0.95rem">
+          <li><strong>指示</strong>: やりたいことを日本語で書く</li>
+          <li><strong>確認</strong>: AIが書いたコードを <strong>読む</strong> ．分からなければ説明させる</li>
+          <li><strong>修正</strong>: 動かなければ・期待と違えば，差分を言葉で指示</li>
+        </ol>
+      </div>
+
+      <div class="analogy">
+        シェフ（AI）に作りたい料理を伝える役．シェフは腕の確かなプロだが，あなたは <strong>味見係</strong> でもある．味見をせず客に出すと事故が起きる．
+      </div>
+
+      <h4 style="color:#76B900;margin-top:1rem">なぜ必要か</h4>
+      <ul class="point-list">
+        <li>調査・試作・ドキュメント参照などに <strong>圧倒的に時間を取られなくなる</strong></li>
+        <li>初学者でも <strong>動くものを早く作れる</strong> ので学習が止まりにくい</li>
+        <li>本来集中すべき <strong>「何を作るか」「なぜ作るか」</strong> に時間を回せる</li>
+      </ul>
+
+      <h4 style="color:#76B900;margin-top:1rem">注意点（初心者ほど大事）</h4>
+      <div class="callout-danger">
+        <h4>1. 読まないコードは動かさない</h4>
+        <p>AI 出力をコピーして即実行しない．特に <code>rm</code>，<code>sudo</code>，パッケージインストール，ファイル書き換えは <strong>1行ずつ意味を確認</strong> ．</p>
+      </div>
+      <div class="callout-warning">
+        <h4>2. AIは「もっともらしい嘘」をつく（ハルシネーション）</h4>
+        <p>存在しない関数名やライブラリを <strong>堂々と書く</strong> ことがある．<strong>必ず公式ドキュメントで検索</strong> するか，実際に実行して確認．</p>
+      </div>
+      <div class="callout-warning">
+        <h4>3. 「動いたから正しい」とは限らない</h4>
+        <p>動くがロジックが間違っているコードはよくある．境界値（0・空リスト・最大値）を試して期待通りか確認．</p>
+      </div>
+      <div class="callout-warning">
+        <h4>4. 自分で書く練習を捨てない</h4>
+        <p>すべて AI に書かせると <strong>基礎力が育たない</strong> ．基礎が無いと AI の出力を <strong>評価できなくなる</strong> ．今日の Task 1（関数の口頭確認）はその基礎．</p>
+      </div>
+      <div class="callout-tip">
+        <h4>5. 詰まったら3往復ルール</h4>
+        <p>同じエラーで <strong>AI に3回プロンプトしても解決しないなら</strong> ，方針を変えるか，先生・SAに相談．</p>
+      </div>
     </div>
 
+    <!-- 2-1: ツール選択肢 -->
+    <div class="card standard">
+      <div class="card-header">
+        <h3>2-1. AIコーディングツールの選択肢（5分）</h3>
+        <span class="tag tag-standard">解説</span>
+      </div>
+
+      <p>AIコーディングアシスタントは2025年以降一気に増えた．代表は <strong>Claude Code</strong>（先頭）と <strong>Codex CLI</strong>．授業では <strong>完全無料</strong> で動かせる <strong style="color:#76B900">opencode</strong> を採用する．</p>
+
+      <table>
+        <tr><th>ツール</th><th>提供元</th><th>料金（個人向け）</th><th>授業での扱い</th></tr>
+        <tr>
+          <td><strong>Claude Code</strong></td>
+          <td>Anthropic</td>
+          <td><strong style="color:#FF5252">有料</strong> Pro 月20ドル〜 / Max 月100〜200ドル</td>
+          <td>業界トップクラス．卒業後の本命候補</td>
+        </tr>
+        <tr>
+          <td><strong>Codex CLI</strong></td>
+          <td>OpenAI</td>
+          <td><strong style="color:#FF5252">有料</strong> ChatGPT Plus 月20ドル〜 / Pro 月200ドル</td>
+          <td>ChatGPT 加入者なら使える</td>
+        </tr>
+        <tr style="background:rgba(118,185,0,0.08)">
+          <td><strong style="color:#76B900">opencode</strong></td>
+          <td>オープンソース</td>
+          <td><strong style="color:#76B900">本体無料</strong> ＋ 使うモデルのAPI料金</td>
+          <td><strong>★ 授業で使う</strong> ．モデル差し替え自由</td>
+        </tr>
+        <tr>
+          <td>GitHub Copilot</td>
+          <td>GitHub</td>
+          <td>サブスク 月10ドル〜</td>
+          <td>IDE内補完．参考</td>
+        </tr>
+        <tr>
+          <td>Cursor</td>
+          <td>Cursor</td>
+          <td>サブスク 月20ドル〜</td>
+          <td>専用エディタ．参考</td>
+        </tr>
+      </table>
+
+      <div class="callout-info">
+        <h4>授業で opencode + DeepSeek V4 を選ぶ理由</h4>
+        <ul class="point-list">
+          <li><strong>全員が同じ環境</strong> を実質ゼロ円で用意できる</li>
+          <li><strong>モデル差し替えが自由</strong>（あとで Claude / GPT などに切替えられる）</li>
+          <li>卒業後に有料ツールへ移っても <strong>同じ操作感</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 2-2: インストール（詳細手順） -->
+    <div class="card standard">
+      <div class="card-header">
+        <h3>2-2. opencode インストール手順（教員大画面に合わせて1ステップずつ）</h3>
+        <span class="tag tag-standard">実習</span>
+      </div>
+
+      <p>opencode 公式のインストールスクリプトを <strong>curl で取得して bash に流す</strong> 方式．以下を <strong>1ステップずつ</strong> 進める．分からなければ <strong>立ち止まって SA を呼ぶ</strong> ．先に進まない．</p>
+
+      <h4 style="color:#76B900;margin-top:1rem">実行イメージ（タイプアニメ）</h4>
+      <div class="term" aria-label="terminal animation">
+        <span class="row r1"><span class="prompt">$</span> curl -fsSL https://opencode.ai/install | bash</span>
+        <span class="row r2"><span class="out">Installing opencode version: 1.x.x</span></span>
+        <span class="row r3"><span class="prompt">$</span> opencode --version</span>
+        <span class="row r4"><span class="out">opencode 1.x.x</span></span>
+        <span class="row r5"><span class="prompt">$</span> opencode</span>
+      </div>
+
+      <!-- Step 0 -->
+      <h4 style="color:#76B900;margin-top:1.5rem">Step 0. 前提を確認する</h4>
+      <p>下の2つのコマンドで，必要なツールがあるか確認．</p>
+      <pre><span class="code-label">Terminal ── 前提チェック</span>
+curl --version
+brew --version</pre>
+      <p style="font-size:0.9rem">→ どちらも何かしらバージョンが表示されればOK．「command not found」が出るものがあれば <strong>SAを呼ぶ</strong> ．</p>
+
+      <details>
+        <summary style="cursor:pointer;color:#76B900;padding:0.5rem 0.8rem;background:#0a1a0a;border-radius:6px;display:inline-block;font-size:0.85rem">▶ Homebrew が無い場合の入れ方</summary>
+        <div style="margin-top:0.6rem;padding-left:0.5rem">
+          <p style="font-size:0.88rem">下のコマンドを <strong>1行で</strong> ターミナルに貼り付けて Enter．数分かかる．</p>
+          <pre><span class="code-label">Terminal ── Homebrew インストール</span>
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</pre>
+          <ul class="point-list" style="font-size:0.85rem">
+            <li>初回は <strong>Xcode Command Line Tools</strong> のインストール許可を求められる．「Install」を選ぶ</li>
+            <li>途中で macOS ユーザのパスワード入力を求められる（画面に表示されないが入力されている）</li>
+            <li>完了後，ターミナルに表示される <strong>「Next steps」</strong> の <code>echo ... &gt;&gt; ~/.zprofile</code> と <code>eval ...</code> の2行を <strong>必ず実行する</strong>（Apple Silicon Mac の場合）</li>
+            <li>新しいターミナルタブを開いて <code>brew --version</code> を再確認</li>
+          </ul>
+        </div>
+      </details>
+
+      <!-- Step 1 -->
+      <h4 style="color:#76B900;margin-top:1.5rem">Step 1. 作業フォルダを作る</h4>
+      <pre><span class="code-label">Terminal ── 作業フォルダ</span>
+cd ~/MD1
+mkdir -p no5
+cd no5
+pwd</pre>
+      <p style="font-size:0.9rem">→ <code>pwd</code> が <code>/Users/ユーザー名/MD1/no5</code> を返せばOK．</p>
+
+      <!-- Step 2 -->
+      <h4 style="color:#76B900;margin-top:1.5rem">Step 2. opencode をインストール</h4>
+      <p>opencode 公式の install スクリプトをワンライナーで実行する．数十秒〜1分でダウンロード・展開される．</p>
+      <pre><span class="code-label">Terminal ── opencode インストール</span>
+curl -fsSL https://opencode.ai/install | bash</pre>
+
+      <div class="callout-warning">
+        <h4>パイプして bash に流すのは危険じゃないの？</h4>
+        <p>「読まずに実行する」典型例で，本来は危険な習慣．授業では opencode 公式（<code>opencode.ai</code>）であることを教員が事前確認しているので使用するが，<strong>自分の開発では</strong> <code>curl ... -o install.sh</code> でいったん保存して <strong>中身を見てから</strong> 実行する習慣を持つ．</p>
+      </div>
+
+      <p style="font-size:0.9rem;margin-top:0.5rem">インストールが完了すると，最後に <strong>「Add the following to your shell rc」</strong> のような案内が表示される．これを次の Step 3 で実行する．</p>
+
+      <!-- Step 3 -->
+      <h4 style="color:#76B900;margin-top:1.5rem">Step 3. PATH を通す</h4>
+      <p>opencode のバイナリは <code>~/.opencode/bin/</code> に入る．ここを <strong>PATH に追加</strong> しないと <code>opencode</code> コマンドが呼べない．</p>
+      <pre><span class="code-label">Terminal ── PATH 追記</span>
+echo 'export PATH="$HOME/.opencode/bin:$PATH"' &gt;&gt; ~/.zshrc
+source ~/.zshrc</pre>
+      <p style="font-size:0.9rem">→ <code>source</code> で .zshrc を読み直す．新しいターミナルタブを開いてもよい．</p>
+
+      <!-- Step 4 -->
+      <h4 style="color:#76B900;margin-top:1.5rem">Step 4. インストール成功を確認</h4>
+      <pre><span class="code-label">Terminal ── バージョン確認</span>
+opencode --version</pre>
+      <p style="font-size:0.9rem">→ <code>opencode 1.x.x</code> のように表示されれば成功．「command not found」なら Step 3 の PATH 追記がうまく行っていない．</p>
+
+      <!-- Step 5 -->
+      <h4 style="color:#76B900;margin-top:1.5rem">Step 5. opencode を起動</h4>
+      <pre><span class="code-label">Terminal ── 起動</span>
+cd ~/MD1/no5
+opencode</pre>
+      <p style="font-size:0.9rem">→ TUI（ターミナル内 UI）が立ち上がる．初回はモデル選択画面が出る．</p>
+
+      <!-- Step 6 -->
+      <h4 style="color:#76B900;margin-top:1.5rem">Step 6. モデルを選ぶ（<strong>DeepSeek V4 Flash Free</strong>）</h4>
+      <p>opencode の初回モデル選択画面で，<strong>DeepSeek V4 Flash Free</strong> を選ぶ．<strong>APIキーの取得は不要</strong>．opencode が無料モデル経由で接続してくれる．</p>
+      <ol style="padding-left:1.4rem;font-size:0.95rem">
+        <li>モデル一覧から矢印キー（↑↓）で <strong>DeepSeek V4 Flash Free</strong> を探す</li>
+        <li><strong>Enter</strong> で確定</li>
+        <li>プロンプト入力欄（画面下部）にカーソルが移れば準備完了</li>
+      </ol>
+      <p style="font-size:0.85rem;color:#999;margin-top:0.3rem">→ 既に起動済みなら TUI 内で <code>/model</code> と打って一覧から切替．</p>
+
+      <div class="callout-danger">
+        <h4>⚠️ DeepSeek V4 Flash Free を使うときの重要な注意：チャット内容が学習に使われる可能性</h4>
+        <p>DeepSeek の <strong>Free（無料）</strong> 枠は，ユーザが送信したプロンプトや受信した応答が <strong>モデル学習に再利用される可能性</strong> がある．したがって：</p>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li><strong>個人情報を入力しない</strong>（氏名・住所・電話・学籍番号・メールアドレス 等）</li>
+          <li><strong>機密情報を入力しない</strong>（パスワード・APIキー・社外秘データ・学内限定資料 等）</li>
+          <li><strong>研究データ・未公開コード</strong> を貼り付けない</li>
+          <li>授業中の練習・公開可能な内容に <strong>限定して</strong> 使う</li>
+        </ul>
+        <p style="margin-top:0.5rem;font-size:0.88rem">→ 授業の練習・課題は公開可能な内容に留め，機密データは絶対に貼り付けないこと．</p>
+      </div>
+
+      <!-- トラブル対応 -->
+      <h4 style="color:#76B900;margin-top:1.5rem">困ったときのチェックリスト</h4>
+      <table style="font-size:0.88rem">
+        <tr><th>症状</th><th>対処</th></tr>
+        <tr><td><code>command not found: opencode</code></td><td>PATH が通っていない．Step 3 を再実行 → 新しいターミナルタブで再試行</td></tr>
+        <tr><td><code>Permission denied</code> / <code>EACCES</code></td><td><code>sudo</code> は付けない．SAを呼ぶ</td></tr>
+        <tr><td>モデル一覧に DeepSeek が出ない</td><td>opencode を一度終了して再起動．新しいターミナルタブで <code>opencode</code></td></tr>
+        <tr><td><code>rate limit exceeded</code></td><td>Free 枠の利用上限に達した．時間を置くか SA に連絡</td></tr>
+        <tr><td>応答が極端に遅い</td><td><strong>Flash Free</strong> を選んでいるか確認．通常版だと数倍時間がかかる</td></tr>
+        <tr><td>opencode が落ちる・固まる</td><td>Ctrl+C で抜けて再起動．それでもダメなら新しいターミナルタブで <code>opencode</code></td></tr>
+      </table>
+
+      <div class="callout-tip">
+        <h4>進捗チェック（自己確認）</h4>
+        <ul class="point-list">
+          <li>☐ Step 4 で <code>opencode --version</code> が動いた</li>
+          <li>☐ Step 5 で opencode の TUI が立ち上がった</li>
+          <li>☐ Step 6 で <strong>DeepSeek V4 Flash Free</strong> を選んでプロンプト欄が見える</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 2-3: 使い方 -->
+    <div class="card standard">
+      <div class="card-header">
+        <h3>2-3. opencode の使い方（イメージ図）</h3>
+        <span class="tag tag-standard">標準</span>
+      </div>
+
+      <div style="margin:1rem 0;text-align:center">
+        <svg viewBox="0 0 620 200" xmlns="http://www.w3.org/2000/svg" style="max-width:620px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
+          <text x="310" y="22" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" font-family="sans-serif">opencode の対話フロー</text>
+
+          <!-- You -->
+          <rect x="20" y="60" width="110" height="80" rx="10" fill="rgba(79,195,247,0.15)" stroke="#4FC3F7"/>
+          <text x="75" y="95" text-anchor="middle" fill="#4FC3F7" font-size="11" font-weight="700" font-family="sans-serif">あなた</text>
+          <text x="75" y="115" text-anchor="middle" fill="#ccc" font-size="9" font-family="sans-serif">日本語で指示</text>
+          <text x="75" y="130" text-anchor="middle" fill="#ccc" font-size="9" font-family="sans-serif">返答を読む</text>
+
+          <!-- arrow right -->
+          <line x1="135" y1="100" x2="195" y2="100" stroke="#76B900" stroke-width="2" marker-end="url(#arrW5)"/>
+          <text x="165" y="92" text-anchor="middle" fill="#76B900" font-size="9" font-family="sans-serif">指示</text>
+
+          <!-- opencode -->
+          <rect x="200" y="60" width="120" height="80" rx="10" fill="rgba(255,184,0,0.15)" stroke="#FFB800"/>
+          <text x="260" y="93" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="700" font-family="sans-serif">opencode</text>
+          <text x="260" y="112" text-anchor="middle" fill="#ccc" font-size="9" font-family="sans-serif">ターミナル CLI</text>
+          <text x="260" y="127" text-anchor="middle" fill="#ccc" font-size="9" font-family="sans-serif">ファイル編集も可</text>
+
+          <!-- arrow right -->
+          <line x1="325" y1="100" x2="385" y2="100" stroke="#76B900" stroke-width="2" marker-end="url(#arrW5)"/>
+          <text x="355" y="92" text-anchor="middle" fill="#76B900" font-size="9" font-family="sans-serif">API</text>
+
+          <!-- Deepseek -->
+          <rect x="390" y="60" width="120" height="80" rx="10" fill="rgba(155,89,182,0.15)" stroke="#93D500"/>
+          <text x="450" y="93" text-anchor="middle" fill="#93D500" font-size="11" font-weight="700" font-family="sans-serif">Deepseek v4</text>
+          <text x="450" y="112" text-anchor="middle" fill="#ccc" font-size="9" font-family="sans-serif">クラウドAIモデル</text>
+          <text x="450" y="127" text-anchor="middle" fill="#ccc" font-size="9" font-family="sans-serif">flash 高速・安価</text>
+
+          <!-- return arrow -->
+          <path d="M450,150 Q260,175 75,150" fill="none" stroke="#FFB800" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrW5b)"/>
+          <text x="260" y="170" text-anchor="middle" fill="#FFB800" font-size="9" font-family="sans-serif">コードと説明が返る</text>
+
+          <defs>
+            <marker id="arrW5" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#76B900"/></marker>
+            <marker id="arrW5b" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#FFB800"/></marker>
+          </defs>
+        </svg>
+      </div>
+
+      <div class="concept-box">
+        <h4>基本3ループ</h4>
+        <ol style="padding-left:1.5rem;font-size:0.95rem">
+          <li><strong>指示</strong>: 「○○を××で書いてください」と日本語で投げる</li>
+          <li><strong>確認</strong>: 返ってきた内容を <strong>読む</strong> ．分からない関数があれば「これは何？」と追加質問</li>
+          <li><strong>修正</strong>: 「○○を××に直してください」と差分を言葉で指示</li>
+        </ol>
+        <p style="font-size:0.85rem;color:#999;margin-top:0.3rem">3〜4往復で目的に辿りつくのが普通．完璧なプロンプトを目指さず雑に投げて反応を見る．</p>
+      </div>
+
+      <div class="callout-warning">
+        <h4>そのまま使わない</h4>
+        <ul class="point-list">
+          <li>ファイル削除・パッケージ追加の命令が混ざっていないか</li>
+          <li>APIキーが直書きされていないか</li>
+          <li>関数の意味を自分の言葉で説明できるか</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 2-3: 実行スクショ -->
+    <div class="card standard">
+      <div class="card-header">
+        <h3>2-4. opencode 実行画面（参考動画）</h3>
+        <span class="tag tag-standard">参考</span>
+      </div>
+
+      <p>実際にターミナルで opencode を起動している様子（約 37 秒・音声なし）．再生して画面遷移を確認してから自分のターミナルで試そう．</p>
+
+      <div class="shot-frame">
+        <video
+          src="images/opencode_running.mp4"
+          poster="images/opencode_running.png"
+          controls
+          preload="metadata"
+          playsinline
+          muted
+          style="width:100%;border-radius:8px;display:block;background:#000">
+          お使いのブラウザは video タグに対応していません．代わりに静止画を表示します．
+          <img src="images/opencode_running.png" alt="opencode 起動直後の画面" style="width:100%;border-radius:8px">
+        </video>
+        <div class="shot-caption">opencode 起動 → モデル選択 → プロンプト入力欄</div>
+      </div>
+    </div>
+
+    <!-- 2-4: 実際の使用例 -->
+    <div class="card standard">
+      <div class="card-header">
+        <h3>2-5. 実際の使用例（動画・約2分）</h3>
+        <span class="tag tag-standard">参考</span>
+      </div>
+
+      <p>opencode に「<strong>venv で仮想環境をつくり，py5 を入れて，白い円を等間隔に2つ並べる Python コードを作って実行せよ</strong>」と日本語で指示する様子．プロンプト送信 → 思考 → コード提案 → 適用 → 実行までの流れが見える．</p>
+
+      <div class="shot-frame">
+        <video
+          src="images/opencode_usage.mp4"
+          poster="images/opencode_usage.png"
+          controls
+          preload="metadata"
+          playsinline
+          muted
+          style="width:100%;border-radius:8px;display:block;background:#000">
+          お使いのブラウザは video タグに対応していません．代わりに静止画を表示します．
+          <img src="images/opencode_usage.png" alt="opencode の実際の使用例" style="width:100%;border-radius:8px">
+        </video>
+        <div class="shot-caption">日本語プロンプト → opencode 提案 → コード生成・実行までの流れ</div>
+      </div>
+
+      <div class="try-it">
+        <h4>動画で観察するポイント</h4>
+        <ul class="point-list">
+          <li><strong>プロンプトの書き方</strong>: 完璧な日本語でなくても伝わる．「○○を作って実行せよ」程度でOK</li>
+          <li><strong>提案の確認</strong>: opencode が「これから○○を行います」と提案 → 内容を読んでから許可</li>
+          <li><strong>ファイル操作の許可プロンプト</strong>: 新規ファイル作成・編集・コマンド実行はそれぞれ確認が入る</li>
+          <li><strong>思考時間（spinner）</strong>: 数秒〜十数秒は普通．焦って Ctrl+C しない</li>
+          <li><strong>1往復で動くとは限らない</strong>: エラーが出たら結果を貼って「直して」と返す</li>
+        </ul>
+      </div>
+
+      <div class="callout-tip">
+        <h4>動画と同じことを自分でやってみたい人へ</h4>
+        <p>授業の <a href="#sec-task2" style="color:#93D500">2-6 練習プロンプト</a> をまずクリアしてから，<strong>動画と同じ指示</strong> を打ってみると流れが体験できる．いきなり UFO のプロンプト（§3）に入る前のウォームアップに最適．</p>
+      </div>
+    </div>
+
+    <!-- 2-5: 練習プロンプト -->
+    <div class="card standard">
+      <div class="card-header">
+        <h3>2-6. 動作確認の練習プロンプト</h3>
+        <span class="tag tag-standard">実習</span>
+      </div>
+
+      <p>起動できたら，下の <strong>2つのプロンプト</strong> を順に投げて返事が返ってくるか確認する．コードがどう返ってくるか，見て触る．</p>
+
+      <pre><span class="code-label">プロンプト ── 1</span>
+hello world を Python で書いてください。</pre>
+      <pre><span class="code-label">プロンプト ── 2</span>
+0 から 9 までを 1 行ずつ表示する Python コードを書いてください。</pre>
+
+      <div class="try-it">
+        <h4>観察ポイント</h4>
+        <ul class="point-list">
+          <li>返答に <strong>説明文</strong> と <strong>コード</strong> の両方があるか</li>
+          <li><strong>「これを実行して」</strong> と追加指示するとどうなるか</li>
+          <li>意図的に <strong>あいまいな指示</strong> を出すとどう振る舞うか</li>
+        </ul>
+      </div>
+
+      <div style="background:#0a1a2e;border:1px solid #4FC3F7;border-radius:10px;padding:1rem 1.2rem;margin-top:1.5rem">
+        <h4 style="color:#4FC3F7;margin-bottom:0.5rem">std5-1 提出物（スクリーンショット2枚）</h4>
+        <ul class="point-list">
+          <li><strong>1.</strong> <code>opencode --version</code> の実行結果（バージョン番号が見える）</li>
+          <li><strong>2.</strong> 起動した opencode が <strong>練習プロンプト1か2に返答した画面</strong></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TASK 3: 加速度センサ + UFO横揺れアニメ + 移動平均 ============ -->
+<section id="sec-task3">
+  <!-- 旧 anchor 互換 -->
+  <a id="sec-std5-2" style="display:block;height:0"></a>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">3</div>
+      <h2>加速度センサと時系列データ: UFO横揺れアニメ＋移動平均 <span style="font-size:0.55rem;color:#999;font-weight:400">── 約40分</span></h2>
+      <span class="tag tag-standard">std5-2</span>
+    </div>
+
+    <!-- 3-1: 加速度センサ・時系列データの基礎 -->
+    <div class="card standard">
+      <div class="card-header">
+        <h3>3-1. 加速度センサと時系列データの基礎（5分）</h3>
+        <span class="tag tag-standard">解説</span>
+      </div>
+
+      <p>今日のデータ <code>acc_y.csv</code> は <strong>スマートフォンの加速度センサ</strong> から取得したと仮定した疑似データ．データサイエンス（DS）とコンピュータサイエンス（CS）の両面から <strong>時系列データの扱い方</strong> を学ぶ．</p>
+
+      <div class="concept-box">
+        <h4>加速度センサとは（DS視点）</h4>
+        <ul class="point-list">
+          <li>スマホ・スマートウォッチ・自動車・地震計などに入っている</li>
+          <li>X / Y / Z の3軸の <strong>加速度（m/s²）</strong> を時間ごとに記録</li>
+          <li>歩数計・転倒検知・地震速報など，現実世界の挙動を数値化する基礎技術</li>
+        </ul>
+      </div>
+
+      <div class="concept-box">
+        <h4>時系列データとは（CS視点）</h4>
+        <ul class="point-list">
+          <li><strong>「時刻」と「値」のペア</strong> が時間順に並んだデータ列</li>
+          <li>典型フォーマット: <code>CSV</code>（カンマ区切り）．1行＝1サンプル</li>
+          <li>処理パターンの基本: <strong>読み込み → 欠損除去 → 平滑化 → 可視化</strong></li>
+        </ul>
+      </div>
+
+      <pre><span class="code-label">acc_y.csv（先頭5行・例）</span>
+timestamp,AccY
+0.00,-0.12
+0.01,0.34
+0.02,1.56
+0.03,2.78
+0.04,3.21</pre>
+
+      <div class="callout-info">
+        <h4>なぜ加速度データはノイジーなのか</h4>
+        <p>センサは <strong>細かな振動・電気ノイズ・量子化誤差</strong> を拾うため，値は常に小刻みに揺れる．人間が「動き」として見たい成分の上に「ノイズ」が乗った状態．→ そのまま使うとアニメが <strong>ガタガタして見づらい</strong> ので，<strong>平滑化（スムージング）</strong> が必要．</p>
+      </div>
+    </div>
+
+    <!-- 3-2: Step A 基本アニメ -->
+    <div class="card standard">
+      <div class="card-header">
+        <h3>3-2. Step A: UFO横揺れアニメを opencode で作る（15分）</h3>
+        <span class="tag tag-standard">実習</span>
+      </div>
+
+      <p>opencode に対して下のことを <strong>自分の言葉で</strong> 指示する．プロンプト例は参考のみ．そのままコピーせず，自分の文に直してから使うとよい．<strong>個人で取り組むが，グループ内で詰まりは共有する</strong>．</p>
+
+      <div class="concept-box">
+        <h4>用意するもの（教員から配布 → <code>~/MD1/no5/</code> に置く）</h4>
+        <ul class="point-list">
+          <li><code>acc_y.csv</code> ─ 加速度センサのY軸 疑似時系列データ</li>
+          <li><code>ufo.png</code> ─ UFO の画像</li>
+        </ul>
+      </div>
+
+      <h4 style="color:#76B900;margin-top:1rem">作りたい動き</h4>
+      <ul class="point-list">
+        <li><strong>UFOが画面の左端から右端へ</strong> 時間とともに横方向に進む</li>
+        <li><strong>縦方向は AccY の値</strong> に応じて上下に揺れる（=横移動しながら縦揺れ）</li>
+        <li>センサ値そのままなので <strong>ガタガタ振動</strong> して見える（これは Step B で解決）</li>
+      </ul>
+
+      <div style="margin:1rem 0;text-align:center">
+        <svg viewBox="0 0 620 140" xmlns="http://www.w3.org/2000/svg" style="max-width:620px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
+          <text x="310" y="22" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" font-family="sans-serif">2段階の課題</text>
+
+          <rect x="30" y="55" width="240" height="60" rx="10" fill="rgba(79,195,247,0.15)" stroke="#4FC3F7"/>
+          <text x="150" y="80" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700" font-family="sans-serif">Step A: 横揺れアニメ</text>
+          <text x="150" y="100" text-anchor="middle" fill="#ccc" font-size="10" font-family="sans-serif">左→右 ＋ AccY でガタガタ縦揺れ</text>
+
+          <line x1="275" y1="85" x2="335" y2="85" stroke="#FFB800" stroke-width="2" marker-end="url(#arrT3)"/>
+          <text x="305" y="78" text-anchor="middle" fill="#FFB800" font-size="9" font-family="sans-serif">平滑化</text>
+
+          <rect x="340" y="55" width="250" height="60" rx="10" fill="rgba(255,184,0,0.15)" stroke="#FFB800"/>
+          <text x="465" y="80" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700" font-family="sans-serif">Step B: 移動平均でなめらか</text>
+          <text x="465" y="100" text-anchor="middle" fill="#ccc" font-size="10" font-family="sans-serif">window=5 でスムージング</text>
+
+          <defs><marker id="arrT3" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#FFB800"/></marker></defs>
+        </svg>
+      </div>
+
+      <pre><span class="code-label">プロンプト例（参考・自分の言葉で書き換える）</span>
+py5 を使った Python コードを書いてください。
+
+- ウィンドウは 800x400
+- ufo.png を読み込む
+- acc_y.csv を読み込む（先頭行はヘッダ、AccY 列を使う）
+- UFO が画面の左端から右端へ、時間とともに横方向に進む
+- 縦方向は AccY の値を -10..10 → 0..400 に変換した位置
+- すべてのフレームを表示し終わったら停止</pre>
+
+      <div class="try-it">
+        <h4>動作確認ポイント</h4>
+        <ul class="point-list">
+          <li>UFOが <strong>左から右へ</strong> 進むか</li>
+          <li>縦方向は <strong>ガタガタ振動</strong> しているか（これが正しい・Step B でなめらかにする）</li>
+          <li>欠損行・外れ値で <strong>クラッシュしない</strong> か</li>
+        </ul>
+      </div>
+
+      <div class="callout-warning">
+        <h4>opencode 利用時のリマインダー</h4>
+        <ul class="point-list">
+          <li>AI が書いた行は <strong>1つずつ何をしているか</strong> 読む</li>
+          <li>関数名・API が <strong>本当に存在するか</strong> 公式ドキュメントで確認</li>
+          <li>3往復しても動かなければ <strong>方針を変える</strong> か SA を呼ぶ</li>
+          <li>機密情報・個人情報は <strong>プロンプトに含めない</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 3-3: Step B 移動平均 -->
+    <div class="card advanced">
+      <div class="card-header">
+        <h3>3-3. Step B: 移動平均で「なめらか」にする（15分）</h3>
+        <span class="tag tag-advanced">実習</span>
+      </div>
+
+      <p>Step A の UFO はガタガタして見づらい．これを <strong>移動平均法（moving average）</strong> でなめらかにする．移動平均は <strong>時系列処理の最も基本的なスムージング手法</strong>．</p>
+
+      <div class="concept-box">
+        <h4>移動平均とは（CS基礎）</h4>
+        <p>連続する <strong>N点（窓幅）</strong> の値を平均する．例: <code>values = [10, 20, 30, 40, 50]</code>，<code>window=3</code> →</p>
+        <p style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:0.95rem">[ (10+20+30)/3, (20+30+40)/3, (30+40+50)/3 ] = <strong style="color:#FFB800">[20.0, 30.0, 40.0]</strong></p>
+        <p>窓幅が大きいほど <strong>なめらか</strong>．ただし大きすぎると元の動きが消えて <strong>ぼやけた動き</strong> になる．</p>
+      </div>
+
+      <pre><span class="code-label">プロンプト例（参考・自分の言葉で書き換える）</span>
+今のコードに、AccY を移動平均（window=5）で平滑化する処理を追加してください。
+
+- 平滑化した値を使ってUFOの縦位置を決める
+- 移動平均は自前の moving_average(values, window) 関数として定義
+- 画面左上に「smoothed (window=5)」のテキストを表示</pre>
+
+      <div class="try-it">
+        <h4>動作確認ポイント</h4>
+        <ul class="point-list">
+          <li>UFOの縦の動きが <strong>明らかになめらか</strong> になる</li>
+          <li>左→右の横移動は変わらず動く</li>
+          <li>クラッシュしない</li>
+          <li><strong>window を 3, 11, 21 に変えてみる</strong> と動きがどう変わるか観察</li>
+        </ul>
+      </div>
+
+      <div class="callout-tip">
+        <h4>移動平均が現実世界で使われる例</h4>
+        <ul class="point-list">
+          <li><strong>株価チャート</strong>: 5日線・25日線・75日線</li>
+          <li><strong>気象データ</strong>: 移動平均気温で長期トレンド表示</li>
+          <li><strong>センサデータ</strong>: ジャイロ・加速度・心拍数の前処理</li>
+          <li><strong>音声処理</strong>: ノイズ除去フィルタの最も簡単な形</li>
+        </ul>
+      </div>
+
+      <div style="background:#0a1a2e;border:1px solid #4FC3F7;border-radius:10px;padding:1rem 1.2rem;margin-top:1.5rem">
+        <h4 style="color:#4FC3F7;margin-bottom:0.5rem">std5-2 提出物（Word→PDF 1ファイル）</h4>
+        <ul class="point-list">
+          <li><strong>1. 完成コード全文</strong>（Step A + Step B 統合版）</li>
+          <li><strong>2. スクリーンショット2枚</strong>: Step A（ガタガタ版）と Step B（なめらか版）の実行画面</li>
+          <li><strong>3. opencode との対話ログ</strong>: 最初・途中・最後の3プロンプト</li>
+          <li><strong>4. 観察メモ</strong>: 移動平均の <strong>窓幅を変えると</strong> 動きがどう変わったか（例: 3 / 5 / 11 / 21）</li>
+        </ul>
+      </div>
+
+      <h4 style="color:#76B900;margin-top:1.5rem">Word / Notion テンプレート</h4>
+      <pre><span class="code-label">テンプレート ── std5-2</span>
+## std5-2: UFO横揺れアニメ ＋ 移動平均で平滑化
+
+### 完成コード
+（コード全文を貼り付け）
+
+### 実行結果
+Step A（センサ値そのまま・ガタガタ）: （スクショ）
+Step B（移動平均で平滑化・なめらか）: （スクショ）
+
+### opencode との対話ログ
+- 最初のプロンプト:
+- 途中のプロンプト:
+- 最後のプロンプト:
+- 合計往復数:
+
+### 観察メモ
+- window=3 のとき:
+- window=5 のとき:
+- window=11 のとき:
+- window=21 のとき:
+- どの窓幅が一番見やすかったか、その理由:</pre>
+
+      <div class="notion-submit">
+        <div><strong>SA確認:</strong> Step B（なめらか版）まで動いたら SA に <strong>Step A と Step B の動きの違い</strong> を見てもらう．<span style="display:inline-block;margin-left:0.5rem;background:#FF6B00;color:#fff;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px">SA確認</span></div>
+      </div>
+    </div>
   </div>
 </section>
 
 <!-- ============ 解答例 ============ -->
-<section id="answers-section" data-release="2026-06-01T13:10">
+<section id="answers-section" data-release="2026-05-25T23:59">
   <div class="container" id="sec-answers">
     <div class="section-header">
       <div class="section-num" style="background:#4A7A00">A</div>
       <h2>解答例</h2>
     </div>
 
-    <p style="font-size:0.9rem;color:#999;margin-bottom:1.5rem">解答例は提出期限後（6/1 13:10〜）に公開されます。</p>
+    <p style="font-size:0.9rem;color:#999;margin-bottom:1.5rem">解答例は提出期限後（5/25 23:59〜）に公開されます．</p>
 
     <div id="answers-locked" style="display:none"></div>
 
@@ -1307,7 +2207,7 @@ document.querySelectorAll('pre').forEach(function(pre) {
   btn.className = 'copy-btn';
   btn.textContent = 'コピー';
   btn.addEventListener('click', function() {
-    var clone = pre.cloneNode(true); var btns = clone.querySelectorAll(".copy-btn"); btns.forEach(function(b){b.remove();}); var labels = clone.querySelectorAll(".code-label"); labels.forEach(function(l){l.remove();}); var code = clone.textContent.trim().replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|\.zshrc|Notion テンプレート|CSV)( ── [^\n]+)?\n/, '');
+    var clone = pre.cloneNode(true); var btns = clone.querySelectorAll(".copy-btn"); btns.forEach(function(b){b.remove();}); var labels = clone.querySelectorAll(".code-label"); labels.forEach(function(l){l.remove();}); var code = clone.textContent.trim().replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|\.zshrc|Notion テンプレート|プロンプト|プロンプト例|CSV)( ── [^\n]+)?\n/, '');
     navigator.clipboard.writeText(code).then(function() {
       btn.textContent = 'コピーしました';
       btn.classList.add('copied');
