@@ -504,8 +504,8 @@ body { padding-top: 2.2rem; }
 <nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week01.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week02.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week03.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week04.html">4</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week05.html">5</a> <a style="color:#76B900;background:rgba(118,185,0,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="week06.html">6</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week07.html">7</a> </div>
   <a href="#sec-schedule">日程</a>
   <a href="#sec-task0">予習</a>
-  <a href="#sec-howsound">音のしくみ</a>
   <a href="#sec-task1">口頭試問</a>
+  <a href="#sec-standard">標準課題</a>
   <a href="#sec-mp3">1. MP3再生</a>
   <a href="#sec-sine">2. 音を作る</a>
   <a href="#sec-std6-1" class="nav-assignment">std6-1</a>
@@ -513,6 +513,7 @@ body { padding-top: 2.2rem; }
   <a href="#sec-chord">5. 和音の秘密</a>
   <a href="#sec-std6-2" class="nav-assignment">std6-2</a>
   <a href="#sec-std6-3" class="nav-assignment">std6-3</a>
+  <a href="#sec-adv" class="nav-assignment">発展課題</a>
   <a href="#sec-cs">CS/DS基礎</a>
   <a href="#answers-section">解答例</a>
 </nav>
@@ -543,6 +544,7 @@ body { padding-top: 2.2rem; }
         <a href="#sec-std6-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std6-1<br>キーボードピアノ（.py）</a>
         <a href="#sec-std6-2" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std6-2<br>ビジュアルキーボードピアノ（.py）</a>
         <a href="#sec-std6-3" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std6-3<br>サウンドペインター（Notionレポート→PDF）</a>
+        <a href="#sec-adv" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv6-1<br>オリジナル・サウンドビジュアライザ（mp4＋PDF）</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.85rem;color:#93D500">
         <strong>提出方法:</strong> std6-1, std6-2 は <strong>Pythonスクリプト（.py）</strong>、std6-3 は <strong>Notion で作成 → PDFにエクスポート</strong> → いずれも Google Classroom に提出．Task 0・Task 1 は <strong>Notion に記録</strong> する．
@@ -618,335 +620,19 @@ body { padding-top: 2.2rem; }
   </div>
 </section>
 
-<!-- ============ TASK 0: 予習（授業内自習） ============ -->
+<!-- ============ 予習（すべての知識） ============ -->
 <section id="sec-task0">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#4A7A00">予</div>
-      <h2>予習 ── 音のデジタル化・正弦波・FFT・和音 <span style="font-size:0.55rem;color:#999;font-weight:400">── 各自で熟読</span></h2>
+      <h2>予習 ── 音のしくみをすべて学ぶ <span style="font-size:0.55rem;color:#999;font-weight:400">── 授業前に各自で熟読してくること</span></h2>
     </div>
 
     <div class="card" style="border-left:4px solid #4A7A00">
       <p style="margin:0"><strong>必ず予習して授業に参加すること。</strong>授業では予習で学んだことを話し合います。講師からも <strong>ランダムに口頭試問</strong> します。回答できるように準備してください。</p>
     </div>
 
-
-    <!-- 予習解説（旧・教員説明を統合） -->
-<div class="card" style="border-left:4px solid #76B900">
-      <div class="card-header">
-        <h3>音をコンピュータで扱う仕組み</h3>
-        <span class="tag tag-note">ノート</span>
-      </div>
-
-      <div class="concept-box">
-        <h4>本日の流れ（予習 → 授業）</h4>
-        <ol style="padding-left:1.5rem;font-size:0.95rem;margin-top:0.5rem">
-          <li style="margin-bottom:0.4rem"><strong>予習（各自で学習）:</strong> AD/DA変換、音のデジタル表現、FFTの概念（この解説と「音のしくみ」を授業前に読んでくる）</li>
-          <li style="margin-bottom:0.4rem"><strong>口頭試問:</strong> 予習内容を1人ずつ口頭で説明（講師からもランダムに出題）</li>
-          <li style="margin-bottom:0.4rem"><strong>グループディスカッション:</strong>「音をコンピュータで扱うためにはどうすればいいか？」</li>
-          <li style="margin-bottom:0.4rem"><strong>Step 1〜2:</strong> pydubでMP3再生、正弦波で音を生成</li>
-          <li style="margin-bottom:0.4rem"><strong>Step 3:</strong> キーボードピアノ（std6-1）</li>
-          <li style="margin-bottom:0.4rem"><strong>Step 4〜5:</strong> FFTで音を可視化、和音の秘密</li>
-          <li><strong>Step 6:</strong> インタラクティブ音実験（std6-2, std6-3）</li>
-        </ol>
-      </div>
-
-      <div class="concept-box">
-        <h4>AD/DA変換 ─ アナログとデジタルの橋渡し</h4>
-        <p>音は空気の振動（アナログ信号）です。コンピュータで扱うには<strong>デジタル信号</strong>に変換する必要があります。</p>
-        <ul class="point-list" style="margin-top:0.5rem">
-          <li><strong>AD変換（Analog-to-Digital）:</strong> マイクで拾った音（連続的な波）を、一定間隔で測定し数値化する</li>
-          <li><strong>標本化（サンプリング）:</strong> 波の高さを1秒間に何回測定するか → <strong>サンプリングレート</strong>（CDは44,100Hz = 1秒に44,100回）</li>
-          <li><strong>量子化:</strong> 測定した値を離散的な数値に丸める → <strong>ビット深度</strong>（CDは16bit = 65,536段階）</li>
-          <li><strong>DA変換（Digital-to-Analog）:</strong> デジタルデータをスピーカーで再びアナログの振動に変換して音を鳴らす</li>
-        </ul>
-      </div>
-
-      <div class="analogy">
-        音のデジタル化は「パラパラ漫画」と同じです。連続的な動きを1コマずつ描いて記録し（AD変換）、高速でめくると動いて見える（DA変換）。コマ数が多いほど滑らかになります。
-      </div>
-
-      <!-- SVG: AD変換プロセス -->
-      <div style="margin:1.5rem 0;text-align:center">
-        <svg viewBox="0 0 620 210" xmlns="http://www.w3.org/2000/svg" style="max-width:620px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
-          <text x="310" y="22" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" font-family="sans-serif">AD変換のプロセス: アナログ → デジタル</text>
-          <!-- Step 1: Continuous sine wave -->
-          <rect x="15" y="40" width="135" height="90" rx="8" fill="none" stroke="#76B900" stroke-width="2"/>
-          <text x="82" y="56" text-anchor="middle" fill="#76B900" font-size="10" font-weight="700" font-family="sans-serif">アナログ信号</text>
-          <!-- Sine wave -->
-          <path d="M25,90 Q40,65 55,90 Q70,115 85,90 Q100,65 115,90 Q130,115 140,90" fill="none" stroke="#4FC3F7" stroke-width="2"/>
-          <text x="82" y="122" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">連続的な波</text>
-          <!-- Arrow 1 -->
-          <line x1="155" y1="85" x2="175" y2="85" stroke="#76B900" stroke-width="1.5" marker-end="url(#arr6ad)"/>
-          <!-- Step 2: Sampling -->
-          <rect x="180" y="40" width="135" height="90" rx="8" fill="none" stroke="#FFB800" stroke-width="2"/>
-          <text x="247" y="56" text-anchor="middle" fill="#FFB800" font-size="10" font-weight="700" font-family="sans-serif">サンプリング</text>
-          <!-- Sampled points on sine -->
-          <path d="M190,90 Q205,65 220,90 Q235,115 250,90 Q265,65 280,90 Q295,115 305,90" fill="none" stroke="#4FC3F7" stroke-width="1" opacity="0.3"/>
-          <line x1="198" y1="82" x2="198" y2="90" stroke="#FFB800" stroke-width="2"/><circle cx="198" cy="82" r="3" fill="#FFB800"/>
-          <line x1="220" y1="90" x2="220" y2="90" stroke="#FFB800" stroke-width="2"/><circle cx="220" cy="90" r="3" fill="#FFB800"/>
-          <line x1="235" y1="108" x2="235" y2="108" stroke="#FFB800" stroke-width="2"/><circle cx="235" cy="108" r="3" fill="#FFB800"/>
-          <line x1="250" y1="90" x2="250" y2="90" stroke="#FFB800" stroke-width="2"/><circle cx="250" cy="90" r="3" fill="#FFB800"/>
-          <line x1="265" y1="72" x2="265" y2="72" stroke="#FFB800" stroke-width="2"/><circle cx="265" cy="72" r="3" fill="#FFB800"/>
-          <line x1="280" y1="90" x2="280" y2="90" stroke="#FFB800" stroke-width="2"/><circle cx="280" cy="90" r="3" fill="#FFB800"/>
-          <line x1="298" y1="105" x2="298" y2="105" stroke="#FFB800" stroke-width="2"/><circle cx="298" cy="105" r="3" fill="#FFB800"/>
-          <text x="247" y="122" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">一定間隔で測定</text>
-          <!-- Arrow 2 -->
-          <line x1="320" y1="85" x2="340" y2="85" stroke="#FFB800" stroke-width="1.5" marker-end="url(#arr6adb)"/>
-          <!-- Step 3: Quantization -->
-          <rect x="345" y="40" width="135" height="90" rx="8" fill="none" stroke="#93D500" stroke-width="2"/>
-          <text x="412" y="56" text-anchor="middle" fill="#93D500" font-size="10" font-weight="700" font-family="sans-serif">量子化</text>
-          <!-- Staircase/quantized -->
-          <line x1="355" y1="108" x2="365" y2="108" stroke="#93D500" stroke-width="2"/>
-          <line x1="365" y1="108" x2="365" y2="96" stroke="#93D500" stroke-width="1" stroke-dasharray="2"/>
-          <line x1="365" y1="96" x2="380" y2="96" stroke="#93D500" stroke-width="2"/>
-          <line x1="380" y1="96" x2="380" y2="84" stroke="#93D500" stroke-width="1" stroke-dasharray="2"/>
-          <line x1="380" y1="84" x2="395" y2="84" stroke="#93D500" stroke-width="2"/>
-          <line x1="395" y1="84" x2="395" y2="72" stroke="#93D500" stroke-width="1" stroke-dasharray="2"/>
-          <line x1="395" y1="72" x2="410" y2="72" stroke="#93D500" stroke-width="2"/>
-          <line x1="410" y1="72" x2="410" y2="84" stroke="#93D500" stroke-width="1" stroke-dasharray="2"/>
-          <line x1="410" y1="84" x2="425" y2="84" stroke="#93D500" stroke-width="2"/>
-          <line x1="425" y1="84" x2="425" y2="96" stroke="#93D500" stroke-width="1" stroke-dasharray="2"/>
-          <line x1="425" y1="96" x2="440" y2="96" stroke="#93D500" stroke-width="2"/>
-          <line x1="440" y1="96" x2="440" y2="108" stroke="#93D500" stroke-width="1" stroke-dasharray="2"/>
-          <line x1="440" y1="108" x2="455" y2="108" stroke="#93D500" stroke-width="2"/>
-          <line x1="455" y1="108" x2="455" y2="96" stroke="#93D500" stroke-width="1" stroke-dasharray="2"/>
-          <line x1="455" y1="96" x2="470" y2="96" stroke="#93D500" stroke-width="2"/>
-          <text x="412" y="122" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">離散値に丸める</text>
-          <!-- Arrow 3 -->
-          <line x1="485" y1="85" x2="505" y2="85" stroke="#93D500" stroke-width="1.5" marker-end="url(#arr6adc)"/>
-          <!-- Step 4: Digital -->
-          <rect x="510" y="40" width="95" height="90" rx="8" fill="none" stroke="#4FC3F7" stroke-width="2"/>
-          <text x="557" y="56" text-anchor="middle" fill="#4FC3F7" font-size="10" font-weight="700" font-family="sans-serif">デジタル</text>
-          <text x="557" y="76" text-anchor="middle" fill="#ccc" font-size="9" font-family="monospace">0110</text>
-          <text x="557" y="90" text-anchor="middle" fill="#ccc" font-size="9" font-family="monospace">1001</text>
-          <text x="557" y="104" text-anchor="middle" fill="#ccc" font-size="9" font-family="monospace">1100</text>
-          <text x="557" y="122" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">数値列</text>
-          <!-- Bottom labels -->
-          <rect x="100" y="148" width="140" height="22" rx="4" fill="none" stroke="#FFB800" stroke-width="1"/>
-          <text x="170" y="163" text-anchor="middle" fill="#FFB800" font-size="9" font-weight="700" font-family="sans-serif">サンプリングレート: 44,100Hz</text>
-          <rect x="280" y="148" width="140" height="22" rx="4" fill="none" stroke="#93D500" stroke-width="1"/>
-          <text x="350" y="163" text-anchor="middle" fill="#93D500" font-size="9" font-weight="700" font-family="sans-serif">ビット深度: 16bit = 65,536段階</text>
-          <!-- Bottom summary -->
-          <text x="310" y="195" text-anchor="middle" fill="#ccc" font-size="9" font-family="sans-serif">AD変換 = サンプリング + 量子化 → デジタルデータとして保存</text>
-          <defs>
-            <marker id="arr6ad" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#76B900"/></marker>
-            <marker id="arr6adb" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#FFB800"/></marker>
-            <marker id="arr6adc" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#93D500"/></marker>
-          </defs>
-        </svg>
-      </div>
-
-      <!-- キーワード解説 -->
-      <div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin:0.5rem 0">
-        <span class="keyword-box"><span class="kw-term">AD変換</span><span class="kw-desc">アナログ信号をデジタル数値に変換</span></span>
-        <span class="keyword-box"><span class="kw-term">サンプリングレート</span><span class="kw-desc">1秒間の測定回数 (CD: 44,100Hz)</span></span>
-        <span class="keyword-box"><span class="kw-term">ビット深度</span><span class="kw-desc">音量の段階数 (CD: 16bit = 65,536段階)</span></span>
-        <span class="keyword-box"><span class="kw-term">FFT</span><span class="kw-desc">高速フーリエ変換: 波形を周波数成分に分解</span></span>
-        <span class="keyword-box"><span class="kw-term">周波数 (Hz)</span><span class="kw-desc">1秒間の振動回数。高いほど高い音</span></span>
-      </div>
-
-      <!-- SVG: キーボード入力 → 音の生成 → 可視化フロー -->
-      <div style="margin:1.5rem 0;text-align:center">
-        <svg viewBox="0 0 600 160" xmlns="http://www.w3.org/2000/svg" style="max-width:600px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
-          <text x="300" y="22" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" font-family="sans-serif">キーボード入力 → 音の生成 → FFT可視化フロー</text>
-          <!-- keyboard input -->
-          <rect x="20" y="45" width="120" height="50" rx="8" fill="none" stroke="#76B900" stroke-width="2"/>
-          <text x="80" y="65" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700" font-family="sans-serif">キーボード入力</text>
-          <text x="80" y="82" text-anchor="middle" fill="#ccc" font-size="10" font-family="monospace">key_pressed()</text>
-          <!-- arrow 1 -->
-          <line x1="145" y1="70" x2="175" y2="70" stroke="#76B900" stroke-width="1.5" marker-end="url(#arr6)"/>
-          <!-- freq lookup -->
-          <rect x="180" y="45" width="120" height="50" rx="8" fill="none" stroke="#FFB800" stroke-width="2"/>
-          <text x="240" y="65" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="700" font-family="sans-serif">周波数を決定</text>
-          <text x="240" y="82" text-anchor="middle" fill="#ccc" font-size="10" font-family="monospace">NOTES[key]</text>
-          <!-- arrow 2 -->
-          <line x1="305" y1="70" x2="335" y2="70" stroke="#FFB800" stroke-width="1.5" marker-end="url(#arr6b)"/>
-          <!-- sine wave generation -->
-          <rect x="340" y="45" width="120" height="50" rx="8" fill="none" stroke="#93D500" stroke-width="2"/>
-          <text x="400" y="65" text-anchor="middle" fill="#93D500" font-size="11" font-weight="700" font-family="sans-serif">正弦波を生成</text>
-          <text x="400" y="82" text-anchor="middle" fill="#ccc" font-size="10" font-family="monospace">np.sin(2*pi*f*t)</text>
-          <!-- arrow 3 -->
-          <line x1="465" y1="70" x2="495" y2="70" stroke="#93D500" stroke-width="1.5" marker-end="url(#arr6c)"/>
-          <!-- speaker -->
-          <rect x="500" y="45" width="80" height="50" rx="8" fill="none" stroke="#4FC3F7" stroke-width="2"/>
-          <text x="540" y="65" text-anchor="middle" fill="#4FC3F7" font-size="11" font-weight="700" font-family="sans-serif">再生</text>
-          <text x="540" y="82" text-anchor="middle" fill="#ccc" font-size="10" font-family="monospace">play_buffer</text>
-          <!-- FFT branch -->
-          <line x1="400" y1="98" x2="400" y2="118" stroke="#555" stroke-width="1" stroke-dasharray="4"/>
-          <rect x="330" y="120" width="140" height="28" rx="6" fill="none" stroke="#555" stroke-width="1"/>
-          <text x="400" y="139" text-anchor="middle" fill="#ccc" font-size="10" font-family="sans-serif">FFTで周波数スペクトルを可視化</text>
-          <defs>
-            <marker id="arr6" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#76B900"/></marker>
-            <marker id="arr6b" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#FFB800"/></marker>
-            <marker id="arr6c" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#93D500"/></marker>
-          </defs>
-        </svg>
-      </div>
-
-      <div class="concept-box" style="margin-top:1rem">
-        <h4>グループディスカッション</h4>
-        <p style="font-size:0.95rem">テーマ:「音をコンピュータで扱うためにはどうすればいいか？」</p>
-        <ul class="point-list" style="margin-top:0.5rem">
-          <li>音の特徴（大きさ、高さ、音色）をどう数値化する？</li>
-          <li>1秒間に何回測定すれば「十分」か？</li>
-          <li>画像と音のデジタル化の共通点は？</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="callout-danger">
-      <h4>環境構築の変更: Python 3.10 が必要です</h4>
-      <p style="font-size:0.9rem">今回使用する <code>pydub</code> は Python 3.12 との互換性に問題があるため、<strong>Python 3.10.x</strong> で仮想環境を作り直してください。また <code>ffmpeg</code> のインストールが必要です。</p>
-    </div>
-
-    <pre><span class="code-label">Bash ── 環境構築</span>
-<span class="fn">cd</span> ~/MD1
-<span class="fn">mkdir</span> no6
-<span class="fn">cd</span> no6
-uv venv <span class="op">--</span>python <span class="num">3.10</span>
-<span class="fn">source</span> .venv/bin/activate
-uv pip install pydub py5 simpleaudio jupyterlab sounddevice
-brew install ffmpeg</pre>
-
-    <div class="callout-info">
-      <h4>ffmpegとは？</h4>
-      <p style="font-size:0.9rem"><code>ffmpeg</code> は動画・音声を変換するコマンドラインツールです。pydubがMP3やWAVなどのファイルを読み書きするために内部で使用します。<code>brew install ffmpeg</code> で一度インストールすればOKです。</p>
-    </div>
-
-    <!-- 0-1 -->
-    <div class="card">
-      <div class="card-header"><h3>0-1. 音のデジタル化（AD/DA変換）とは</h3></div>
-      <div class="concept-box">
-        <h4>音は「空気の振動」＝アナログ信号</h4>
-        <p>音はもともと空気の連続的な振動（アナログ信号）．コンピュータで扱うには <strong>数値の列（デジタル信号）</strong> に変換する必要がある．</p>
-        <ul class="point-list" style="margin-top:0.5rem">
-          <li><strong>AD変換:</strong> マイクで拾った連続的な波を，一定間隔で測定して数値化する</li>
-          <li><strong>標本化（サンプリング）:</strong> 1秒間に何回測るか＝ <strong>サンプリングレート</strong>（CDは44,100Hz）</li>
-          <li><strong>量子化:</strong> 測った値を離散的な段階に丸める＝ <strong>ビット深度</strong>（CDは16bit）</li>
-          <li><strong>DA変換:</strong> デジタルデータをスピーカーで再びアナログの振動に戻して鳴らす</li>
-        </ul>
-      </div>
-      <div class="analogy">音のデジタル化は「パラパラ漫画」と同じ．連続的な動きを1コマずつ記録し（AD変換），高速でめくると動いて見える（DA変換）．コマ数（サンプリングレート）が多いほど滑らか．</div>
-      <div class="callout-info" style="font-size:0.92rem">
-        <h4>チェック問題</h4>
-        <p style="margin:0">サンプリングレート 44,100Hz は何を意味するか？ レートを下げると音はどうなる？</p>
-        <details style="margin-top:0.4rem">
-          <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
-          <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
-            「1秒間に44,100回，波の高さを測定する」という意味．レートを下げると測定回数が減り，高い周波数の音を表現できなくなって <strong>音がこもる・劣化する</strong>．
-          </div>
-        </details>
-      </div>
-    </div>
-
-    <!-- 0-2 -->
-    <div class="card">
-      <div class="card-header"><h3>0-2. 周波数と正弦波（音の三要素）</h3></div>
-      <div class="concept-box">
-        <h4>音の高さ・大きさ・音色</h4>
-        <ul class="point-list" style="margin-top:0.5rem">
-          <li><strong>高さ（ピッチ）:</strong> <strong>周波数（Hz）</strong> で決まる．440Hz＝ラ（A4）の音</li>
-          <li><strong>大きさ（音量）:</strong> <strong>振幅</strong>（波の高さ）で決まる．大きいほど音が大きい</li>
-          <li><strong>音色（ティンバー）:</strong> <strong>波の形</strong> で決まる．正弦波＝純音，矩形波＝ブザー音</li>
-        </ul>
-      </div>
-      <p>最も基本的な波が <strong>正弦波（サイン波）</strong>．<code>np.sin(2 * np.pi * frequency * t)</code> の <code>frequency</code> を変えると音の高さが変わる．</p>
-      <div class="callout-info" style="font-size:0.92rem">
-        <h4>チェック問題</h4>
-        <p style="margin:0"><code>frequency</code> を 440 から 880 に変えると音はどう変わるか？</p>
-        <details style="margin-top:0.4rem">
-          <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
-          <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
-            周波数が2倍になると音は <strong>1オクターブ高く</strong> なる（ラ→1つ上のラ）．周波数が高い＝音が高い．
-          </div>
-        </details>
-      </div>
-    </div>
-
-    <!-- 0-3 -->
-    <div class="card">
-      <div class="card-header"><h3>0-3. FFT（高速フーリエ変換）とは</h3></div>
-      <div class="concept-box">
-        <h4>波形を「周波数成分」に分解する</h4>
-        <p><strong>FFT</strong> は，音の波形データを <strong>「どの周波数がどれだけ含まれているか」</strong> に分解する手法．時間で並んだデータ（時間領域）を，周波数で並んだデータ（周波数領域）に変換する．</p>
-        <ol style="padding-left:1.5rem;font-size:0.95rem;margin-top:0.5rem">
-          <li>音声データを読み込む → サンプル値の配列（波形）</li>
-          <li>窓（4096サンプルなど）を切り出す</li>
-          <li><code>np.fft.fft()</code> を実行 → 複素数の配列</li>
-          <li><code>np.abs()</code> で各周波数の強さ（マグニチュード）を取る</li>
-          <li>結果は左右対称なので <strong>前半だけ</strong>（<code>[:WINDOW//2]</code>）使う</li>
-        </ol>
-      </div>
-      <div class="analogy">虹と同じ．白い光（波形）をプリズム（FFT）に通すと，赤・橙・黄…と色（周波数）に分解される．</div>
-      <div class="callout-info" style="font-size:0.92rem">
-        <h4>チェック問題</h4>
-        <p style="margin:0">FFT結果で <code>fft[:WINDOW // 2]</code> と前半だけ使うのはなぜか？</p>
-        <details style="margin-top:0.4rem">
-          <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
-          <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
-            FFTの結果は <strong>左右対称</strong> になり，後半は前半の鏡像（折り返し）で新しい情報を持たない．だから <strong>前半だけ</strong> 使えば十分．
-          </div>
-        </details>
-      </div>
-    </div>
-
-    <!-- 0-4 -->
-    <div class="card">
-      <div class="card-header"><h3>0-4. 和音と周波数比</h3></div>
-      <div class="concept-box">
-        <h4>シンプルな整数比＝美しい和音（協和音）</h4>
-        <p>和音が「美しい（協和する）」かどうかは <strong>周波数の比率</strong> で決まる．比がシンプルな整数比に近いほど協和して聞こえる．</p>
-        <table style="margin-top:0.5rem">
-          <tr><th>音名</th><th>周波数 (Hz)</th><th>ド基準の比</th><th>近似整数比</th></tr>
-          <tr><td>ド (C4)</td><td>261.63</td><td>1.00</td><td>1</td></tr>
-          <tr><td>ミ (E4)</td><td>329.63</td><td>1.26</td><td>5/4</td></tr>
-          <tr><td>ソ (G4)</td><td>392.00</td><td>1.50</td><td>3/2</td></tr>
-        </table>
-        <p style="margin-top:0.5rem">ミ/ド ≈ 5/4，ソ/ド ≈ 3/2 → ドミソは <strong>4 : 5 : 6</strong> の協和音．比が複雑（例: ド＋ド#）だと不協和音になる．</p>
-      </div>
-      <div class="callout-info" style="font-size:0.92rem">
-        <h4>チェック問題</h4>
-        <p style="margin:0">ドミソが美しく響くのはなぜか？ ド＋ド#はなぜ濁って聞こえるか？</p>
-        <details style="margin-top:0.4rem">
-          <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
-          <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
-            ドミソは周波数比が <strong>4:5:6</strong> というシンプルな整数比で，波の山がきれいに重なり協和する．ド＋ド#（半音）は比率が複雑（≈1.06）で山がずれて干渉し，濁った <strong>不協和音</strong> になる．
-          </div>
-        </details>
-      </div>
-    </div>
-
-    <!-- 0-5 Notion 提出指示 -->
-    <div class="card standard">
-      <div class="card-header">
-        <h3>0-5. Notion に分からなかった点を記録する</h3>
-        <span class="tag tag-standard">提出</span>
-      </div>
-      <p style="margin-bottom:0.6rem;font-size:0.95rem">予習資料（0-1〜0-4）を読んで <strong>分からなかった点をリストアップ</strong> せよ．用語・コード・図の何でも可．<strong>1つも分からない点が無ければ「分からない点なし」と明記</strong> する．</p>
-      <div style="background:#0a1a0a;border:2px solid #76B900;border-radius:12px;padding:1.2rem 1.5rem;margin-top:1rem">
-        <h4 style="color:#76B900;font-size:1.05rem;margin-bottom:0.6rem">📝 Notion テンプレート（コピペ用）</h4>
-<pre style="margin:0.4rem 0"><span class="code-label">Notion テンプレート ── Task 0</span>## Task 0 予習で分からなかった点
-
-- 0-1（音のデジタル化・サンプリング）:
-- 0-2（周波数と正弦波）:
-- 0-3（FFT）:
-- 0-4（和音と周波数比）:
-
-※ 1つも無ければ「分からない点なし」と記載</pre>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 音のしくみ（図とアニメで理解する） ============ -->
-<section id="sec-howsound">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-num" style="background:#FF6B00">音</div>
-      <h2>音のしくみを図とアニメで理解する <span style="font-size:0.55rem;color:#999;font-weight:400">── 予習の深掘り（高校生向け）</span></h2>
-    </div>
-    <div class="card" style="border-left:4px solid #FF6B00">
+        <div class="card" style="border-left:4px solid #FF6B00">
       <p style="margin:0">「音」って結局なに？ なぜ <strong>0と1のコンピュータ</strong> で音を扱えるの？ ここでは <strong>① 音は空気の振動 → ② アナログ信号 → ③ 標本化 → ④ 量子化 → ⑤ 正弦波の合成 → ⑥ 周波数 → ⑦ FFT</strong> の順に，図とアニメで一気に理解する。動く図は <strong>くり返し再生</strong> される。</p>
     </div>
 
@@ -1211,6 +897,60 @@ brew install ffmpeg</pre>
         <p style="margin:0">空気の振動（①）→ なめらかな波＝アナログ（②）→ 時間をとびとびに＝標本化（③）→ 高さをとびとびに＝量子化（④）→ 0と1へ符号化 → 中身は正弦波の足し算（⑤⑥）→ FFTで周波数に分解して可視化（⑦）。</p>
       </div>
     </div>
+
+    <!-- 予習チェック問題 -->
+    <div class="card">
+      <div class="card-header"><h3>予習チェック問題（自分で答えてから開く）</h3><span class="tag tag-note">確認</span></div>
+      <p style="font-size:0.92rem;color:#bbb;margin:0 0 0.6rem">上の「音のしくみ」を読んだら，次の問いに自分の言葉で答えられるか確認しよう（口頭試問でも同じ範囲から出る）。</p>
+
+      <div class="callout-info" style="font-size:0.92rem">
+        <p style="margin:0"><strong>Q1.</strong> サンプリングレート 44,100Hz は何を意味するか？ レートを下げると音はどうなる？</p>
+        <details style="margin-top:0.4rem"><summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
+          <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px">「1秒間に44,100回，波の高さを測定する」という意味．レートを下げると測定回数が減り，高い周波数を表現できなくなって <strong>音がこもる・劣化する</strong>．</div>
+        </details>
+      </div>
+
+      <div class="callout-info" style="font-size:0.92rem">
+        <p style="margin:0"><strong>Q2.</strong> 正弦波生成コードの <code>frequency</code> を 440 から 880 に変えると音はどう変わるか？</p>
+        <details style="margin-top:0.4rem"><summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
+          <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px">周波数が2倍になると音は <strong>1オクターブ高く</strong> なる（ラ→1つ上のラ）．周波数が高い＝音が高い．</div>
+        </details>
+      </div>
+
+      <div class="callout-info" style="font-size:0.92rem">
+        <p style="margin:0"><strong>Q3.</strong> FFT結果で <code>fft[:WINDOW // 2]</code> と前半だけ使うのはなぜか？</p>
+        <details style="margin-top:0.4rem"><summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
+          <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px">FFTの結果は <strong>左右対称</strong> で，後半は前半の鏡像（折り返し）で新しい情報を持たない．だから <strong>前半だけ</strong> 使えば十分．</div>
+        </details>
+      </div>
+
+      <div class="callout-info" style="font-size:0.92rem">
+        <p style="margin:0"><strong>Q4.</strong> ドミソが美しく響くのはなぜか？ ド＋ド#はなぜ濁って聞こえるか？</p>
+        <details style="margin-top:0.4rem"><summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
+          <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px">ドミソは周波数比が <strong>4:5:6</strong> というシンプルな整数比で，波の山がきれいに重なり協和する．ド＋ド#（半音）は比率が複雑（≈1.06）で山がずれて干渉し，濁った <strong>不協和音</strong> になる．</div>
+        </details>
+      </div>
+    </div>
+
+    <!-- 0-5 Notion 提出指示 -->
+    <div class="card standard">
+      <div class="card-header">
+        <h3>0-5. Notion に分からなかった点を記録する</h3>
+        <span class="tag tag-standard">提出</span>
+      </div>
+      <p style="margin-bottom:0.6rem;font-size:0.95rem">予習資料（0-1〜0-4）を読んで <strong>分からなかった点をリストアップ</strong> せよ．用語・コード・図の何でも可．<strong>1つも分からない点が無ければ「分からない点なし」と明記</strong> する．</p>
+      <div style="background:#0a1a0a;border:2px solid #76B900;border-radius:12px;padding:1.2rem 1.5rem;margin-top:1rem">
+        <h4 style="color:#76B900;font-size:1.05rem;margin-bottom:0.6rem">📝 Notion テンプレート（コピペ用）</h4>
+<pre style="margin:0.4rem 0"><span class="code-label">Notion テンプレート ── Task 0</span>## Task 0 予習で分からなかった点
+
+- 0-1（音のデジタル化・サンプリング）:
+- 0-2（周波数と正弦波）:
+- 0-3（FFT）:
+- 0-4（和音と周波数比）:
+
+※ 1つも無ければ「分からない点なし」と記載</pre>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1375,6 +1115,43 @@ magnitude <span class="op">=</span> np.<span class="fn">abs</span>(fft[:WINDOW <
       <div class="notion-submit">
         <div><strong>SA確認:</strong> 第1回・第2回ともに全員が1問以上回答し，判定表を Notion に記録できたら<span style="display:inline-block;margin-left:0.5rem;background:#FF6B00;color:#fff;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px">SA確認</span> を受けて次に進む．</div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 標準課題（3問） ============ -->
+<section id="sec-standard">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">課</div>
+      <h2>標準課題（3問）── 実習しながら作る <span style="font-size:0.55rem;color:#999;font-weight:400">── std6-1 / std6-2 / std6-3</span></h2>
+    </div>
+    <div class="card" style="border-left:4px solid #4FC3F7">
+      <p style="margin:0 0 0.6rem">予習で学んだ知識を使い，下の実習ステップを順に進めながら <strong>3つの標準課題</strong> を完成させる。まず環境を整えてから Step 1 へ。</p>
+      <ul class="point-list">
+        <li><strong>std6-1</strong>（Step 3）：キーボードピアノ（.py）</li>
+        <li><strong>std6-2</strong>（Step 6）：ビジュアルキーボードピアノ（.py）</li>
+        <li><strong>std6-3</strong>（Step 6）：サウンドペインター（Notionレポート → PDF）</li>
+      </ul>
+    </div>
+
+    <div class="callout-danger">
+      <h4>環境構築の変更: Python 3.10 が必要です</h4>
+      <p style="font-size:0.9rem">今回使用する <code>pydub</code> は Python 3.12 との互換性に問題があるため、<strong>Python 3.10.x</strong> で仮想環境を作り直してください。また <code>ffmpeg</code> のインストールが必要です。</p>
+    </div>
+
+    <pre><span class="code-label">Bash ── 環境構築</span>
+<span class="fn">cd</span> ~/MD1
+<span class="fn">mkdir</span> no6
+<span class="fn">cd</span> no6
+uv venv <span class="op">--</span>python <span class="num">3.10</span>
+<span class="fn">source</span> .venv/bin/activate
+uv pip install pydub py5 simpleaudio jupyterlab sounddevice
+brew install ffmpeg</pre>
+
+    <div class="callout-info">
+      <h4>ffmpegとは？</h4>
+      <p style="font-size:0.9rem"><code>ffmpeg</code> は動画・音声を変換するコマンドラインツールです。pydubがMP3やWAVなどのファイルを読み書きするために内部で使用します。<code>brew install ffmpeg</code> で一度インストールすればOKです。</p>
     </div>
   </div>
 </section>
@@ -1935,6 +1712,53 @@ spectrums <span class="op">=</span> []
         <strong>std6-3</strong> Notionで作成したレポートを<strong>PDFにエクスポート</strong>してGoogle Classroomに提出してください（提出ガイドの「第6回まとめ」テンプレート参照）。プログラムの説明・工夫した点・スクリーンショット・考察を含むこと。
         <div style="margin-top:0.4rem;font-size:0.8rem;color:#FF6B00"><span class="sa-check-tag" style="display:inline-block;margin-left:0.5rem;background:#FF6B00;color:#fff;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px;vertical-align:middle">SA確認</span> SAさんのOKがもらえたら次に進んでください（授業時間外はSA確認不要）</div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 発展課題 ============ -->
+<section id="sec-adv">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">発</div>
+      <h2>発展課題 ── オリジナル・サウンドビジュアライザを自由制作 <span style="font-size:0.55rem;color:#999;font-weight:400">── adv6-1</span></h2>
+    </div>
+
+    <div class="card advanced">
+      <div class="card-header"><h3>adv6-1: 自分だけのサウンドビジュアライザ</h3><span class="tag tag-advanced">発展課題</span></div>
+      <div class="concept-box">
+        <h4>課題内容</h4>
+        <p>標準課題（std6-1〜6-3）で学んだ <strong>音の生成・波形表示・FFT・色（HSB）</strong> を組み合わせ，<strong>好きな音楽で動く「自分だけのサウンドビジュアライザ」</strong> を自由に作る。</p>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li>好きな MP3 を読み込み，<strong>FFTの周波数スペクトル</strong> や <strong>波形</strong> を使って絵を動かす</li>
+          <li>周波数 → 色，音量 → 大きさ・速さ など，<strong>音の特徴と見た目の対応を自分で設計</strong> する</li>
+          <li>円・線・図形・パーティクルなど表現方法は自由（py5 の描画関数を活用）</li>
+          <li>余裕があれば <strong>ローパスフィルタ</strong>（低い周波数だけ通す）など音の加工にも挑戦</li>
+        </ul>
+      </div>
+      <div class="callout-tip">
+        <h4>アイデアのヒント</h4>
+        <ul class="point-list">
+          <li>低音（バスドラム）で画面全体を脈動させる</li>
+          <li>周波数帯ごとに違う色の図形を配置し，音量で伸び縮みさせる</li>
+          <li>時間とともに軌跡が残るようにして「音の絵画」にする</li>
+        </ul>
+      </div>
+      <div class="callout-info">
+        <h4>評価のポイント</h4>
+        <ul class="point-list">
+          <li>「音の特徴 → 見た目」の <strong>対応づけが意図的</strong> で説明できる</li>
+          <li>FFT または波形データを <strong>実際に使っている</strong></li>
+          <li>AI に丸投げではなく <strong>自分で調整した形跡</strong> がある</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="notion-submit">
+      <strong>adv6-1</strong> 作品の <strong>画面録画（mp4・10〜30秒）</strong> と，<strong>Notion レポート（PDF）</strong>（コンセプト・音と見た目の対応・工夫・完成コード）を Google Classroom に提出してください。
+    </div>
+    <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:0.5rem;font-size:0.85rem;color:#FFB800">
+      <strong>📅 発展課題の提出期限:</strong> 従来どおり（次回の授業開始まで）
     </div>
   </div>
 </section>
