@@ -504,7 +504,6 @@ body { padding-top: 2.2rem; }
 <nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week01.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week02.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week03.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week04.html">4</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week05.html">5</a> <a style="color:#76B900;background:rgba(118,185,0,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="week06.html">6</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week07.html">7</a> </div>
   <a href="#sec-schedule">日程</a>
   <a href="#sec-task0">予習</a>
-  <a href="#sec-teacher">予習解説</a>
   <a href="#sec-howsound">音のしくみ</a>
   <a href="#sec-task1">口頭試問</a>
   <a href="#sec-mp3">1. MP3再生</a>
@@ -631,140 +630,9 @@ body { padding-top: 2.2rem; }
       <p style="margin:0"><strong>必ず予習して授業に参加すること。</strong>授業では予習で学んだことを話し合います。講師からも <strong>ランダムに口頭試問</strong> します。回答できるように準備してください。</p>
     </div>
 
-    <!-- 0-1 -->
-    <div class="card">
-      <div class="card-header"><h3>0-1. 音のデジタル化（AD/DA変換）とは</h3></div>
-      <div class="concept-box">
-        <h4>音は「空気の振動」＝アナログ信号</h4>
-        <p>音はもともと空気の連続的な振動（アナログ信号）．コンピュータで扱うには <strong>数値の列（デジタル信号）</strong> に変換する必要がある．</p>
-        <ul class="point-list" style="margin-top:0.5rem">
-          <li><strong>AD変換:</strong> マイクで拾った連続的な波を，一定間隔で測定して数値化する</li>
-          <li><strong>標本化（サンプリング）:</strong> 1秒間に何回測るか＝ <strong>サンプリングレート</strong>（CDは44,100Hz）</li>
-          <li><strong>量子化:</strong> 測った値を離散的な段階に丸める＝ <strong>ビット深度</strong>（CDは16bit）</li>
-          <li><strong>DA変換:</strong> デジタルデータをスピーカーで再びアナログの振動に戻して鳴らす</li>
-        </ul>
-      </div>
-      <div class="analogy">音のデジタル化は「パラパラ漫画」と同じ．連続的な動きを1コマずつ記録し（AD変換），高速でめくると動いて見える（DA変換）．コマ数（サンプリングレート）が多いほど滑らか．</div>
-      <div class="callout-info" style="font-size:0.92rem">
-        <h4>チェック問題</h4>
-        <p style="margin:0">サンプリングレート 44,100Hz は何を意味するか？ レートを下げると音はどうなる？</p>
-        <details style="margin-top:0.4rem">
-          <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
-          <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
-            「1秒間に44,100回，波の高さを測定する」という意味．レートを下げると測定回数が減り，高い周波数の音を表現できなくなって <strong>音がこもる・劣化する</strong>．
-          </div>
-        </details>
-      </div>
-    </div>
 
-    <!-- 0-2 -->
-    <div class="card">
-      <div class="card-header"><h3>0-2. 周波数と正弦波（音の三要素）</h3></div>
-      <div class="concept-box">
-        <h4>音の高さ・大きさ・音色</h4>
-        <ul class="point-list" style="margin-top:0.5rem">
-          <li><strong>高さ（ピッチ）:</strong> <strong>周波数（Hz）</strong> で決まる．440Hz＝ラ（A4）の音</li>
-          <li><strong>大きさ（音量）:</strong> <strong>振幅</strong>（波の高さ）で決まる．大きいほど音が大きい</li>
-          <li><strong>音色（ティンバー）:</strong> <strong>波の形</strong> で決まる．正弦波＝純音，矩形波＝ブザー音</li>
-        </ul>
-      </div>
-      <p>最も基本的な波が <strong>正弦波（サイン波）</strong>．<code>np.sin(2 * np.pi * frequency * t)</code> の <code>frequency</code> を変えると音の高さが変わる．</p>
-      <div class="callout-info" style="font-size:0.92rem">
-        <h4>チェック問題</h4>
-        <p style="margin:0"><code>frequency</code> を 440 から 880 に変えると音はどう変わるか？</p>
-        <details style="margin-top:0.4rem">
-          <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
-          <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
-            周波数が2倍になると音は <strong>1オクターブ高く</strong> なる（ラ→1つ上のラ）．周波数が高い＝音が高い．
-          </div>
-        </details>
-      </div>
-    </div>
-
-    <!-- 0-3 -->
-    <div class="card">
-      <div class="card-header"><h3>0-3. FFT（高速フーリエ変換）とは</h3></div>
-      <div class="concept-box">
-        <h4>波形を「周波数成分」に分解する</h4>
-        <p><strong>FFT</strong> は，音の波形データを <strong>「どの周波数がどれだけ含まれているか」</strong> に分解する手法．時間で並んだデータ（時間領域）を，周波数で並んだデータ（周波数領域）に変換する．</p>
-        <ol style="padding-left:1.5rem;font-size:0.95rem;margin-top:0.5rem">
-          <li>音声データを読み込む → サンプル値の配列（波形）</li>
-          <li>窓（4096サンプルなど）を切り出す</li>
-          <li><code>np.fft.fft()</code> を実行 → 複素数の配列</li>
-          <li><code>np.abs()</code> で各周波数の強さ（マグニチュード）を取る</li>
-          <li>結果は左右対称なので <strong>前半だけ</strong>（<code>[:WINDOW//2]</code>）使う</li>
-        </ol>
-      </div>
-      <div class="analogy">虹と同じ．白い光（波形）をプリズム（FFT）に通すと，赤・橙・黄…と色（周波数）に分解される．</div>
-      <div class="callout-info" style="font-size:0.92rem">
-        <h4>チェック問題</h4>
-        <p style="margin:0">FFT結果で <code>fft[:WINDOW // 2]</code> と前半だけ使うのはなぜか？</p>
-        <details style="margin-top:0.4rem">
-          <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
-          <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
-            FFTの結果は <strong>左右対称</strong> になり，後半は前半の鏡像（折り返し）で新しい情報を持たない．だから <strong>前半だけ</strong> 使えば十分．
-          </div>
-        </details>
-      </div>
-    </div>
-
-    <!-- 0-4 -->
-    <div class="card">
-      <div class="card-header"><h3>0-4. 和音と周波数比</h3></div>
-      <div class="concept-box">
-        <h4>シンプルな整数比＝美しい和音（協和音）</h4>
-        <p>和音が「美しい（協和する）」かどうかは <strong>周波数の比率</strong> で決まる．比がシンプルな整数比に近いほど協和して聞こえる．</p>
-        <table style="margin-top:0.5rem">
-          <tr><th>音名</th><th>周波数 (Hz)</th><th>ド基準の比</th><th>近似整数比</th></tr>
-          <tr><td>ド (C4)</td><td>261.63</td><td>1.00</td><td>1</td></tr>
-          <tr><td>ミ (E4)</td><td>329.63</td><td>1.26</td><td>5/4</td></tr>
-          <tr><td>ソ (G4)</td><td>392.00</td><td>1.50</td><td>3/2</td></tr>
-        </table>
-        <p style="margin-top:0.5rem">ミ/ド ≈ 5/4，ソ/ド ≈ 3/2 → ドミソは <strong>4 : 5 : 6</strong> の協和音．比が複雑（例: ド＋ド#）だと不協和音になる．</p>
-      </div>
-      <div class="callout-info" style="font-size:0.92rem">
-        <h4>チェック問題</h4>
-        <p style="margin:0">ドミソが美しく響くのはなぜか？ ド＋ド#はなぜ濁って聞こえるか？</p>
-        <details style="margin-top:0.4rem">
-          <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
-          <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
-            ドミソは周波数比が <strong>4:5:6</strong> というシンプルな整数比で，波の山がきれいに重なり協和する．ド＋ド#（半音）は比率が複雑（≈1.06）で山がずれて干渉し，濁った <strong>不協和音</strong> になる．
-          </div>
-        </details>
-      </div>
-    </div>
-
-    <!-- 0-5 Notion 提出指示 -->
-    <div class="card standard">
-      <div class="card-header">
-        <h3>0-5. Notion に分からなかった点を記録する</h3>
-        <span class="tag tag-standard">提出</span>
-      </div>
-      <p style="margin-bottom:0.6rem;font-size:0.95rem">予習資料（0-1〜0-4）を読んで <strong>分からなかった点をリストアップ</strong> せよ．用語・コード・図の何でも可．<strong>1つも分からない点が無ければ「分からない点なし」と明記</strong> する．</p>
-      <div style="background:#0a1a0a;border:2px solid #76B900;border-radius:12px;padding:1.2rem 1.5rem;margin-top:1rem">
-        <h4 style="color:#76B900;font-size:1.05rem;margin-bottom:0.6rem">📝 Notion テンプレート（コピペ用）</h4>
-<pre style="margin:0.4rem 0"><span class="code-label">Notion テンプレート ── Task 0</span>## Task 0 予習で分からなかった点
-
-- 0-1（音のデジタル化・サンプリング）:
-- 0-2（周波数と正弦波）:
-- 0-3（FFT）:
-- 0-4（和音と周波数比）:
-
-※ 1つも無ければ「分からない点なし」と記載</pre>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 0. TEACHER EXPLANATION ============ -->
-<section id="sec-teacher">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-num" style="background:#4A7A00">予</div>
-      <h2>予習（解説）── 各自で熟読 <span style="font-size:0.5rem;color:#999;font-weight:400">── 授業前に学習してくること</span></h2>
-    </div>
-
-    <div class="card" style="border-left:4px solid #76B900">
+    <!-- 予習解説（旧・教員説明を統合） -->
+<div class="card" style="border-left:4px solid #76B900">
       <div class="card-header">
         <h3>音をコンピュータで扱う仕組み</h3>
         <span class="tag tag-note">ノート</span>
@@ -946,8 +814,127 @@ brew install ffmpeg</pre>
       <p style="font-size:0.9rem"><code>ffmpeg</code> は動画・音声を変換するコマンドラインツールです。pydubがMP3やWAVなどのファイルを読み書きするために内部で使用します。<code>brew install ffmpeg</code> で一度インストールすればOKです。</p>
     </div>
 
-    <div style="background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:1rem 1.2rem;margin-top:1.5rem;text-align:center;font-size:0.95rem;color:#76B900;font-weight:700">
-      ── 次の「音のしくみ」も予習として読み，口頭試問に備えること ──
+    <!-- 0-1 -->
+    <div class="card">
+      <div class="card-header"><h3>0-1. 音のデジタル化（AD/DA変換）とは</h3></div>
+      <div class="concept-box">
+        <h4>音は「空気の振動」＝アナログ信号</h4>
+        <p>音はもともと空気の連続的な振動（アナログ信号）．コンピュータで扱うには <strong>数値の列（デジタル信号）</strong> に変換する必要がある．</p>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li><strong>AD変換:</strong> マイクで拾った連続的な波を，一定間隔で測定して数値化する</li>
+          <li><strong>標本化（サンプリング）:</strong> 1秒間に何回測るか＝ <strong>サンプリングレート</strong>（CDは44,100Hz）</li>
+          <li><strong>量子化:</strong> 測った値を離散的な段階に丸める＝ <strong>ビット深度</strong>（CDは16bit）</li>
+          <li><strong>DA変換:</strong> デジタルデータをスピーカーで再びアナログの振動に戻して鳴らす</li>
+        </ul>
+      </div>
+      <div class="analogy">音のデジタル化は「パラパラ漫画」と同じ．連続的な動きを1コマずつ記録し（AD変換），高速でめくると動いて見える（DA変換）．コマ数（サンプリングレート）が多いほど滑らか．</div>
+      <div class="callout-info" style="font-size:0.92rem">
+        <h4>チェック問題</h4>
+        <p style="margin:0">サンプリングレート 44,100Hz は何を意味するか？ レートを下げると音はどうなる？</p>
+        <details style="margin-top:0.4rem">
+          <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
+          <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
+            「1秒間に44,100回，波の高さを測定する」という意味．レートを下げると測定回数が減り，高い周波数の音を表現できなくなって <strong>音がこもる・劣化する</strong>．
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <!-- 0-2 -->
+    <div class="card">
+      <div class="card-header"><h3>0-2. 周波数と正弦波（音の三要素）</h3></div>
+      <div class="concept-box">
+        <h4>音の高さ・大きさ・音色</h4>
+        <ul class="point-list" style="margin-top:0.5rem">
+          <li><strong>高さ（ピッチ）:</strong> <strong>周波数（Hz）</strong> で決まる．440Hz＝ラ（A4）の音</li>
+          <li><strong>大きさ（音量）:</strong> <strong>振幅</strong>（波の高さ）で決まる．大きいほど音が大きい</li>
+          <li><strong>音色（ティンバー）:</strong> <strong>波の形</strong> で決まる．正弦波＝純音，矩形波＝ブザー音</li>
+        </ul>
+      </div>
+      <p>最も基本的な波が <strong>正弦波（サイン波）</strong>．<code>np.sin(2 * np.pi * frequency * t)</code> の <code>frequency</code> を変えると音の高さが変わる．</p>
+      <div class="callout-info" style="font-size:0.92rem">
+        <h4>チェック問題</h4>
+        <p style="margin:0"><code>frequency</code> を 440 から 880 に変えると音はどう変わるか？</p>
+        <details style="margin-top:0.4rem">
+          <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
+          <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
+            周波数が2倍になると音は <strong>1オクターブ高く</strong> なる（ラ→1つ上のラ）．周波数が高い＝音が高い．
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <!-- 0-3 -->
+    <div class="card">
+      <div class="card-header"><h3>0-3. FFT（高速フーリエ変換）とは</h3></div>
+      <div class="concept-box">
+        <h4>波形を「周波数成分」に分解する</h4>
+        <p><strong>FFT</strong> は，音の波形データを <strong>「どの周波数がどれだけ含まれているか」</strong> に分解する手法．時間で並んだデータ（時間領域）を，周波数で並んだデータ（周波数領域）に変換する．</p>
+        <ol style="padding-left:1.5rem;font-size:0.95rem;margin-top:0.5rem">
+          <li>音声データを読み込む → サンプル値の配列（波形）</li>
+          <li>窓（4096サンプルなど）を切り出す</li>
+          <li><code>np.fft.fft()</code> を実行 → 複素数の配列</li>
+          <li><code>np.abs()</code> で各周波数の強さ（マグニチュード）を取る</li>
+          <li>結果は左右対称なので <strong>前半だけ</strong>（<code>[:WINDOW//2]</code>）使う</li>
+        </ol>
+      </div>
+      <div class="analogy">虹と同じ．白い光（波形）をプリズム（FFT）に通すと，赤・橙・黄…と色（周波数）に分解される．</div>
+      <div class="callout-info" style="font-size:0.92rem">
+        <h4>チェック問題</h4>
+        <p style="margin:0">FFT結果で <code>fft[:WINDOW // 2]</code> と前半だけ使うのはなぜか？</p>
+        <details style="margin-top:0.4rem">
+          <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
+          <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
+            FFTの結果は <strong>左右対称</strong> になり，後半は前半の鏡像（折り返し）で新しい情報を持たない．だから <strong>前半だけ</strong> 使えば十分．
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <!-- 0-4 -->
+    <div class="card">
+      <div class="card-header"><h3>0-4. 和音と周波数比</h3></div>
+      <div class="concept-box">
+        <h4>シンプルな整数比＝美しい和音（協和音）</h4>
+        <p>和音が「美しい（協和する）」かどうかは <strong>周波数の比率</strong> で決まる．比がシンプルな整数比に近いほど協和して聞こえる．</p>
+        <table style="margin-top:0.5rem">
+          <tr><th>音名</th><th>周波数 (Hz)</th><th>ド基準の比</th><th>近似整数比</th></tr>
+          <tr><td>ド (C4)</td><td>261.63</td><td>1.00</td><td>1</td></tr>
+          <tr><td>ミ (E4)</td><td>329.63</td><td>1.26</td><td>5/4</td></tr>
+          <tr><td>ソ (G4)</td><td>392.00</td><td>1.50</td><td>3/2</td></tr>
+        </table>
+        <p style="margin-top:0.5rem">ミ/ド ≈ 5/4，ソ/ド ≈ 3/2 → ドミソは <strong>4 : 5 : 6</strong> の協和音．比が複雑（例: ド＋ド#）だと不協和音になる．</p>
+      </div>
+      <div class="callout-info" style="font-size:0.92rem">
+        <h4>チェック問題</h4>
+        <p style="margin:0">ドミソが美しく響くのはなぜか？ ド＋ド#はなぜ濁って聞こえるか？</p>
+        <details style="margin-top:0.4rem">
+          <summary style="cursor:pointer;color:#FFB800;font-size:0.88rem;font-weight:700">▶ 答えを見る</summary>
+          <div style="margin-top:0.4rem;padding:0.6rem 0.9rem;background:rgba(255,184,0,0.08);border-left:3px solid #FFB800;border-radius:4px;font-size:0.92rem">
+            ドミソは周波数比が <strong>4:5:6</strong> というシンプルな整数比で，波の山がきれいに重なり協和する．ド＋ド#（半音）は比率が複雑（≈1.06）で山がずれて干渉し，濁った <strong>不協和音</strong> になる．
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <!-- 0-5 Notion 提出指示 -->
+    <div class="card standard">
+      <div class="card-header">
+        <h3>0-5. Notion に分からなかった点を記録する</h3>
+        <span class="tag tag-standard">提出</span>
+      </div>
+      <p style="margin-bottom:0.6rem;font-size:0.95rem">予習資料（0-1〜0-4）を読んで <strong>分からなかった点をリストアップ</strong> せよ．用語・コード・図の何でも可．<strong>1つも分からない点が無ければ「分からない点なし」と明記</strong> する．</p>
+      <div style="background:#0a1a0a;border:2px solid #76B900;border-radius:12px;padding:1.2rem 1.5rem;margin-top:1rem">
+        <h4 style="color:#76B900;font-size:1.05rem;margin-bottom:0.6rem">📝 Notion テンプレート（コピペ用）</h4>
+<pre style="margin:0.4rem 0"><span class="code-label">Notion テンプレート ── Task 0</span>## Task 0 予習で分からなかった点
+
+- 0-1（音のデジタル化・サンプリング）:
+- 0-2（周波数と正弦波）:
+- 0-3（FFT）:
+- 0-4（和音と周波数比）:
+
+※ 1つも無ければ「分からない点なし」と記載</pre>
+      </div>
     </div>
   </div>
 </section>
