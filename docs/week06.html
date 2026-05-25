@@ -1001,7 +1001,7 @@ body { padding-top: 2.2rem; }
       <div class="callout-info" style="font-size:0.92rem">
         <h4>コードでよく出るポイント（標準課題の FFT で使う）</h4>
         <ul class="point-list">
-          <li><strong>前半だけ使う理由（<code>fft[:WINDOW // 2]</code>）：</strong> FFT の結果は <strong>左右対称（折り返し）</strong> になり，後半は前半の <strong>鏡像</strong> で新しい情報を持たない。だから <strong>前半だけ</strong> 取れば十分（残り半分は捨てる）。</li>
+          <li><strong>前半だけ使う理由（<code>fft[:WINDOW // 2]</code>）：</strong> FFT の結果は <strong>左右対称（折り返し）</strong> になり，後半は前半の <strong>鏡像</strong> で新しい情報を持たない。だから <strong>前半だけ</strong> 取れば十分（残り半分は捨てる）。<br><span style="color:#bbb"><code>//</code> は <strong>整数の割り算（小数点以下を切り捨て）</strong>。例：<code>4096 // 2 = 2048</code>，<code>7 // 2 = 3</code>。配列の要素番号は整数でなければならないので，ふつうの <code>/</code>（結果が 2048.0 のような小数になる）ではなく <code>//</code> を使う。</span></li>
           <li><strong>窓を2のべき乗にする理由（<code>WINDOW = 4096</code>）：</strong> FFT（＝高速フーリエ変換）は，一度に解析する点数（窓のサイズ）が <strong>2のべき乗</strong>（…1024・2048・4096…）のとき <strong>最も速く計算</strong> できる仕組み。だから中途半端な数ではなく 4096 などを使う。</li>
         </ul>
       </div>
