@@ -998,6 +998,13 @@ body { padding-top: 2.2rem; }
         <p style="margin-top:0.5rem">FFT を通すと，<strong>時間で並んだ波（時間領域）</strong> が <strong>周波数で並んだ棒グラフ（周波数領域＝スペクトル）</strong> に変わる。横軸＝周波数，縦軸＝その成分の大きさ（音量）。声紋分析や音楽の可視化に使われる。</p>
       </div>
       <div class="analogy">FFT は <strong>プリズム</strong>。白い光（混ざった音）を通すと，赤・橙・黄…（周波数ごと）に分かれて，何色がどれだけ入っているかが見える。</div>
+      <div class="callout-info" style="font-size:0.92rem">
+        <h4>コードでよく出るポイント（標準課題の FFT で使う）</h4>
+        <ul class="point-list">
+          <li><strong>前半だけ使う理由（<code>fft[:WINDOW // 2]</code>）：</strong> FFT の結果は <strong>左右対称（折り返し）</strong> になり，後半は前半の <strong>鏡像</strong> で新しい情報を持たない。だから <strong>前半だけ</strong> 取れば十分（残り半分は捨てる）。</li>
+          <li><strong>窓を2のべき乗にする理由（<code>WINDOW = 4096</code>）：</strong> FFT（＝高速フーリエ変換）は，一度に解析する点数（窓のサイズ）が <strong>2のべき乗</strong>（…1024・2048・4096…）のとき <strong>最も速く計算</strong> できる仕組み。だから中途半端な数ではなく 4096 などを使う。</li>
+        </ul>
+      </div>
       <div style="margin:1rem 0;text-align:center">
         <svg viewBox="0 0 640 210" xmlns="http://www.w3.org/2000/svg" style="max-width:640px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
           <text x="160" y="24" text-anchor="middle" fill="#FF6B00" font-size="12" font-weight="700" font-family="sans-serif">時間領域（混ざった波）</text>
@@ -1023,7 +1030,7 @@ body { padding-top: 2.2rem; }
       </div>
       <div class="callout-info" style="font-size:0.92rem">
         <h4>まとめ①：音が「デジタルデータ」になるまで</h4>
-        <p style="margin:0">空気の振動（①）→ なめらかな波＝アナログ（②）→ 時間をとびとびに＝標本化（③）→ 高さをとびとびに＝量子化（④）→ 各段階を <strong>0と1へ符号化</strong> → <strong>デジタルデータの完成</strong>。ここまでが「音をコンピュータに取り込む」流れ。</p>
+        <p style="margin:0">空気の振動（①）→ なめらかな波＝アナログ（②）→ 時間をとびとびに＝標本化（③）→ 高さをとびとびに＝量子化（④）→ 各段階を <strong>0と1へ符号化</strong> → <strong>デジタルデータの完成</strong>。この「アナログ → デジタル」の流れ全体を <strong>AD変換</strong>（Analog→Digital）という。逆に，再生するときは <strong>デジタルデータをスピーカーで空気の振動に戻す</strong>＝<strong>DA変換</strong>（Digital→Analog）。</p>
         <div style="margin:0.8rem 0 0;text-align:center">
           <svg viewBox="0 0 660 150" xmlns="http://www.w3.org/2000/svg" style="max-width:660px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
             <text x="330" y="24" text-anchor="middle" fill="#FF6B00" font-size="13" font-weight="700" font-family="sans-serif">音が「デジタルデータ」になるまで</text>
