@@ -1002,6 +1002,34 @@ body { padding-top: 2.2rem; }
         </div>
       </div>
       <div class="callout-tip" style="font-size:0.92rem">
+        <h4>コンピュータの中では，すべてが「0と1」</h4>
+        <p style="margin:0">音を 0 と 1 に符号化したのと同じように，<strong>テキスト・画像・動画</strong> も，コンピュータの中では <strong>すべて 0 と 1 の数字の並び</strong> で表されている。違うのは「どんなルールで数字に直すか」だけ。だからコンピュータは，文字も写真も音楽も動画も <strong>同じ 0/1 のデータ</strong> として保存・コピー・送信できる。</p>
+        
+        <div style="margin:0.8rem 0 0;text-align:center">
+          <svg viewBox="0 0 640 198" xmlns="http://www.w3.org/2000/svg" style="max-width:640px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
+            <text x="320" y="24" text-anchor="middle" fill="#FF6B00" font-size="13" font-weight="700" font-family="sans-serif">コンピュータの中身は，何でも 0 と 1 の並び</text>
+            <rect x="14" y="44" width="150" height="22" rx="5" fill="#0f1620" stroke="#4FC3F7" stroke-width="1.3"/><text x="22" y="59" fill="#4FC3F7" font-size="11" font-weight="700" font-family="sans-serif">テキスト</text><text x="92" y="59" fill="#aaa" font-size="10" font-family="sans-serif">A B あ 文</text><path d="M168,55 L188,55" stroke="#777" stroke-width="1.5" marker-end="url(#allarr)"/><rect x="14" y="72" width="150" height="22" rx="5" fill="#0f1620" stroke="#93D500" stroke-width="1.3"/><text x="22" y="87" fill="#93D500" font-size="11" font-weight="700" font-family="sans-serif">画像</text><text x="92" y="87" fill="#aaa" font-size="10" font-family="sans-serif">🟥🟩🟦</text><path d="M168,83 L188,83" stroke="#777" stroke-width="1.5" marker-end="url(#allarr)"/><rect x="14" y="100" width="150" height="22" rx="5" fill="#0f1620" stroke="#FFB800" stroke-width="1.3"/><text x="22" y="115" fill="#FFB800" font-size="11" font-weight="700" font-family="sans-serif">動画</text><text x="92" y="115" fill="#aaa" font-size="10" font-family="sans-serif">▶ コマ</text><path d="M168,111 L188,111" stroke="#777" stroke-width="1.5" marker-end="url(#allarr)"/><rect x="14" y="128" width="150" height="22" rx="5" fill="#0f1620" stroke="#FF6B00" stroke-width="1.3"/><text x="22" y="143" fill="#FF6B00" font-size="11" font-weight="700" font-family="sans-serif">音</text><text x="92" y="143" fill="#aaa" font-size="10" font-family="sans-serif">♪ 波</text><path d="M168,139 L188,139" stroke="#777" stroke-width="1.5" marker-end="url(#allarr)"/>
+            <!-- 符号化ハブ -->
+            <rect x="196" y="62" width="74" height="46" rx="8" fill="#0f1620" stroke="#FF6B00" stroke-width="1.5"/>
+            <text x="233" y="82" text-anchor="middle" fill="#FF6B00" font-size="11" font-weight="700" font-family="sans-serif">符号化</text>
+            <text x="233" y="98" text-anchor="middle" fill="#aaa" font-size="9" font-family="sans-serif">2進数へ</text>
+            <path d="M270,85 L300,85" stroke="#FF6B00" stroke-width="2" marker-end="url(#allarr2)"/>
+            <!-- bit stream (scrolling) -->
+            <rect x="305" y="60" width="325" height="50" rx="6" fill="#0a0f08" stroke="#2a3a2a" stroke-width="1"/>
+            <clipPath id="bitclip"><rect x="307" y="62" width="321" height="46"/></clipPath>
+            <g clip-path="url(#bitclip)">
+              <text x="310" y="92" fill="#76B900" font-size="15" font-family="monospace" letter-spacing="1.5">01100011101101001011011110010001100101110000110110000000111111010011010110001110110100101101111001000110010111000011011000000011111101001101<animate attributeName="x" values="310;-320" dur="6s" repeatCount="indefinite"/></text>
+            </g>
+            <text x="320" y="172" text-anchor="middle" fill="#ddd" font-size="11" font-family="sans-serif">テキストも・画像も・動画も・音も，最後はすべて <tspan fill="#76B900" font-weight="700">0 と 1 の数字の列</tspan> になる。</text>
+            <text x="320" y="189" text-anchor="middle" fill="#888" font-size="9.5" font-family="sans-serif">違うのは「どう数字に直すか（符号化のルール）」だけ。コンピュータは 0/1 しか扱えない。</text>
+            <defs>
+              <marker id="allarr" markerWidth="7" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6" fill="#777"/></marker>
+              <marker id="allarr2" markerWidth="8" markerHeight="7" refX="8" refY="3.5" orient="auto"><path d="M0,0 L8,3.5 L0,7" fill="#FF6B00"/></marker>
+            </defs>
+          </svg>
+        </div>
+      </div>
+      <div class="callout-tip" style="font-size:0.92rem">
         <h4>まとめ②：取り込んだあと ── 音を「作る」「分析する」（別の話）</h4>
         <p style="margin:0">⑤⑥⑦は，デジタル化とは <strong>別のテーマ</strong>。すでにある（または作った）デジタルの音を <strong>作り出したり・調べたり</strong> する技術。</p>
         <ul class="point-list" style="margin-top:0.5rem">
