@@ -1323,7 +1323,7 @@ magnitude <span class="op">=</span> np.<span class="fn">abs</span>(fft[:WINDOW <
 
     <div class="callout-danger">
       <h4>環境構築の変更: Python 3.10 が必要です</h4>
-      <p style="font-size:0.9rem">今回使用する <code>pydub</code> は Python 3.12 との互換性に問題があるため、<strong>Python 3.10.x</strong> で仮想環境を作り直してください。また <code>ffmpeg</code> のインストールが必要です。</p>
+      <p style="font-size:0.9rem">今回使用する <code>pydub</code> は Python 3.12 との互換性に問題があるため、<strong>Python 3.10.x</strong> で仮想環境を作り直してください。（<code>ffmpeg</code> は前回の演習でインストール済み）</p>
     </div>
 
     <pre><span class="code-label">Bash ── 環境構築</span>
@@ -1333,11 +1333,17 @@ magnitude <span class="op">=</span> np.<span class="fn">abs</span>(fft[:WINDOW <
 uv venv <span class="op">--</span>python <span class="num">3.10</span>
 <span class="fn">source</span> .venv/bin/activate
 uv pip install pydub py5 simpleaudio jupyterlab sounddevice
-brew install ffmpeg</pre>
+<span class="cmt"># VSCode を no6 フォルダで開く</span>
+<span class="fn">code</span> .</pre>
 
     <div class="callout-info">
       <h4>ffmpegとは？</h4>
       <p style="font-size:0.9rem"><code>ffmpeg</code> は動画・音声を変換するコマンドラインツールです。pydubがMP3やWAVなどのファイルを読み書きするために内部で使用します。<strong>前回の演習でインストール済み</strong>のため，今回あらためてインストールする必要はありません（未インストールの場合のみ <code>brew install ffmpeg</code> を実行）。</p>
+    </div>
+    <div style="background:#0a1a0a;border:2px solid #76B900;border-radius:10px;padding:1rem 1.2rem;margin-top:1rem">
+      <h4 style="color:#76B900;margin:0 0 0.4rem">🎵 サンプル音源をダウンロード</h4>
+      <p style="margin:0 0 0.6rem;font-size:0.9rem">標準課題で使う <code>sample.mp3</code>（ドレミ＋和音・約5秒）をダウンロードし，<code>no6</code> フォルダの中に置いてください。コードからは <code>"sample.mp3"</code> で読み込みます。</p>
+      <a href="sample.mp3" download style="display:inline-block;background:#76B900;color:#0a0a0a;font-weight:700;text-decoration:none;padding:0.5rem 1.1rem;border-radius:8px;font-size:0.95rem">⬇ sample.mp3 をダウンロード</a>
     </div>
   </div>
 </section>
@@ -1347,8 +1353,9 @@ brew install ffmpeg</pre>
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">1</div>
-      <h2>Step 1: MP3ファイルを再生する（約15分）</h2>
+      <h2>Step 1: MP3ファイルを再生する</h2>
     </div>
+    <div style="background:#0a1a2e;border:1px solid #4FC3F7;border-radius:8px;padding:0.5rem 0.9rem;margin:0.6rem 0;font-size:0.9rem;color:#cfe8ff">📄 作成するファイル：<code>step1_mp3.py</code></div>
 
     <div class="card" style="border-left:4px solid #76B900">
       <div class="card-header">
@@ -1484,8 +1491,9 @@ combined <span class="op">=</span> clip <span class="op">+</span> reversed_clip
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">2</div>
-      <h2>Step 2: 周波数を指定して音を作る（約15分）</h2>
+      <h2>Step 2: 周波数を指定して音を作る</h2>
     </div>
+    <div style="background:#0a1a2e;border:1px solid #4FC3F7;border-radius:8px;padding:0.5rem 0.9rem;margin:0.6rem 0;font-size:0.9rem;color:#cfe8ff">📄 作成するファイル：<code>step2_sine.py</code></div>
 
     <div class="card" style="border-left:4px solid #76B900">
       <div class="card-header">
@@ -1560,8 +1568,9 @@ melody <span class="op">=</span> AudioSegment.<span class="fn">silent</span>(dur
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#4FC3F7">3</div>
-      <h2>Step 3: キーボードピアノ + std6-1（約25分）</h2>
+      <h2>Step 3: キーボードピアノ + std6-1</h2>
     </div>
+    <div style="background:#0a1a2e;border:1px solid #4FC3F7;border-radius:8px;padding:0.5rem 0.9rem;margin:0.6rem 0;font-size:0.9rem;color:#cfe8ff">📄 作成するファイル：<code>std6-1.py</code></div>
 
     <div class="card standard">
       <div class="card-header">
@@ -1661,8 +1670,9 @@ py5.<span class="fn">run_sketch</span>()</pre>
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">4</div>
-      <h2>Step 4: FFTで音を可視化する（約25分）</h2>
+      <h2>Step 4: FFTで音を可視化する</h2>
     </div>
+    <div style="background:#0a1a2e;border:1px solid #4FC3F7;border-radius:8px;padding:0.5rem 0.9rem;margin:0.6rem 0;font-size:0.9rem;color:#cfe8ff">📄 作成するファイル：<code>step4_fft.py</code></div>
 
     <div class="card" style="border-left:4px solid #76B900">
       <div class="card-header">
@@ -1753,8 +1763,9 @@ py5.<span class="fn">run_sketch</span>()</pre>
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">5</div>
-      <h2>Step 5: 和音の秘密（約15分）</h2>
+      <h2>Step 5: 和音の秘密</h2>
     </div>
+    <div style="background:#0a1a2e;border:1px solid #4FC3F7;border-radius:8px;padding:0.5rem 0.9rem;margin:0.6rem 0;font-size:0.9rem;color:#cfe8ff">📄 作成するファイル：<code>step5_chord.py</code></div>
 
     <div class="card" style="border-left:4px solid #76B900">
       <div class="card-header">
@@ -1816,8 +1827,9 @@ dissonance <span class="op">=</span> do.<span class="fn">apply_gain</span>(<span
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#4FC3F7">6</div>
-      <h2>Step 6: インタラクティブ音実験 + std6-2, std6-3（約25分）</h2>
+      <h2>Step 6: インタラクティブ音実験 + std6-2, std6-3</h2>
     </div>
+    <div style="background:#0a1a2e;border:1px solid #4FC3F7;border-radius:8px;padding:0.5rem 0.9rem;margin:0.6rem 0;font-size:0.9rem;color:#cfe8ff">📄 作成するファイル：<code>std6-2.py / std6-3.py</code></div>
 
     <div class="card standard">
       <div class="card-header">
