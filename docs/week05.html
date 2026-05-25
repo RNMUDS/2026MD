@@ -1624,7 +1624,7 @@ result <span class="op">=</span> <span class="fn">average</span>(<span class="nu
       <div class="concept-box">
         <h4>3つの基本ループ</h4>
         <ol style="padding-left:1.5rem;font-size:0.95rem">
-          <li><strong>指示</strong>: やりたいことを日本語で書く</li>
+          <li><strong>指示</strong>: やりたいことを言葉で書く（日本語でも英語でもOK・自分が書きやすい言語で）</li>
           <li><strong>確認</strong>: AIが書いたコードを <strong>読む</strong> ．分からなければ説明させる</li>
           <li><strong>修正</strong>: 動かなければ・期待と違えば，差分を言葉で指示</li>
         </ol>
@@ -1642,20 +1642,16 @@ result <span class="op">=</span> <span class="fn">average</span>(<span class="nu
       </ul>
 
       <h4 style="color:#76B900;margin-top:1rem">注意点（初心者ほど大事）</h4>
-      <div class="callout-danger">
-        <h4>1. 読まないコードは動かさない</h4>
-        <p>AI 出力をコピーして即実行しない．特に <code>rm</code>，<code>sudo</code>，パッケージインストール，ファイル書き換えは <strong>1行ずつ意味を確認</strong> ．</p>
-      </div>
       <div class="callout-warning">
-        <h4>2. AIは「もっともらしい嘘」をつく（ハルシネーション）</h4>
+        <h4>1. ハルシネーション</h4>
         <p>存在しない関数名やライブラリを <strong>堂々と書く</strong> ことがある．<strong>必ず公式ドキュメントで検索</strong> するか，実際に実行して確認．</p>
       </div>
       <div class="callout-warning">
-        <h4>3. 「動いたから正しい」とは限らない</h4>
+        <h4>2. 「動いたから正しい」とは限らない</h4>
         <p>動くがロジックが間違っているコードはよくある．境界値（0・空リスト・最大値）を試して期待通りか確認．</p>
       </div>
       <div class="callout-warning">
-        <h4>4. 自分で書く練習を捨てない</h4>
+        <h4>3. 自分で書く練習を捨てない</h4>
         <p>すべて AI に書かせると <strong>基礎力が育たない</strong> ．基礎が無いと AI の出力を <strong>評価できなくなる</strong> ．今日の Task 1（関数の口頭確認）はその基礎．</p>
       </div>
       <div class="callout-tip">
@@ -2026,6 +2022,7 @@ ffmpeg -i 元のファイル名.mov -vcodec h264 -b:v 1000k 作成するファ�
     <div class="card standard">
       <div class="card-header">
         <h3>3-1. 加速度センサと時系列データの基礎</h3>
+        <span class="tag tag-standard">std5-2</span>
         <span class="tag tag-standard">解説</span>
       </div>
 
@@ -2070,7 +2067,7 @@ timestamp,AccY
         <span class="tag tag-standard">実習</span>
       </div>
 
-      <p>opencode に対して下のことを <strong>自分の言葉で</strong> 指示する．プロンプト例は参考のみ．そのままコピーせず，自分の文に直してから使うとよい．<strong>個人で取り組むが，グループ内で詰まりは共有する</strong>．</p>
+      <p>opencode に対して下のことを <strong>自分の言葉で</strong> 指示する．<strong>個人で取り組むが，グループ内で詰まりは共有する</strong>．</p>
 
       <div class="concept-box">
         <h4>用意するもの（下のリンクからダウンロード → <code>~/MD1/no5/</code> に置く）</h4>
@@ -2139,10 +2136,11 @@ timestamp,AccY
     </div>
 
     <!-- 3-3: Step B 移動平均 -->
-    <div class="card advanced">
+    <div class="card standard">
       <div class="card-header">
         <h3>3-3. Step B: 移動平均で「なめらか」にする</h3>
-        <span class="tag tag-advanced">実習</span>
+        <span class="tag tag-standard">std5-2</span>
+        <span class="tag tag-standard">実習</span>
       </div>
 
       <p>Step A の UFO はガタガタして見づらい．これを <strong>移動平均法（moving average）</strong> でなめらかにする．移動平均は <strong>時系列処理の最も基本的なスムージング手法</strong>．</p>
