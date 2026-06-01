@@ -1564,6 +1564,36 @@ combined <span class="op">=</span> clip <span class="op">+</span> reversed_clip
       <div class="try-it">
         <h4>やってみよう</h4>
         <p>MP3ファイルの読み込みと加工を試しましょう。切り出す長さや音量 (<code>apply_gain</code>) を変えてみてください。結果の音声情報をNotionに記録してください。</p>
+
+        <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:0.7rem;font-size:0.88rem">
+          <p style="color:#93D500;font-weight:700;margin:0 0 0.4rem">📝 Notion に書く例（参考）</p>
+
+          <p style="margin:0.3rem 0 0.2rem"><strong>① 元ファイルの基本情報</strong>（読み込み直後の <code>audio</code> から）</p>
+          <ul class="point-list" style="margin:0.2rem 0 0.5rem">
+            <li><code>audio.duration_seconds</code> → 例: 4.85 秒</li>
+            <li><code>audio.frame_rate</code> → 例: 44100 Hz</li>
+            <li><code>audio.channels</code> → 例: 2（ステレオ）</li>
+            <li><code>audio.dBFS</code> → 例: -18.2 dBFS（基準からの音量レベル）</li>
+          </ul>
+
+          <p style="margin:0.5rem 0 0.2rem"><strong>② 試した条件と結果（表）</strong></p>
+          <table style="font-size:0.82rem;margin-top:0.2rem">
+            <tr><th>試した内容</th><th>コード</th><th>長さ</th><th>音量 (dBFS)</th><th>聞いた印象</th></tr>
+            <tr><td>そのまま</td><td><code>audio</code></td><td>4.85秒</td><td>-18.2</td><td>普通の音量</td></tr>
+            <tr><td>最初の1秒だけ</td><td><code>audio[:1000]</code></td><td>1.00秒</td><td>-18.2</td><td>ぶつ切り、ドだけ残る</td></tr>
+            <tr><td>3秒＋逆再生を連結</td><td><code>clip + clip.reverse()</code></td><td>6.00秒</td><td>-18.2</td><td>行って戻る感じ</td></tr>
+            <tr><td>音量を10下げる</td><td><code>audio.apply_gain(-10)</code></td><td>4.85秒</td><td>-28.2</td><td>はっきり小さくなる</td></tr>
+            <tr><td>音量を20下げる</td><td><code>audio.apply_gain(-20)</code></td><td>4.85秒</td><td>-38.2</td><td>ほぼ聞こえない</td></tr>
+            <tr><td>音量を+5上げる</td><td><code>audio.apply_gain(5)</code></td><td>4.85秒</td><td>-13.2</td><td>少しうるさい</td></tr>
+          </table>
+
+          <p style="margin:0.6rem 0 0.2rem"><strong>③ 気づいたこと（2〜3行で自由記述）</strong></p>
+          <ul class="point-list" style="margin:0.2rem 0 0">
+            <li><code>apply_gain(-10)</code> で dBFS がぴったり -10 下がった ──「デシベルは差の単位」だと体感できた</li>
+            <li><code>audio[:1000]</code> の単位は<strong>ミリ秒</strong>。秒だと思って <code>audio[:3]</code> と書くと 3ms＝ほぼ無音になる</li>
+            <li>ゲインをマイナスに大きく振ると無音に近づき、プラスに振ると<strong>クリッピング</strong>（音割れ）の可能性がある</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
