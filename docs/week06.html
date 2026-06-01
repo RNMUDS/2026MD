@@ -1836,6 +1836,15 @@ py5.<span class="fn">run_sketch</span>()</pre>
         <p style="margin:0.6rem 0 0;font-size:0.88rem;color:#cfe8b0">画面の <strong>左端ぎりぎりに小さな棒</strong> が見えるだけで，あとは真っ黒。これは正常な動作で，以下の3つが理由：(1) 横軸は <strong>0〜22,050 Hz</strong>（サンプリング周波数の半分）まで広がっているのに，音楽の主要成分は <strong>数百 Hz</strong> しかない → 左端に押し込まれる，(2) <code>samples[:WINDOW]</code> は曲の <strong>最初の約93 ms</strong> しか見ていない，(3) 最大ピークは <strong>≒ 258 Hz</strong>（C4「ド」≒ 261.63 Hz に対応）に立っているが画面端のため目立ちにくい。<strong>表示範囲を 0〜2000 Hz に絞る／最大音量の区間を選ぶ</strong> などの改良で見やすくできる（発展課題 adv6-1 のヒント）。</p>
       </div>
 
+      <div style="background:#0a0a0a;border:1px dashed #4FC3F7;border-radius:10px;padding:0.9rem 1rem;margin:0.8rem 0">
+        <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.6rem">
+          <span style="background:#4FC3F7;color:#0a0a0a;font-size:0.7rem;font-weight:700;padding:0.15rem 0.55rem;border-radius:4px">補足：改良するとこう見える</span>
+          <span style="font-size:0.85rem;color:#999">表示範囲 0〜2000Hz × 最大音量区間 × 軸ラベル付き</span>
+        </div>
+        <img src="images/week06_fft_spectrum_improved.png" alt="FFTスペクトル（改良版）" style="width:100%;border-radius:8px;border:1px solid #333">
+        <p style="margin:0.6rem 0 0;font-size:0.88rem;color:#cfe8ff">上のコードに次の3つの改良を加えた参考画像：① 曲の中で <strong>最も音量が大きい4096サンプル</strong> を自動的に選ぶ → サビなど見たい部分を解析できる。② 横軸を <strong>0〜2000 Hz</strong> に絞る → 音楽の主要帯域だけ表示されてピークがはっきり見える。③ <strong>軸ラベル・目盛り・ピーク注釈</strong> を描き足す → 何 Hz の音がどれだけ強いかが読み取れる。最大ピーク <strong>≒ 291 Hz</strong>（D4「レ」≒ 293.66 Hz）が立っている。<br><span style="color:#999">発展課題 adv6-1 で自分のビジュアライザを作るときの参考に。</span></p>
+      </div>
+
       <div class="callout-info">
         <h4>コードの読み方</h4>
         <ul class="point-list" style="margin-top:0.5rem">
