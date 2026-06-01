@@ -566,14 +566,14 @@ body { padding-top: 2.2rem; }
       <div class="submission-items">
         <a href="#sec-task0" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-pre">予習</span>Task 0<br>音のデジタル化・正弦波・FFT・和音を熟読</a>
         <a href="#sec-task1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-group">口頭試問</span>Task 1<br>音とFFTの理解を口頭確認（第1回 Q1〜Q5・第2回 Q6〜Q10）</a>
-        <a href="#sec-std6-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std6-1<br>キーボードピアノ（.py）</a>
+        <a href="#sec-std6-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std6-1<br>キーボードピアノ（コードをNotionに貼り→PDF）</a>
         <a href="#sec-adv-vkb" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv6-2<br>ビジュアルキーボードピアノ（.py）</a>
         <a href="#sec-adv-mi-contest" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv6-4<br>「ミ」(E4) 正確さ対決（グループ・Notion→PDF）</a>
         <a href="#sec-adv-painter" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv6-3<br>サウンドペインター（Notionレポート→PDF）</a>
         <a href="#sec-adv" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv6-1<br>オリジナル・サウンドビジュアライザ（mp4＋PDF）</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.85rem;color:#93D500">
-        <strong>提出方法:</strong> std6-1 / adv6-2 は <strong>Pythonスクリプト（.py）</strong>、adv6-3 / adv6-4 は <strong>Notion で作成 → PDFにエクスポート</strong> → いずれも Google Classroom に提出．Task 0・Task 1 は <strong>Notion に記録</strong> する．
+        <strong>提出方法:</strong> <strong>標準課題まで</strong>（Task 0 予習・Task 1 口頭試問・<strong>std6-1 コード</strong>・Step 5 不協和音実験）は<strong>1つの Notion ページにまとめ → PDFにエクスポート → Google Classroom に提出</strong>．発展課題は別ファイル（adv6-2 は <code>.py</code>、adv6-3 / adv6-4 は別の Notion PDF、adv6-1 は <code>.mp4</code> ＋ 別の Notion PDF）．
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:0.5rem;font-size:0.85rem;color:#E0E0E0">
         <strong>📅 提出期限:</strong><br>
@@ -585,8 +585,8 @@ body { padding-top: 2.2rem; }
         欠席等でグループワークに参加できなかった場合は，<strong>すべての問い（Task 0 の予習チェック・Task 1 の口頭試問 第1回 Q1〜Q5・第2回 Q6〜Q10）を自分で解答し</strong> ，Notion に記録して提出すること．
       </div>
       <details style="background:#0a1a0a;border:2px solid #76B900;border-radius:12px;padding:1rem 1.3rem;margin-top:0.8rem">
-        <summary style="color:#76B900;font-size:1.0rem;font-weight:700;cursor:pointer">📝 提出用 Notion テンプレート（第6回まとめ ── 予習＋口頭試問＋実験記録を1ページに）</summary>
-        <p style="margin:0.7rem 0 0.4rem;font-size:0.88rem;color:#cfe8b0">この1ページに <strong>Task 0（予習）・Task 1（口頭試問）・Step 5 不協和音実験</strong> を記入し，<strong>PDF にエクスポート</strong>して提出する（std6-1 と発展課題 adv6-2 は .py を Classroom に提出，adv6-3 は別途 Notion レポートを PDF にして提出）．</p>
+        <summary style="color:#76B900;font-size:1.0rem;font-weight:700;cursor:pointer">📝 提出用 Notion テンプレート（第6回まとめ ── 予習＋口頭試問＋std6-1コード＋実験記録を1ページに）</summary>
+        <p style="margin:0.7rem 0 0.4rem;font-size:0.88rem;color:#cfe8b0">この1ページに <strong>Task 0（予習）・Task 1（口頭試問）・std6-1（標準課題）コード・Step 5 不協和音実験</strong> を記入し，<strong>PDF にエクスポート</strong>して提出する（発展課題は別ファイル：adv6-2 は <code>.py</code>，adv6-3 / adv6-4 は別の Notion PDF，adv6-1 は <code>.mp4</code>＋別 Notion PDF）．</p>
 <pre style="margin:0.4rem 0"><span class="code-label">Notion テンプレート ── 第6回まとめ</span># 第6回 提出レポート（音のプログラミングとFFT）
 
 氏名:
@@ -625,6 +625,26 @@ body { padding-top: 2.2rem; }
 |        | Q        |                | ○/× |
 
 ### グループでの気づき・SAに質問したいこと
+-
+
+---
+
+## std6-1 キーボードピアノ（標準課題）
+### 完成したコード
+```python
+（std6-1.py の中身をここに貼り付け）
+```
+
+### 動作確認
+- 鍵盤の描画: ○ / ×
+- 1オクターブ目の音再生（a/s/d/f/g/h/j/k）: ○ / ×
+- 2オクターブ目の音再生（q/w/e/r/t/y/u/i）: ○ / ×
+- 押された鍵盤のハイライト: ○ / ×
+
+### スクリーンショット（任意）
+（実行画面のスクショを貼り付け）
+
+### 工夫した点・つまずいた点
 -
 
 ---
@@ -1399,7 +1419,7 @@ body { padding-top: 2.2rem; }
     <div class="card" style="border-left:4px solid #4FC3F7">
       <p style="margin:0 0 0.6rem">予習で学んだ知識を使い，下の実習ステップ（Step 1〜5）を順に進めながら <strong>標準課題</strong> を完成させる。まず環境を整えてから Step 1 へ。</p>
       <ul class="point-list">
-        <li><strong>std6-1</strong>（Step 3）：キーボードピアノ（.py）── 提出必須</li>
+        <li><strong>std6-1</strong>（Step 3）：キーボードピアノ ── <strong>提出必須</strong>（コードを Notion ページに貼り付け、PDF にエクスポートして提出）</li>
         <li><span style="color:#FFB800"><strong>発展課題（任意）</strong></span>：<strong>adv6-2</strong> ビジュアルキーボードピアノ・<strong>adv6-4</strong> グループで「ミ」(E4) 正確さ対決・<strong>adv6-3</strong> サウンドペインター・<strong>adv6-1</strong> オリジナル・サウンドビジュアライザ ── すべて <a href="#sec-adv" style="color:#FFB800;text-decoration:underline">発展課題セクション</a> に掲載</li>
       </ul>
     </div>
@@ -1773,7 +1793,7 @@ current_key <span class="op">=</span> <span class="str">""</span>
 py5.<span class="fn">run_sketch</span>()</pre>
 
       <div class="notion-submit">
-        <strong>std6-1</strong> 完成したPythonスクリプト（.py）をGoogle Classroomに提出してください。鍵盤の描画とキーボード入力による2オクターブ分の音再生が動作すること。
+        <strong>std6-1</strong> 完成したコード（鍵盤の描画 + キーボード入力で2オクターブ分の音再生が動作するもの）を、Task 0・Task 1・Step 5 と同じ <strong>Notion ページに貼り付け、PDF にエクスポート</strong>して Google Classroom に提出してください（<code>.py</code> 単体での提出は不要）。
         <div style="margin-top:0.4rem;font-size:0.8rem;color:#FF6B00"><span class="sa-check-tag" style="display:inline-block;margin-left:0.5rem;background:#FF6B00;color:#fff;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px;vertical-align:middle">SA確認</span> SAさんのOKがもらえたら次に進んでください（授業時間外はSA確認不要）</div>
       </div>
     </div>
