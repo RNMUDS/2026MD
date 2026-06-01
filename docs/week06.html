@@ -1802,100 +1802,38 @@ py5.<span class="fn">run_sketch</span>()</pre>
 
 <span class="cmt"># 音声ファイルを読み込み、モノラルに変換</span>
 audio <span class="op">=</span> AudioSegment.<span class="fn">from_file</span>(<span class="str">"sample.mp3"</span>).<span class="fn">set_channels</span>(<span class="num">1</span>)
-samples <span class="op">=</span> np.<span class="fn">array</span>(audio.<span class="fn">get_array_of_samples</span>()).<span class="fn">astype</span>(np.float64)
-SR <span class="op">=</span> audio.frame_rate  <span class="cmt"># サンプリングレート (Hz)</span>
+samples <span class="op">=</span> np.<span class="fn">array</span>(audio.<span class="fn">get_array_of_samples</span>())
 
 <span class="cmt"># FFTパラメータ</span>
 WINDOW <span class="op">=</span> <span class="num">4096</span>
-
-<span class="cmt"># 最も音量が大きい4096サンプルの区間を選ぶ（無音から始まる曲でも見やすい）</span>
-hop <span class="op">=</span> WINDOW <span class="op">//</span> <span class="num">2</span>
-n_chunks <span class="op">=</span> (<span class="fn">len</span>(samples) <span class="op">-</span> WINDOW) <span class="op">//</span> hop
-energies <span class="op">=</span> [(samples[i<span class="op">*</span>hop : i<span class="op">*</span>hop <span class="op">+</span> WINDOW] <span class="op">**</span> <span class="num">2</span>).<span class="fn">sum</span>() <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n_chunks)]
-start <span class="op">=</span> <span class="fn">int</span>(np.<span class="fn">argmax</span>(energies)) <span class="op">*</span> hop
-
-<span class="cmt"># FFT を実行（前半だけ使う）</span>
-fft <span class="op">=</span> np.fft.<span class="fn">fft</span>(samples[start : start <span class="op">+</span> WINDOW])
+fft <span class="op">=</span> np.fft.<span class="fn">fft</span>(samples[:WINDOW])
 magnitude <span class="op">=</span> np.<span class="fn">abs</span>(fft[:WINDOW <span class="op">//</span> <span class="num">2</span>])
 
-<span class="cmt"># 表示する周波数の範囲（音楽の主要帯域 0〜2000Hz に絞ると見やすい）</span>
-FREQ_MAX <span class="op">=</span> <span class="num">2000</span>
-freq_resolution <span class="op">=</span> SR <span class="op">/</span> WINDOW                <span class="cmt"># 1本の bin が表す周波数幅 (Hz)</span>
-n_visible <span class="op">=</span> <span class="fn">int</span>(FREQ_MAX <span class="op">/</span> freq_resolution)  <span class="cmt"># 描画する bin の数</span>
-mag <span class="op">=</span> magnitude[:n_visible]
-peak_i <span class="op">=</span> <span class="fn">int</span>(np.<span class="fn">argmax</span>(mag))
-peak_freq <span class="op">=</span> peak_i <span class="op">*</span> freq_resolution
-
-<span class="cmt"># 描画領域の余白（軸ラベルを描くスペース）</span>
-PAD_L, PAD_R, PAD_T, PAD_B <span class="op">=</span> <span class="num">60</span>, <span class="num">20</span>, <span class="num">42</span>, <span class="num">48</span>
-
 <span class="kw">def</span> <span class="fn">setup</span>():
-    py5.<span class="fn">size</span>(<span class="num">900</span>, <span class="num">450</span>)
+    py5.<span class="fn">size</span>(<span class="num">800</span>, <span class="num">400</span>)
     py5.<span class="fn">color_mode</span>(py5.HSB, <span class="num">255</span>)
     py5.<span class="fn">no_loop</span>()
 
 <span class="kw">def</span> <span class="fn">draw</span>():
-    py5.<span class="fn">background</span>(<span class="num">10</span>)
-    bottom <span class="op">=</span> py5.height <span class="op">-</span> PAD_B
-    top    <span class="op">=</span> PAD_T
+    py5.<span class="fn">background</span>(<span class="num">0</span>)
 
-    <span class="cmt"># 横グリッド（縦軸のメモリ）</span>
-    py5.<span class="fn">stroke</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">45</span>)
-    py5.<span class="fn">stroke_weight</span>(<span class="num">1</span>)
-    <span class="kw">for</span> k <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">5</span>):
-        gy <span class="op">=</span> bottom <span class="op">-</span> (bottom <span class="op">-</span> top) <span class="op">*</span> k <span class="op">/</span> <span class="num">4</span>
-        py5.<span class="fn">line</span>(PAD_L, gy, py5.width <span class="op">-</span> PAD_R, gy)
-
-    <span class="cmt"># スペクトルを棒グラフとして描画（周波数 → 色 HSB）</span>
-    max_mag <span class="op">=</span> mag.<span class="fn">max</span>()
-    py5.<span class="fn">stroke_weight</span>(<span class="num">2</span>)
-    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(mag)):
-        x <span class="op">=</span> py5.<span class="fn">remap</span>(i, <span class="num">0</span>, <span class="fn">len</span>(mag), PAD_L, py5.width <span class="op">-</span> PAD_R)
-        y <span class="op">=</span> py5.<span class="fn">remap</span>(mag[i], <span class="num">0</span>, max_mag, bottom, top)
+    <span class="cmt"># スペクトルを棒グラフとして描画</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">0</span>, <span class="fn">len</span>(magnitude), <span class="num">8</span>):
+        x <span class="op">=</span> py5.<span class="fn">remap</span>(i, <span class="num">0</span>, <span class="fn">len</span>(magnitude), <span class="num">0</span>, py5.width)
+        y <span class="op">=</span> py5.<span class="fn">remap</span>(magnitude[i], <span class="num">0</span>, magnitude.<span class="fn">max</span>(), py5.height, <span class="num">0</span>)
         <span class="cmt"># 色を周波数に応じて変化させる（HSBカラー）</span>
-        hue <span class="op">=</span> py5.<span class="fn">remap</span>(i, <span class="num">0</span>, <span class="fn">len</span>(mag), <span class="num">0</span>, <span class="num">220</span>)
-        py5.<span class="fn">stroke</span>(hue, <span class="num">220</span>, <span class="num">255</span>)
-        py5.<span class="fn">line</span>(x, bottom, x, y)
-
-    <span class="cmt"># 軸の枠</span>
-    py5.<span class="fn">stroke</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">120</span>)
-    py5.<span class="fn">line</span>(PAD_L, top, PAD_L, bottom)
-    py5.<span class="fn">line</span>(PAD_L, bottom, py5.width <span class="op">-</span> PAD_R, bottom)
-
-    <span class="cmt"># 周波数軸の目盛りラベル（250 Hz おき）</span>
-    py5.<span class="fn">no_stroke</span>()
-    py5.<span class="fn">fill</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">180</span>)
-    py5.<span class="fn">text_size</span>(<span class="num">11</span>)
-    py5.<span class="fn">text_align</span>(py5.CENTER, py5.TOP)
-    <span class="kw">for</span> hz <span class="kw">in</span> <span class="fn">range</span>(<span class="num">0</span>, FREQ_MAX <span class="op">+</span> <span class="num">1</span>, <span class="num">250</span>):
-        x <span class="op">=</span> py5.<span class="fn">remap</span>(hz, <span class="num">0</span>, FREQ_MAX, PAD_L, py5.width <span class="op">-</span> PAD_R)
-        py5.<span class="fn">text</span>(<span class="fn">str</span>(hz), x, bottom <span class="op">+</span> <span class="num">6</span>)
-    py5.<span class="fn">text_align</span>(py5.CENTER, py5.BOTTOM)
-    py5.<span class="fn">text</span>(<span class="str">"周波数 (Hz)　← 低い音　　高い音 →"</span>, py5.width <span class="op">/</span> <span class="num">2</span>, py5.height <span class="op">-</span> <span class="num">4</span>)
-
-    <span class="cmt"># 最大ピークを矢印で示す</span>
-    px <span class="op">=</span> py5.<span class="fn">remap</span>(peak_i, <span class="num">0</span>, <span class="fn">len</span>(mag), PAD_L, py5.width <span class="op">-</span> PAD_R)
-    py_ <span class="op">=</span> py5.<span class="fn">remap</span>(mag[peak_i], <span class="num">0</span>, max_mag, bottom, top)
-    py5.<span class="fn">fill</span>(<span class="num">38</span>, <span class="num">220</span>, <span class="num">255</span>)
-    py5.<span class="fn">text_size</span>(<span class="num">13</span>)
-    py5.<span class="fn">text_align</span>(py5.LEFT, py5.CENTER)
-    py5.<span class="fn">text</span>(<span class="str">f"最大ピーク ≒ <span class="op">{</span>peak_freq:<span class="num">.0f</span><span class="op">}</span> Hz"</span>, px <span class="op">+</span> <span class="num">12</span>, py_)
-
-    <span class="cmt"># タイトル</span>
-    py5.<span class="fn">fill</span>(<span class="num">85</span>, <span class="num">220</span>, <span class="num">255</span>)
-    py5.<span class="fn">text_size</span>(<span class="num">15</span>)
-    py5.<span class="fn">text_align</span>(py5.CENTER, py5.TOP)
-    py5.<span class="fn">text</span>(<span class="str">"FFTスペクトル（sample.mp3 の最も音量が大きい区間）"</span>, py5.width <span class="op">/</span> <span class="num">2</span>, <span class="num">10</span>)
+        py5.<span class="fn">stroke</span>(py5.<span class="fn">remap</span>(i, <span class="num">0</span>, <span class="fn">len</span>(magnitude), <span class="num">0</span>, <span class="num">255</span>), <span class="num">200</span>, <span class="num">255</span>)
+        py5.<span class="fn">line</span>(x, py5.height, x, y)
 
 py5.<span class="fn">run_sketch</span>()</pre>
 
       <div style="background:#0a0a0a;border:1px solid #2a2a2a;border-radius:10px;padding:0.9rem 1rem;margin:0.8rem 0">
         <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.6rem">
           <span style="background:#76B900;color:#0a0a0a;font-size:0.7rem;font-weight:700;padding:0.15rem 0.55rem;border-radius:4px">実行結果</span>
-          <span style="font-size:0.85rem;color:#999">sample.mp3（ドレミ＋和音・約5秒）に対して FFT を実行</span>
+          <span style="font-size:0.85rem;color:#999">800×400 の py5 ウィンドウに上のコードがそのまま描く絵</span>
         </div>
-        <img src="images/week06_fft_spectrum.png" alt="FFTスペクトル（sample.mp3）" style="width:100%;border-radius:8px;border:1px solid #333">
-        <p style="margin:0.6rem 0 0;font-size:0.88rem;color:#cfe8b0">最大ピークが <strong>≒ 291 Hz</strong>（D4「レ」≒ 293.66 Hz に対応）の位置に現れる。低音域に倍音やピアノの周辺成分も並ぶ。コードでは <code>magnitude.max()</code> を基準に正規化して棒の高さを決めるため，py5 のウィンドウでも同じ形が描かれる。</p>
+        <img src="images/week06_fft_spectrum.png" alt="FFTスペクトル（py5 実行結果）" style="width:100%;border-radius:8px;border:1px solid #333">
+        <p style="margin:0.6rem 0 0;font-size:0.88rem;color:#cfe8b0">画面の <strong>左端ぎりぎりに小さな棒</strong> が見えるだけで，あとは真っ黒。これは正常な動作で，以下の3つが理由：(1) 横軸は <strong>0〜22,050 Hz</strong>（サンプリング周波数の半分）まで広がっているのに，音楽の主要成分は <strong>数百 Hz</strong> しかない → 左端に押し込まれる，(2) <code>samples[:WINDOW]</code> は曲の <strong>最初の約93 ms</strong> しか見ていない，(3) 最大ピークは <strong>≒ 258 Hz</strong>（C4「ド」≒ 261.63 Hz に対応）に立っているが画面端のため目立ちにくい。<strong>表示範囲を 0〜2000 Hz に絞る／最大音量の区間を選ぶ</strong> などの改良で見やすくできる（発展課題 adv6-1 のヒント）。</p>
       </div>
 
       <div class="callout-info">
@@ -1903,11 +1841,7 @@ py5.<span class="fn">run_sketch</span>()</pre>
         <ul class="point-list" style="margin-top:0.5rem">
           <li><code>set_channels(1)</code> → ステレオをモノラルに変換（解析を簡単にするため）</li>
           <li><code>WINDOW = 4096</code> → 一度に解析するサンプル数。2のべき乗にするとFFTが高速</li>
-          <li><code>energies</code> で <strong>最も音量が大きい区間を選ぶ</strong> → 曲が無音から始まっても見やすい結果になる</li>
           <li><code>fft[:WINDOW // 2]</code> → FFT結果の前半だけ取る（後半は対称なので不要）</li>
-          <li><code>freq_resolution = SR / WINDOW</code> → 1本の bin が何 Hz を表すか（44100/4096 ≒ 10.77 Hz）</li>
-          <li><code>n_visible = int(FREQ_MAX / freq_resolution)</code> → 描く本数を 0〜2000Hz に絞る（音楽の主要帯域）</li>
-          <li><code>PAD_L/R/T/B</code> → 描画領域の余白。軸ラベルや目盛りを描くスペース</li>
           <li><code>remap()</code> → 値の範囲を別の範囲に変換する（py5の便利関数）</li>
         </ul>
       </div>
