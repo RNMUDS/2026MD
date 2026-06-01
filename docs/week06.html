@@ -1720,7 +1720,9 @@ current_key <span class="op">=</span> <span class="str">""</span>
 
 <span class="kw">def</span> <span class="fn">setup</span>():
     py5.<span class="fn">size</span>(<span class="num">800</span>, <span class="num">300</span>)
-    py5.<span class="fn">text_size</span>(<span class="num">20</span>)
+    <span class="cmt"># 日本語フォントを読み込む（Mac）── これを忘れると py5.text() の日本語が□（豆腐）になる</span>
+    jp_font <span class="op">=</span> py5.<span class="fn">create_font</span>(<span class="str">"Hiragino Sans"</span>, <span class="num">20</span>)
+    py5.<span class="fn">text_font</span>(jp_font)
 
 <span class="kw">def</span> <span class="fn">draw</span>():
     py5.<span class="fn">background</span>(<span class="num">30</span>)
