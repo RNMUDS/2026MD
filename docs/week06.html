@@ -2326,15 +2326,36 @@ document.querySelectorAll('pre').forEach(function(pre) {
   pre.appendChild(btn);
 });
 
-// Toggle large section headers (大見出し)
+// Toggle large section headers (大見出し) ── default = collapsed
 document.querySelectorAll('section.toggle-section').forEach(function(sec) {
   var header = sec.querySelector(':scope > .container > .section-header');
   if (!header) return;
+  sec.classList.add('collapsed');
   header.addEventListener('click', function(e) {
     if (e.target.closest('a, button, code, pre, input, select, textarea')) return;
     sec.classList.toggle('collapsed');
   });
 });
+
+// If the URL has a hash like #sec-fft, open that section automatically
+(function openHashSection() {
+  function openByHash() {
+    var id = (location.hash || '').replace(/^#/, '');
+    if (!id) return;
+    var el = document.getElementById(id);
+    if (!el) return;
+    var sec = el.closest('section.toggle-section');
+    if (sec) sec.classList.remove('collapsed');
+  }
+  openByHash();
+  window.addEventListener('hashchange', openByHash);
+  // Also open when a same-page anchor is clicked (the schedule index links)
+  document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+    a.addEventListener('click', function() {
+      setTimeout(openByHash, 0);
+    });
+  });
+})();
 
 // Click-to-copy on inline code elements
 document.querySelectorAll(':not(pre) > code').forEach(function(code) {
