@@ -336,6 +336,63 @@ details summary::before {
 details[open] summary::before { transform: rotate(90deg); }
 details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
 
+/* ============ SECTION-LEVEL TOGGLE (大見出しの開閉) ============ */
+.section-toggle {
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  background: #141414;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+.section-toggle > summary {
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.2rem;
+  background: linear-gradient(135deg, #1a1a1a, #151515);
+}
+.section-toggle > summary::-webkit-details-marker { display: none; }
+.section-toggle > summary::marker { content: ''; }
+/* 開閉インジケーター（▶ → 回転して▼） */
+.section-toggle > summary::before {
+  content: '\25B6';
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  color: #76B900;
+  transition: transform 0.2s;
+}
+.section-toggle[open] > summary::before { transform: rotate(90deg); }
+.section-toggle > summary .section-num { margin-bottom: 0; }
+.section-toggle > summary h2 {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.3;
+}
+/* 閉じている時のヒント / 開いている時の表示 */
+.section-toggle > summary::after {
+  content: 'タップで開く \25BC';
+  flex-shrink: 0;
+  margin-left: auto;
+  font-size: 0.6rem;
+  font-weight: 500;
+  color: #777;
+  white-space: nowrap;
+}
+.section-toggle[open] > summary::after { content: '閉じる \25B2'; }
+.section-toggle[open] > summary { border-bottom: 1px solid #2a2a2a; }
+.section-toggle > .toggle-body { padding: 1.5rem 1.2rem; }
+@media (max-width: 640px) {
+  .section-toggle > summary { padding: 0.8rem 0.9rem; gap: 0.5rem; }
+  .section-toggle > summary::after { content: '\25BC'; }
+  .section-toggle[open] > summary::after { content: '\25B2'; }
+  .section-toggle > .toggle-body { padding: 1.1rem 0.9rem; }
+}
+
 /* ============ WARNING / DANGER CALLOUT ============ */
 .callout-danger {
   background: rgba(255, 82, 82, 0.08);
@@ -473,6 +530,30 @@ body { padding-top: 2.2rem; }
 }
 .try-it h4::before { content: '\270F\FE0F '; }
 
+/* ============ EXECUTION RESULT (本物の実行結果) ============ */
+.result-box {
+  background: #0e1a0e;
+  border: 1px solid #4A7A00;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.result-box h4 {
+  color: #93D500; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.6rem;
+}
+.result-box h4::before { content: '\25B6\FE0F '; }
+.result-box img {
+  display: block;
+  width: 100%; max-width: 640px;
+  margin: 0 auto;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background: #fff;
+}
+.result-box .result-cap {
+  font-size: 0.8rem; color: #999; margin-top: 0.6rem; text-align: center;
+}
+
 /* ============ KEYWORD BOX ============ */
 .keyword-box {
   display: inline-flex; align-items: baseline; gap: 0.4rem;
@@ -501,9 +582,10 @@ body { padding-top: 2.2rem; }
 
 <!-- ============ SECTION NAV ============ -->
 <nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week01.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week02.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week03.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week04.html">4</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week05.html">5</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week06.html">6</a> <a style="color:#76B900;background:rgba(118,185,0,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="week07.html">7</a> </div>
-  <a href="#sec-teacher">0. 説明</a>
+  <a href="#sec-req" class="nav-assignment">要件</a>
+  <a href="#sec-example">作品例</a>
+  <a href="#sec-teacher">0. 進め方</a>
   <a href="#sec-viz">可視化の基礎</a>
-  <a href="#sec-summary">学んだこと</a>
   <a href="#sec-csv">1. CSV読み込み</a>
   <a href="#sec-patterns">可視化パターン</a>
   <a href="#sec-final" class="nav-assignment">最終課題</a>
@@ -526,8 +608,14 @@ body { padding-top: 2.2rem; }
 </header>
 
 <!-- ============ FINAL PROJECT REQUIREMENTS (冒頭) ============ -->
-<section style="padding-top:2rem;padding-bottom:0">
+<section id="sec-req" style="padding-top:2rem;padding-bottom:0">
   <div class="container">
+    <details class="section-toggle">
+      <summary>
+        <div class="section-num" style="background:#FFB800">◎</div>
+        <h2>最終課題の要件・提出・制作方法 <span style="font-size:0.5rem;color:#999;font-weight:400">── まず最初に読む</span></h2>
+      </summary>
+      <div class="toggle-body">
     <div class="card advanced" style="border-left:4px solid #FFB800;background:linear-gradient(135deg,#141414,#1a1405)">
       <div class="card-header">
         <span class="tag tag-advanced">最終課題</span>
@@ -661,12 +749,20 @@ body { padding-top: 2.2rem; }
         <p style="margin-top:0.5rem;font-size:0.9rem"><strong>理解せずに「実行できただけ」の作品は認められません。</strong>作られたコードの仕組み・内容をきちんと理解できていなければ、評価することはできません。必要に応じて<strong>口頭試問</strong>で理解を確認する場合があります。</p>
       </div>
     </div>
+      </div>
+    </details>
   </div>
 </section>
 
 <!-- ============ INTRO: DATA VIZ EXAMPLE ============ -->
-<section style="padding-top:2rem;padding-bottom:0">
+<section id="sec-example" style="padding-top:2rem;padding-bottom:0">
   <div class="container">
+    <details class="section-toggle">
+      <summary>
+        <div class="section-num" style="background:#76B900">例</div>
+        <h2>はじめに: データ可視化の作品例 <span style="font-size:0.5rem;color:#999;font-weight:400">── コービーの全シュート</span></h2>
+      </summary>
+      <div class="toggle-body">
     <div class="card" style="border-left:4px solid #76B900">
       <div class="card-header">
         <h3>はじめに: データ可視化の例 ──「コービー・ブライアントの全シュート」</h3>
@@ -693,16 +789,20 @@ body { padding-top: 2.2rem; }
         <a href="assets/kobe_shot_cleaned.csv" download style="display:inline-block;background:#76B900;color:#0a1a0a;font-weight:700;font-size:0.85rem;padding:0.45rem 1rem;border-radius:0.3rem;text-decoration:none">⬇ kobe_shot_cleaned.csv をダウンロード</a>
       </div>
     </div>
+      </div>
+    </details>
   </div>
 </section>
 
 <!-- ============ DATA VIZ BASICS (teaching) ============ -->
 <section id="sec-viz" style="padding-top:2rem;padding-bottom:0">
   <div class="container">
-    <div class="section-header">
-      <div class="section-num" style="background:#76B900">★</div>
-      <h2>データ可視化の基礎 <span style="font-size:0.5rem;color:#999;font-weight:400">── なぜ可視化し、そこから何を読み取るのか</span></h2>
-    </div>
+    <details class="section-toggle">
+      <summary>
+        <div class="section-num" style="background:#76B900">★</div>
+        <h2>データ可視化の基礎 <span style="font-size:0.5rem;color:#999;font-weight:400">── なぜ可視化し、そこから何を読み取るのか</span></h2>
+      </summary>
+      <div class="toggle-body">
 
     <p style="margin-bottom:1rem">最終課題に入る前に、<strong>そもそも「データを可視化する」とはどういうことか</strong>を整理しておこう。コービーの作品も、ただ点を並べたのではなく「年ごとの変化を見たい」という<strong>目的</strong>があった。ここでは <strong>なぜ可視化するのか → 何に注目して様子を見るのか → そこからインサイト（気づき）をどう見つけるのか</strong>を、順を追って説明する。</p>
 
@@ -872,16 +972,20 @@ body { padding-top: 2.2rem; }
       <h4>最終課題につなげると</h4>
       <p>作品を作るときは、<strong>「何を伝えたいか（目的）」→「どんな図なら様子が見えるか」→「見た人にどんな気づき（インサイト）を持ってほしいか」</strong>の順に考えると、ねらいのはっきりした作品になる。Notion の「作った目的」「設計」「施策提案／工夫した点」は、まさにこの流れを書く欄です。</p>
     </div>
+      </div>
+    </details>
   </div>
 </section>
 
 <!-- ============ 0. TEACHER EXPLANATION ============ -->
 <section id="sec-teacher">
   <div class="container">
-    <div class="section-header">
-      <div class="section-num" style="background:#76B900">0</div>
-      <h2>教員による説明</h2>
-    </div>
+    <details class="section-toggle">
+      <summary>
+        <div class="section-num" style="background:#76B900">0</div>
+        <h2>最終回の進め方と基礎知識 <span style="font-size:0.5rem;color:#999;font-weight:400">── A・Bコース／CS・DS基礎／配布データ／全7回のまとめ</span></h2>
+      </summary>
+      <div class="toggle-body">
 
     <div class="concept-box">
       <h4>最終回: これまでの技術を組み合わせて作品を作る</h4>
@@ -1138,6 +1242,8 @@ body { padding-top: 2.2rem; }
       <p style="font-size:0.85rem;color:#93D500;margin-top:1rem;text-align:center;font-weight:700">最終課題では、上記の技術から2つ以上を組み合わせて作品を制作します</p>
     </div>
 
+      </div>
+    </details>
   </div>
 </section>
 
@@ -1163,10 +1269,12 @@ body { padding-top: 2.2rem; }
 <!-- ============ 1. CSV READING ============ -->
 <section id="sec-csv">
   <div class="container">
-    <div class="section-header">
-      <div class="section-num" style="background:#76B900">1</div>
-      <h2>データの読み込み方 <span style="font-size:0.5rem;color:#999;font-weight:400">── 約15分</span></h2>
-    </div>
+    <details class="section-toggle">
+      <summary>
+        <div class="section-num" style="background:#76B900">1</div>
+        <h2>データの読み込み方 <span style="font-size:0.5rem;color:#999;font-weight:400">── 約15分</span></h2>
+      </summary>
+      <div class="toggle-body">
 
     <p style="font-size:0.95rem;margin-bottom:1rem">最終課題のベースとなるCSV読み込みのサンプルコードを3つ紹介します。コピーして動かしてみてから、自分の作品に応用してください。</p>
 
@@ -1263,9 +1371,10 @@ py5.run_sketch()</pre>
         </ul>
       </div>
 
-      <div class="try-it">
-        <h4>やってみよう</h4>
-        <p>サンプル1のコードをコピーして実行し、CSVのデータが表示されることを確認しましょう。表示行数を変えてみてください。動作確認できたらNotionに記録してください。</p>
+      <div class="result-box">
+        <h4>実行結果（このコードを実データで動かした画面）</h4>
+        <img src="assets/sample1_result.png" alt="サンプル1の実行結果: 日付とアクティブメンバー数の一覧" loading="lazy">
+        <p class="result-cap">▲ 配布データ <code>DS全体のslack利用状況.csv</code> の先頭10行を読み込んだ実際の表示（2025-05-01〜05-10 のアクティブメンバー数）。</p>
       </div>
     </div>
 
@@ -1325,9 +1434,10 @@ data = []
 
 py5.run_sketch()</pre>
 
-      <div class="try-it">
-        <h4>やってみよう</h4>
-        <p>サンプル2を実行し、平均・最大・最小が正しく表示されるか確認しましょう。列名を変えて別のデータを表示してみてください。結果をNotionに記録してください。</p>
+      <div class="result-box">
+        <h4>実行結果（このコードを実データで動かした画面）</h4>
+        <img src="assets/sample2_result.png" alt="サンプル2の実行結果: 複数列の表と平均・最大・最小" loading="lazy">
+        <p class="result-cap">▲ 先頭8日分の「日付・アクティブ・メッセージ」を並べ、下に <strong>平均 201.6人／最大 377人／最小 91人</strong> を計算して表示（すべて実データから算出した値）。</p>
       </div>
     </div>
 
@@ -1384,22 +1494,27 @@ py5.run_sketch()</pre>
         </ul>
       </div>
 
-      <div class="try-it">
-        <h4>やってみよう</h4>
-        <p>サンプル3の棒グラフを実行し、バーの色や表示するデータ列を変えてみましょう。ここから自分の最終課題の出発点にしてください。動��確認できたらNotionに記録してください。</p>
+      <div class="result-box">
+        <h4>実行結果（このコードを実データで動かした画面）</h4>
+        <img src="assets/sample3_result.png" alt="サンプル3の実行結果: アクティブメンバー数の棒グラフ" loading="lazy">
+        <p class="result-cap">▲ 先頭12日分のアクティブメンバー数を棒グラフ化した実際の描画。連休明け（5/7）に利用が急増している様子が読み取れる。ここから色やデータ列を変えて、自分の作品の出発点にしよう。</p>
       </div>
     </div>
 
+      </div>
+    </details>
   </div>
 </section>
 
 <!-- ============ PATTERNS: py5での可視化パターン集 ============ -->
 <section id="sec-patterns">
   <div class="container">
-    <div class="section-header">
-      <div class="section-num" style="background:#76B900">P</div>
-      <h2>py5 可視化パターン集 <span style="font-size:0.5rem;color:#999;font-weight:400">── 「型」を真似れば作れる</span></h2>
-    </div>
+    <details class="section-toggle">
+      <summary>
+        <div class="section-num" style="background:#76B900">P</div>
+        <h2>py5 可視化パターン集 <span style="font-size:0.5rem;color:#999;font-weight:400">── 「型」を真似れば作れる</span></h2>
+      </summary>
+      <div class="toggle-body">
 
     <p style="margin-bottom:1rem">「何を作ればいいか分からない」人へ。py5 での可視化は、実は<strong>たった1つの“型”の繰り返し</strong>でできています。まず共通の型を覚え、あとは下の<strong>パターン</strong>から作りたい見た目を選んで真似るだけ。各パターンに<strong>動く図</strong>と<strong>コードの骨子</strong>を付けました。コピーして数字を変えるところから始めよう。</p>
 
@@ -1771,16 +1886,20 @@ mode = <span class="num">0</span>
       <h4>パターンは「組み合わせる」と作品になる</h4>
       <p>1つで終わらせず、重ねるほど良くなります。例: <strong>棒グラフ（P1）＋ アニメーション（P7）＋ マウス操作（P8）</strong> → 「マウスを動かすと月が切り替わり、棒がにゅっと伸びる」インタラクティブ作品に。まずは1パターンを動かし、慣れたら1つずつ足していこう。</p>
     </div>
+      </div>
+    </details>
   </div>
 </section>
 
 <!-- ============ 2. FINAL PROJECT ============ -->
 <section id="sec-final">
   <div class="container">
-    <div class="section-header">
-      <div class="section-num" style="background:#FFB800">2</div>
-      <h2>最終課題制作 <span style="font-size:0.5rem;color:#999;font-weight:400">── 約120分+</span></h2>
-    </div>
+    <details class="section-toggle">
+      <summary>
+        <div class="section-num" style="background:#FFB800">2</div>
+        <h2>最終課題制作 <span style="font-size:0.5rem;color:#999;font-weight:400">── 約120分+</span></h2>
+      </summary>
+      <div class="toggle-body">
 
     <!-- A/B 選択イントロ -->
     <div class="card advanced">
@@ -1936,16 +2055,20 @@ mode = <span class="num">0</span>
       </div>
     </div>
 
+      </div>
+    </details>
   </div>
 </section>
 
 <!-- ============ GROUP WORK: 中間発表 ============ -->
 <section id="sec-group">
   <div class="container">
-    <div class="section-header">
-      <div class="section-num" style="background:#93D500">G</div>
-      <h2>グループワーク: 中間発表 <span style="font-size:0.5rem;color:#999;font-weight:400">── 途中経過を見せ合ってフィードバック</span></h2>
-    </div>
+    <details class="section-toggle">
+      <summary>
+        <div class="section-num" style="background:#93D500">G</div>
+        <h2>グループワーク: 中間発表 <span style="font-size:0.5rem;color:#999;font-weight:400">── 途中経過を見せ合ってフィードバック</span></h2>
+      </summary>
+      <div class="toggle-body">
 
     <div class="card group">
       <div class="card-header">
@@ -1982,6 +2105,8 @@ mode = <span class="num">0</span>
         <p style="font-size:0.9rem">この中間発表は<strong>グループ内で行う活動で、提出するものは特にありません</strong>。気軽に見せ合い、フィードバックを楽しんでください。（提出が必要なのは最終課題のみです。）</p>
       </div>
     </div>
+      </div>
+    </details>
   </div>
 </section>
 
@@ -2026,6 +2151,28 @@ document.querySelectorAll(':not(pre) > code').forEach(function(code) {
       }, 1500);
     });
   });
+});
+
+// 大見出しトグル: アンカー遷移時に対象セクションを自動で開く
+function openToggleForHash() {
+  var hash = location.hash;
+  if (!hash || hash.length < 2) return;
+  var target;
+  try { target = document.querySelector(hash); } catch (e) { return; }
+  if (!target) return;
+  var details = target.closest('details.section-toggle')
+    || target.querySelector('details.section-toggle')
+    || (target.matches && target.matches('details.section-toggle') ? target : null);
+  if (!details) return;
+  if (!details.open) details.open = true;
+  // 開いてレイアウトが変わった後に対象位置へスクロール
+  requestAnimationFrame(function() { target.scrollIntoView({ block: 'start' }); });
+}
+window.addEventListener('hashchange', openToggleForHash);
+window.addEventListener('DOMContentLoaded', openToggleForHash);
+// 同じハッシュを再クリックした場合にも反応させる
+document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+  a.addEventListener('click', function() { setTimeout(openToggleForHash, 0); });
 });
 </script>
 
