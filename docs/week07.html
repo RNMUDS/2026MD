@@ -501,12 +501,13 @@ body { padding-top: 2.2rem; }
 
 <!-- ============ SECTION NAV ============ -->
 <nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week01.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week02.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week03.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week04.html">4</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week05.html">5</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="week06.html">6</a> <a style="color:#76B900;background:rgba(118,185,0,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="week07.html">7</a> </div>
-  <a href="#sec-schedule">日程</a>
   <a href="#sec-teacher">0. 説明</a>
+  <a href="#sec-viz">可視化の基礎</a>
   <a href="#sec-summary">学んだこと</a>
   <a href="#sec-csv">1. CSV読み込み</a>
+  <a href="#sec-patterns">可視化パターン</a>
   <a href="#sec-final" class="nav-assignment">最終課題</a>
-  <a href="#sec-notion">Notion</a>
+  <a href="#sec-group">中間発表</a>
 </nav>
 
 <!-- ============ HERO ============ -->
@@ -523,6 +524,145 @@ body { padding-top: 2.2rem; }
     </div>
   </div>
 </header>
+
+<!-- ============ FINAL PROJECT REQUIREMENTS (冒頭) ============ -->
+<section style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div class="card advanced" style="border-left:4px solid #FFB800;background:linear-gradient(135deg,#141414,#1a1405)">
+      <div class="card-header">
+        <span class="tag tag-advanced">最終課題</span>
+        <h3>最終課題の要件 ──「py5 でデータを可視化する作品」をつくる</h3>
+      </div>
+      <p>この回の課題は、<strong>第1回〜第6回で学んだ技術を使って、py5 でデータの可視化作品を1つ制作する</strong>こと。まずは「どんな条件で作るのか」を確認しよう。</p>
+
+      <div style="background:linear-gradient(135deg,#1a2e0a,#0a1a0a);border:2px solid #76B900;border-radius:10px;padding:0.9rem 1.1rem;margin:0.8rem 0">
+        <div style="font-weight:900;color:#76B900;font-size:1rem;margin-bottom:0.3rem">共通ルール: 可視化は必ず py5 で作ること</div>
+        <p style="font-size:0.9rem;margin:0">いろいろなライブラリを使って可視化したい気持ちは分かりますが、<strong>この課題では全員共通のルールとして「py5 を必ず使う」ことを条件</strong>とします。グラフや図の描画は matplotlib などではなく、<strong>py5 の描画機能で行ってください</strong>。<br><span style="font-size:0.82rem;color:#93D500">※ データの読み込みや音の処理に他のライブラリ（<code>csv</code> / <code>pydub</code> など）を<strong>併用</strong>するのはOK。あくまで「見せる（可視化）部分は py5」が条件です。</span></p>
+      </div>
+
+      <div class="callout-warning" style="margin:0.8rem 0">
+        <h4>第7回に通常の週課題はありません</h4>
+        <p style="font-size:0.9rem"><strong>第7回の提出物はこの「最終課題」だけ</strong>です。これまでのような小課題（基礎・標準・発展）は出しません。残りの時間はすべて、<strong>最終課題の制作に専念</strong>してください。</p>
+      </div>
+
+      <div class="callout-tip" style="margin:0.8rem 0">
+        <h4>授業の終盤に「中間発表」を行います</h4>
+        <p style="font-size:0.9rem">第7回の<strong>授業終盤</strong>に、途中まででOKなので<strong>作品をグループ内でプレゼンテーション</strong>し、お互いにフィードバックし合う時間を取ります（提出物はありません）。それまでに「見せられる状態」を目指して制作を進めましょう。→ <a href="#sec-group" style="color:#93D500;font-weight:700">中間発表の詳細</a></p>
+      </div>
+
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.6rem 1rem;margin:0.8rem 0;font-size:0.85rem;color:#FFB800">
+        <strong>提出期限:</strong> 6/15(月) 13:10 まで（Notion をまとめた PDF ＋ 実行画面の mp4 動画 の 2ファイル）
+      </div>
+
+      <!-- 必須条件 / 推奨条件 -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:0.6rem;margin:1rem 0">
+        <div style="background:#1A1A1A;border:2px solid #76B900;border-radius:0.5rem;padding:0.9rem">
+          <div style="font-weight:700;color:#76B900;font-size:0.95rem;margin-bottom:0.5rem">必須条件（どちらも満たすこと）</div>
+          <ul class="point-list" style="margin:0">
+            <li><strong>py5 のライブラリを使う</strong> こと（描画・アニメーションなど py5 で表現する）</li>
+            <li><strong>何らかのデータを可視化する</strong> こと（数値の表ではなく、図形・色・位置などで見せる）</li>
+          </ul>
+        </div>
+        <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:0.5rem;padding:0.9rem">
+          <div style="font-weight:700;color:#FFB800;font-size:0.95rem;margin-bottom:0.5rem">推奨条件（あるとなお良い・加点対象）</div>
+          <ul class="point-list" style="margin:0">
+            <li><strong>マウスやキーボードでインタラクティブに操作できる</strong> こと<br>
+              <span style="font-size:0.8rem;color:#999">（例: マウスの位置で表示する年やカテゴリが切り替わる／キー入力でグラフの種類を切り替える／クリックした点の詳細が出る、など「触ると反応する」しくみ）</span></li>
+            <li><strong>データが動的に変化する</strong> こと<br>
+              <span style="font-size:0.8rem;color:#999">（例: マウスやキーの操作で<strong>時系列の変化</strong>をたどれる／時間の経過とともにグラフが動く・アニメーションするなど、静止画ではなく「動き」で変化が見えるしくみ）</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout-tip" style="margin-top:0.6rem">
+        <h4>さらに加点の対象になる観点</h4>
+        <p style="font-size:0.9rem;margin-bottom:0.3rem">上の必須・推奨を満たしたうえで、次のような点も評価します。</p>
+        <ul class="point-list" style="margin:0">
+          <li><strong>わかりやすさ</strong> ── 何を伝えたいかが一目で伝わる</li>
+          <li><strong>魅力・面白さ</strong> ── 見ていて楽しい・引き込まれる</li>
+          <li><strong>ユニークさ（新規性）</strong> ── 他にない着眼点や見せ方になっている</li>
+        </ul>
+      </div>
+
+      <div class="callout-info" style="margin-top:0.6rem">
+        <h4>py5 の強みを活かそう ／ 音メディアも選択肢</h4>
+        <ul class="point-list" style="margin:0">
+          <li><strong>py5 を使うメリット（アニメーションなど）を活かす</strong> ── py5 は <code>draw()</code> のループで毎フレーム描き直せるので、<strong>動き・アニメーション・インタラクション</strong>が得意です。せっかく py5 で作るので、静止画で終わらせず、py5 ならではの「動く表現」を取り入れよう。</li>
+          <li><strong>音のメディアを扱うのも選択肢</strong> ── <code>pydub</code> などのライブラリで音声ファイルを読み込み・加工・解析し、その特徴をデータとして可視化に組み込んでもOK（第6回の音の学習を発展させる方向）。</li>
+        </ul>
+      </div>
+
+      <!-- データのルール -->
+      <h4 style="color:#76B900;margin-top:1.2rem;margin-bottom:0.5rem">使ってよいデータ / ダメなデータ</h4>
+      <div class="callout-info" style="margin-top:0.4rem">
+        <h4>◯ 使ってよいデータ</h4>
+        <ul class="point-list">
+          <li><strong>自分で作ったデータ</strong> ── 例: <strong>加速度センサ</strong>でスマホを振って取った計測データ、他の人に<strong>アンケート</strong>を実施して集めた回答結果 など、自分の手で集めた実データ</li>
+          <li><strong>ネット上に公開されているデータ</strong> ── 気象庁・e-Stat・Kaggle など、出典が明示できる公開データセット</li>
+          <li><strong>データに困ったら:</strong> 講師が用意する <strong>Slack（MUDS ＝ データサイエンス学部の Slack）の活動状況データ</strong>（<code>DS全体のslack利用状況.csv</code>／<code>ユーザ別投稿状況.csv</code>。いずれも 2025年5月1日〜2026年5月31日）を使ってよい</li>
+        </ul>
+      </div>
+      <div class="callout-danger" style="margin-top:0.5rem">
+        <h4>✕ 使ってはいけないデータ</h4>
+        <ul class="point-list">
+          <li><strong>AI に作らせた架空のデータ</strong> ── 「それっぽい数値を生成して」と AI にでっち上げさせたデータは <strong>NG</strong>。可視化は「実在するデータ」を対象にすること（実データを集める・探す作業も課題のうち）。</li>
+        </ul>
+      </div>
+      <p style="font-size:0.85rem;color:#999;margin-top:0.6rem">※ 具体的な進め方は、配布データを分析する <strong>A</strong> と、自分でテーマとデータを決める <strong>B</strong> の2コースに分けて後半（<a href="#sec-final" style="color:#76B900">最終課題制作</a>）で説明します。</p>
+    </div>
+
+    <!-- 提出形式 -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <h3>提出形式 ── Notion にまとめて PDF 化 ＋ mp4 を別途提出</h3>
+      </div>
+      <p>提出物は <strong>① Notion を1ページにまとめてエクスポートした PDF</strong> と <strong>② 実行画面の mp4 動画</strong> の <strong>2ファイル</strong>。Notion には次の項目を記載してください。</p>
+      <table>
+        <tr><th style="width:30%">記載する項目</th><th>内容</th></tr>
+        <tr><td><strong>作品のタイトル</strong></td><td>作品につけた名前</td></tr>
+        <tr><td><strong>作品のテーマ</strong></td><td>何を可視化したのか（扱ったデータの主題）</td></tr>
+        <tr><td><strong>作った目的</strong></td><td>なぜこれを作ったのか・見た人に何を伝えたいのか</td></tr>
+        <tr><td><strong>どのように作ったか（設計）</strong></td><td>作り方・構成・工夫したこと。<strong>文章だけでもOK／図や表を使ってもOK</strong></td></tr>
+        <tr><td><strong>コード</strong></td><td>完成した Python コード全文。<strong>自分の言葉でコメントを入れること</strong></td></tr>
+        <tr><td><strong>実行画面の動画</strong></td><td>画面収録を <strong>必ず mp4 に変換</strong>。Notion に貼り、<strong>PDF とは別に Google Classroom にも提出</strong></td></tr>
+      </table>
+
+      <div class="callout-danger" style="margin-top:0.8rem">
+        <h4>コードのコメントは必ず「自分の言葉」で</h4>
+        <ul class="point-list">
+          <li>コード内のコメントは <strong>必ず自分の言葉で書く</strong>こと。<strong>AI にコメントを書かせるのは禁止</strong>です。</li>
+          <li>必要に応じて、<strong>コードの内容を理解できているか口頭試問（こうとうしもん）する場合があります</strong>。自分が書いたコードは、どこで何をしているか説明できるようにしておいてください。</li>
+        </ul>
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.6rem 1rem;margin-top:0.6rem;font-size:0.85rem;color:#FFB800">
+        <strong>提出先・期限:</strong> PDF と mp4 の2ファイルを Google Classroom へ ── 6/15(月) 13:10 まで
+      </div>
+    </div>
+
+    <!-- 制作方法: バイブコーディング -->
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <h3>制作方法 ── バイブコーディング推奨（ただし「理解」は必須）</h3>
+      </div>
+      <p>コードの書き方は <strong>バイブコーディング（AI にコードを書いてもらいながら進める作り方）を推奨</strong>します。ツールは自由です。授業で紹介した <strong>OpenCode</strong> のほか、<strong>Codex / Claude Code / Antigravity</strong> など、好きなものを使って構いません。</p>
+
+      <div class="callout-info" style="margin-top:0.6rem">
+        <h4>◯ 使ってよいツール（自由）</h4>
+        <p style="font-size:0.9rem">OpenCode（授業で紹介）／ Codex ／ Claude Code ／ Antigravity ／ その他の AI コーディングツール ── どれを使ってもOK。複数を併用しても構いません。</p>
+      </div>
+
+      <div class="callout-danger" style="margin-top:0.5rem">
+        <h4>ただし「理解」は必須 ── 動いただけの作品は評価できません</h4>
+        <ul class="point-list">
+          <li><strong>① 生成されたコードを必ず自分で確認する</strong></li>
+          <li><strong>② 何をしているコードか内容・仕組みを理解する</strong></li>
+          <li><strong>③ 理解したうえで、自分の言葉でコメントを付ける</strong>（AI にコメントを書かせない）</li>
+        </ul>
+        <p style="margin-top:0.5rem;font-size:0.9rem"><strong>理解せずに「実行できただけ」の作品は認められません。</strong>作られたコードの仕組み・内容をきちんと理解できていなければ、評価することはできません。必要に応じて<strong>口頭試問</strong>で理解を確認する場合があります。</p>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- ============ INTRO: DATA VIZ EXAMPLE ============ -->
 <section style="padding-top:2rem;padding-bottom:0">
@@ -556,107 +696,181 @@ body { padding-top: 2.2rem; }
   </div>
 </section>
 
-<!-- ============ SUBMISSION GUIDE ============ -->
-<section style="padding-top:2rem;padding-bottom:0">
+<!-- ============ DATA VIZ BASICS (teaching) ============ -->
+<section id="sec-viz" style="padding-top:2rem;padding-bottom:0">
   <div class="container">
-    <div class="submission-box">
-      <h3>提出ガイド（Notion をまとめてPDF化、＋ 実行画面の mp4 動画を提出）</h3>
-      <div class="submission-items">
-        <a href="#sec-notion" class="sub-item" style="text-decoration:none;color:inherit;border-color:#76B900"><span class="sub-count" style="background:#76B900">4</span><span class="tag" style="background:#1a2e0a;color:#76B900">ノート</span>穴埋め・記録</a>
-        <a href="#sec-final" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-advanced">最終課題</span>A または B を選択</a>
-      </div>
-      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.85rem;color:#93D500">
-        <strong>提出方法:</strong> 下記の項目を<strong>1つのNotionページにまとめて記録</strong> → PDFにエクスポート → Google Classroomに<strong>PDF と 実行画面の mp4 動画 の 2ファイル</strong>を提出
-      </div>
-      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:0.5rem;font-size:0.85rem;color:#FFB800">
-        <strong>提出期限:</strong> 6/15(月) 13:10
-      </div>
-
-      <!-- Notionに書くべき項目チェックリスト -->
-      <div id="notion-checklist" style="background:#141414;border:1px solid #333;border-radius:0.4rem;padding:1rem;margin-top:1rem">
-        <p style="color:#76B900;font-weight:700;font-size:0.85rem;margin-bottom:0.3rem">ノート: Notionに記録する項目（提出前に確認）</p>
-        <p style="font-size:0.75rem;color:#999;margin-bottom:0.8rem">以下の項目を1つのNotionページに記録し、PDF化して提出します。</p>
-        <table style="font-size:0.8rem">
-          <tr><th style="width:5%"></th><th style="width:30%">セクション</th><th>記録する内容</th><th style="width:10%">リンク</th></tr>
-          <tr>
-            <td><input type="checkbox"></td>
-            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> データ可視化の原則</td>
-            <td>穴埋め問題（可視化の原則、グラフの種類、グラフの嘘）</td>
-            <td><a href="#sec-teacher" style="color:#76B900">移動</a></td>
-          </tr>
-          <tr>
-            <td><input type="checkbox"></td>
-            <td><span class="tag tag-advanced" style="font-size:0.65rem">最終課題</span> テーマ・コンセプト</td>
-            <td>50字程度の説明文</td>
-            <td><a href="#sec-final" style="color:#76B900">移動</a></td>
-          </tr>
-          <tr>
-            <td><input type="checkbox"></td>
-            <td><span class="tag tag-advanced" style="font-size:0.65rem">最終課題</span> コード</td>
-            <td>完成したPythonコード全文</td>
-            <td><a href="#sec-final" style="color:#76B900">移動</a></td>
-          </tr>
-          <tr>
-            <td><input type="checkbox"></td>
-            <td><span class="tag tag-advanced" style="font-size:0.65rem">最終課題</span> 実行画面の動画</td>
-            <td>実行画面を画面収録した <strong>mp4 ファイル</strong>（Notion にも貼り、Google Classroom にも別途提出）</td>
-            <td><a href="#sec-final" style="color:#76B900">移動</a></td>
-          </tr>
-          <tr>
-            <td><input type="checkbox"></td>
-            <td><span class="tag tag-advanced" style="font-size:0.65rem">最終課題</span> 振り返り</td>
-            <td><strong>A を選んだ場合:</strong> 分析から読み取ったこと ＋ より活発にするための施策提案<br><strong>B を選んだ場合:</strong> 使用したデータの出典 ＋ 工夫した点</td>
-            <td><a href="#sec-final" style="color:#76B900">移動</a></td>
-          </tr>
-        </table>
-      </div>
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">★</div>
+      <h2>データ可視化の基礎 <span style="font-size:0.5rem;color:#999;font-weight:400">── なぜ可視化し、そこから何を読み取るのか</span></h2>
     </div>
-  </div>
-</section>
 
-<!-- ============ SCHEDULE ============ -->
-<section id="sec-schedule" style="padding-top:1rem;padding-bottom:0">
-  <div class="container">
+    <p style="margin-bottom:1rem">最終課題に入る前に、<strong>そもそも「データを可視化する」とはどういうことか</strong>を整理しておこう。コービーの作品も、ただ点を並べたのではなく「年ごとの変化を見たい」という<strong>目的</strong>があった。ここでは <strong>なぜ可視化するのか → 何に注目して様子を見るのか → そこからインサイト（気づき）をどう見つけるのか</strong>を、順を追って説明する。</p>
+
+    <!-- 1. なぜ可視化するのか -->
     <div class="card" style="border-left:4px solid #76B900">
-      <div class="card-header"><h3>授業スケジュール（前期・月曜3・4限 13:10〜16:40）</h3></div>
+      <div class="card-header"><h3>1. なぜデータを「可視化」するのか</h3></div>
+      <p>同じデータでも、<strong>数字の羅列</strong>と<strong>グラフ</strong>では伝わり方がまったく違う。人間の脳は、数字の表を1つずつ読むのは苦手だが、<strong>位置・長さ・色・形の違い</strong>なら一瞬で比べられる。可視化とは、この「目で見て比べる力」を借りて、データを理解しやすくする作業だ。</p>
+
+      <div class="analogy">
+        健康診断の結果が「数値の一覧」だけだと、自分が悪いのか良いのか分かりにくい。だが「基準範囲のバーの中で、自分の値がどこにあるか」を図で示されると、一目で「ここが高い」と分かる。可視化は、データを<strong>自分ごととして理解できる形</strong>に変える。
+      </div>
+
+      <!-- SVG: 数字の表 → 棒グラフ（アニメーションで棒が伸びる） -->
+      <div style="margin:1.2rem 0;text-align:center">
+        <svg viewBox="0 0 620 200" xmlns="http://www.w3.org/2000/svg" style="max-width:620px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
+          <text x="310" y="22" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" font-family="sans-serif">同じデータ ── 数字の表 と グラフ</text>
+          <!-- 左: 数字の表 -->
+          <text x="120" y="48" text-anchor="middle" fill="#999" font-size="10" font-family="sans-serif">数字だけだと比べにくい</text>
+          <g font-family="monospace" font-size="12" fill="#ccc">
+            <text x="60" y="74">月</text><text x="150" y="74">投稿数</text>
+            <text x="60" y="96">4月</text><text x="150" y="96">120</text>
+            <text x="60" y="118">5月</text><text x="150" y="118">210</text>
+            <text x="60" y="140">6月</text><text x="150" y="140">180</text>
+            <text x="60" y="162">7月</text><text x="150" y="162">340</text>
+            <text x="60" y="184">8月</text><text x="150" y="184">90</text>
+          </g>
+          <line x1="240" y1="45" x2="240" y2="185" stroke="#333" stroke-width="1"/>
+          <text x="248" y="120" fill="#76B900" font-size="18">&rarr;</text>
+          <!-- 右: 棒グラフ（伸びるアニメーション） -->
+          <text x="450" y="48" text-anchor="middle" fill="#999" font-size="10" font-family="sans-serif">グラフなら差が一目でわかる</text>
+          <line x1="300" y1="175" x2="600" y2="175" stroke="#555" stroke-width="1"/>
+          <!-- 各棒: height/y を values でループアニメーション -->
+          <rect x="320" y="115" width="34" height="60" fill="#76B900" opacity="0.85">
+            <animate attributeName="height" values="0;60;60;0" keyTimes="0;0.35;0.85;1" dur="5s" begin="0s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="175;115;115;175" keyTimes="0;0.35;0.85;1" dur="5s" begin="0s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="372" y="70" width="34" height="105" fill="#76B900" opacity="0.85">
+            <animate attributeName="height" values="0;105;105;0" keyTimes="0;0.35;0.85;1" dur="5s" begin="0.15s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="175;70;70;175" keyTimes="0;0.35;0.85;1" dur="5s" begin="0.15s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="424" y="85" width="34" height="90" fill="#76B900" opacity="0.85">
+            <animate attributeName="height" values="0;90;90;0" keyTimes="0;0.35;0.85;1" dur="5s" begin="0.3s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="175;85;85;175" keyTimes="0;0.35;0.85;1" dur="5s" begin="0.3s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="476" y="45" width="34" height="130" fill="#FFB800">
+            <animate attributeName="height" values="0;130;130;0" keyTimes="0;0.35;0.85;1" dur="5s" begin="0.45s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="175;45;45;175" keyTimes="0;0.35;0.85;1" dur="5s" begin="0.45s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="528" y="135" width="34" height="40" fill="#FF5252" opacity="0.8">
+            <animate attributeName="height" values="0;40;40;0" keyTimes="0;0.35;0.85;1" dur="5s" begin="0.6s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="175;135;135;175" keyTimes="0;0.35;0.85;1" dur="5s" begin="0.6s" repeatCount="indefinite"/>
+          </rect>
+          <g font-family="sans-serif" font-size="9" fill="#999" text-anchor="middle">
+            <text x="337" y="188">4月</text><text x="389" y="188">5月</text><text x="441" y="188">6月</text>
+            <text x="493" y="188">7月</text><text x="545" y="188">8月</text>
+          </g>
+        </svg>
+        <p style="font-size:0.78rem;color:#888;margin-top:0.3rem">▲ 同じ5か月分のデータ。表だと「7月が多い・8月が少ない」と気づくのに時間がかかるが、棒グラフなら<strong>瞬時</strong>に分かる。</p>
+      </div>
+
+      <p style="font-weight:700;color:#76B900;margin-top:0.5rem">可視化でできるようになること</p>
+      <ul class="point-list">
+        <li><strong>大量の数字を一度に把握できる</strong> ── 何百行のデータも1枚の図に収まる</li>
+        <li><strong>差・傾向・異常が一目でわかる</strong> ── 大小・増減・飛び抜けた値が見える</li>
+        <li><strong>言葉にしにくいことを共有できる</strong> ── 「なんとなく多い」を全員が同じ図で確認できる</li>
+      </ul>
+    </div>
+
+    <!-- 2. 様子を見る: 観察の視点 -->
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header"><h3>2. 可視化して「様子を見る」── どこに注目するか</h3></div>
+      <p>グラフは、作って終わりではない。<strong>「眺める」のではなく「読む」</strong>。次の5つの観点を持って見ると、ただの絵が「読み取れるデータ」に変わる。</p>
+
       <table>
-        <tr><th style="width:40px">回</th><th>日付</th><th>テーマ</th><th>提出期限</th></tr>
-        <tr><td>1</td><td>4/20(月)</td><td>グループディスカッション・ターミナル操作・環境構築</td><td>4/27 13:10</td></tr>
-        <tr><td>2</td><td>4/27(月)</td><td>順次制御・繰り返し処理・色の表現</td><td>5/11 13:10</td></tr>
-        <tr style="color:#616161"><td>-</td><td><s>5/4(月)</s></td><td colspan="2" style="color:#FFB800">休講（GW）</td></tr>
-        <tr><td>3</td><td>5/11(月)</td><td>条件分岐・アニメーション</td><td>5/18 13:10</td></tr>
-        <tr><td>4</td><td>5/18(月)</td><td>リスト・辞書・関数設計</td><td>5/25 13:10</td></tr>
-        <tr><td>5</td><td>5/25(月)</td><td>時系列データ・加速度センサ</td><td>6/1 13:10</td></tr>
-        <tr><td>6</td><td>6/1(月)</td><td>音のプログラミング・FFT和音解析</td><td>6/8 13:10</td></tr>
-        <tr style="background:rgba(118,185,0,0.1)"><td><strong>7</strong></td><td><strong>6/8(月)</strong></td><td><strong>最終課題制作</strong></td><td><strong>6/15 13:10</strong></td></tr>
+        <tr><th>観点</th><th>自分への問いかけ</th><th>例（Slackデータ）</th></tr>
+        <tr><td><strong>傾向（トレンド）</strong></td><td>全体として増えている? 減っている?</td><td>月ごとの投稿数が右肩上がり</td></tr>
+        <tr><td><strong>外れ値</strong></td><td>飛び抜けた点・へこんだ点はない?</td><td>ある1日だけ投稿が急増した</td></tr>
+        <tr><td><strong>周期・リズム</strong></td><td>繰り返すパターンはある?</td><td>毎週月曜にアクティブ数が上がる</td></tr>
+        <tr><td><strong>かたより（分布）</strong></td><td>一部に集中していない?</td><td>投稿の8割が数人に集中</td></tr>
+        <tr><td><strong>関係（相関）</strong></td><td>2つの量は連動している?</td><td>メッセージが多い日はファイルも多い</td></tr>
       </table>
-      <p style="font-size:0.85rem;color:#999;margin-top:0.5rem">※ 各回の提出期限は次回授業開始時刻（13:10）です。1秒でも遅れると遅れ提出扱いになります。</p>
-    </div>
-  </div>
-</section>
 
-<!-- ============ TIME FLOW ============ -->
-<section style="padding-top:1rem;padding-bottom:0">
-  <div class="container">
-    <div class="card" style="border-left:4px solid #76B900">
-      <div class="card-header"><h3>本日の授業の流れ</h3></div>
-      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin:0.5rem 0">
-        <div style="flex:1;min-width:8rem;background:#1A1A1A;border:2px solid #76B900;border-radius:0.4rem;padding:0.6rem;text-align:center">
-          <div style="font-size:1.2rem;font-weight:900;color:#76B900">13:10 - 13:30</div>
-          <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">教員による説明</div>
-          <div style="font-size:0.65rem;color:#999">最終課題（A/B 選択）の説明 / データ可視化の原則 / CS・DS基礎</div>
-        </div>
-        <div style="flex:1;min-width:8rem;background:#1A1A1A;border:1px solid #333;border-radius:0.4rem;padding:0.6rem;text-align:center">
-          <div style="font-size:1.2rem;font-weight:900;color:#93D500">13:30 - 13:45</div>
-          <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">1. データの読み込み方</div>
-          <div style="font-size:0.65rem;color:#999">CSVファイルの読み込みサンプル3種</div>
-        </div>
-        <div style="flex:2;min-width:12rem;background:#1A1A1A;border:2px solid #FFB800;border-radius:0.4rem;padding:0.6rem;text-align:center">
-          <div style="font-size:1.2rem;font-weight:900;color:#FFB800">13:45 - 16:40</div>
-          <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">2. 最終課題制作</div>
-          <div style="font-size:0.65rem;color:#999">自由制作時間 / グループで相談OK / 教員に質問OK</div>
-        </div>
+      <!-- SVG: 時系列に注目ポイントを注釈 -->
+      <div style="margin:1.2rem 0;text-align:center">
+        <svg viewBox="0 0 620 190" xmlns="http://www.w3.org/2000/svg" style="max-width:620px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
+          <text x="310" y="22" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" font-family="sans-serif">1枚の折れ線から、いくつもの「気づき」が読める</text>
+          <line x1="40" y1="150" x2="595" y2="150" stroke="#555" stroke-width="1"/>
+          <line x1="40" y1="40" x2="40" y2="150" stroke="#555" stroke-width="1"/>
+          <!-- 周期的に上下しつつ右肩上がりの折れ線 -->
+          <polyline points="55,130 95,108 135,124 175,100 215,116 255,88 295,104 335,76 375,92 415,60 455,80 495,120 535,52" fill="none" stroke="#4FC3F7" stroke-width="2.5"/>
+          <!-- トレンド線（点線） -->
+          <line x1="55" y1="125" x2="535" y2="70" stroke="#76B900" stroke-width="1.5" stroke-dasharray="5,4"/>
+          <text x="560" y="70" fill="#76B900" font-size="9" font-family="sans-serif">トレンド</text>
+          <!-- 外れ値マーカー -->
+          <circle cx="495" cy="120" r="7" fill="none" stroke="#FF5252" stroke-width="2">
+            <animate attributeName="r" values="7;11;7" dur="1.8s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="1;0.3;1" dur="1.8s" repeatCount="indefinite"/>
+          </circle>
+          <text x="495" y="142" text-anchor="middle" fill="#FF5252" font-size="9" font-family="sans-serif">外れ値</text>
+          <!-- 周期の注釈 -->
+          <text x="175" y="170" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">↑↓ 周期的に上下（リズム）</text>
+          <text x="380" y="48" text-anchor="middle" fill="#76B900" font-size="9" font-family="sans-serif">全体は増加傾向</text>
+        </svg>
+        <p style="font-size:0.78rem;color:#888;margin-top:0.3rem">▲ 同じ1本の線でも、「全体の傾向」「繰り返すリズム」「飛び抜けた点（外れ値）」と、見る観点を変えると複数の気づきが得られる。</p>
       </div>
+    </div>
+
+    <!-- 3. 観察からインサイトへ -->
+    <div class="card" style="border-left:4px solid #4FC3F7">
+      <div class="card-header"><h3>3. 観察から「インサイト（洞察）」を見つけるまで</h3></div>
+      <p>可視化の本当のゴールは、きれいなグラフを作ることではない。そこから <strong>「だから何が言えるのか・何をすべきか」という気づき＝インサイト</strong> にたどり着くことだ。インサイトは、次の流れで生まれる。</p>
+
+      <!-- SVG: 観察→問い→仮説→検証→インサイト のフロー（流れる点） -->
+      <div style="margin:1.2rem 0;text-align:center">
+        <svg viewBox="0 0 620 130" xmlns="http://www.w3.org/2000/svg" style="max-width:620px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
+          <!-- 流れる光の点 -->
+          <circle r="5" fill="#FFB800">
+            <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.9;1" dur="4s" repeatCount="indefinite"/>
+            <animateMotion path="M 70,95 L 550,95" dur="4s" repeatCount="indefinite"/>
+          </circle>
+          <g font-family="sans-serif" text-anchor="middle">
+            <rect x="22" y="48" width="96" height="44" rx="8" fill="none" stroke="#76B900" stroke-width="2"/>
+            <text x="70" y="68" fill="#76B900" font-size="11" font-weight="700">① 観察</text>
+            <text x="70" y="83" fill="#999" font-size="8">図から事実を読む</text>
+            <rect x="142" y="48" width="96" height="44" rx="8" fill="none" stroke="#93D500" stroke-width="2"/>
+            <text x="190" y="68" fill="#93D500" font-size="11" font-weight="700">② 問い</text>
+            <text x="190" y="83" fill="#999" font-size="8">なぜ? と疑問</text>
+            <rect x="262" y="48" width="96" height="44" rx="8" fill="none" stroke="#FFB800" stroke-width="2"/>
+            <text x="310" y="68" fill="#FFB800" font-size="11" font-weight="700">③ 仮説</text>
+            <text x="310" y="83" fill="#999" font-size="8">こうでは? と予想</text>
+            <rect x="382" y="48" width="96" height="44" rx="8" fill="none" stroke="#FF8A00" stroke-width="2"/>
+            <text x="430" y="68" fill="#FF8A00" font-size="11" font-weight="700">④ 検証</text>
+            <text x="430" y="83" fill="#999" font-size="8">別の角度で確かめる</text>
+            <rect x="502" y="48" width="96" height="44" rx="8" fill="none" stroke="#4FC3F7" stroke-width="2.5"/>
+            <text x="550" y="68" fill="#4FC3F7" font-size="11" font-weight="700">⑤ インサイト</text>
+            <text x="550" y="83" fill="#999" font-size="8">行動につながる気づき</text>
+          </g>
+          <g stroke="#555" stroke-width="1.5">
+            <line x1="118" y1="70" x2="140" y2="70" marker-end="url(#arrv)"/>
+            <line x1="238" y1="70" x2="260" y2="70" marker-end="url(#arrv)"/>
+            <line x1="358" y1="70" x2="380" y2="70" marker-end="url(#arrv)"/>
+            <line x1="478" y1="70" x2="500" y2="70" marker-end="url(#arrv)"/>
+          </g>
+          <text x="310" y="118" text-anchor="middle" fill="#666" font-size="9" font-family="sans-serif">※ 検証で仮説が外れたら ②③ に戻ってやり直す（行ったり来たりが普通）</text>
+          <defs><marker id="arrv" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#555"/></marker></defs>
+        </svg>
+      </div>
+
+      <div class="concept-box">
+        <h4>「事実」と「インサイト」はちがう</h4>
+        <p><strong>事実:</strong> 「火曜日の投稿が一番多い」── グラフを見れば誰でも言える。<br>
+        <strong>インサイト:</strong> 「火曜が多いのは “週初めの定例後に共有が集中する” から。<u>なら、その流れを他の曜日にも作れば全体が活発になる</u>」── <strong>なぜ? だから何をする? まで踏み込んだ気づき</strong>。最終課題の「施策提案」や「工夫した点」は、この段階を狙ってほしい。</p>
+      </div>
+
+      <div class="callout-tip">
+        <h4>冒頭のコービーの作品で考えると</h4>
+        <ul class="point-list">
+          <li><strong>観察:</strong> 若い頃はゴール下中心 → 年々、遠い位置（3P）からのシュートが増えている</li>
+          <li><strong>問い:</strong> なぜ年々ゴールから離れていったのか?</li>
+          <li><strong>仮説:</strong> 加齢で接触の多いプレーを減らし、シュート技術で勝負するようになったのでは?</li>
+          <li><strong>インサイト:</strong> 「一流選手は、身体の変化に合わせてプレースタイルそのものを進化させている」── 単なるシュート位置の事実を超えた気づき</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout-info">
+      <h4>最終課題につなげると</h4>
+      <p>作品を作るときは、<strong>「何を伝えたいか（目的）」→「どんな図なら様子が見えるか」→「見た人にどんな気づき（インサイト）を持ってほしいか」</strong>の順に考えると、ねらいのはっきりした作品になる。Notion の「作った目的」「設計」「施策提案／工夫した点」は、まさにこの流れを書く欄です。</p>
     </div>
   </div>
 </section>
@@ -666,14 +880,14 @@ body { padding-top: 2.2rem; }
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">0</div>
-      <h2>教員による説明 <span style="font-size:0.5rem;color:#999;font-weight:400">── 約20分</span></h2>
+      <h2>教員による説明</h2>
     </div>
 
     <div class="concept-box">
       <h4>最終回: これまでの技術を組み合わせて作品を作る</h4>
       <p>第1回〜第6回で学んだ技術（図形描画、テキスト表示、色彩、アニメーション、音の再生、CSV読み込み）を組み合わせて、データの可視化作品を制作します。次の <strong>A・B のどちらか</strong>を選んで取り組んでください。今日のほとんどの時間は、自分で手を動かす制作時間です。</p>
       <ul class="point-list" style="margin-top:0.5rem">
-        <li><strong>A: Slack 利用データの分析と「より活発になる」施策提案</strong> ── 配布CSV（slack.csv / slack_time.csv）を使い、データから読み取った特徴をもとに改善案を提案する。</li>
+        <li><strong>A: Slack 利用データの分析と「より活発になる」施策提案</strong> ── 配布CSV（<code>DS全体のslack利用状況.csv</code>／<code>ユーザ別投稿状況.csv</code>）を使い、データから読み取った特徴をもとに改善案を提案する。</li>
         <li><strong>B: 自分のテーマで自由制作</strong> ── 興味のあるテーマを決め、自分でデータを用意して可視化する。データは 6/15 の提出までに用意できればOK。</li>
       </ul>
       <p style="margin-top:0.5rem">いずれの場合も <strong>py5 で可視化することが必須</strong>です。</p>
@@ -709,7 +923,7 @@ body { padding-top: 2.2rem; }
           <rect x="15" y="45" width="110" height="55" rx="8" fill="none" stroke="#76B900" stroke-width="2"/>
           <text x="70" y="65" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700" font-family="sans-serif">1. データ取得</text>
           <text x="70" y="82" text-anchor="middle" fill="#ccc" font-size="9" font-family="monospace">csv.DictReader</text>
-          <text x="70" y="94" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">slack.csv</text>
+          <text x="70" y="94" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">Slackデータ</text>
           <!-- Arrow -->
           <line x1="128" y1="72" x2="148" y2="72" stroke="#76B900" stroke-width="1.5" marker-end="url(#arr7)"/>
           <!-- Step 2: Process -->
@@ -870,13 +1084,13 @@ body { padding-top: 2.2rem; }
       <div class="card-header">
         <h3>A を選んだ場合に使用する CSV ファイル</h3>
       </div>
-      <p>A（Slack 分析＋施策提案）を選ぶ場合は、Google Classroomから以下の2つのCSVファイルをダウンロードして使用してください。どちらを使っても構いません。<strong>B（自由制作）を選ぶ場合は、自分で用意したCSVを使ってください。</strong></p>
+      <p>A（Slack 分析＋施策提案）を選ぶ場合は、Google Classroomから以下の2つのCSVファイルをダウンロードして使用してください。どちらを使っても、両方を組み合わせても構いません。<strong>B（自由制作）を選ぶ場合は、自分で用意したCSVを使ってください。</strong></p>
       <table>
-        <tr><th>ファイル名</th><th>期間</th><th>内容</th></tr>
-        <tr><td><code>slack.csv</code></td><td>2025年4月〜6月</td><td>短期間のSlack利用データ</td></tr>
-        <tr><td><code>slack_time.csv</code></td><td>2024年5月〜2025年6月</td><td>長期間のSlack利用データ</td></tr>
+        <tr><th>ファイル名</th><th>期間</th><th>内容（主な列）</th></tr>
+        <tr><td><code>DS全体のslack利用状況.csv</code></td><td>2025/5/1〜2026/5/31</td><td>日付ごとの全体の利用状況（日付／アクティブなメンバー数（日次）／投稿されたメッセージ数／アップロードファイル数 など多数の列）</td></tr>
+        <tr><td><code>ユーザ別投稿状況.csv</code></td><td>2025/5/1〜2026/5/31</td><td>役職・担当ごとの投稿状況（役職・担当／アクティブ日数／投稿されたメッセージ数）</td></tr>
       </table>
-      <p style="font-size:0.85rem;color:#999;margin-top:0.5rem">※ 列の例: 日付、アクティブなメンバー数（日次）、投稿されたメッセージ数、アップロードファイル数 など</p>
+      <p style="font-size:0.85rem;color:#999;margin-top:0.5rem">※ いずれも武蔵野大学データサイエンス学部（DS）の Slack の実データ（<strong>2025年5月1日〜2026年5月31日</strong>）です。<code>DS全体のslack利用状況.csv</code> は時系列の分析に、<code>ユーザ別投稿状況.csv</code> は役職別の比較・分布の分析に向いています。</p>
     </div>
 
     <!-- この授業で学んだこと -->
@@ -924,33 +1138,6 @@ body { padding-top: 2.2rem; }
       <p style="font-size:0.85rem;color:#93D500;margin-top:1rem;text-align:center;font-weight:700">最終課題では、上記の技術から2つ以上を組み合わせて作品を制作します</p>
     </div>
 
-    <!-- 環境準備 -->
-    <div class="card">
-      <div class="card-header">
-        <h3>環境準備</h3>
-      </div>
-      <p>第7回用のディレクトリを作成し、CSVファイルを配置します。</p>
-      <pre><span class="code-label">Bash</span>
-<span class="cmt"># 第7回のディレクトリを作成</span>
-<span class="fn">cd</span> ~/Documents/MD1
-<span class="fn">mkdir</span> -p no7
-<span class="fn">cd</span> no7
-
-<span class="cmt"># 仮想環境を作成・有効化</span>
-uv venv
-<span class="fn">source</span> .venv/bin/activate
-
-<span class="cmt"># py5をインストール</span>
-uv pip install py5
-
-<span class="cmt"># Google ClassroomからダウンロードしたCSVファイルをno7/に移動</span>
-<span class="cmt"># slack.csv または slack_time.csv</span></pre>
-      <div class="callout-danger">
-        <h4>CSVファイルの配置を忘れずに</h4>
-        <p>CSVファイルはPythonスクリプトと<strong>同じディレクトリ（no7/）</strong>に置いてください。パスが異なるとファイルが読み込めずエラーになります。</p>
-      </div>
-    </div>
-
   </div>
 </section>
 
@@ -990,7 +1177,7 @@ uv pip install py5
         <!-- Step 1: CSV file -->
         <rect x="15" y="42" width="115" height="55" rx="8" fill="none" stroke="#76B900" stroke-width="2"/>
         <text x="72" y="62" text-anchor="middle" fill="#76B900" font-size="10" font-weight="700" font-family="sans-serif">CSVファイル</text>
-        <text x="72" y="78" text-anchor="middle" fill="#ccc" font-size="9" font-family="monospace">slack.csv</text>
+        <text x="72" y="78" text-anchor="middle" fill="#ccc" font-size="9" font-family="monospace">Slackデータ</text>
         <text x="72" y="90" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">日付,メンバー,...</text>
         <!-- Arrow -->
         <line x1="135" y1="70" x2="155" y2="70" stroke="#76B900" stroke-width="1.5" marker-end="url(#arr7csv)"/>
@@ -1014,7 +1201,7 @@ uv pip install py5
         <text x="527" y="78" text-anchor="middle" fill="#ccc" font-size="9" font-family="monospace">rect() / text()</text>
         <text x="527" y="90" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">棒グラフ・テキスト表示</text>
         <!-- Bottom: サンプル対応 -->
-        <text x="72" y="118" text-anchor="middle" fill="#76B900" font-size="8" font-weight="700" font-family="sans-serif">slack.csv</text>
+        <text x="72" y="118" text-anchor="middle" fill="#76B900" font-size="8" font-weight="700" font-family="sans-serif">Slackデータ</text>
         <text x="217" y="118" text-anchor="middle" fill="#FFB800" font-size="8" font-weight="700" font-family="sans-serif">サンプル1</text>
         <text x="362" y="118" text-anchor="middle" fill="#93D500" font-size="8" font-weight="700" font-family="sans-serif">サンプル2</text>
         <text x="527" y="118" text-anchor="middle" fill="#4FC3F7" font-size="8" font-weight="700" font-family="sans-serif">サンプル3</text>
@@ -1040,7 +1227,7 @@ uv pip install py5
 <span class="kw">import</span> csv
 
 data = []
-<span class="kw">with</span> <span class="fn">open</span>(<span class="str">'slack_time.csv'</span>, <span class="str">'r'</span>, encoding=<span class="str">'utf-8'</span>) <span class="kw">as</span> file:
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">'DS全体のslack利用状況.csv'</span>, <span class="str">'r'</span>, encoding=<span class="str">'utf-8'</span>) <span class="kw">as</span> file:
     reader = csv.DictReader(file)
     count = <span class="num">0</span>
     <span class="kw">for</span> row <span class="kw">in</span> reader:
@@ -1094,7 +1281,7 @@ py5.run_sketch()</pre>
 <span class="kw">import</span> csv
 
 data = []
-<span class="kw">with</span> <span class="fn">open</span>(<span class="str">'slack_time.csv'</span>, <span class="str">'r'</span>, encoding=<span class="str">'utf-8'</span>) <span class="kw">as</span> file:
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">'DS全体のslack利用状況.csv'</span>, <span class="str">'r'</span>, encoding=<span class="str">'utf-8'</span>) <span class="kw">as</span> file:
     reader = csv.DictReader(file)
     count = <span class="num">0</span>
     <span class="kw">for</span> row <span class="kw">in</span> reader:
@@ -1156,7 +1343,7 @@ py5.run_sketch()</pre>
 <span class="kw">import</span> csv
 
 active_data = []
-<span class="kw">with</span> <span class="fn">open</span>(<span class="str">'slack_time.csv'</span>, <span class="str">'r'</span>, encoding=<span class="str">'utf-8'</span>) <span class="kw">as</span> file:
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">'DS全体のslack利用状況.csv'</span>, <span class="str">'r'</span>, encoding=<span class="str">'utf-8'</span>) <span class="kw">as</span> file:
     reader = csv.DictReader(file)
     count = <span class="num">0</span>
     <span class="kw">for</span> row <span class="kw">in</span> reader:
@@ -1206,6 +1393,387 @@ py5.run_sketch()</pre>
   </div>
 </section>
 
+<!-- ============ PATTERNS: py5での可視化パターン集 ============ -->
+<section id="sec-patterns">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">P</div>
+      <h2>py5 可視化パターン集 <span style="font-size:0.5rem;color:#999;font-weight:400">── 「型」を真似れば作れる</span></h2>
+    </div>
+
+    <p style="margin-bottom:1rem">「何を作ればいいか分からない」人へ。py5 での可視化は、実は<strong>たった1つの“型”の繰り返し</strong>でできています。まず共通の型を覚え、あとは下の<strong>パターン</strong>から作りたい見た目を選んで真似るだけ。各パターンに<strong>動く図</strong>と<strong>コードの骨子</strong>を付けました。コピーして数字を変えるところから始めよう。</p>
+
+    <!-- 共通の型（骨格） -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>すべての可視化に共通する「型」</h3></div>
+      <p>どんなグラフも、結局は次の5ステップ。<strong>②マッピング</strong>と<strong>③ループ描画</strong>が心臓部です。</p>
+      <div style="margin:1rem 0;text-align:center">
+        <svg viewBox="0 0 620 120" xmlns="http://www.w3.org/2000/svg" style="max-width:620px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
+          <circle r="5" fill="#FFB800">
+            <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.9;1" dur="4.5s" repeatCount="indefinite"/>
+            <animateMotion path="M 62,60 L 558,60" dur="4.5s" repeatCount="indefinite"/>
+          </circle>
+          <g font-family="sans-serif" text-anchor="middle">
+            <rect x="18" y="38" width="92" height="44" rx="8" fill="none" stroke="#76B900" stroke-width="2"/>
+            <text x="64" y="58" fill="#76B900" font-size="10" font-weight="700">① 読む</text>
+            <text x="64" y="73" fill="#999" font-size="8">csv → list</text>
+            <rect x="130" y="38" width="92" height="44" rx="8" fill="none" stroke="#FFB800" stroke-width="2"/>
+            <text x="176" y="58" fill="#FFB800" font-size="10" font-weight="700">② マッピング</text>
+            <text x="176" y="73" fill="#999" font-size="8">値 → 画面座標</text>
+            <rect x="242" y="38" width="92" height="44" rx="8" fill="none" stroke="#93D500" stroke-width="2"/>
+            <text x="288" y="58" fill="#93D500" font-size="10" font-weight="700">③ ループ描画</text>
+            <text x="288" y="73" fill="#999" font-size="8">for + 図形</text>
+            <rect x="354" y="38" width="92" height="44" rx="8" fill="none" stroke="#4FC3F7" stroke-width="2"/>
+            <text x="400" y="58" fill="#4FC3F7" font-size="10" font-weight="700">④ 装飾</text>
+            <text x="400" y="73" fill="#999" font-size="8">色・文字・軸</text>
+            <rect x="466" y="38" width="100" height="44" rx="8" fill="none" stroke="#9B59B6" stroke-width="2"/>
+            <text x="516" y="58" fill="#b07cc6" font-size="10" font-weight="700">⑤ 動き・操作</text>
+            <text x="516" y="73" fill="#999" font-size="8">draw / mouse</text>
+          </g>
+        </svg>
+      </div>
+      <pre><span class="code-label">Python ── 共通の骨格</span>
+<span class="kw">import</span> py5, csv
+
+data = [...]                         <span class="cmt"># ① CSVを読んでリストや辞書に</span>
+
+<span class="kw">def</span> <span class="fn">setup</span>():
+    py5.size(<span class="num">600</span>, <span class="num">400</span>)
+
+<span class="kw">def</span> <span class="fn">draw</span>():
+    py5.background(<span class="num">255</span>)
+    <span class="kw">for</span> i, v <span class="kw">in</span> <span class="fn">enumerate</span>(data):       <span class="cmt"># ③ ループで1つずつ</span>
+        x = py5.remap(i, <span class="num">0</span>, <span class="fn">len</span>(data), <span class="num">50</span>, <span class="num">550</span>)   <span class="cmt"># ② 値→画面座標</span>
+        h = py5.remap(v, <span class="num">0</span>, <span class="fn">max</span>(data), <span class="num">0</span>, <span class="num">300</span>)
+        py5.fill(<span class="num">118</span>, <span class="num">185</span>, <span class="num">0</span>)            <span class="cmt"># ④ 装飾</span>
+        py5.rect(x, <span class="num">350</span> - h, <span class="num">40</span>, h)
+
+py5.run_sketch()</pre>
+    </div>
+
+    <!-- 心臓部: remap -->
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header"><h3>心臓部は <code>py5.remap()</code> ── 「値」を「画面の位置」に変える</h3></div>
+      <p>データの数値（例: 12人）を、そのまま画面に置くことはできません。<strong>「データの範囲」を「画面の範囲」に置き換える</strong>のが <code>remap</code>。これさえ分かれば、棒の高さ・点の位置・色・角度…何にでも応用できます。</p>
+      <div style="margin:1rem 0;text-align:center">
+        <svg viewBox="0 0 620 170" xmlns="http://www.w3.org/2000/svg" style="max-width:620px;width:100%;background:#1A1A1A;border-radius:12px;border:1px solid #333">
+          <text x="310" y="22" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700" font-family="sans-serif">値が変わると、棒の高さも連動して変わる</text>
+          <!-- データ軸 -->
+          <line x1="60" y1="80" x2="300" y2="80" stroke="#555" stroke-width="2"/>
+          <text x="60" y="100" fill="#999" font-size="9" font-family="monospace" text-anchor="middle">0</text>
+          <text x="300" y="100" fill="#999" font-size="9" font-family="monospace" text-anchor="middle">100</text>
+          <text x="180" y="118" fill="#76B900" font-size="9" font-family="sans-serif" text-anchor="middle">データの値（0〜100）</text>
+          <circle cy="80" r="7" fill="#FFB800">
+            <animate attributeName="cx" values="80;280;80" dur="4s" repeatCount="indefinite"/>
+          </circle>
+          <!-- 矢印 -->
+          <text x="330" y="84" fill="#FFB800" font-size="16">&rarr;</text>
+          <text x="350" y="70" fill="#999" font-size="9" font-family="monospace">remap</text>
+          <!-- 棒 -->
+          <line x1="430" y1="150" x2="560" y2="150" stroke="#555" stroke-width="1"/>
+          <rect x="470" y="30" width="50" fill="#76B900">
+            <animate attributeName="height" values="10;120;10" dur="4s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="140;30;140" dur="4s" repeatCount="indefinite"/>
+          </rect>
+          <text x="495" y="165" fill="#76B900" font-size="9" font-family="sans-serif" text-anchor="middle">画面の高さ（0〜120px）</text>
+        </svg>
+      </div>
+      <pre><span class="code-label">Python ── remapの使い方</span>
+<span class="cmt"># remap(変換したい値, 元の最小, 元の最大, 変換後の最小, 変換後の最大)</span>
+h = py5.remap(active, <span class="num">0</span>, <span class="num">100</span>, <span class="num">0</span>, <span class="num">300</span>)   <span class="cmt"># 人数 → 棒の高さ(px)</span>
+x = py5.remap(i, <span class="num">0</span>, <span class="fn">len</span>(data), <span class="num">50</span>, <span class="num">550</span>) <span class="cmt"># 何番目か → 横位置</span>
+c = py5.remap(v, <span class="num">0</span>, <span class="fn">max</span>(data), <span class="num">0</span>, <span class="num">255</span>)  <span class="cmt"># 値 → 色の濃さ</span></pre>
+      <div class="callout-tip" style="margin-top:0.5rem">
+        <p style="margin:0;font-size:0.9rem"><strong>コツ:</strong> 高さや縦位置は「画面の下が大きい」ので、<strong>下を大きい数・上を小さい数</strong>にすると上向きグラフになります（例: <code>remap(v, 0, max, 350, 50)</code>）。</p>
+      </div>
+    </div>
+
+    <!-- パターンカタログ見出し -->
+    <div style="text-align:center;margin:1.5rem 0 0.5rem">
+      <span style="display:inline-block;background:#1a2e0a;color:#93D500;font-weight:700;padding:0.4rem 1.2rem;border-radius:100px;font-size:0.9rem">▼ ここから実装パターン集（9種）。作りたい見た目を選ぼう ▼</span>
+    </div>
+
+    <!-- P1 棒グラフ -->
+    <div class="card standard">
+      <div class="card-header"><span class="tag tag-standard">パターン1</span><h3>棒グラフ ── 量を「高さ」で比べる</h3></div>
+      <p><strong>いつ使う:</strong> カテゴリごとの大小を比べたいとき（曜日別の投稿数など）。</p>
+      <div style="margin:0.6rem 0;text-align:center">
+        <svg viewBox="0 0 380 150" xmlns="http://www.w3.org/2000/svg" style="max-width:380px;width:100%;background:#1A1A1A;border-radius:10px;border:1px solid #333">
+          <line x1="20" y1="125" x2="360" y2="125" stroke="#555"/>
+          <rect x="40" width="44" fill="#76B900"><animate attributeName="height" values="0;55;55;0" keyTimes="0;0.4;0.85;1" dur="4s" repeatCount="indefinite"/><animate attributeName="y" values="125;70;70;125" keyTimes="0;0.4;0.85;1" dur="4s" repeatCount="indefinite"/></rect>
+          <rect x="100" width="44" fill="#76B900"><animate attributeName="height" values="0;90;90;0" keyTimes="0;0.4;0.85;1" dur="4s" begin="0.15s" repeatCount="indefinite"/><animate attributeName="y" values="125;35;35;125" keyTimes="0;0.4;0.85;1" dur="4s" begin="0.15s" repeatCount="indefinite"/></rect>
+          <rect x="160" width="44" fill="#76B900"><animate attributeName="height" values="0;70;70;0" keyTimes="0;0.4;0.85;1" dur="4s" begin="0.3s" repeatCount="indefinite"/><animate attributeName="y" values="125;55;55;125" keyTimes="0;0.4;0.85;1" dur="4s" begin="0.3s" repeatCount="indefinite"/></rect>
+          <rect x="220" width="44" fill="#FFB800"><animate attributeName="height" values="0;110;110;0" keyTimes="0;0.4;0.85;1" dur="4s" begin="0.45s" repeatCount="indefinite"/><animate attributeName="y" values="125;15;15;125" keyTimes="0;0.4;0.85;1" dur="4s" begin="0.45s" repeatCount="indefinite"/></rect>
+          <rect x="280" width="44" fill="#76B900"><animate attributeName="height" values="0;40;40;0" keyTimes="0;0.4;0.85;1" dur="4s" begin="0.6s" repeatCount="indefinite"/><animate attributeName="y" values="125;85;85;125" keyTimes="0;0.4;0.85;1" dur="4s" begin="0.6s" repeatCount="indefinite"/></rect>
+        </svg>
+      </div>
+      <pre><span class="code-label">py5 ── 骨子</span>
+<span class="kw">for</span> i, v <span class="kw">in</span> <span class="fn">enumerate</span>(data):          <span class="cmt"># data = [12,21,18,34,9]</span>
+    x = <span class="num">60</span> + i * <span class="num">90</span>
+    h = py5.remap(v, <span class="num">0</span>, <span class="fn">max</span>(data), <span class="num">0</span>, <span class="num">300</span>)  <span class="cmt"># 値→高さ</span>
+    py5.fill(<span class="num">118</span>, <span class="num">185</span>, <span class="num">0</span>)
+    py5.rect(x, <span class="num">350</span> - h, <span class="num">50</span>, h)         <span class="cmt"># 下から伸ばす</span></pre>
+      <p style="font-size:0.8rem;color:#999">使う既習知識: 繰り返し(for) ・ 図形(rect) ・ 色(fill)</p>
+    </div>
+
+    <!-- P2 折れ線 -->
+    <div class="card standard">
+      <div class="card-header"><span class="tag tag-standard">パターン2</span><h3>折れ線グラフ ── 変化を「線」でつなぐ</h3></div>
+      <p><strong>いつ使う:</strong> 時間とともにどう変わったかを見たいとき（月ごとの推移など）。</p>
+      <div style="margin:0.6rem 0;text-align:center">
+        <svg viewBox="0 0 380 150" xmlns="http://www.w3.org/2000/svg" style="max-width:380px;width:100%;background:#1A1A1A;border-radius:10px;border:1px solid #333">
+          <line x1="20" y1="125" x2="360" y2="125" stroke="#555"/>
+          <polyline points="40,100 100,70 160,85 220,45 280,60 340,25" fill="none" stroke="#FFB800" stroke-width="3" stroke-dasharray="400" stroke-dashoffset="400">
+            <animate attributeName="stroke-dashoffset" values="400;0" dur="2.5s" repeatCount="indefinite"/>
+          </polyline>
+          <g fill="#FFB800"><circle cx="40" cy="100" r="4"/><circle cx="100" cy="70" r="4"/><circle cx="160" cy="85" r="4"/><circle cx="220" cy="45" r="4"/><circle cx="280" cy="60" r="4"/><circle cx="340" cy="25" r="4"/></g>
+        </svg>
+      </div>
+      <pre><span class="code-label">py5 ── 骨子</span>
+py5.no_fill()
+py5.stroke(<span class="num">255</span>, <span class="num">184</span>, <span class="num">0</span>)
+py5.begin_shape()
+<span class="kw">for</span> i, v <span class="kw">in</span> <span class="fn">enumerate</span>(data):
+    x = py5.remap(i, <span class="num">0</span>, <span class="fn">len</span>(data)-<span class="num">1</span>, <span class="num">50</span>, <span class="num">550</span>)
+    y = py5.remap(v, <span class="num">0</span>, <span class="fn">max</span>(data), <span class="num">350</span>, <span class="num">50</span>)  <span class="cmt"># 上が大きい</span>
+    py5.vertex(x, y)               <span class="cmt"># 点をつないでいく</span>
+py5.end_shape()</pre>
+      <p style="font-size:0.8rem;color:#999">使う既習知識: 繰り返し(for) ・ begin_shape/vertex ・ 線(stroke)</p>
+    </div>
+
+    <!-- P3 散布図 -->
+    <div class="card standard">
+      <div class="card-header"><span class="tag tag-standard">パターン3</span><h3>散布図 ── 2つの数値を「位置」で見る</h3></div>
+      <p><strong>いつ使う:</strong> 2つの量が関係するか調べたいとき（メッセージ数 vs ファイル数）。</p>
+      <div style="margin:0.6rem 0;text-align:center">
+        <svg viewBox="0 0 380 150" xmlns="http://www.w3.org/2000/svg" style="max-width:380px;width:100%;background:#1A1A1A;border-radius:10px;border:1px solid #333">
+          <line x1="40" y1="125" x2="360" y2="125" stroke="#555"/><line x1="40" y1="20" x2="40" y2="125" stroke="#555"/>
+          <g fill="#4FC3F7">
+            <circle cx="80" cy="105" r="6"><animate attributeName="opacity" values="0;1" dur="0.5s" begin="0s;3s" fill="freeze"/></circle>
+            <circle cx="120" cy="95" r="6"><animate attributeName="opacity" values="0;1" dur="0.5s" begin="0.3s;3.3s" fill="freeze"/></circle>
+            <circle cx="160" cy="80" r="6"><animate attributeName="opacity" values="0;1" dur="0.5s" begin="0.6s;3.6s" fill="freeze"/></circle>
+            <circle cx="200" cy="85" r="6"><animate attributeName="opacity" values="0;1" dur="0.5s" begin="0.9s;3.9s" fill="freeze"/></circle>
+            <circle cx="240" cy="60" r="6"><animate attributeName="opacity" values="0;1" dur="0.5s" begin="1.2s;4.2s" fill="freeze"/></circle>
+            <circle cx="290" cy="50" r="6"><animate attributeName="opacity" values="0;1" dur="0.5s" begin="1.5s;4.5s" fill="freeze"/></circle>
+            <circle cx="320" cy="40" r="6"><animate attributeName="opacity" values="0;1" dur="0.5s" begin="1.8s;4.8s" fill="freeze"/></circle>
+          </g>
+        </svg>
+      </div>
+      <pre><span class="code-label">py5 ── 骨子</span>
+<span class="kw">for</span> d <span class="kw">in</span> data:                  <span class="cmt"># d = {"msg":.., "file":..}</span>
+    px = py5.remap(d[<span class="str">"msg"</span>],  <span class="num">0</span>, <span class="num">500</span>, <span class="num">50</span>, <span class="num">550</span>)
+    py = py5.remap(d[<span class="str">"file"</span>], <span class="num">0</span>, <span class="num">50</span>,  <span class="num">350</span>, <span class="num">50</span>)
+    py5.fill(<span class="num">79</span>, <span class="num">195</span>, <span class="num">247</span>, <span class="num">150</span>)  <span class="cmt"># 半透明で重なりが見える</span>
+    py5.circle(px, py, <span class="num">12</span>)</pre>
+      <p style="font-size:0.8rem;color:#999">使う既習知識: 辞書 ・ 図形(circle) ・ 透明度(alpha)</p>
+    </div>
+
+    <!-- P4 点群マップ -->
+    <div class="card standard">
+      <div class="card-header"><span class="tag tag-standard">パターン4</span><h3>点群マップ ── 座標データをそのまま「点」で置く</h3></div>
+      <p><strong>いつ使う:</strong> 位置の情報を持つデータ（コービーのシュート位置、地図、座席など）。点の<strong>色</strong>で成功/失敗などを表せる。</p>
+      <div style="margin:0.6rem 0;text-align:center">
+        <svg viewBox="0 0 380 150" xmlns="http://www.w3.org/2000/svg" style="max-width:380px;width:100%;background:#1A1A1A;border-radius:10px;border:1px solid #333">
+          <rect x="20" y="15" width="340" height="120" rx="6" fill="none" stroke="#444"/>
+          <g>
+            <circle cx="90" cy="50" r="5" fill="#76B900"><animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/></circle>
+            <circle cx="150" cy="80" r="5" fill="#FF5252"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.4s" repeatCount="indefinite"/></circle>
+            <circle cx="200" cy="40" r="5" fill="#76B900"><animate attributeName="opacity" values="0.3;1;0.3" dur="1.8s" repeatCount="indefinite"/></circle>
+            <circle cx="250" cy="95" r="5" fill="#76B900"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.2s" repeatCount="indefinite"/></circle>
+            <circle cx="300" cy="60" r="5" fill="#FF5252"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.6s" repeatCount="indefinite"/></circle>
+            <circle cx="120" cy="110" r="5" fill="#76B900"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.1s" repeatCount="indefinite"/></circle>
+            <circle cx="280" cy="30" r="5" fill="#76B900"><animate attributeName="opacity" values="0.3;1;0.3" dur="1.9s" repeatCount="indefinite"/></circle>
+          </g>
+          <text x="190" y="148" text-anchor="middle" fill="#999" font-size="8" font-family="sans-serif">緑=成功 / 赤=失敗 のように色で意味づけ</text>
+        </svg>
+      </div>
+      <pre><span class="code-label">py5 ── 骨子</span>
+<span class="kw">for</span> d <span class="kw">in</span> data:                  <span class="cmt"># d = {"x":.., "y":.., "made":..}</span>
+    x = py5.width/<span class="num">2</span> + d[<span class="str">"x"</span>] * <span class="num">0.4</span>  <span class="cmt"># 中央を原点に</span>
+    y = <span class="num">80</span> + d[<span class="str">"y"</span>] * <span class="num">0.4</span>
+    <span class="kw">if</span> d[<span class="str">"made"</span>]:
+        py5.fill(<span class="num">0</span>, <span class="num">200</span>, <span class="num">0</span>)        <span class="cmt"># 成功は緑</span>
+    <span class="kw">else</span>:
+        py5.fill(<span class="num">220</span>, <span class="num">0</span>, <span class="num">0</span>)        <span class="cmt"># 失敗は赤</span>
+    py5.circle(x, y, <span class="num">6</span>)</pre>
+      <p style="font-size:0.8rem;color:#999">使う既習知識: 辞書 ・ 条件分岐(if) ・ 座標計算</p>
+    </div>
+
+    <!-- P5 色・ヒートマップ -->
+    <div class="card standard">
+      <div class="card-header"><span class="tag tag-standard">パターン5</span><h3>色で表す（ヒートマップ）── 値を「色の濃さ」に変える</h3></div>
+      <p><strong>いつ使う:</strong> 格子状・カレンダー状のデータ（曜日×時間帯の活発さ、月ごとの強弱）。</p>
+      <div style="margin:0.6rem 0;text-align:center">
+        <svg viewBox="0 0 380 150" xmlns="http://www.w3.org/2000/svg" style="max-width:380px;width:100%;background:#1A1A1A;border-radius:10px;border:1px solid #333">
+          <g>
+            <rect x="40" y="35" width="38" height="38" rx="3"><animate attributeName="fill" values="#0a3a5a;#76B900;#0a3a5a" dur="3s" repeatCount="indefinite"/></rect>
+            <rect x="84" y="35" width="38" height="38" rx="3"><animate attributeName="fill" values="#76B900;#FFB800;#76B900" dur="3s" begin="0.4s" repeatCount="indefinite"/></rect>
+            <rect x="128" y="35" width="38" height="38" rx="3"><animate attributeName="fill" values="#FFB800;#FF5252;#FFB800" dur="3s" begin="0.8s" repeatCount="indefinite"/></rect>
+            <rect x="172" y="35" width="38" height="38" rx="3"><animate attributeName="fill" values="#0a3a5a;#4FC3F7;#0a3a5a" dur="3s" begin="1.2s" repeatCount="indefinite"/></rect>
+            <rect x="40" y="79" width="38" height="38" rx="3"><animate attributeName="fill" values="#76B900;#0a3a5a;#76B900" dur="3s" begin="0.6s" repeatCount="indefinite"/></rect>
+            <rect x="84" y="79" width="38" height="38" rx="3"><animate attributeName="fill" values="#FF5252;#FFB800;#FF5252" dur="3s" begin="1s" repeatCount="indefinite"/></rect>
+            <rect x="128" y="79" width="38" height="38" rx="3"><animate attributeName="fill" values="#4FC3F7;#76B900;#4FC3F7" dur="3s" begin="1.4s" repeatCount="indefinite"/></rect>
+            <rect x="172" y="79" width="38" height="38" rx="3"><animate attributeName="fill" values="#0a3a5a;#FF5252;#0a3a5a" dur="3s" begin="1.8s" repeatCount="indefinite"/></rect>
+          </g>
+          <text x="300" y="60" fill="#999" font-size="9" font-family="sans-serif">低い</text>
+          <rect x="295" y="66" width="44" height="12" fill="url(#hg)"/>
+          <text x="300" y="98" fill="#999" font-size="9" font-family="sans-serif">高い</text>
+          <defs><linearGradient id="hg"><stop offset="0" stop-color="#0a3a5a"/><stop offset="1" stop-color="#FF5252"/></linearGradient></defs>
+        </svg>
+      </div>
+      <pre><span class="code-label">py5 ── 骨子</span>
+py5.color_mode(py5.HSB, <span class="num">360</span>, <span class="num">100</span>, <span class="num">100</span>)
+<span class="kw">for</span> i, v <span class="kw">in</span> <span class="fn">enumerate</span>(grid):        <span class="cmt"># grid = 値の一次元リスト</span>
+    col = i % <span class="num">10</span>
+    row = i // <span class="num">10</span>
+    hue = py5.remap(v, <span class="num">0</span>, <span class="num">100</span>, <span class="num">200</span>, <span class="num">0</span>)  <span class="cmt"># 低=青 高=赤</span>
+    py5.fill(hue, <span class="num">80</span>, <span class="num">90</span>)
+    py5.rect(col*<span class="num">40</span>, row*<span class="num">40</span>, <span class="num">40</span>, <span class="num">40</span>)</pre>
+      <p style="font-size:0.8rem;color:#999">使う既習知識: 色(HSB) ・ remap ・ 余り(%)と整数除算(//)でマス目</p>
+    </div>
+
+    <!-- P6 放射状 -->
+    <div class="card standard">
+      <div class="card-header"><span class="tag tag-standard">パターン6</span><h3>放射状・円形 ── 「角度」で並べる</h3></div>
+      <p><strong>いつ使う:</strong> 周期や全体の割合を見せたいとき、見た目のインパクトを出したいとき。<code>sin / cos</code> で円周上に配置します。</p>
+      <div style="margin:0.6rem 0;text-align:center">
+        <svg viewBox="0 0 380 150" xmlns="http://www.w3.org/2000/svg" style="max-width:380px;width:100%;background:#1A1A1A;border-radius:10px;border:1px solid #333">
+          <g transform="translate(190,75)">
+            <g><animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="12s" repeatCount="indefinite"/>
+              <line x1="0" y1="0" x2="55" y2="0" stroke="#76B900" stroke-width="2"/><circle cx="55" cy="0" r="6" fill="#76B900"/>
+              <line x1="0" y1="0" x2="38" y2="38" stroke="#FFB800" stroke-width="2"/><circle cx="38" cy="38" r="6" fill="#FFB800"/>
+              <line x1="0" y1="0" x2="0" y2="50" stroke="#4FC3F7" stroke-width="2"/><circle cx="0" cy="50" r="6" fill="#4FC3F7"/>
+              <line x1="0" y1="0" x2="-45" y2="30" stroke="#93D500" stroke-width="2"/><circle cx="-45" cy="30" r="6" fill="#93D500"/>
+              <line x1="0" y1="0" x2="-58" y2="-20" stroke="#FF5252" stroke-width="2"/><circle cx="-58" cy="-20" r="6" fill="#FF5252"/>
+              <line x1="0" y1="0" x2="-15" y2="-52" stroke="#b07cc6" stroke-width="2"/><circle cx="-15" cy="-52" r="6" fill="#b07cc6"/>
+              <line x1="0" y1="0" x2="40" y2="-40" stroke="#FFB800" stroke-width="2"/><circle cx="40" cy="-40" r="6" fill="#FFB800"/>
+            </g>
+            <circle r="4" fill="#fff"/>
+          </g>
+        </svg>
+      </div>
+      <pre><span class="code-label">py5 ── 骨子</span>
+cx, cy = py5.width/<span class="num">2</span>, py5.height/<span class="num">2</span>
+<span class="kw">for</span> i, v <span class="kw">in</span> <span class="fn">enumerate</span>(data):
+    a = py5.remap(i, <span class="num">0</span>, <span class="fn">len</span>(data), <span class="num">0</span>, py5.TWO_PI)  <span class="cmt"># 何番目か→角度</span>
+    r = py5.remap(v, <span class="num">0</span>, <span class="fn">max</span>(data), <span class="num">30</span>, <span class="num">200</span>)     <span class="cmt"># 値→中心からの距離</span>
+    x = cx + py5.cos(a) * r
+    y = cy + py5.sin(a) * r
+    py5.line(cx, cy, x, y)
+    py5.circle(x, y, <span class="num">10</span>)</pre>
+      <p style="font-size:0.8rem;color:#999">使う既習知識: sin/cos ・ TWO_PI ・ 座標計算</p>
+    </div>
+
+    <!-- P7 アニメーション -->
+    <div class="card advanced">
+      <div class="card-header"><span class="tag tag-advanced">パターン7</span><h3>アニメーション ── 時間（フレーム）で動かす</h3></div>
+      <p><strong>py5の強みはここ。</strong> <code>draw()</code> は毎フレーム呼ばれるので、<code>frame_count</code> を使うと「伸びる・揺れる・流れる」動きが作れます。<strong>静止画＋これ</strong>で一気に魅力が増します。</p>
+      <div style="margin:0.6rem 0;text-align:center">
+        <svg viewBox="0 0 380 150" xmlns="http://www.w3.org/2000/svg" style="max-width:380px;width:100%;background:#1A1A1A;border-radius:10px;border:1px solid #333">
+          <line x1="20" y1="125" x2="360" y2="125" stroke="#555"/>
+          <rect x="50" width="40" fill="#9B59B6"><animate attributeName="height" values="30;100;30" dur="1.6s" repeatCount="indefinite"/><animate attributeName="y" values="95;25;95" dur="1.6s" repeatCount="indefinite"/></rect>
+          <rect x="110" width="40" fill="#9B59B6"><animate attributeName="height" values="30;100;30" dur="1.6s" begin="0.2s" repeatCount="indefinite"/><animate attributeName="y" values="95;25;95" dur="1.6s" begin="0.2s" repeatCount="indefinite"/></rect>
+          <rect x="170" width="40" fill="#9B59B6"><animate attributeName="height" values="30;100;30" dur="1.6s" begin="0.4s" repeatCount="indefinite"/><animate attributeName="y" values="95;25;95" dur="1.6s" begin="0.4s" repeatCount="indefinite"/></rect>
+          <rect x="230" width="40" fill="#9B59B6"><animate attributeName="height" values="30;100;30" dur="1.6s" begin="0.6s" repeatCount="indefinite"/><animate attributeName="y" values="95;25;95" dur="1.6s" begin="0.6s" repeatCount="indefinite"/></rect>
+          <rect x="290" width="40" fill="#9B59B6"><animate attributeName="height" values="30;100;30" dur="1.6s" begin="0.8s" repeatCount="indefinite"/><animate attributeName="y" values="95;25;95" dur="1.6s" begin="0.8s" repeatCount="indefinite"/></rect>
+        </svg>
+      </div>
+      <pre><span class="code-label">py5 ── 骨子</span>
+<span class="kw">def</span> <span class="fn">draw</span>():
+    py5.background(<span class="num">255</span>)
+    <span class="kw">for</span> i, v <span class="kw">in</span> <span class="fn">enumerate</span>(data):
+        <span class="cmt"># フレーム経過で 0→1 に伸びる（登場アニメ）</span>
+        grow = <span class="fn">min</span>(py5.frame_count / <span class="num">60</span>, <span class="num">1</span>)
+        h = py5.remap(v, <span class="num">0</span>, <span class="fn">max</span>(data), <span class="num">0</span>, <span class="num">300</span>) * grow
+        <span class="cmt"># sinで揺らすなら: y揺れ = py5.sin(py5.frame_count*0.1 + i)*10</span>
+        py5.rect(<span class="num">60</span> + i*<span class="num">90</span>, <span class="num">350</span> - h, <span class="num">50</span>, h)</pre>
+      <p style="font-size:0.8rem;color:#999">使う既習知識: draw()ループ ・ frame_count ・ sin で揺らす</p>
+    </div>
+
+    <!-- P8 マウス操作 -->
+    <div class="card advanced">
+      <div class="card-header"><span class="tag tag-advanced">パターン8</span><h3>マウス操作 ── 触ると反応する（インタラクション）</h3></div>
+      <p><strong>推奨条件はここ。</strong> <code>mouse_x</code> / <code>mouse_y</code> で「今どこを指しているか」が分かります。乗ったバーを<strong>ハイライト</strong>したり、マウス位置で<strong>表示する年を切り替え</strong>たり（コービー作品の手法）。</p>
+      <div style="margin:0.6rem 0;text-align:center">
+        <svg viewBox="0 0 380 150" xmlns="http://www.w3.org/2000/svg" style="max-width:380px;width:100%;background:#1A1A1A;border-radius:10px;border:1px solid #333">
+          <line x1="20" y1="125" x2="360" y2="125" stroke="#555"/>
+          <rect x="50" y="70" width="40" height="55" fill="#555"/>
+          <rect x="110" y="40" width="40" height="85" fill="#555"/>
+          <rect x="170" y="55" width="40" height="70" fill="#555"/>
+          <rect x="230" y="25" width="40" height="100" fill="#555"/>
+          <rect x="290" y="85" width="40" height="40" fill="#555"/>
+          <!-- ハイライト枠が移動 -->
+          <rect y="20" width="40" height="105" fill="#FFB800" opacity="0.85">
+            <animate attributeName="x" values="50;110;170;230;290;50" keyTimes="0;0.2;0.4;0.6;0.8;1" dur="5s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="70;40;55;25;85;70" keyTimes="0;0.2;0.4;0.6;0.8;1" dur="5s" repeatCount="indefinite"/>
+            <animate attributeName="height" values="55;85;70;100;40;55" keyTimes="0;0.2;0.4;0.6;0.8;1" dur="5s" repeatCount="indefinite"/>
+          </rect>
+          <!-- マウスカーソル -->
+          <path d="M0,0 L0,16 L4,12 L7,18 L9,17 L6,11 L11,11 Z" fill="#fff" stroke="#000" stroke-width="0.5">
+            <animateMotion path="M70,60 L130,30 L190,45 L250,15 L310,75 L70,60" keyPoints="0;0.2;0.4;0.6;0.8;1" keyTimes="0;0.2;0.4;0.6;0.8;1" dur="5s" repeatCount="indefinite"/>
+          </path>
+        </svg>
+      </div>
+      <pre><span class="code-label">py5 ── 骨子</span>
+<span class="kw">def</span> <span class="fn">draw</span>():
+    py5.background(<span class="num">255</span>)
+    <span class="kw">for</span> i, v <span class="kw">in</span> <span class="fn">enumerate</span>(data):
+        x = <span class="num">60</span> + i * <span class="num">90</span>
+        h = py5.remap(v, <span class="num">0</span>, <span class="fn">max</span>(data), <span class="num">0</span>, <span class="num">300</span>)
+        over = x &lt; py5.mouse_x &lt; x + <span class="num">50</span>     <span class="cmt"># マウスが乗っているか</span>
+        <span class="kw">if</span> over:
+            py5.fill(<span class="num">255</span>, <span class="num">184</span>, <span class="num">0</span>)            <span class="cmt"># 乗ったら黄色で強調</span>
+            py5.text(<span class="fn">str</span>(v), x, <span class="num">340</span> - h)     <span class="cmt"># 値を表示</span>
+        <span class="kw">else</span>:
+            py5.fill(<span class="num">118</span>, <span class="num">185</span>, <span class="num">0</span>)
+        py5.rect(x, <span class="num">350</span> - h, <span class="num">50</span>, h)</pre>
+      <p style="font-size:0.8rem;color:#999">使う既習知識: mouse_x/mouse_y ・ 条件分岐(if) ・ テキスト表示</p>
+    </div>
+
+    <!-- P9 キー切替 + 音 -->
+    <div class="card advanced">
+      <div class="card-header"><span class="tag tag-advanced">パターン9</span><h3>キーで切替 ＆ 音を足す</h3></div>
+      <p><strong>キー操作:</strong> <code>key_pressed()</code> で表示モードを切り替え（棒↔折れ線↔散布図）。<br><strong>音メディア:</strong> <code>pydub</code> で読み込んだ音や FFT の強さを、イコライザのように可視化してもOK（第6回の発展）。</p>
+      <div style="margin:0.6rem 0;text-align:center">
+        <svg viewBox="0 0 380 150" xmlns="http://www.w3.org/2000/svg" style="max-width:380px;width:100%;background:#1A1A1A;border-radius:10px;border:1px solid #333">
+          <line x1="20" y1="130" x2="360" y2="130" stroke="#555"/>
+          <g>
+            <rect x="40" width="20" fill="#4FC3F7"><animate attributeName="height" values="20;70;35;90;20" dur="1.1s" repeatCount="indefinite"/><animate attributeName="y" values="110;60;95;40;110" dur="1.1s" repeatCount="indefinite"/></rect>
+            <rect x="70" width="20" fill="#76B900"><animate attributeName="height" values="50;100;30;60;50" dur="1.1s" repeatCount="indefinite"/><animate attributeName="y" values="80;30;100;70;80" dur="1.1s" repeatCount="indefinite"/></rect>
+            <rect x="100" width="20" fill="#93D500"><animate attributeName="height" values="80;40;100;50;80" dur="1.1s" repeatCount="indefinite"/><animate attributeName="y" values="50;90;30;80;50" dur="1.1s" repeatCount="indefinite"/></rect>
+            <rect x="130" width="20" fill="#FFB800"><animate attributeName="height" values="35;90;55;100;35" dur="1.1s" repeatCount="indefinite"/><animate attributeName="y" values="95;40;75;30;95" dur="1.1s" repeatCount="indefinite"/></rect>
+            <rect x="160" width="20" fill="#FF8A00"><animate attributeName="height" values="60;30;85;45;60" dur="1.1s" repeatCount="indefinite"/><animate attributeName="y" values="70;100;45;85;70" dur="1.1s" repeatCount="indefinite"/></rect>
+            <rect x="190" width="20" fill="#FF5252"><animate attributeName="height" values="90;55;100;35;90" dur="1.1s" repeatCount="indefinite"/><animate attributeName="y" values="40;75;30;95;40" dur="1.1s" repeatCount="indefinite"/></rect>
+            <rect x="220" width="20" fill="#b07cc6"><animate attributeName="height" values="45;95;40;80;45" dur="1.1s" repeatCount="indefinite"/><animate attributeName="y" values="85;35;90;50;85" dur="1.1s" repeatCount="indefinite"/></rect>
+            <rect x="250" width="20" fill="#9B59B6"><animate attributeName="height" values="70;40;90;55;70" dur="1.1s" repeatCount="indefinite"/><animate attributeName="y" values="60;90;40;75;60" dur="1.1s" repeatCount="indefinite"/></rect>
+            <rect x="280" width="20" fill="#4FC3F7"><animate attributeName="height" values="30;80;50;95;30" dur="1.1s" repeatCount="indefinite"/><animate attributeName="y" values="100;50;80;35;100" dur="1.1s" repeatCount="indefinite"/></rect>
+            <rect x="310" width="20" fill="#76B900"><animate attributeName="height" values="55;100;35;70;55" dur="1.1s" repeatCount="indefinite"/><animate attributeName="y" values="75;30;95;60;75" dur="1.1s" repeatCount="indefinite"/></rect>
+          </g>
+        </svg>
+      </div>
+      <pre><span class="code-label">py5 ── 骨子</span>
+mode = <span class="num">0</span>
+<span class="kw">def</span> <span class="fn">key_pressed</span>():
+    <span class="kw">global</span> mode
+    <span class="kw">if</span>   py5.key == <span class="str">'b'</span>: mode = <span class="num">0</span>   <span class="cmt"># 棒グラフ</span>
+    <span class="kw">elif</span> py5.key == <span class="str">'l'</span>: mode = <span class="num">1</span>   <span class="cmt"># 折れ線</span>
+
+<span class="cmt"># 音: pydubで読み込み→強さの配列levelsを作っておく</span>
+<span class="kw">for</span> i, lv <span class="kw">in</span> <span class="fn">enumerate</span>(levels):
+    h = py5.remap(lv, <span class="num">0</span>, <span class="num">1</span>, <span class="num">0</span>, <span class="num">300</span>)
+    py5.fill(py5.remap(i, <span class="num">0</span>, <span class="fn">len</span>(levels), <span class="num">0</span>, <span class="num">255</span>), <span class="num">200</span>, <span class="num">255</span>)
+    py5.rect(i*<span class="num">12</span>, <span class="num">350</span> - h, <span class="num">10</span>, h)  <span class="cmt"># 周波数バー</span></pre>
+      <p style="font-size:0.8rem;color:#999">使う既習知識: key_pressed ・ グローバル変数 ・ 音/FFT(第6回) ・ pydub</p>
+    </div>
+
+    <!-- 組み合わせの示唆 -->
+    <div class="callout-info">
+      <h4>パターンは「組み合わせる」と作品になる</h4>
+      <p>1つで終わらせず、重ねるほど良くなります。例: <strong>棒グラフ（P1）＋ アニメーション（P7）＋ マウス操作（P8）</strong> → 「マウスを動かすと月が切り替わり、棒がにゅっと伸びる」インタラクティブ作品に。まずは1パターンを動かし、慣れたら1つずつ足していこう。</p>
+    </div>
+  </div>
+</section>
+
 <!-- ============ 2. FINAL PROJECT ============ -->
 <section id="sec-final">
   <div class="container">
@@ -1224,7 +1792,7 @@ py5.run_sketch()</pre>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:0.6rem;margin-top:0.8rem">
         <a href="#sec-final-a" style="text-decoration:none;color:inherit;background:#1A1A1A;border:2px solid #76B900;border-radius:0.5rem;padding:0.8rem;display:block">
           <div style="font-weight:700;color:#76B900;font-size:1rem;margin-bottom:0.3rem">A: Slack 分析＋施策提案</div>
-          <div style="font-size:0.8rem;color:#ccc">配布データ（slack.csv / slack_time.csv）を分析し、「より活発になる」ための施策をデータ的根拠とともに提案する。</div>
+          <div style="font-size:0.8rem;color:#ccc">配布データ（DS全体のslack利用状況.csv／ユーザ別投稿状況.csv）を分析し、「より活発になる」ための施策をデータ的根拠とともに提案する。</div>
         </a>
         <a href="#sec-final-b" style="text-decoration:none;color:inherit;background:#1A1A1A;border:2px solid #FFB800;border-radius:0.5rem;padding:0.8rem;display:block">
           <div style="font-weight:700;color:#FFB800;font-size:1rem;margin-bottom:0.3rem">B: 自分のテーマで自由制作</div>
@@ -1272,20 +1840,23 @@ py5.run_sketch()</pre>
       </div>
 
       <h4 style="color:#76B900;margin-bottom:0.5rem">課題内容</h4>
-      <p>配布された <code>slack.csv</code> または <code>slack_time.csv</code> のデータを分析し、<strong>Slack がより活発に使われるための施策</strong>を提案してください。データから読み取った特徴と、そこから導いた提案を py5 で可視化します。</p>
+      <p>配布された <code>DS全体のslack利用状況.csv</code>（日付ごとの全体利用状況）または <code>ユーザ別投稿状況.csv</code>（役職別の投稿状況）のデータ（いずれも 2025年5月1日〜2026年5月31日）を分析し、<strong>Slack がより活発に使われるための施策</strong>を提案してください。データから読み取った特徴と、そこから導いた提案を py5 で可視化します。</p>
 
       <h4 style="color:#76B900;margin-top:1.5rem;margin-bottom:0.5rem">必須条件</h4>
       <ul class="point-list">
-        <li>配布されたCSVファイル（slack.csv または slack_time.csv）を使用</li>
+        <li>配布されたCSVファイル（DS全体のslack利用状況.csv または ユーザ別投稿状況.csv）を使用</li>
         <li>py5 で可視化すること（技術要素から2つ以上を組み合わせる）</li>
         <li>データから読み取った特徴と、それに基づく施策が伝わるように作ること</li>
       </ul>
 
       <h4 style="color:#76B900;margin-top:1.5rem;margin-bottom:0.5rem">Notion に記録する項目</h4>
       <ul class="point-list">
-        <li><strong>テーマ・コンセプト:</strong> 50字程度の説明文</li>
-        <li><strong>コード:</strong> 完成したPythonコード全文</li>
-        <li><strong>実行画面の動画:</strong> 画面収録した <strong>mp4 ファイル</strong>を Notion に貼り付け</li>
+        <li><strong>作品のタイトル:</strong> 作品につけた名前</li>
+        <li><strong>作品のテーマ:</strong> 何を可視化したか（50字程度）</li>
+        <li><strong>作った目的:</strong> なぜこれを作ったのか・何を伝えたいのか</li>
+        <li><strong>どのように作ったか（設計）:</strong> 作り方・工夫（文章だけでも・図表を使ってもOK）</li>
+        <li><strong>コード:</strong> 完成したPythonコード全文（<strong>コメントは自分の言葉で。AI に書かせない</strong>）</li>
+        <li><strong>実行画面の動画:</strong> 画面収録を <strong>mp4 に変換</strong>して Notion に貼り付け（Google Classroom にも別途提出）</li>
         <li><strong>分析から読み取ったこと:</strong> データを見て気づいた特徴・傾向</li>
         <li><strong>より活発にするための施策提案:</strong> 上記の分析を根拠にした提案（思いつきではなく、データから言える内容に）</li>
       </ul>
@@ -1320,11 +1891,13 @@ py5.run_sketch()</pre>
 
       <h4 style="color:#FFB800;margin-top:1.5rem;margin-bottom:0.5rem">Notion に記録する項目</h4>
       <ul class="point-list">
-        <li><strong>テーマ・コンセプト:</strong> 50字程度の説明文</li>
+        <li><strong>作品のタイトル:</strong> 作品につけた名前</li>
+        <li><strong>作品のテーマ:</strong> 何を可視化したか（50字程度）</li>
+        <li><strong>作った目的:</strong> なぜこれを作ったのか・何を伝えたいのか</li>
         <li><strong>使用したデータの出典:</strong> URL や提供元を明記</li>
-        <li><strong>コード:</strong> 完成したPythonコード全文</li>
-        <li><strong>実行画面の動画:</strong> 画面収録した <strong>mp4 ファイル</strong>を Notion に貼り付け</li>
-        <li><strong>工夫した点:</strong> 自分なりに工夫したポイント</li>
+        <li><strong>どのように作ったか（設計）:</strong> 作り方・工夫（文章だけでも・図表を使ってもOK）</li>
+        <li><strong>コード:</strong> 完成したPythonコード全文（<strong>コメントは自分の言葉で。AI に書かせない</strong>）</li>
+        <li><strong>実行画面の動画:</strong> 画面収録を <strong>mp4 に変換</strong>して Notion に貼り付け（Google Classroom にも別途提出）</li>
       </ul>
 
       <div class="callout-info">
@@ -1366,76 +1939,49 @@ py5.run_sketch()</pre>
   </div>
 </section>
 
-<!-- ============ NOTION TEMPLATE ============ -->
-<section id="sec-notion">
+<!-- ============ GROUP WORK: 中間発表 ============ -->
+<section id="sec-group">
   <div class="container">
     <div class="section-header">
-      <div class="section-num" style="background:#76B900">N</div>
-      <h2>Notion テンプレート <span style="font-size:0.5rem;color:#999;font-weight:400">── コピーして使ってください</span></h2>
+      <div class="section-num" style="background:#93D500">G</div>
+      <h2>グループワーク: 中間発表 <span style="font-size:0.5rem;color:#999;font-weight:400">── 途中経過を見せ合ってフィードバック</span></h2>
     </div>
 
-    <div class="card">
+    <div class="card group">
       <div class="card-header">
-        <h3>Notionにコピーして使うテンプレート</h3>
+        <span class="tag tag-group">グループ</span>
+        <h3>途中までの作品をグループ内でプレゼンし、お互いにフィードバックしよう</h3>
       </div>
-      <p>以下をNotionにコピーし、穴埋め・記録をしてからPDFにエクスポートしてください。<strong>選んだ課題（A または B）に対応するブロックだけ</strong>を埋めればOKです。提出は PDF と 実行画面の mp4 動画 の2ファイルです。</p>
-      <pre><span class="code-label">Notion テンプレート</span>
-# MD1 第7回: 最終課題
+      <p>制作の途中で、いったん手を止めて <strong>「いまどこまでできたか」をグループ内で発表（中間発表）</strong>します。完成していなくて大丈夫。<strong>未完成・アイデア段階でもOK</strong>です。人に見せて話すことで、自分の作品の課題や次にやることがはっきりします。</p>
 
-名前:
-学籍番号:
-選んだ課題: A / B  ←どちらかに〇
+      <h4 style="color:#93D500;margin-top:1rem;margin-bottom:0.5rem">発表する人（1〜2分）</h4>
+      <ul class="point-list">
+        <li><strong>テーマ・目的:</strong> 何のデータを、なぜ可視化しようとしているか</li>
+        <li><strong>現状:</strong> いまどこまでできているか（画面を見せながら）</li>
+        <li><strong>困っていること:</strong> 詰まっている点・相談したいこと</li>
+      </ul>
 
----
+      <h4 style="color:#93D500;margin-top:1rem;margin-bottom:0.5rem">聞く人（フィードバック）</h4>
+      <ul class="point-list">
+        <li><strong>良いと思った点</strong>を具体的に伝える（どこが分かりやすい・面白いか）</li>
+        <li><strong>もっと良くなりそうな点</strong>を提案する（こう見せると伝わるのでは?）</li>
+        <li>「インサイト（気づき）」が伝わってきたか、率直に伝える</li>
+      </ul>
 
-## データ可視化の原則
-- 可視化で最も大事なこと: ＿＿＿＿＿＿＿＿＿＿
-- 棒グラフが適している場面: ＿＿＿＿＿＿
-- 折れ線グラフが適している場面: ＿＿＿＿＿＿
-- グラフの嘘の例: ＿＿＿＿＿＿＿＿
+      <div class="callout-tip" style="margin-top:1rem">
+        <h4>うまく回すコツ</h4>
+        <ul class="point-list">
+          <li>1人ずつ順番に。発表1〜2分 → フィードバック1〜2分くらいの軽いテンポで</li>
+          <li>ダメ出しではなく「良い点 → 提案」の順で。お互いの作品をより良くするための時間です</li>
+          <li>もらった意見は、後半の制作で取り入れてみよう</li>
+        </ul>
+      </div>
 
----
-
-## 最終課題
-
-### テーマ・コンセプト（50字程度）
-
-
-### 使用した技術（該当するものにチェック）
-- [ ] 図形描画
-- [ ] テキスト表示
-- [ ] 色彩
-- [ ] アニメーション
-- [ ] 音の再生
-
-### Code
-（コードを貼り付け）
-
-### 実行画面の動画（mp4）
-（画面収録した mp4 をここに貼り付け。Google Classroom にも同じ mp4 を別途提出）
-
----
-
-## A を選んだ場合のみ記入
-
-### 分析から読み取ったこと
-（データを見て気づいた特徴・傾向）
-
-### より活発にするための施策提案
-（上記の分析を根拠にした提案。データから言える内容に）
-
----
-
-## B を選んだ場合のみ記入
-
-### 使用したデータの出典
-（URL や提供元を明記）
-
-### 工夫した点
-
-</pre>
+      <div class="callout-info" style="margin-top:0.6rem">
+        <h4>提出物はありません</h4>
+        <p style="font-size:0.9rem">この中間発表は<strong>グループ内で行う活動で、提出するものは特にありません</strong>。気軽に見せ合い、フィードバックを楽しんでください。（提出が必要なのは最終課題のみです。）</p>
+      </div>
     </div>
-
   </div>
 </section>
 
