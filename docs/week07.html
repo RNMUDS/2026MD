@@ -588,7 +588,7 @@ body { padding-top: 2.2rem; }
   <a href="#sec-viz">可視化の基礎</a>
   <a href="#sec-csv">1. CSV読み込み</a>
   <a href="#sec-patterns">可視化パターン</a>
-  <a href="#sec-final" class="nav-assignment">最終課題</a>
+  <a href="#sec-final-a" class="nav-assignment">最終課題</a>
   <a href="#sec-group">中間発表</a>
 </nav>
 
@@ -696,7 +696,7 @@ body { padding-top: 2.2rem; }
           <li><strong>AI に作らせた架空のデータ</strong> ── 「それっぽい数値を生成して」と AI にでっち上げさせたデータは <strong>NG</strong>。可視化は「実在するデータ」を対象にすること（実データを集める・探す作業も課題のうち）。</li>
         </ul>
       </div>
-      <p style="font-size:0.85rem;color:#999;margin-top:0.6rem">※ 具体的な進め方は、配布データを分析する <strong>A</strong> と、自分でテーマとデータを決める <strong>B</strong> の2コースに分けて後半（<a href="#sec-final" style="color:#76B900">最終課題制作</a>）で説明します。</p>
+      <p style="font-size:0.85rem;color:#999;margin-top:0.6rem">※ 具体的な進め方は、配布データを分析する <strong>A</strong> と、自分でテーマとデータを決める <strong>B</strong> の2コースに分けてこの下（<a href="#sec-final-a" style="color:#76B900">A・B コースの説明</a>）で詳しく述べます。</p>
     </div>
 
     <!-- 提出形式 -->
@@ -749,6 +749,164 @@ body { padding-top: 2.2rem; }
         <p style="margin-top:0.5rem;font-size:0.9rem"><strong>理解せずに「実行できただけ」の作品は認められません。</strong>作られたコードの仕組み・内容をきちんと理解できていなければ、評価することはできません。必要に応じて<strong>口頭試問</strong>で理解を確認する場合があります。</p>
       </div>
     </div>
+
+    <!-- ▼ 最終課題制作（旧セクション2から統合） -->
+    <h3 style="color:#FFB800;margin:2rem 0 1rem;padding-top:1.3rem;border-top:2px solid #2a2a2a;font-size:1.25rem;font-weight:800">▶ 最終課題制作（約120分+）</h3>
+
+    <!-- A/B 選択イントロ -->
+    <div class="card advanced">
+      <div class="card-header">
+        <span class="tag tag-advanced">最終課題</span>
+        <h3>A・B のどちらかを選んで制作</h3>
+      </div>
+      <p>下の <strong>A・B いずれか</strong>を選んで取り組んでください。両方とも <strong>py5 で可視化することが必須</strong>です。</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:0.6rem;margin-top:0.8rem">
+        <a href="#sec-final-a" style="text-decoration:none;color:inherit;background:#1A1A1A;border:2px solid #76B900;border-radius:0.5rem;padding:0.8rem;display:block">
+          <div style="font-weight:700;color:#76B900;font-size:1rem;margin-bottom:0.3rem">A: Slack 分析＋施策提案</div>
+          <div style="font-size:0.8rem;color:#ccc">配布データ（DS全体のslack利用状況.csv／ユーザ別投稿状況.csv）を分析し、「より活発になる」ための施策をデータ的根拠とともに提案する。</div>
+        </a>
+        <a href="#sec-final-b" style="text-decoration:none;color:inherit;background:#1A1A1A;border:2px solid #FFB800;border-radius:0.5rem;padding:0.8rem;display:block">
+          <div style="font-weight:700;color:#FFB800;font-size:1rem;margin-bottom:0.3rem">B: 自分のテーマで自由制作</div>
+          <div style="font-size:0.8rem;color:#ccc">興味のあるテーマを決め、自分でデータを用意して可視化作品を制作する。データは 6/15 までに用意できればOK。</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- 共通: 技術要素（2つ以上組み合わせる） -->
+    <div class="card">
+      <div class="card-header">
+        <h3>共通の必須条件: 技術要素を2つ以上組み合わせる</h3>
+      </div>
+      <p>A・B どちらを選ぶ場合も、第1回〜第6回で学んだ次の技術要素から<strong>2つ以上</strong>を組み合わせてください。</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(7rem,1fr));gap:0.4rem;margin:1rem 0">
+        <div style="background:#1A1A1A;border:1px solid #333;border-radius:0.3rem;padding:0.5rem;text-align:center;font-size:0.8rem">
+          <div style="font-weight:700;color:#76B900">図形描画</div>
+          <div style="font-size:0.65rem;color:#999">rect, ellipse, line...</div>
+        </div>
+        <div style="background:#1A1A1A;border:1px solid #333;border-radius:0.3rem;padding:0.5rem;text-align:center;font-size:0.8rem">
+          <div style="font-weight:700;color:#76B900">テキスト表示</div>
+          <div style="font-size:0.65rem;color:#999">text, text_size...</div>
+        </div>
+        <div style="background:#1A1A1A;border:1px solid #333;border-radius:0.3rem;padding:0.5rem;text-align:center;font-size:0.8rem">
+          <div style="font-weight:700;color:#76B900">色彩</div>
+          <div style="font-size:0.65rem;color:#999">fill, stroke, RGB...</div>
+        </div>
+        <div style="background:#1A1A1A;border:1px solid #333;border-radius:0.3rem;padding:0.5rem;text-align:center;font-size:0.8rem">
+          <div style="font-weight:700;color:#76B900">アニメーション</div>
+          <div style="font-size:0.65rem;color:#999">draw()ループ, 変数更新...</div>
+        </div>
+        <div style="background:#1A1A1A;border:1px solid #333;border-radius:0.3rem;padding:0.5rem;text-align:center;font-size:0.8rem">
+          <div style="font-weight:700;color:#76B900">音の再生</div>
+          <div style="font-size:0.65rem;color:#999">sine, square, play...</div>
+        </div>
+      </div>
+      <p style="font-size:0.85rem;color:#999;margin-top:0.3rem">インタラクティブな要素（マウス操作など）があるとなお良いです（必須ではありません）。</p>
+    </div>
+
+    <!-- Option A -->
+    <div id="sec-final-a" class="card advanced" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.75rem">選択肢 A</span>
+        <h3>Slack 利用データの分析と「より活発になる」施策提案</h3>
+      </div>
+
+      <h4 style="color:#76B900;margin-bottom:0.5rem">課題内容</h4>
+      <p>配布された <code>DS全体のslack利用状況.csv</code>（日付ごとの全体利用状況）または <code>ユーザ別投稿状況.csv</code>（役職別の投稿状況）のデータ（いずれも 2025年5月1日〜2026年5月31日）を分析し、<strong>Slack がより活発に使われるための施策</strong>を提案してください。データから読み取った特徴と、そこから導いた提案を py5 で可視化します。</p>
+
+      <h4 style="color:#76B900;margin-top:1.5rem;margin-bottom:0.5rem">必須条件</h4>
+      <ul class="point-list">
+        <li>配布されたCSVファイル（DS全体のslack利用状況.csv または ユーザ別投稿状況.csv）を使用</li>
+        <li>py5 で可視化すること（技術要素から2つ以上を組み合わせる）</li>
+        <li>データから読み取った特徴と、それに基づく施策が伝わるように作ること</li>
+      </ul>
+
+      <h4 style="color:#76B900;margin-top:1.5rem;margin-bottom:0.5rem">Notion に記録する項目</h4>
+      <ul class="point-list">
+        <li><strong>作品のタイトル:</strong> 作品につけた名前</li>
+        <li><strong>作品のテーマ:</strong> 何を可視化したか（50字程度）</li>
+        <li><strong>作った目的:</strong> なぜこれを作ったのか・何を伝えたいのか</li>
+        <li><strong>どのように作ったか（設計）:</strong> 作り方・工夫（文章だけでも・図表を使ってもOK）</li>
+        <li><strong>コード:</strong> 完成したPythonコード全文（<strong>コメントは自分の言葉で。AI に書かせない</strong>）</li>
+        <li><strong>実行画面の動画:</strong> 画面収録を <strong>mp4 に変換</strong>して Notion に貼り付け（Google Classroom にも別途提出）</li>
+        <li><strong>分析から読み取ったこと:</strong> データを見て気づいた特徴・傾向</li>
+        <li><strong>より活発にするための施策提案:</strong> 上記の分析を根拠にした提案（思いつきではなく、データから言える内容に）</li>
+      </ul>
+
+      <div class="callout-info">
+        <h4>制作のヒント（A）</h4>
+        <ul class="point-list">
+          <li>例: 曜日別・時間帯別のアクティブ数を可視化 → 静かな時間帯を発見 → その時間に何かを仕掛ける施策</li>
+          <li>例: 月ごとのメッセージ推移 → 落ち込んだ時期に注目 → 改善案</li>
+          <li>例: メッセージ数とファイル数の関係を散布図に → 利用パターンの違いを発見 → 提案</li>
+          <li>「絵文字を増やそう」のような根拠のない思いつきではなく、<strong>データから言える施策</strong>を心がけてください。</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Option B -->
+    <div id="sec-final-b" class="card advanced" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <span class="tag tag-advanced" style="font-size:0.75rem">選択肢 B</span>
+        <h3>自分のテーマで自由制作（データ持参）</h3>
+      </div>
+
+      <h4 style="color:#FFB800;margin-bottom:0.5rem">課題内容</h4>
+      <p>自分で興味のあるテーマを決め、それに関するデータを自分で用意して可視化作品を制作してください。データソースは <strong>6/15 の提出までに用意できればOK</strong>です（授業中に揃わなくても問題ありません）。</p>
+
+      <h4 style="color:#FFB800;margin-top:1.5rem;margin-bottom:0.5rem">必須条件</h4>
+      <ul class="point-list">
+        <li>自分で用意したCSVデータを使用（出典を明記）</li>
+        <li>py5 で可視化すること（技術要素から2つ以上を組み合わせる）</li>
+        <li>データの特徴が視覚的に理解できること</li>
+      </ul>
+
+      <h4 style="color:#FFB800;margin-top:1.5rem;margin-bottom:0.5rem">Notion に記録する項目</h4>
+      <ul class="point-list">
+        <li><strong>作品のタイトル:</strong> 作品につけた名前</li>
+        <li><strong>作品のテーマ:</strong> 何を可視化したか（50字程度）</li>
+        <li><strong>作った目的:</strong> なぜこれを作ったのか・何を伝えたいのか</li>
+        <li><strong>使用したデータの出典:</strong> URL や提供元を明記</li>
+        <li><strong>どのように作ったか（設計）:</strong> 作り方・工夫（文章だけでも・図表を使ってもOK）</li>
+        <li><strong>コード:</strong> 完成したPythonコード全文（<strong>コメントは自分の言葉で。AI に書かせない</strong>）</li>
+        <li><strong>実行画面の動画:</strong> 画面収録を <strong>mp4 に変換</strong>して Notion に貼り付け（Google Classroom にも別途提出）</li>
+      </ul>
+
+      <div class="callout-info">
+        <h4>データソースの例（自由に選んでOK）</h4>
+        <ul class="point-list">
+          <li><a href="https://www.data.jma.go.jp/risk/obsdl/" target="_blank" rel="noopener" style="color:#76B900">気象庁 過去の気象データ</a> ── 自分の住む街の気温・降水量の推移</li>
+          <li><a href="https://www.e-stat.go.jp/" target="_blank" rel="noopener" style="color:#76B900">e-Stat（政府統計）</a> ── 人口・経済・教育などの公開統計</li>
+          <li><a href="https://www.kaggle.com/datasets" target="_blank" rel="noopener" style="color:#76B900">Kaggle Datasets</a> ── スポーツ・音楽・映画など多種多様な公開データセット</li>
+          <li>自分のスマホの記録（歩数、睡眠ログ、スクリーンタイムなど）</li>
+          <li>趣味で集めた記録（観戦したスポーツの結果、聴いた音楽、読んだ本など）</li>
+          <li>はじめに紹介した <a href="assets/kobe_shot_cleaned.csv" download style="color:#76B900">kobe_shot_cleaned.csv</a> を使って別の角度から可視化してもOK</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 共通: 制作の進め方ヒント -->
+    <div class="card">
+      <div class="card-header">
+        <h3>制作の進め方（共通）</h3>
+      </div>
+      <div class="callout-info">
+        <ul class="point-list">
+          <li>まずサンプルコード3（棒グラフ）をコピーして動かしてみる</li>
+          <li>動いたら、色・サイズ・レイアウトを変えてみる</li>
+          <li>慣れてきたら、アニメーションやインタラクションを追加</li>
+          <li>困ったらグループのメンバーや教員に相談</li>
+          <li>完璧を目指さず、まず動くものを作ってから改良する</li>
+        </ul>
+      </div>
+
+      <div class="notion-submit">
+        <div>
+          <strong>提出:</strong> 上記の項目を1つの Notion ページにまとめ → PDF エクスポート → <strong>PDF と 実行画面の mp4 動画 の 2ファイル</strong>を Google Classroom に提出
+        <div style="margin-top:0.4rem;font-size:0.8rem;color:#FF6B00"><span class="sa-check-tag" style="display:inline-block;margin-left:0.5rem;background:#FF6B00;color:#fff;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px;vertical-align:middle">SA確認</span> SAさんのOKがもらえたら次に進んでください（授業時間外はSA確認不要）</div>
+      </div>
+      </div>
+    </div>
+
       </div>
     </details>
   </div>
@@ -1886,175 +2044,6 @@ mode = <span class="num">0</span>
       <h4>パターンは「組み合わせる」と作品になる</h4>
       <p>1つで終わらせず、重ねるほど良くなります。例: <strong>棒グラフ（P1）＋ アニメーション（P7）＋ マウス操作（P8）</strong> → 「マウスを動かすと月が切り替わり、棒がにゅっと伸びる」インタラクティブ作品に。まずは1パターンを動かし、慣れたら1つずつ足していこう。</p>
     </div>
-      </div>
-    </details>
-  </div>
-</section>
-
-<!-- ============ 2. FINAL PROJECT ============ -->
-<section id="sec-final">
-  <div class="container">
-    <details class="section-toggle">
-      <summary>
-        <div class="section-num" style="background:#FFB800">2</div>
-        <h2>最終課題制作 <span style="font-size:0.5rem;color:#999;font-weight:400">── 約120分+</span></h2>
-      </summary>
-      <div class="toggle-body">
-
-    <!-- A/B 選択イントロ -->
-    <div class="card advanced">
-      <div class="card-header">
-        <span class="tag tag-advanced">最終課題</span>
-        <h3>A・B のどちらかを選んで制作</h3>
-      </div>
-      <p>下の <strong>A・B いずれか</strong>を選んで取り組んでください。両方とも <strong>py5 で可視化することが必須</strong>です。</p>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:0.6rem;margin-top:0.8rem">
-        <a href="#sec-final-a" style="text-decoration:none;color:inherit;background:#1A1A1A;border:2px solid #76B900;border-radius:0.5rem;padding:0.8rem;display:block">
-          <div style="font-weight:700;color:#76B900;font-size:1rem;margin-bottom:0.3rem">A: Slack 分析＋施策提案</div>
-          <div style="font-size:0.8rem;color:#ccc">配布データ（DS全体のslack利用状況.csv／ユーザ別投稿状況.csv）を分析し、「より活発になる」ための施策をデータ的根拠とともに提案する。</div>
-        </a>
-        <a href="#sec-final-b" style="text-decoration:none;color:inherit;background:#1A1A1A;border:2px solid #FFB800;border-radius:0.5rem;padding:0.8rem;display:block">
-          <div style="font-weight:700;color:#FFB800;font-size:1rem;margin-bottom:0.3rem">B: 自分のテーマで自由制作</div>
-          <div style="font-size:0.8rem;color:#ccc">興味のあるテーマを決め、自分でデータを用意して可視化作品を制作する。データは 6/15 までに用意できればOK。</div>
-        </a>
-      </div>
-    </div>
-
-    <!-- 共通: 技術要素（2つ以上組み合わせる） -->
-    <div class="card">
-      <div class="card-header">
-        <h3>共通の必須条件: 技術要素を2つ以上組み合わせる</h3>
-      </div>
-      <p>A・B どちらを選ぶ場合も、第1回〜第6回で学んだ次の技術要素から<strong>2つ以上</strong>を組み合わせてください。</p>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(7rem,1fr));gap:0.4rem;margin:1rem 0">
-        <div style="background:#1A1A1A;border:1px solid #333;border-radius:0.3rem;padding:0.5rem;text-align:center;font-size:0.8rem">
-          <div style="font-weight:700;color:#76B900">図形描画</div>
-          <div style="font-size:0.65rem;color:#999">rect, ellipse, line...</div>
-        </div>
-        <div style="background:#1A1A1A;border:1px solid #333;border-radius:0.3rem;padding:0.5rem;text-align:center;font-size:0.8rem">
-          <div style="font-weight:700;color:#76B900">テキスト表示</div>
-          <div style="font-size:0.65rem;color:#999">text, text_size...</div>
-        </div>
-        <div style="background:#1A1A1A;border:1px solid #333;border-radius:0.3rem;padding:0.5rem;text-align:center;font-size:0.8rem">
-          <div style="font-weight:700;color:#76B900">色彩</div>
-          <div style="font-size:0.65rem;color:#999">fill, stroke, RGB...</div>
-        </div>
-        <div style="background:#1A1A1A;border:1px solid #333;border-radius:0.3rem;padding:0.5rem;text-align:center;font-size:0.8rem">
-          <div style="font-weight:700;color:#76B900">アニメーション</div>
-          <div style="font-size:0.65rem;color:#999">draw()ループ, 変数更新...</div>
-        </div>
-        <div style="background:#1A1A1A;border:1px solid #333;border-radius:0.3rem;padding:0.5rem;text-align:center;font-size:0.8rem">
-          <div style="font-weight:700;color:#76B900">音の再生</div>
-          <div style="font-size:0.65rem;color:#999">sine, square, play...</div>
-        </div>
-      </div>
-      <p style="font-size:0.85rem;color:#999;margin-top:0.3rem">インタラクティブな要素（マウス操作など）があるとなお良いです（必須ではありません）。</p>
-    </div>
-
-    <!-- Option A -->
-    <div id="sec-final-a" class="card advanced" style="border-left:4px solid #76B900">
-      <div class="card-header">
-        <span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.75rem">選択肢 A</span>
-        <h3>Slack 利用データの分析と「より活発になる」施策提案</h3>
-      </div>
-
-      <h4 style="color:#76B900;margin-bottom:0.5rem">課題内容</h4>
-      <p>配布された <code>DS全体のslack利用状況.csv</code>（日付ごとの全体利用状況）または <code>ユーザ別投稿状況.csv</code>（役職別の投稿状況）のデータ（いずれも 2025年5月1日〜2026年5月31日）を分析し、<strong>Slack がより活発に使われるための施策</strong>を提案してください。データから読み取った特徴と、そこから導いた提案を py5 で可視化します。</p>
-
-      <h4 style="color:#76B900;margin-top:1.5rem;margin-bottom:0.5rem">必須条件</h4>
-      <ul class="point-list">
-        <li>配布されたCSVファイル（DS全体のslack利用状況.csv または ユーザ別投稿状況.csv）を使用</li>
-        <li>py5 で可視化すること（技術要素から2つ以上を組み合わせる）</li>
-        <li>データから読み取った特徴と、それに基づく施策が伝わるように作ること</li>
-      </ul>
-
-      <h4 style="color:#76B900;margin-top:1.5rem;margin-bottom:0.5rem">Notion に記録する項目</h4>
-      <ul class="point-list">
-        <li><strong>作品のタイトル:</strong> 作品につけた名前</li>
-        <li><strong>作品のテーマ:</strong> 何を可視化したか（50字程度）</li>
-        <li><strong>作った目的:</strong> なぜこれを作ったのか・何を伝えたいのか</li>
-        <li><strong>どのように作ったか（設計）:</strong> 作り方・工夫（文章だけでも・図表を使ってもOK）</li>
-        <li><strong>コード:</strong> 完成したPythonコード全文（<strong>コメントは自分の言葉で。AI に書かせない</strong>）</li>
-        <li><strong>実行画面の動画:</strong> 画面収録を <strong>mp4 に変換</strong>して Notion に貼り付け（Google Classroom にも別途提出）</li>
-        <li><strong>分析から読み取ったこと:</strong> データを見て気づいた特徴・傾向</li>
-        <li><strong>より活発にするための施策提案:</strong> 上記の分析を根拠にした提案（思いつきではなく、データから言える内容に）</li>
-      </ul>
-
-      <div class="callout-info">
-        <h4>制作のヒント（A）</h4>
-        <ul class="point-list">
-          <li>例: 曜日別・時間帯別のアクティブ数を可視化 → 静かな時間帯を発見 → その時間に何かを仕掛ける施策</li>
-          <li>例: 月ごとのメッセージ推移 → 落ち込んだ時期に注目 → 改善案</li>
-          <li>例: メッセージ数とファイル数の関係を散布図に → 利用パターンの違いを発見 → 提案</li>
-          <li>「絵文字を増やそう」のような根拠のない思いつきではなく、<strong>データから言える施策</strong>を心がけてください。</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Option B -->
-    <div id="sec-final-b" class="card advanced" style="border-left:4px solid #FFB800">
-      <div class="card-header">
-        <span class="tag tag-advanced" style="font-size:0.75rem">選択肢 B</span>
-        <h3>自分のテーマで自由制作（データ持参）</h3>
-      </div>
-
-      <h4 style="color:#FFB800;margin-bottom:0.5rem">課題内容</h4>
-      <p>自分で興味のあるテーマを決め、それに関するデータを自分で用意して可視化作品を制作してください。データソースは <strong>6/15 の提出までに用意できればOK</strong>です（授業中に揃わなくても問題ありません）。</p>
-
-      <h4 style="color:#FFB800;margin-top:1.5rem;margin-bottom:0.5rem">必須条件</h4>
-      <ul class="point-list">
-        <li>自分で用意したCSVデータを使用（出典を明記）</li>
-        <li>py5 で可視化すること（技術要素から2つ以上を組み合わせる）</li>
-        <li>データの特徴が視覚的に理解できること</li>
-      </ul>
-
-      <h4 style="color:#FFB800;margin-top:1.5rem;margin-bottom:0.5rem">Notion に記録する項目</h4>
-      <ul class="point-list">
-        <li><strong>作品のタイトル:</strong> 作品につけた名前</li>
-        <li><strong>作品のテーマ:</strong> 何を可視化したか（50字程度）</li>
-        <li><strong>作った目的:</strong> なぜこれを作ったのか・何を伝えたいのか</li>
-        <li><strong>使用したデータの出典:</strong> URL や提供元を明記</li>
-        <li><strong>どのように作ったか（設計）:</strong> 作り方・工夫（文章だけでも・図表を使ってもOK）</li>
-        <li><strong>コード:</strong> 完成したPythonコード全文（<strong>コメントは自分の言葉で。AI に書かせない</strong>）</li>
-        <li><strong>実行画面の動画:</strong> 画面収録を <strong>mp4 に変換</strong>して Notion に貼り付け（Google Classroom にも別途提出）</li>
-      </ul>
-
-      <div class="callout-info">
-        <h4>データソースの例（自由に選んでOK）</h4>
-        <ul class="point-list">
-          <li><a href="https://www.data.jma.go.jp/risk/obsdl/" target="_blank" rel="noopener" style="color:#76B900">気象庁 過去の気象データ</a> ── 自分の住む街の気温・降水量の推移</li>
-          <li><a href="https://www.e-stat.go.jp/" target="_blank" rel="noopener" style="color:#76B900">e-Stat（政府統計）</a> ── 人口・経済・教育などの公開統計</li>
-          <li><a href="https://www.kaggle.com/datasets" target="_blank" rel="noopener" style="color:#76B900">Kaggle Datasets</a> ── スポーツ・音楽・映画など多種多様な公開データセット</li>
-          <li>自分のスマホの記録（歩数、睡眠ログ、スクリーンタイムなど）</li>
-          <li>趣味で集めた記録（観戦したスポーツの結果、聴いた音楽、読んだ本など）</li>
-          <li>はじめに紹介した <a href="assets/kobe_shot_cleaned.csv" download style="color:#76B900">kobe_shot_cleaned.csv</a> を使って別の角度から可視化してもOK</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- 共通: 制作の進め方ヒント -->
-    <div class="card">
-      <div class="card-header">
-        <h3>制作の進め方（共通）</h3>
-      </div>
-      <div class="callout-info">
-        <ul class="point-list">
-          <li>まずサンプルコード3（棒グラフ）をコピーして動かしてみる</li>
-          <li>動いたら、色・サイズ・レイアウトを変えてみる</li>
-          <li>慣れてきたら、アニメーションやインタラクションを追加</li>
-          <li>困ったらグループのメンバーや教員に相談</li>
-          <li>完璧を目指さず、まず動くものを作ってから改良する</li>
-        </ul>
-      </div>
-
-      <div class="notion-submit">
-        <div>
-          <strong>提出:</strong> 上記の項目を1つの Notion ページにまとめ → PDF エクスポート → <strong>PDF と 実行画面の mp4 動画 の 2ファイル</strong>を Google Classroom に提出
-        <div style="margin-top:0.4rem;font-size:0.8rem;color:#FF6B00"><span class="sa-check-tag" style="display:inline-block;margin-left:0.5rem;background:#FF6B00;color:#fff;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px;vertical-align:middle">SA確認</span> SAさんのOKがもらえたら次に進んでください（授業時間外はSA確認不要）</div>
-      </div>
-      </div>
-    </div>
-
       </div>
     </details>
   </div>
