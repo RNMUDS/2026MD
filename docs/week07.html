@@ -607,6 +607,20 @@ body { padding-top: 2.2rem; }
   </div>
 </header>
 
+<!-- ============ 配布データ ダウンロード (冒頭) ============ -->
+<section style="padding-top:1.5rem;padding-bottom:0">
+  <div class="container">
+    <div style="background:linear-gradient(135deg,#1a2e0a,#0a1a0a);border:2px solid #76B900;border-radius:10px;padding:1rem 1.2rem">
+      <div style="font-weight:900;color:#76B900;font-size:1rem;margin-bottom:0.3rem">⬇ 配布データ（Slack 活動状況 CSV）</div>
+      <p style="font-size:0.88rem;margin:0 0 0.7rem">最終課題の <strong>A コース（Slack 分析）</strong>で使う CSV はここからダウンロードできます（いずれも 2025年5月1日〜2026年5月31日）。</p>
+      <div style="display:flex;flex-wrap:wrap;gap:0.5rem">
+        <a href="assets/DS全体のslack利用状況.csv" download style="display:inline-block;background:#76B900;color:#0a1a0a;font-weight:700;font-size:0.85rem;padding:0.45rem 1rem;border-radius:0.3rem;text-decoration:none">⬇ DS全体のslack利用状況.csv をダウンロード</a>
+        <a href="assets/ユーザ別投稿状況.csv" download style="display:inline-block;background:#76B900;color:#0a1a0a;font-weight:700;font-size:0.85rem;padding:0.45rem 1rem;border-radius:0.3rem;text-decoration:none">⬇ ユーザ別投稿状況.csv をダウンロード</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ FINAL PROJECT REQUIREMENTS (冒頭) ============ -->
 <section id="sec-req" style="padding-top:2rem;padding-bottom:0">
   <div class="container">
@@ -689,6 +703,10 @@ body { padding-top: 2.2rem; }
           <li><strong>ネット上に公開されているデータ</strong> ── 気象庁・e-Stat・Kaggle など、出典が明示できる公開データセット</li>
           <li><strong>データに困ったら:</strong> 講師が用意する <strong>Slack（MUDS ＝ データサイエンス学部の Slack）の活動状況データ</strong>（<code>DS全体のslack利用状況.csv</code>／<code>ユーザ別投稿状況.csv</code>。いずれも 2025年5月1日〜2026年5月31日）を使ってよい</li>
         </ul>
+        <div style="margin-top:0.6rem;display:flex;flex-wrap:wrap;gap:0.5rem">
+          <a href="assets/DS全体のslack利用状況.csv" download style="display:inline-block;background:#76B900;color:#0a1a0a;font-weight:700;font-size:0.85rem;padding:0.45rem 1rem;border-radius:0.3rem;text-decoration:none">⬇ DS全体のslack利用状況.csv をダウンロード</a>
+          <a href="assets/ユーザ別投稿状況.csv" download style="display:inline-block;background:#76B900;color:#0a1a0a;font-weight:700;font-size:0.85rem;padding:0.45rem 1rem;border-radius:0.3rem;text-decoration:none">⬇ ユーザ別投稿状況.csv をダウンロード</a>
+        </div>
       </div>
       <div class="callout-danger" style="margin-top:0.5rem">
         <h4>✕ 使ってはいけないデータ</h4>
@@ -812,6 +830,11 @@ body { padding-top: 2.2rem; }
 
       <h4 style="color:#76B900;margin-bottom:0.5rem">課題内容</h4>
       <p>配布された <code>DS全体のslack利用状況.csv</code>（日付ごとの全体利用状況）または <code>ユーザ別投稿状況.csv</code>（役職別の投稿状況）のデータ（いずれも 2025年5月1日〜2026年5月31日）を分析し、<strong>Slack がより活発に使われるための施策</strong>を提案してください。データから読み取った特徴と、そこから導いた提案を py5 で可視化します。</p>
+
+      <div style="margin-top:0.6rem;display:flex;flex-wrap:wrap;gap:0.5rem">
+        <a href="assets/DS全体のslack利用状況.csv" download style="display:inline-block;background:#76B900;color:#0a1a0a;font-weight:700;font-size:0.85rem;padding:0.45rem 1rem;border-radius:0.3rem;text-decoration:none">⬇ DS全体のslack利用状況.csv をダウンロード</a>
+        <a href="assets/ユーザ別投稿状況.csv" download style="display:inline-block;background:#76B900;color:#0a1a0a;font-weight:700;font-size:0.85rem;padding:0.45rem 1rem;border-radius:0.3rem;text-decoration:none">⬇ ユーザ別投稿状況.csv をダウンロード</a>
+      </div>
 
       <h4 style="color:#76B900;margin-top:1.5rem;margin-bottom:0.5rem">必須条件</h4>
       <ul class="point-list">
@@ -1310,12 +1333,6 @@ body { padding-top: 2.2rem; }
         <p style="margin-top:0.5rem">今学期はCSVファイルからデータを読みましたが、2学期ではAPIからリアルタイムデータを取得して可視化する方法を学びます。</p>
       </div>
 
-      <pre><span class="code-label">Notion テンプレート</span>
-## データ可視化の原則
-- 可視化で最も大事なこと: ＿＿＿＿＿＿＿＿＿＿
-- 棒グラフが適している場面: ＿＿＿＿＿＿
-- 折れ線グラフが適している場面: ＿＿＿＿＿＿
-- グラフの嘘の例: ＿＿＿＿＿＿＿＿</pre>
     </div>
 
     <!-- CSVファイルの説明 -->
