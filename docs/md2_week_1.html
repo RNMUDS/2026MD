@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第1回: WebXRとデータサイエンス ― 3D Web空間を実験環境として捉える | MD2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET & BASE ============ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: clamp(13px, 1.6vw, 28px); }
+html, body { overflow-x: hidden; max-width: 100%; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #111111;
+  color: #e0e0e0;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+/* Media and embeds should never overflow their container */
+img, video, iframe, svg, canvas { max-width: 100%; height: auto; }
+
+/* ============ LAYOUT ============ */
+.container { max-width: 1600px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+
+/* ============ HEADER ============ */
+.hero {
+  background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a);
+  color: white;
+  padding: clamp(3rem, 8vw, 6rem) 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(108,99,255,0.3), transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(155,89,182,0.2), transparent 50%);
+}
+.hero .container { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 100px;
+  padding: 0.35rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+}
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+
+/* ============ SUBMISSION BOX ============ */
+.submission-box {
+  background: linear-gradient(135deg, #1A1A1A, #1a2e0a);
+  border: 2px solid #76B900;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin: 2rem 0;
+}
+.submission-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #76B900;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.submission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.5rem;
+}
+.sub-item {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  gap: 0.3rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.4rem;
+  padding: 0.6rem 0.4rem;
+  font-size: 0.55rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.sub-item .sub-count {
+  margin-bottom: 0.1rem;
+}
+.sub-item .tag {
+  margin-bottom: 0.15rem;
+}
+.sub-count {
+  background: #76B900;
+  color: white;
+  border-radius: 0.2rem;
+  min-width: 1.5rem; height: 1.5rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700;
+}
+
+/* ============ TAGS ============ */
+.tag {
+  display: inline-flex; align-items: center; gap: 0.2rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 100px;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.tag-note      { background: #1a2e0a; color: #76B900; }
+.tag-standard  { background: #0a1a2e; color: #4FC3F7; }
+.tag-advanced  { background: #2e1a0a; color: #FFB800; }
+.tag-group     { background: #1a2e0a; color: #76B900; }
+
+/* ============ EXAM ALERT TAG ============ */
+.exam-alert {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  background: rgba(255, 82, 82, 0.15);
+  border: 1px solid #FFB800;
+  color: #FFB800;
+  padding: 0.2rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  animation: exam-pulse 2s ease-in-out 3;
+}
+@keyframes exam-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ============ SECTION HEADERS ============ */
+.section-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.section-num {
+  width: 2.5rem; height: 2.5rem;
+  border-radius: 0.4rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 900; color: white;
+  flex-shrink: 0;
+}
+.section-header h2 {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+/* ============ CARDS ============ */
+.card {
+  background: #141414;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  border: 1px solid #2a2a2a;
+}
+.card-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #222;
+}
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.standard  { border-left: 4px solid #76B900; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.card.group     { border-left: 4px solid #93D500; }
+
+/* ============ NOTION CALLOUT ============ */
+.notion-submit {
+  background: #1a2e0a;
+  border: 1px solid #76B900;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  display: flex; align-items: flex-start; gap: 0.5rem;
+}
+.notion-submit::before { content: '\1F4DD'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+
+/* ============ TABLES ============ */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem;
+  margin: 1rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+th {
+  background: rgba(108, 99, 255, 0.15);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  color: #76B900;
+  letter-spacing: 0.02em;
+}
+td {
+  padding: 0.55rem 0.8rem;
+  border-top: 1px solid #222;
+}
+tr:nth-child(even) td { background: #111; }
+
+/* ============ CODE ============ */
+pre {
+  background: #0A0A0A;
+  color: #E0E0E0;
+  border-radius: 12px;
+  padding: clamp(0.8rem, 2vw, 1.4rem);
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
+  font-size: clamp(0.75rem, 1.3vw, 0.88rem);
+  line-height: 1.7;
+  margin: 1rem 0;
+  position: relative;
+}
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #FFB800; }
+pre .op { color: #93D500; }
+.code-label {
+  position: absolute; top: 0; right: 0;
+  background: rgba(255,255,255,0.08);
+  color: #999999;
+  padding: 0.2rem 0.8rem;
+  border-radius: 0 12px 0 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+/* inline code */
+:not(pre) > code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(108,99,255,0.15);
+  padding: 0.15em 0.45em;
+  border-radius: 5px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+:not(pre) > code:hover { background: rgba(108,99,255,0.3); }
+:not(pre) > code.copied { background: rgba(108,99,255,0.5); }
+
+/* ============ EXPLANATION BLOCKS ============ */
+.concept-box {
+  background: rgba(108, 99, 255, 0.15);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  border: 1px solid #2a2a3a;
+}
+.concept-box h4 {
+  font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem;
+}
+.analogy {
+  background: #1a1a0a;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 0.75rem 0;
+  border-left: 3px solid #FFB800;
+  font-size: 0.95rem;
+}
+.analogy::before {
+  content: '\1F4A1 日常の例';
+  display: block;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #FFB800;
+  margin-bottom: 0.3rem;
+}
+.point-list {
+  list-style: none;
+  padding: 0;
+}
+.point-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+}
+.point-list li::before {
+  content: '\25B8';
+  position: absolute; left: 0;
+  color: #76B900;
+  font-weight: 700;
+}
+
+/* ============ ANSWERS (COLLAPSIBLE) ============ */
+details {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+details summary {
+  padding: 0.8rem 1.2rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 0.5rem;
+  background: #1a1a1a;
+  user-select: none;
+}
+details summary::marker { content: ''; }
+details summary::before {
+  content: '\25B6';
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+  color: #666;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
+
+/* ============ WARNING / DANGER CALLOUT ============ */
+.callout-danger {
+  background: rgba(255, 82, 82, 0.08);
+  border: 1px solid rgba(255, 82, 82, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-danger h4 {
+  color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-warning {
+  background: rgba(255, 184, 0, 0.08);
+  border: 1px solid rgba(255, 184, 0, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-warning h4 {
+  color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-info {
+  background: rgba(108, 99, 255, 0.08);
+  border: 1px solid rgba(108, 99, 255, 0.3);
+  border-left: 4px solid #76B900;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-info h4 {
+  color: #76B900; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-tip {
+  background: rgba(155, 89, 182, 0.08);
+  border: 1px solid rgba(155, 89, 182, 0.3);
+  border-left: 4px solid #93D500;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-tip h4 {
+  color: #93D500; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+
+/* ============ FOOTER ============ */
+footer {
+  background: #0A0A0A;
+  color: #999999;
+  padding: 2rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 640px) {
+  .submission-items { grid-template-columns: 1fr; }
+  .section-num { width: 2rem; height: 2rem; font-size: 0.85rem; }
+
+  /* Tables: allow horizontal scroll wrapper feel via smaller text + wrap */
+  table { max-width: 100%; font-size: 0.78rem; }
+  th, td { padding: 0.4rem 0.5rem; white-space: normal; }
+  th { font-size: 0.72rem; }
+  th[style*="width"], td[style*="width"] { width: auto !important; min-width: 3rem; }
+
+  [style*="min-width:8rem"] { min-width: 0 !important; }
+  [style*="min-width:12rem"] { min-width: 0 !important; }
+  [style*="min-width: 8rem"] { min-width: 0 !important; }
+  [style*="min-width: 12rem"] { min-width: 0 !important; }
+
+  [style*="display:inline-block"],
+  [style*="display: inline-block"],
+  [style*="display:inline-flex"],
+  [style*="display: inline-flex"] { max-width: 100%; overflow-wrap: anywhere; }
+
+  .card > div, .card div[style] { max-width: 100%; overflow-wrap: anywhere; }
+  div[style*="border-radius"] { max-width: 100%; overflow-wrap: anywhere; }
+
+  .callout-danger, .callout-warning, .callout-info, .callout-tip,
+  .concept-box, .analogy, .notion-submit { padding: 0.8rem 0.9rem; border-radius: 10px; font-size: 0.88rem; overflow-x: hidden; }
+  details summary { padding: 0.7rem 0.9rem; font-size: 0.9rem; }
+  details .answer-content { padding: 0.8rem 0.9rem; overflow-x: auto; }
+
+  p, li, td, th, summary, .card, .callout-info, .callout-tip,
+  .callout-warning, .callout-danger, div { overflow-wrap: anywhere; }
+  :not(pre) > code { white-space: normal; overflow-wrap: anywhere; word-break: break-all; }
+
+  [style*="white-space:nowrap"],
+  [style*="white-space: nowrap"] { white-space: normal !important; }
+
+  [id] { scroll-margin-top: 2.5rem; }
+}
+
+/* Small phone */
+@media (max-width: 420px) {
+  .container { padding: 0 0.6rem; }
+  .submission-items { grid-template-columns: 1fr; }
+  .hero { padding: 1.3rem 0; }
+  .hero h1 { font-size: 1rem !important; }
+  .hero p { font-size: 0.78rem !important; }
+  .hero-badge { font-size: 0.65rem; padding: 0.22rem 0.65rem; }
+  .section-header h2 { font-size: 0.95rem; }
+  .section-num { width: 1.7rem; height: 1.7rem; font-size: 0.78rem; }
+  .card { padding: 0.75rem; }
+  .card-header h3 { font-size: 0.92rem; }
+  th, td { padding: 0.3rem 0.35rem; font-size: 0.7rem; }
+  th[style*="width"], td[style*="width"] { min-width: 2rem !important; }
+  pre { font-size: 0.65rem; padding: 0.55rem; }
+  .section-nav a { font-size: 0.6rem !important; padding: 0.2rem 0.4rem !important; }
+  .submission-box { padding: 0.8rem; }
+  .submission-box h3 { font-size: 0.88rem; }
+  .sub-item { font-size: 0.62rem; }
+}
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
+/* ============ SUB-ITEM LINKS ============ */
+a.sub-item { transition: transform 0.15s, box-shadow 0.15s; }
+a.sub-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(118,185,0,0.3);
+  border-color: #76B900;
+}
+
+/* ============ SECTION NAV (always visible at top) ============ */
+.section-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.2rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+body { padding-top: 2.2rem; }
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.45rem;
+  font-weight: 500;
+  padding: 0.15rem 0.4rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-exam { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3.5rem; }
+
+/* ============ REDUCED MOTION ============ */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  details summary::before { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SECTION NAV ============ -->
+<nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#76B900;background:rgba(118,185,0,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="md2_week_1.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_2.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_3.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_4.html">4</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_5.html">5</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_6.html">6</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_7.html">7</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_8.html">8</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_9.html">9</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_10.html">10</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_11.html">11</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_12.html">12</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_13.html">13</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_14.html">14</a> </div>
+  <a href="#sec-purpose">授業の目的</a>
+  <a href="#sec-flow">本日の流れ</a>
+  <a href="#sec-icebreak">1. アイスブレイク</a>
+  <a href="#sec-showcase">2. MD1発表会</a>
+  <a href="#sec-webxr">3. WebXR入門</a>
+  <a href="#sec-html">4. HTML基礎</a>
+  <a href="#sec-aframe">5. A-Frame基礎</a>
+  <a href="#sec-loop" class="nav-assignment">6. for文で量産</a>
+  <a href="#sec-terms">用語ガイド</a>
+  <a href="#sec-homework" class="nav-assignment">予習・復習</a>
+  <a href="#sec-notion">ノート</a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">Media creation Data design 2（MD2）─ 2026年度</div>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.1rem">武蔵野大学データサイエンス学部</p>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.3rem">武蔵野大学国際データサイエンス学部（通信教育部）</p>
+    <p style="font-size:0.95rem;opacity:0.85;margin-bottom:1rem">中村 亮太</p>
+    <h1>MD2 第1回: WebXR入門 ― HTMLとA-Frameで最初の3D空間をつくる</h1>
+    <p>WebXRとは何かを理解し、HTMLの基礎を確認したうえで、A-Frameでボックスや球を表示する。さらにfor文を使って、たくさんのオブジェクトを一気に並べる方法を体験する。</p>
+    <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:0.3rem;padding:0.4rem 0.8rem;margin-top:1rem;font-size:0.7rem;display:inline-block;max-width:100%;overflow-wrap:anywhere">
+      <strong>第1回のメイン:</strong> 新グループでのアイスブレイク ＋ MD1最終課題の作品発表会 ＋ WebXR/HTML/A-Frameの基礎実習
+    </div>
+  </div>
+</header>
+
+<!-- ============ COURSE PURPOSE (はじめに) ============ -->
+<section id="sec-purpose" style="padding-top:2.5rem;padding-bottom:0">
+  <div class="container">
+    <div class="card" style="border-left:4px solid #76B900;background:linear-gradient(135deg,#141414,#152011)">
+      <div class="card-header"><h3>📌 授業の目的：何をするのか（はじめに読もう）</h3></div>
+
+      <p style="font-size:1.05rem;margin-bottom:0.7rem">テーマは <strong style="color:#76B900">「バーチャル空間で、データサイエンスを実践する」</strong>。</p>
+      <ul class="point-list" style="margin-bottom:1rem">
+        <li>「なぜバーチャル空間／WebXRか」＝データサイエンス学で説明ずみ</li>
+        <li>舞台＝<strong>自分で作る3D Web空間</strong></li>
+        <li>体験する範囲＝<strong>データ取得 → 分析 → 統計的検定・可視化</strong>（ビジネス・学術でも通用）</li>
+      </ul>
+      <ul class="point-list" style="margin-bottom:1rem">
+        <li>ふつうの授業＝配られたデータを分析</li>
+        <li>本科目＝<strong>データが生まれる舞台ごと自作</strong> → 出どころ・測り方・言えることを丸ごと理解</li>
+      </ul>
+      <p style="font-size:0.9rem;color:#999;margin-bottom:0.5rem">流れは次の3ステップ。</p>
+
+      <!-- 3 steps -->
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin:0.5rem 0 1rem">
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #76B900;border-radius:0.5rem;padding:0.9rem">
+          <div style="color:#76B900;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 1 ─ 舞台をつくる</div>
+          <div style="font-size:0.88rem"><strong>3D空間を自分で作る</strong>。HTML＋A-Frameでオブジェクト配置。<span style="color:#999">（本日〜第10回）</span></div>
+        </div>
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #4FC3F7;border-radius:0.5rem;padding:0.9rem">
+          <div style="color:#4FC3F7;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 2 ─ データを取る環境をつくる</div>
+          <div style="font-size:0.88rem"><strong>データを自分で取る</strong>。位置・操作・時間・主観評価を記録。<span style="color:#999">（第4・9・11回ほか）</span></div>
+        </div>
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #FFB800;border-radius:0.5rem;padding:0.9rem">
+          <div style="color:#FFB800;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 3 ─ データを分析する</div>
+          <div style="font-size:0.88rem">取ったデータを<strong>統計で分析</strong>。根拠ある結論へ。<span style="color:#999">（第12〜14回）</span></div>
+        </div>
+      </div>
+
+      <!-- STEP3 deep dive -->
+      <div class="callout-info">
+        <h4>STEP 3 の山場 ─ 分析の手法（2つ）</h4>
+
+        <p style="font-weight:700;color:#76B900;font-size:0.92rem;margin-bottom:0.2rem">① 統計的検定 ─ 「差は本物か、ただの偶然か」</p>
+        <ul class="point-list" style="margin-bottom:0.8rem">
+          <li>例：条件A=3.8、B=4.2 → 0.4の差は本物？偶然の誤差？</li>
+          <li>「なんとなく」ではなく、<strong>データで「有意差あり／なし」を判定</strong></li>
+        </ul>
+
+        <p style="font-weight:700;color:#76B900;font-size:0.92rem;margin-bottom:0.2rem">② 主観評価の定量化 ─ 感覚を数値にする</p>
+        <ul class="point-list" style="margin-bottom:0">
+          <li>「使いやすい」等の主観＝数値でないので分析不可</li>
+          <li><strong>リッカート尺度</strong>（1〜5）でスコア化 → ①で検定</li>
+          <li>例：「有用性はBがAより有意に高い」をデータで提示</li>
+        </ul>
+      </div>
+
+      <!-- skills overview -->
+      <h4 style="color:#76B900;font-weight:700;font-size:1.05rem;margin:1.5rem 0 0.3rem">🎯 全14回でやること（身につくスキル）</h4>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.9rem">空間づくりと並行し、分析の道具を演習で習得。到達像＝<strong style="color:#e0e0e0">集める → 整える → 図にする → 数値で語る → 差を証明</strong>。</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(15.5rem,1fr));gap:0.6rem">
+        <div style="background:#1a1a1a;border:1px solid #333;border-left:3px solid #76B900;border-radius:0.5rem;padding:0.8rem 0.9rem">
+          <div style="font-weight:800;font-size:0.92rem;color:#76B900;margin-bottom:0.25rem">① プログラミング基礎</div>
+          <div style="font-size:0.84rem;color:#ccc">変数 ／ 型 ／ 条件分岐 ／ 繰り返し ／ 関数 ／ 再帰 ／ 例外処理</div>
+        </div>
+        <div style="background:#1a1a1a;border:1px solid #333;border-left:3px solid #4FC3F7;border-radius:0.5rem;padding:0.8rem 0.9rem">
+          <div style="font-weight:800;font-size:0.92rem;color:#4FC3F7;margin-bottom:0.25rem">② 前処理（データラングリング）</div>
+          <div style="font-size:0.84rem;color:#ccc">欠損値・外れ値の検出と除去 ／ 正規化・標準化 ／ ダミー変数化</div>
+        </div>
+        <div style="background:#1a1a1a;border:1px solid #333;border-left:3px solid #93D500;border-radius:0.5rem;padding:0.8rem 0.9rem">
+          <div style="font-weight:800;font-size:0.92rem;color:#93D500;margin-bottom:0.25rem">③ データ可視化</div>
+          <div style="font-size:0.84rem;color:#ccc">散布図 ／ ヒストグラム ／ 軸設定の基礎知識</div>
+        </div>
+        <div style="background:#1a1a1a;border:1px solid #333;border-left:3px solid #FFB800;border-radius:0.5rem;padding:0.8rem 0.9rem">
+          <div style="font-weight:800;font-size:0.92rem;color:#FFB800;margin-bottom:0.25rem">④ 記述統計</div>
+          <div style="font-size:0.84rem;color:#ccc">平均（相加平均） ／ 中央値 ／ 最頻値 ／ 分散 ／ 標準偏差</div>
+        </div>
+        <div style="background:#1a1a1a;border:1px solid #333;border-left:3px solid #B388FF;border-radius:0.5rem;padding:0.8rem 0.9rem">
+          <div style="font-weight:800;font-size:0.92rem;color:#B388FF;margin-bottom:0.25rem">⑤ 推測統計</div>
+          <div style="font-size:0.84rem;color:#ccc">母集団と標本の違い ／ 不偏分散 ／ 点推定 ／ 区間推定</div>
+        </div>
+        <div style="background:#1a1a1a;border:1px solid #333;border-left:3px solid #FF7043;border-radius:0.5rem;padding:0.8rem 0.9rem">
+          <div style="font-weight:800;font-size:0.92rem;color:#FF7043;margin-bottom:0.25rem">⑥ 仮説検定</div>
+          <div style="font-size:0.84rem;color:#ccc">帰無仮説・対立仮説 ／ p値 ／ 有意水準</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div class="submission-box">
+      <h3>提出ガイド（1つのNotionページにまとめ、PDF 1枚を提出）</h3>
+      <div class="submission-items">
+        <a href="#notion-checklist" class="sub-item" style="text-decoration:none;color:inherit;border-color:#76B900"><span class="sub-count" style="background:#76B900">5</span><span class="tag" style="background:#1a2e0a;color:#76B900">ノート</span>記録・穴埋め</a>
+        <a href="#sec-icebreak" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-group">グループ</span>自己紹介・役割</a>
+        <a href="#sec-showcase" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>MD1発表会メモ</a>
+        <a href="#std1-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std1-1 box+sphere</a>
+        <a href="#std1-2" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std1-2 for文で量産</a>
+        <a href="#adv1-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv1-1 二重for</a>
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.85rem;color:#93D500">
+        <strong>提出方法:</strong> 下記の項目をすべて<strong>1つのNotionページにまとめて記録</strong> → PDFにエクスポート → Google Classroomに<strong>PDF 1ファイル</strong>を提出
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:0.5rem;font-size:0.85rem;color:#FFB800">
+        <strong>提出期限:</strong> 第2回授業開始まで（次回の授業開始時刻）
+      </div>
+
+      <!-- Notionに書くべき項目チェックリスト -->
+      <div id="notion-checklist" style="background:#141414;border:1px solid #333;border-radius:0.4rem;padding:1rem;margin-top:1rem">
+        <p style="color:#76B900;font-weight:700;font-size:0.85rem;margin-bottom:0.3rem">ノート: Notionに記録する項目（提出前に確認）</p>
+        <p style="font-size:0.75rem;color:#999;margin-bottom:0.8rem">以下の項目を1つのNotionページに記録し、PDF化して提出します。各項目は資料内の該当箇所にテンプレートがあります。</p>
+        <table style="font-size:0.8rem;width:100%;table-layout:fixed">
+          <tr><th style="width:5%"></th><th style="width:30%">セクション</th><th>記録する内容</th><th style="width:8%">リンク</th></tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> グループ</td>
+            <td>グループ番号・メンバー名・自分の役割・チームのグランドルール</td>
+            <td><a href="#sec-icebreak" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> MD1発表会</td>
+            <td>他チーム作品の良かった点・データ活用の工夫・自分の学び（3作品以上）</td>
+            <td><a href="#sec-showcase" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> WebXR/HTML/A-Frame</td>
+            <td>WebXR・タグ/属性・A-Frameの主要プリミティブの穴埋め</td>
+            <td><a href="#sec-webxr" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std1-1 / std1-2</td>
+            <td>box+sphereの表示コードと実行スクショ／for文で10個並べたコードとスクショ</td>
+            <td><a href="#std1-1" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-advanced" style="font-size:0.65rem">発展課題</span> adv1-1</td>
+            <td>二重for文でグリッド状に並べたコードとスクショ（任意）</td>
+            <td><a href="#adv1-1" style="color:#76B900">移動</a></td>
+          </tr>
+        </table>
+        <p style="font-size:0.75rem;color:#999;margin-top:0.5rem">※ 発展課題（adv1-1）は任意。ほかはすべて記録が必要です。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TIME FLOW ============ -->
+<section id="sec-flow" style="padding-top:1rem;padding-bottom:0">
+  <div class="container">
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>本日の授業の流れ</h3></div>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin:0.5rem 0">
+        <div style="flex:1;min-width:8rem;background:#1A1A1A;border:2px solid #76B900;border-radius:0.4rem;padding:0.6rem;text-align:center">
+          <div style="font-size:1rem;font-weight:900;color:#76B900">① アイスブレイク</div>
+          <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">新グループ結成</div>
+          <div style="font-size:0.65rem;color:#999">自己紹介 / 役割分担 / チームのグランドルール</div>
+        </div>
+        <div style="flex:2;min-width:12rem;background:#1A1A1A;border:2px solid #93D500;border-radius:0.4rem;padding:0.6rem;text-align:center">
+          <div style="font-size:1rem;font-weight:900;color:#93D500">② MD1 最終課題 作品発表会</div>
+          <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">前期の成果を共有</div>
+          <div style="font-size:0.65rem;color:#999">良かった点・学びをNotionに記録</div>
+        </div>
+        <div style="flex:1;min-width:8rem;background:#1A1A1A;border:2px solid #FFB800;border-radius:0.4rem;padding:0.6rem;text-align:center">
+          <div style="font-size:1rem;font-weight:900;color:#FFB800">③ 講義導入</div>
+          <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">WebXR × データサイエンス</div>
+          <div style="font-size:0.65rem;color:#999">HTML・A-Frameの基礎実習</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 1: ICEBREAK ============ -->
+<section id="sec-icebreak">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>アイスブレイク：新グループ結成</h2>
+    </div>
+
+    <div class="callout-info">
+      <h4>セクションのねらい</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>MD2はグループワークが基本（響学スパイラル）</li>
+        <li>後期を通じて協働するチームを結成</li>
+        <li>安心して意見を出し合える雰囲気づくり</li>
+        <li>最終課題＝自分の問いを立て、データで答えを示す</li>
+      </ul>
+    </div>
+
+    <div class="card group">
+      <div class="card-header"><h3>① 2 Truths and a Lie（2つの真実と1つのウソ）</h3></div>
+
+      <p style="font-weight:700;color:#93D500;font-size:0.9rem;margin:0.3rem 0 0.2rem">やり方</p>
+      <ul class="point-list">
+        <li>各自、自分について <strong>「本当2つ＋ウソ1つ」</strong> を発表</li>
+        <li>他のメンバーが <strong>どれがウソか</strong> を当てる</li>
+      </ul>
+
+      <p style="font-weight:700;color:#93D500;font-size:0.9rem;margin:0.7rem 0 0.2rem">ポイント</p>
+      <ul class="point-list">
+        <li>自己紹介にもなる</li>
+        <li>笑いが起きやすく、一気に距離が縮まる</li>
+      </ul>
+    </div>
+
+    <div class="card group">
+      <div class="card-header"><h3>② 役割分担</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">回ごとに交代OK。まずは初回の担当を決定。</p>
+      <table>
+        <tr><th>役割</th><th>主な仕事</th></tr>
+        <tr><td><strong>ファシリテーター</strong></td><td>議論の進行・全員の発言を促す</td></tr>
+        <tr><td><strong>サブリーダー</strong></td><td>リーダーのアシスト・代理</td></tr>
+        <tr><td><strong>プレゼンター</strong></td><td>グループを代表して発表、質問に回答</td></tr>
+        <tr><td><strong>記録（ノート）</strong></td><td>Notionにグループの記録</td></tr>
+        <tr><td><strong>タイムキーパー</strong></td><td>時間配分・進捗の声かけ</td></tr>
+        <tr><td><strong>調べ役</strong></td><td>不明点を資料・Webで確認</td></tr>
+      </table>
+    </div>
+
+    <div class="callout-tip">
+      <h4>チームのグランドルール（ストレスコントロール）</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li><strong>ポジティブなフィードバック</strong>で雰囲気づくり（＝評価対象）</li>
+        <li>例：「否定から入らない」「分からないと言える」</li>
+        <li><strong>Slackのマナー</strong>：必ずリアクションする／迅速に返信／遅くても24時間以内に返信</li>
+        <li>チームの約束を2〜3個決めてNotionに記録</li>
+      </ul>
+    </div>
+
+    <div class="card group">
+      <div class="card-header"><h3>③ チーム憲章をつくる（ノートに記録）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">後期を通じて効くチームの「土台」を、最初に言葉にして残す。</p>
+      <ul class="point-list">
+        <li><strong>チーム名</strong>＋由来を一言</li>
+        <li><strong>チームの目標</strong>：後期の終わりに「どんな状態になっていたいか」を1文で</li>
+        <li><strong>強み一覧</strong>：「2 Truths and a Lie」で見つけたメンバーの意外な特技・強みを書き出す</li>
+        <li><strong>バーチャル空間で測ってみたいこと</strong>を3案ブレスト（最終課題の種）</li>
+      </ul>
+      <div class="notion-submit">
+        <div><strong>基本情報も記録:</strong> グループ番号 ／ メンバー名 ／ 各自の初回の役割 ／ グランドルール（2〜3個）</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 2: MD1 SHOWCASE ============ -->
+<section id="sec-showcase">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#93D500">2</div>
+      <h2>MD1 最終課題 作品発表会</h2>
+    </div>
+
+    <div class="callout-info">
+      <h4>セクションのねらい</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>MD1の最終課題を発表し合う</li>
+        <li>MD2では「データを取得・分析する」視点を追加</li>
+        <li>他チームを <strong>「どんなデータを、どう見せたか」</strong> の目で観察 → 後期の制作のヒント収集</li>
+      </ul>
+    </div>
+
+    <div class="callout-warning">
+      <h4>ルール：一人につき必ず1つ質問する</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>発表後の質疑で、<strong>全員が最低1つは質問</strong>する</li>
+        <li>質問した内容と、返ってきた回答を記録テンプレートに残す</li>
+      </ul>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3>発表を聴くときの観点</h3></div>
+      <ul class="point-list">
+        <li><strong>表現</strong>：何を伝えたい作品だったか。データ可視化の工夫は？</li>
+        <li><strong>データ</strong>：どんなデータ（数値・色・音・動き）を使っていたか</li>
+        <li><strong>技術</strong>：自分のチームにも取り入れられそうな手法は？</li>
+        <li><strong>問い</strong>：もし発表された作品で「データを取得」するなら、何を測れそうか？</li>
+      </ul>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3>記録テンプレート（3作品以上）</h3></div>
+      <table>
+        <tr><th style="width:16%">チーム/作品</th><th>良かった点</th><th>データ活用の工夫</th><th>自分の学び</th><th style="width:20%">自分がした質問</th><th style="width:20%">その回答</th></tr>
+        <tr><td>　</td><td>　</td><td>　</td><td>　</td><td>　</td><td>　</td></tr>
+        <tr><td>　</td><td>　</td><td>　</td><td>　</td><td>　</td><td>　</td></tr>
+        <tr><td>　</td><td>　</td><td>　</td><td>　</td><td>　</td><td>　</td></tr>
+      </table>
+      <p style="font-size:0.82rem;color:#999;margin-top:0.4rem">※ 「自分がした質問」「その回答」は、最低1つは必ず記入。</p>
+    </div>
+
+    <div class="notion-submit">
+      <div><strong>ノートに記録:</strong> 上の表を埋める（質問・回答を含む）＋「後期に活かしたいこと」を3行</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 3: WebXR 入門 ============ -->
+<section id="sec-webxr">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">3</div>
+      <h2>WebXR入門：ブラウザで動く3D空間</h2>
+    </div>
+
+    <div class="concept-box">
+      <h4>WebXRとは</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>WebXR（Web Extended Reality）＝<strong>ブラウザでVR/AR/3Dを動かす技術</strong>の総称</li>
+        <li>アプリ不要。URLを開くだけで3D空間へ</li>
+        <li>スマホ・PC・VRゴーグルなど、同じページが多端末で動く</li>
+      </ul>
+    </div>
+
+    <div class="card advanced">
+      <div class="card-header"><h3>なぜWebXRを使うのか（本授業の立場）</h3></div>
+      <ul class="point-list">
+        <li><strong>導入が簡単</strong>：HTMLが書ければ3D空間が作れる（= 本日体験する <code>A-Frame</code>）</li>
+        <li><strong>データが取りやすい</strong>：位置・操作・時間などが、もともと数値として扱える</li>
+        <li><strong>共有が簡単</strong>：URLを送るだけで誰でも体験・実験できる</li>
+      </ul>
+      <div class="analogy">
+        3D空間＝「最初からセンサー入りの実験室」。位置や滞在時間は<strong>はじめから数値</strong>なので、記録するだけでデータになる。今日はまず舞台となる空間を<strong>自分の手で作る</strong>。
+      </div>
+    </div>
+
+    <div class="callout-info">
+      <h4>本日のゴール</h4>
+      <ul class="point-list" style="margin-top:0.4rem">
+        <li>HTMLの「タグ」「属性」の仕組みを理解する</li>
+        <li>A-Frameでボックス（<code>a-box</code>）と球（<code>a-sphere</code>）を表示する</li>
+        <li>JavaScriptの<strong>for文</strong>で、オブジェクトをたくさん並べる</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 4: HTML 基礎 ============ -->
+<section id="sec-html">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">4</div>
+      <h2>HTML基礎：A-Frameを読むための土台</h2>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3>まず：WebブラウザとWebサーバの関係</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.8rem">HTMLは「サーバから受け取って、ブラウザが画面に描く」もの。流れを図で押さえる。</p>
+
+      <!-- request / response diagram -->
+      <div style="display:flex;align-items:stretch;gap:0.6rem;flex-wrap:wrap;margin:0.5rem 0">
+        <div style="flex:1;min-width:9rem;background:#1a1a1a;border:2px solid #4FC3F7;border-radius:0.6rem;padding:1rem 0.8rem;text-align:center">
+          <div style="font-size:1.8rem;line-height:1">💻</div>
+          <div style="font-weight:800;color:#4FC3F7;font-size:0.95rem;margin-top:0.2rem">Webブラウザ</div>
+          <div style="font-size:0.72rem;color:#999">Chrome / Safari など<br>（あなたのPC）</div>
+        </div>
+
+        <div style="flex:1.4;min-width:11rem;display:flex;flex-direction:column;justify-content:center;gap:0.5rem">
+          <div style="background:#1a2e0a;border:1px solid #76B900;border-radius:100px;padding:0.3rem 0.7rem;font-size:0.78rem;text-align:center;position:relative">
+            ① リクエスト「ページください」 <span style="color:#76B900;font-weight:900">→</span>
+          </div>
+          <div style="background:#2e1a0a;border:1px solid #FFB800;border-radius:100px;padding:0.3rem 0.7rem;font-size:0.78rem;text-align:center">
+            <span style="color:#FFB800;font-weight:900">←</span> ② レスポンス（HTML/CSS/JS）
+          </div>
+        </div>
+
+        <div style="flex:1;min-width:9rem;background:#1a1a1a;border:2px solid #FFB800;border-radius:0.6rem;padding:1rem 0.8rem;text-align:center">
+          <div style="font-size:1.8rem;line-height:1">🖥️</div>
+          <div style="font-weight:800;color:#FFB800;font-size:0.95rem;margin-top:0.2rem">Webサーバ</div>
+          <div style="font-size:0.72rem;color:#999">ファイルを置いて<br>配る側</div>
+        </div>
+      </div>
+
+      <ul class="point-list" style="margin-top:0.6rem">
+        <li><strong>① リクエスト</strong>：URLを開く＝ブラウザが「ページください」とサーバへお願い</li>
+        <li><strong>② レスポンス</strong>：サーバが <strong>HTML・CSS・JS</strong> のデータを返す</li>
+        <li><strong>③ 表示</strong>：ブラウザが受け取ったHTMLを解釈し、画面に描く</li>
+      </ul>
+      <p style="font-size:0.82rem;color:#999;margin-top:0.5rem">※ 今日の演習では <code>index.html</code> を自分のPCで開く（＝手元のファイルをブラウザが直接読む）。仕組みはサーバから受け取る場合と同じ。</p>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3>Webサーバを立てる（一番かんたんな方法）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">「サーバ」と聞くと難しそうだが、コマンド1つで自分のPCをサーバにできる。</p>
+      <ul class="point-list">
+        <li>ターミナルで、<code>index.html</code> のあるフォルダへ移動</li>
+        <li>サーバ起動：<code>python3 -m http.server 8000</code></li>
+        <li>ブラウザで <code>http://localhost:8000</code> を開く → ページ表示</li>
+        <li>止めるとき：ターミナルで <code>Ctrl + C</code></li>
+      </ul>
+      <p style="font-size:0.82rem;color:#999;margin-top:0.4rem">※ VS Codeの拡張「Live Server」でもOK。<code>localhost</code>＝自分のPC自身を指す住所。</p>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3>一般的なWebサーバ構築の手段（例）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">世の中の公開Webサイトは、用途に応じて次のような手段で動いている。</p>
+      <table>
+        <tr><th style="width:30%">手段</th><th>例</th><th style="width:30%">特徴</th></tr>
+        <tr><td><strong>開発・学習用（手元）</strong></td><td><code>python3 -m http.server</code> ／ VS Code Live Server</td><td>すぐ起動。公開はしない</td></tr>
+        <tr><td><strong>サーバソフト</strong></td><td>Apache ／ Nginx</td><td>定番。自分でサーバを運用</td></tr>
+        <tr><td><strong>プログラムで起動</strong></td><td>Node.js（Express）／ Python（Flask）</td><td>動的なページ・APIに強い</td></tr>
+        <tr><td><strong>静的ホスティング</strong></td><td>GitHub Pages ／ Netlify ／ Vercel ／ Amazon S3</td><td>HTML/JSを置くだけで公開。無料枠あり</td></tr>
+        <tr><td><strong>クラウド／レンタル</strong></td><td>AWS ／ Google Cloud ／ さくら・エックスサーバー</td><td>本格運用。規模を自由に拡大</td></tr>
+      </table>
+      <p style="font-size:0.82rem;color:#999;margin-top:0.4rem">※ どの手段でも、<strong>「ブラウザのリクエスト → サーバのレスポンス → 表示」</strong>という基本は同じ。</p>
+    </div>
+
+    <div class="callout-warning">
+      <h4>ノート課題：サーバ構築 → 表示までの流れを書く</h4>
+      <p style="font-size:0.9rem;margin-bottom:0.5rem">「サーバを立てる → ブラウザでアクセス → ページが表示される」までの流れを、<strong>上の表の用語を使いながら</strong>、自分の言葉で箇条書きにしてNotionに記録。</p>
+      <p style="font-weight:700;color:#FFB800;font-size:0.85rem;margin-bottom:0.2rem">ヒント（使うとよい言葉）</p>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>ターミナル ／ コマンド ／ サーバ起動 ／ ポート番号（8000）</li>
+        <li><code>localhost</code> ／ URL を入力</li>
+        <li>ブラウザが <strong>リクエスト</strong> → サーバが <strong>レスポンス</strong>（HTML/CSS/JS）</li>
+        <li>ブラウザがHTMLを<strong>解釈</strong> → 画面に<strong>表示</strong></li>
+      </ul>
+    </div>
+
+    <p style="margin-bottom:1rem">A-Frameは「HTMLのように書ける」。まずHTMLの基本ルールを確認。HTMLは <strong>タグ</strong>で要素を作り、<strong>属性</strong>で性質を指定する言語。</p>
+
+    <div class="card standard">
+      <div class="card-header"><h3>タグと属性</h3></div>
+<pre>HTML
+<span class="op">&lt;</span><span class="kw">a-box</span> <span class="fn">color</span>=<span class="str">"tomato"</span> <span class="fn">width</span>=<span class="str">"2"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-box</span><span class="op">&gt;</span>
+<span class="cmt">&lt;!-- ↑ a-box がタグ（要素の種類）            --&gt;</span>
+<span class="cmt">&lt;!--   color / width が属性（要素ごとの性質）--&gt;</span>
+<span class="cmt">&lt;!--   "tomato" / "2" が属性の値             --&gt;</span></pre>
+      <ul class="point-list" style="margin-top:0.5rem">
+        <li><strong>開始タグ</strong> <code>&lt;a-box&gt;</code> と <strong>終了タグ</strong> <code>&lt;/a-box&gt;</code> で挟む</li>
+        <li><strong>属性</strong>は「名前="値"」の形で、開始タグの中に書く</li>
+        <li>タグは入れ子（ネスト）にできる。親の中に子を置く</li>
+      </ul>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3>HTMLページの基本の形</h3></div>
+<pre>HTML
+<span class="op">&lt;!DOCTYPE html&gt;</span>
+<span class="op">&lt;</span><span class="kw">html</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">head</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">title</span><span class="op">&gt;</span>はじめてのページ<span class="op">&lt;/</span><span class="kw">title</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">head</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">body</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">h1</span><span class="op">&gt;</span>こんにちは<span class="op">&lt;/</span><span class="kw">h1</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">body</span><span class="op">&gt;</span>
+<span class="op">&lt;/</span><span class="kw">html</span><span class="op">&gt;</span></pre>
+      <ul class="point-list" style="margin-top:0.5rem">
+        <li><code>&lt;head&gt;</code>：ページの設定（タイトル・読み込むライブラリなど）</li>
+        <li><code>&lt;body&gt;</code>：画面に表示される中身。<strong>A-Frameの3D空間も &lt;body&gt; の中に書く</strong></li>
+      </ul>
+    </div>
+
+    <div class="card group">
+      <div class="card-header"><h3>やってみよう：はじめてのHTMLを表示する</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.6rem">フォルダを作り、HTMLファイルを置いて、ブラウザで表示するまでを実際にやる。<code>&lt;h1&gt;</code> の中身を<strong>自分の名前</strong>に変えて表示するのがゴール。</p>
+
+      <p style="font-weight:700;color:#93D500;font-size:0.9rem;margin:0.5rem 0 0.2rem">STEP 1：作業フォルダを作る</p>
+      <p style="font-size:0.85rem;color:#ccc;margin-bottom:0.3rem">ターミナルを開き、次を1行ずつ実行。ホーム直下に <code>Lecture / MD2 / No1</code> のフォルダを作る。</p>
+<pre>Bash
+<span class="cmt"># ホームディレクトリへ移動</span>
+<span class="fn">cd</span> ~
+
+<span class="cmt"># Lecture/MD2/No1 をまとめて作成（-p で途中の階層も自動で作る）</span>
+<span class="fn">mkdir</span> -p ~/Lecture/MD2/No1
+
+<span class="cmt"># 作ったフォルダへ移動</span>
+<span class="fn">cd</span> ~/Lecture/MD2/No1</pre>
+      <div style="background:#1a1a1a;border:1px solid #333;border-radius:0.4rem;padding:0.6rem 0.8rem;margin:0.3rem 0;font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:#999">
+        ~（ホーム）<br>└ Lecture<br>　└ MD2<br>　　└ No1　← ここに index.html を作る
+      </div>
+
+      <p style="font-weight:700;color:#93D500;font-size:0.9rem;margin:0.7rem 0 0.2rem">STEP 2：HTMLファイルを作る</p>
+      <p style="font-size:0.85rem;color:#ccc;margin-bottom:0.3rem">VS Codeでフォルダを開き、<code>index.html</code> という名前で新規ファイルを作る。</p>
+<pre>Bash
+<span class="cmt"># いまのフォルダ（No1）を VS Code で開く</span>
+<span class="fn">code</span> .</pre>
+      <p style="font-size:0.82rem;color:#999;margin:0.2rem 0 0.3rem">※ ファイル名は半角で <code>index.html</code>。拡張子 <code>.html</code> を必ずつける。</p>
+
+      <p style="font-weight:700;color:#93D500;font-size:0.9rem;margin:0.7rem 0 0.2rem">STEP 3：中身を書く（<code>&lt;h1&gt;</code> を自分の名前に）</p>
+<pre>HTML
+<span class="op">&lt;!DOCTYPE html&gt;</span>
+<span class="op">&lt;</span><span class="kw">html</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">head</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">title</span><span class="op">&gt;</span>はじめてのページ<span class="op">&lt;/</span><span class="kw">title</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">head</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">body</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">h1</span><span class="op">&gt;</span>武蔵野 太郎<span class="op">&lt;/</span><span class="kw">h1</span><span class="op">&gt;</span>   <span class="cmt">&lt;!-- ★自分の名前に変える★ --&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">body</span><span class="op">&gt;</span>
+<span class="op">&lt;/</span><span class="kw">html</span><span class="op">&gt;</span></pre>
+      <p style="font-size:0.82rem;color:#999;margin:0.2rem 0 0.3rem">書いたら <strong>保存</strong>（Mac：⌘ + S）。</p>
+
+      <p style="font-weight:700;color:#93D500;font-size:0.9rem;margin:0.7rem 0 0.2rem">STEP 4：ブラウザで表示する</p>
+      <ul class="point-list">
+        <li>かんたん：<code>index.html</code> をダブルクリック（または右クリック →「ブラウザで開く」）</li>
+        <li>または、ターミナルで <code>open index.html</code></li>
+        <li>画面に<strong>自分の名前</strong>が大きく表示されれば成功</li>
+      </ul>
+
+      <div class="notion-submit"><div><strong>提出:</strong> 自分の名前が表示された画面のスクショ＋書いたHTMLをNotionに貼る</div></div>
+    </div>
+
+    <div class="callout-warning">
+      <h4>ノート：穴埋め</h4>
+      <ul class="point-list" style="margin-top:0.4rem">
+        <li>HTMLは（　　　　）で要素を作り、（　　　　）で性質を指定する。</li>
+        <li>画面に表示される中身は <code>&lt;</code>（　　　　）<code>&gt;</code> タグの中に書く。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 5: A-Frame 基礎 ============ -->
+<section id="sec-aframe">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#93D500">5</div>
+      <h2>A-Frame基礎：ボックスと球を表示する</h2>
+    </div>
+
+    <div class="concept-box">
+      <h4>A-Frameとは</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li><code>A-Frame</code>＝HTMLのタグで3D/WebXR空間を作れるフレームワーク</li>
+        <li><code>&lt;a-scene&gt;</code>（3D空間自体）の中に <code>&lt;a-box&gt;</code> や <code>&lt;a-sphere&gt;</code> など<strong>プリミティブ（基本図形）</strong>を配置</li>
+        <li>読み込みは <code>&lt;head&gt;</code> に1行追加するだけ</li>
+      </ul>
+    </div>
+
+    <div class="card group">
+      <div class="card-header"><h3>最初の3D空間（コピーして開いてみよう）</h3></div>
+<pre>HTML
+<span class="op">&lt;!DOCTYPE html&gt;</span>
+<span class="op">&lt;</span><span class="kw">html</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">head</span><span class="op">&gt;</span>
+    <span class="cmt">&lt;!-- A-Frame を読み込む（1行で必須） --&gt;</span>
+    <span class="op">&lt;</span><span class="kw">script</span> <span class="fn">src</span>=<span class="str">"https://aframe.io/releases/1.6.0/aframe.min.js"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">head</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">body</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">a-scene</span><span class="op">&gt;</span>
+      <span class="cmt">&lt;!-- ボックス（箱） --&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-box</span> <span class="fn">position</span>=<span class="str">"-1 1 -3"</span> <span class="fn">color</span>=<span class="str">"tomato"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-box</span><span class="op">&gt;</span>
+      <span class="cmt">&lt;!-- スフィア（球） --&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-sphere</span> <span class="fn">position</span>=<span class="str">"1 1.25 -3"</span> <span class="fn">radius</span>=<span class="str">"0.75"</span> <span class="fn">color</span>=<span class="str">"skyblue"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-sphere</span><span class="op">&gt;</span>
+      <span class="cmt">&lt;!-- 地面と背景 --&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-plane</span> <span class="fn">rotation</span>=<span class="str">"-90 0 0"</span> <span class="fn">width</span>=<span class="str">"10"</span> <span class="fn">height</span>=<span class="str">"10"</span> <span class="fn">color</span>=<span class="str">"#222"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-plane</span><span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-sky</span> <span class="fn">color</span>=<span class="str">"#111"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-sky</span><span class="op">&gt;</span>
+    <span class="op">&lt;/</span><span class="kw">a-scene</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">body</span><span class="op">&gt;</span>
+<span class="op">&lt;/</span><span class="kw">html</span><span class="op">&gt;</span></pre>
+      <p style="font-size:0.85rem;color:#999;margin-top:0.5rem"><code>index.html</code> で保存 → ブラウザで開くだけ。ドラッグで視点回転。</p>
+      <figure style="margin:1rem 0 0">
+        <img src="img/md2w1_box_sphere.png" alt="A-Frameで表示したトマト色のボックスと水色の球" style="width:100%;border-radius:10px;border:1px solid #333;display:block">
+        <figcaption style="font-size:0.78rem;color:#999;margin-top:0.4rem;text-align:center">▲ 実際の実行画面：<code>a-box</code>（tomato）と <code>a-sphere</code>（skyblue）が表示される</figcaption>
+      </figure>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3>position（位置）と主な属性</h3></div>
+      <p style="font-size:0.9rem;margin-bottom:0.5rem"><code>position</code>＝<code>"x y z"</code> の3数値で位置を指定。位置の数値こそ、第6回の「座標データ」。</p>
+      <table>
+        <tr><th style="width:18%">軸</th><th>意味</th><th>大きくすると</th></tr>
+        <tr><td><strong>x</strong></td><td>左右</td><td>右へ動く（マイナスで左）</td></tr>
+        <tr><td><strong>y</strong></td><td>上下</td><td>上へ動く（マイナスで下）</td></tr>
+        <tr><td><strong>z</strong></td><td>奥行き</td><td>手前へ来る（マイナスで奥）</td></tr>
+      </table>
+      <ul class="point-list" style="margin-top:0.5rem;font-size:0.85rem;color:#999">
+        <li>カメラは初期 <code>z=0</code> 付近 → オブジェクトは <code>z</code> をマイナス（奥）に</li>
+        <li>色＝<code>color</code>／球の大きさ＝<code>radius</code>／箱の大きさ＝<code>width・height・depth</code></li>
+      </ul>
+    </div>
+
+    <div class="callout-warning">
+      <h4>ノート：穴埋め</h4>
+      <ul class="point-list" style="margin-top:0.4rem">
+        <li>3D空間自体を表すタグは <code>&lt;a-</code>（　　　　）<code>&gt;</code> である。</li>
+        <li>箱は <code>a-</code>（　　　　）、球は <code>a-</code>（　　　　）で表示する。</li>
+        <li><code>position="x y z"</code> のうち、奥行きを表すのは（　　　　）である。</li>
+      </ul>
+    </div>
+
+    <div class="callout-tip">
+      <h4>組み立て式で進めます</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>完成形を載せるのは「最初の1つ」だけ</li>
+        <li>以降は<strong>部品（パーツ）で配布</strong> → 置く場所と順番は自分で考える</li>
+        <li>コピペで終わりだと身につかない。<strong>「自分で組んで、動いた！」</strong>が一番の学び</li>
+        <li>詰まったら各課題の<strong>ヒント</strong>を開いてOK</li>
+      </ul>
+    </div>
+
+    <!-- std1-1 -->
+    <div id="std1-1" class="card standard">
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std1-1：欠けている部品を自分で書く</h3></div>
+      <p style="font-size:0.9rem;margin-bottom:0.5rem">骨組みは箱（<code>a-box</code>）だけ。<strong>球（<code>a-sphere</code>）が抜けている</strong>。コメントの位置に球の1行を<strong>自分で書いて</strong>完成。完成例の書き方がヒント。</p>
+<pre>HTML
+<span class="op">&lt;!DOCTYPE html&gt;</span>
+<span class="op">&lt;</span><span class="kw">html</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">head</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">script</span> <span class="fn">src</span>=<span class="str">"https://aframe.io/releases/1.6.0/aframe.min.js"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">head</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">body</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">a-scene</span><span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-box</span> <span class="fn">position</span>=<span class="str">"-1 1 -3"</span> <span class="fn">color</span>=<span class="str">"tomato"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-box</span><span class="op">&gt;</span>
+      <span class="cmt">&lt;!-- ★球（a-sphere）を1行、自分で書く★ --&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-plane</span> <span class="fn">rotation</span>=<span class="str">"-90 0 0"</span> <span class="fn">width</span>=<span class="str">"10"</span> <span class="fn">height</span>=<span class="str">"10"</span> <span class="fn">color</span>=<span class="str">"#222"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-plane</span><span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-sky</span> <span class="fn">color</span>=<span class="str">"#111"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-sky</span><span class="op">&gt;</span>
+    <span class="op">&lt;/</span><span class="kw">a-scene</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">body</span><span class="op">&gt;</span>
+<span class="op">&lt;/</span><span class="kw">html</span><span class="op">&gt;</span></pre>
+      <ul class="point-list" style="margin-top:0.5rem">
+        <li>球の <code>position</code>・<code>radius</code>・<code>color</code> は自分で好きに決める</li>
+        <li>できたら、さらに別の図形（<code>a-cylinder</code> / <code>a-cone</code> など）も1つ足してみる</li>
+      </ul>
+      <details>
+        <summary>ヒント（どうしても球が書けないとき）</summary>
+        <div class="answer-content">
+          <p style="font-size:0.9rem">箱と同じ「タグ＋属性」の形。例：</p>
+          <p><code>&lt;a-sphere position="1 1.25 -3" radius="0.75" color="skyblue"&gt;&lt;/a-sphere&gt;</code></p>
+          <p style="font-size:0.85rem;color:#999">数値・色は変更OK。まず「書いて表示できた」を体験。</p>
+        </div>
+      </details>
+      <div class="notion-submit"><div><strong>提出:</strong> 完成コード＋実行画面のスクショをNotionに貼る</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 6: for 文で量産 ============ -->
+<section id="sec-loop">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#93D500">6</div>
+      <h2>for文でたくさん表示する</h2>
+    </div>
+
+    <p style="margin-bottom:1rem">同じタグを手で100個は大変。代わりに <strong>JavaScriptのfor文</strong> で「量産」。for文は後の回の「たくさんの計測対象・データ点」の基礎。</p>
+
+    <div class="concept-box">
+      <h4>for文の形</h4>
+<pre>JavaScript
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; <span class="num">10</span>; i++) {
+  <span class="cmt">// 中身が10回くりかえされる（i は 0,1,2,...,9）</span>
+}</pre>
+      <ul class="point-list" style="margin-top:0.4rem">
+        <li><code>let i = 0</code>：カウンタの初期値</li>
+        <li><code>i &lt; 10</code>：条件が成り立つ間くりかえす</li>
+        <li><code>i++</code>：1回ごとに <code>i</code> を1増やす</li>
+      </ul>
+    </div>
+
+    <div class="card group">
+      <div class="card-header"><h3>部品を組み立てて「箱を10個」を完成させよう</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.8rem">完成コードなし。<strong>部品①〜④</strong>を正しい場所・順番で組み立て。空欄（<code>____</code>）は自分で埋める。</p>
+
+      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.6rem 0 0.2rem">部品① 土台のHTML（変更せず使ってOK）</p>
+<pre>HTML
+<span class="op">&lt;!DOCTYPE html&gt;</span>
+<span class="op">&lt;</span><span class="kw">html</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">head</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">script</span> <span class="fn">src</span>=<span class="str">"https://aframe.io/releases/1.6.0/aframe.min.js"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">head</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">body</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">a-scene</span><span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-sky</span> <span class="fn">color</span>=<span class="str">"#111"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-sky</span><span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-plane</span> <span class="fn">rotation</span>=<span class="str">"-90 0 0"</span> <span class="fn">width</span>=<span class="str">"20"</span> <span class="fn">height</span>=<span class="str">"20"</span> <span class="fn">color</span>=<span class="str">"#1a1a1a"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-plane</span><span class="op">&gt;</span>
+      <span class="cmt">&lt;!-- 生成した箱を入れる場所 --&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-entity</span> <span class="fn">id</span>=<span class="str">"group"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-entity</span><span class="op">&gt;</span>
+    <span class="op">&lt;/</span><span class="kw">a-scene</span><span class="op">&gt;</span>
+
+    <span class="op">&lt;</span><span class="kw">script</span><span class="op">&gt;</span>
+      <span class="cmt">// ★部品②③④ を組み立てて書く★</span>
+    <span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">body</span><span class="op">&gt;</span>
+<span class="op">&lt;/</span><span class="kw">html</span><span class="op">&gt;</span></pre>
+
+      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.9rem 0 0.2rem">部品② コンテナを取得する（1行）</p>
+<pre>JavaScript
+<span class="kw">const</span> group = <span class="fn">document</span>.<span class="fn">querySelector</span>(<span class="str">'#group'</span>);</pre>
+
+      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.9rem 0 0.2rem">部品③ くりかえしの「わく」（中身はまだ空）</p>
+<pre>JavaScript
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; <span class="num">10</span>; i++) {
+  <span class="cmt">// ★部品④を入れる★</span>
+}</pre>
+
+      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.9rem 0 0.2rem">部品④ 箱を1つ作って空間に追加（③の中括弧の中に入れる）</p>
+<pre>JavaScript
+<span class="kw">const</span> box = <span class="fn">document</span>.<span class="fn">createElement</span>(<span class="str">'a-box'</span>);
+box.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, <span class="str">`____ 1 -5`</span>);   <span class="cmt">// 空欄: i を使って横にずらす式</span>
+box.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, <span class="str">'#76B900'</span>);
+box.<span class="fn">setAttribute</span>(<span class="str">'width'</span>, <span class="str">'0.6'</span>);
+box.<span class="fn">setAttribute</span>(<span class="str">'height'</span>, <span class="str">'0.6'</span>);
+box.<span class="fn">setAttribute</span>(<span class="str">'depth'</span>, <span class="str">'0.6'</span>);
+group.<span class="fn">appendChild</span>(box);</pre>
+
+      <div class="callout-info" style="margin-top:0.9rem">
+        <h4>組み立てチャレンジ</h4>
+        <ul class="point-list" style="margin-top:0.3rem">
+          <li>部品①を <code>index.html</code> という名前で保存する</li>
+          <li><code>&lt;script&gt;</code> の中に、② → ③ の順で書く</li>
+          <li>③の <code>for</code> の <strong>中括弧 { } の中</strong> に ④ を入れる</li>
+          <li>④の空欄 <code>____</code> に、<code>i</code> を使って横にずらす式を入れる<br><span style="font-size:0.82rem;color:#999">ヒント：10個が中央に広がるには、x が −5〜+4 になるとよい</span></li>
+        </ul>
+      </div>
+
+      <details>
+        <summary>つまったら：完成した <code>&lt;script&gt;</code> の中身を見る</summary>
+        <div class="answer-content">
+<pre>JavaScript
+<span class="kw">const</span> group = <span class="fn">document</span>.<span class="fn">querySelector</span>(<span class="str">'#group'</span>);
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; <span class="num">10</span>; i++) {
+  <span class="kw">const</span> box = <span class="fn">document</span>.<span class="fn">createElement</span>(<span class="str">'a-box'</span>);
+  box.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, <span class="str">`${i - 5} 1 -5`</span>);
+  box.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, <span class="str">'#76B900'</span>);
+  box.<span class="fn">setAttribute</span>(<span class="str">'width'</span>, <span class="str">'0.6'</span>);
+  box.<span class="fn">setAttribute</span>(<span class="str">'height'</span>, <span class="str">'0.6'</span>);
+  box.<span class="fn">setAttribute</span>(<span class="str">'depth'</span>, <span class="str">'0.6'</span>);
+  group.<span class="fn">appendChild</span>(box);
+}</pre>
+          <p style="font-size:0.85rem;color:#999">空欄＝<code>${i - 5}</code>。i が 0→9 → x が −5→4 → 10個が横並び。</p>
+        </div>
+      </details>
+
+      <figure style="margin:1rem 0 0">
+        <img src="img/md2w1_for_row.png" alt="for文で生成した緑のボックスが横一列に10個並んだ実行画面" style="width:100%;border-radius:10px;border:1px solid #333;display:block">
+        <figcaption style="font-size:0.78rem;color:#999;margin-top:0.4rem;text-align:center">▲ 組み立てが成功した状態（ゴール）：<code>a-box</code> が横に10個並ぶ</figcaption>
+      </figure>
+    </div>
+
+    <div class="callout-tip">
+      <h4>ちょっと実験</h4>
+      <ul class="point-list" style="margin-top:0.4rem">
+        <li><code>i &lt; 10</code> の <code>10</code> を <code>30</code> に変えると、いくつ並ぶ？</li>
+        <li><code>position</code> の式を <code>`${i - 5} ${i * 0.5} -5`</code> にすると、どんな形になる？</li>
+        <li>色を <code>`hsl(${i * 30}, 70%, 60%)`</code> にすると、1個ずつ色が変わる</li>
+      </ul>
+    </div>
+
+    <!-- std1-2 -->
+    <div id="std1-2" class="card standard">
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std1-2：組み立てて、さらに改造する</h3></div>
+      <ul class="point-list">
+        <li>部品①〜④を<strong>組み立て</strong>、10個並ぶことを確認</li>
+        <li>個数・色・大きさ・位置の式を変えて、自分なりの並べ方に</li>
+        <li>発展：<code>'a-box'</code>→<code>'a-sphere'</code>、<code>width/height/depth</code>→<code>radius</code> で球を量産</li>
+      </ul>
+      <div class="notion-submit"><div><strong>提出:</strong> 完成コード＋実行画面のスクショをNotionに貼る</div></div>
+    </div>
+
+    <!-- adv1-1 -->
+    <div id="adv1-1" class="card advanced">
+      <div class="card-header"><h3><span class="tag tag-advanced" style="font-size:0.7rem">発展課題</span> adv1-1：forをもう1つ足してグリッドにする（任意）</h3></div>
+      <ul class="point-list" style="margin-bottom:0.6rem">
+        <li>いまは「横一列（x）」だけ → <strong>縦×横の格子</strong>にする</li>
+        <li>forを<strong>もう1つ外側に追加</strong>し、奥行き（z）もずらす</li>
+        <li>格子状の配置＝第6回「位置データの分布」につながる</li>
+        <li>完成コードは伏せる。部品をヒントに組み立て</li>
+      </ul>
+
+      <p style="font-weight:700;color:#FFB800;font-size:0.9rem;margin:0.6rem 0 0.2rem">部品A 二重forのわく（x＝横、z＝奥行き）</p>
+<pre>JavaScript
+<span class="kw">for</span> (<span class="kw">let</span> x = <span class="num">0</span>; x &lt; <span class="num">5</span>; x++) {
+  <span class="kw">for</span> (<span class="kw">let</span> z = <span class="num">0</span>; z &lt; <span class="num">5</span>; z++) {
+    <span class="cmt">// ★球を1つ作る（部品B）★</span>
+  }
+}</pre>
+
+      <p style="font-weight:700;color:#FFB800;font-size:0.9rem;margin:0.9rem 0 0.2rem">部品B 球を作る（position の空欄を埋める）</p>
+<pre>JavaScript
+<span class="kw">const</span> s = <span class="fn">document</span>.<span class="fn">createElement</span>(<span class="str">'a-sphere'</span>);
+s.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, <span class="str">`${x - 2} 1 ____`</span>);   <span class="cmt">// 空欄: z を使って奥にずらす式</span>
+s.<span class="fn">setAttribute</span>(<span class="str">'radius'</span>, <span class="str">'0.3'</span>);
+s.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, <span class="str">`hsl(${(x * 5 + z) * 12}, 70%, 60%)`</span>);  <span class="cmt">// 1個ずつ色が変わる</span>
+group.<span class="fn">appendChild</span>(s);</pre>
+
+      <div class="callout-info" style="margin-top:0.9rem">
+        <h4>組み立てチャレンジ</h4>
+        <ul class="point-list" style="margin-top:0.3rem">
+          <li>std1-2の <code>&lt;script&gt;</code> をベースに、for文を部品Aの<strong>二重</strong>に置きかえる</li>
+          <li>内側に部品Bを入れて球を作る</li>
+          <li>空欄 <code>____</code> に、<code>z</code> を使って奥（マイナス方向）にずらす式を入れる<br><span style="font-size:0.82rem;color:#999">ヒント：手前から奥へ並べるには、z が大きいほど位置をマイナスにする</span></li>
+        </ul>
+      </div>
+
+      <details>
+        <summary>つまったら：完成した <code>&lt;script&gt;</code> の中身を見る</summary>
+        <div class="answer-content">
+<pre>JavaScript
+<span class="kw">const</span> group = <span class="fn">document</span>.<span class="fn">querySelector</span>(<span class="str">'#group'</span>);
+<span class="kw">for</span> (<span class="kw">let</span> x = <span class="num">0</span>; x &lt; <span class="num">5</span>; x++) {
+  <span class="kw">for</span> (<span class="kw">let</span> z = <span class="num">0</span>; z &lt; <span class="num">5</span>; z++) {
+    <span class="kw">const</span> s = <span class="fn">document</span>.<span class="fn">createElement</span>(<span class="str">'a-sphere'</span>);
+    s.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, <span class="str">`${x - 2} 1 ${-z - 3}`</span>);
+    s.<span class="fn">setAttribute</span>(<span class="str">'radius'</span>, <span class="str">'0.3'</span>);
+    s.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, <span class="str">`hsl(${(x * 5 + z) * 12}, 70%, 60%)`</span>);
+    group.<span class="fn">appendChild</span>(s);
+  }
+}</pre>
+          <p style="font-size:0.85rem;color:#999">空欄＝<code>${-z - 3}</code>。z が 0→4 → 奥行き −3→−7 → 5×5＝25個が格子状。</p>
+        </div>
+      </details>
+
+      <figure style="margin:1rem 0">
+        <img src="img/md2w1_grid.png" alt="二重for文で生成した5×5の球がHSLで虹色に並んだ実行画面" style="width:100%;border-radius:10px;border:1px solid #333;display:block">
+        <figcaption style="font-size:0.78rem;color:#999;margin-top:0.4rem;text-align:center">▲ 組み立てが成功した状態（ゴール）：25個の <code>a-sphere</code> が <code>hsl()</code> で色違いに並ぶ</figcaption>
+      </figure>
+      <div class="notion-submit"><div><strong>提出（任意）:</strong> 完成コード＋グリッドの実行画面のスクショをNotionに貼る</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TERMS GUIDE ============ -->
+<section id="sec-terms">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#93D500">用</div>
+      <h2>読み方 ― 用語ガイド</h2>
+    </div>
+    <p style="margin-bottom:0.8rem">繰り返し登場する英単語。発音と意味を先に押さえると、コード読解が楽。</p>
+    <table>
+      <tr><th style="width:22%">英単語</th><th style="width:22%">カタカナ読み</th><th>意味・メモ</th></tr>
+      <tr><td><code>WebXR</code></td><td>ウェブ・エックスアール</td><td>Webブラウザ上でVR/AR/3D体験を実現する技術の総称。XR = Extended Reality。</td></tr>
+      <tr><td><code>A-Frame</code></td><td>エーフレーム</td><td>HTMLのように書ける3D/WebXRフレームワーク。第5回以降の主役。</td></tr>
+      <tr><td><code>Three.js</code></td><td>スリー・ジェイエス</td><td>A-Frameの背後で動く低レベルな3D描画ライブラリ。第10回で扱う。</td></tr>
+      <tr><td><code>geometry</code></td><td>ジオメトリ</td><td>形状（箱・球・平面など）。「幾何」の意。空間を構成する部品。</td></tr>
+      <tr><td><code>position</code></td><td>ポジション</td><td>位置。x, y, z の3つの数値で表す。</td></tr>
+      <tr><td><code>coordinate</code></td><td>コーディネート</td><td>座標。空間内の場所を数で指定する仕組み。</td></tr>
+      <tr><td><code>event</code></td><td>イベント</td><td>「クリックした」「移動した」など、起きた出来事。データ取得のきっかけ。</td></tr>
+      <tr><td><code>log</code></td><td>ログ</td><td>記録。いつ・何が起きたかを残したデータ。</td></tr>
+      <tr><td><code>texture</code></td><td>テクスチャ</td><td>表面に貼る画像。質感。第7回で「環境条件」として扱う。</td></tr>
+      <tr><td><code>Likert scale</code></td><td>リッカート・スケール</td><td>「とても良い〜とても悪い」を5段階などで答える主観評価の尺度。</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============ HOMEWORK ============ -->
+<section id="sec-homework">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#93D500">宿</div>
+      <h2>予習・復習</h2>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">予習</span> WebXRの事例調査</h3></div>
+      <p style="font-size:0.9rem">WebXR / A-Frame の3D Web空間の事例を <strong>2つ以上</strong> 探し、各事例で次をまとめる。</p>
+      <ul class="point-list" style="margin-top:0.5rem">
+        <li>URL（出典）＋スクショ</li>
+        <li>どんな体験か（1〜2行）</li>
+        <li>「実験環境」にするなら、取れそうなデータは？</li>
+      </ul>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">復習</span> コードの数値を変えた実験メモ</h3></div>
+      <p style="font-size:0.9rem">std1-2のコードで数値を変え、結果を観察して表を完成。</p>
+      <table style="margin-top:0.5rem">
+        <tr><th style="width:34%">変えた箇所</th><th>変えた値</th><th>見た目の変化</th></tr>
+        <tr><td>くりかえし回数（<code>i &lt; 10</code>）</td><td>　</td><td>　</td></tr>
+        <tr><td>position の式</td><td>　</td><td>　</td></tr>
+        <tr><td>color の指定</td><td>　</td><td>　</td></tr>
+      </table>
+      <p style="font-size:0.85rem;color:#999;margin-top:0.5rem">※ ねらい＝「数値を変える → 見た目が変わる」＝プログラムはデータで動く、を体感。</p>
+    </div>
+
+    <div class="notion-submit">
+      <div><strong>提出:</strong> 予習・復習・各ノートを1つのNotionページに → PDF化 → Google Classroomへ（次回授業開始まで）</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NOTION GUIDE ============ -->
+<section id="sec-notion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">N</div>
+      <h2>ノートの作り方（Notion）</h2>
+    </div>
+    <div class="callout-info">
+      <h4>1ページにまとめて提出</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>各セクションの「ノートに記録」を1つのNotionページに集約</li>
+        <li><strong>PDFにエクスポート</strong> → Google Classroomに <strong>PDF 1ファイル</strong></li>
+        <li>上部に「グループ番号・氏名・第1回」を明記</li>
+      </ul>
+    </div>
+    <div class="callout-tip">
+      <h4>記録のコツ</h4>
+      <ul class="point-list" style="margin-top:0.4rem">
+        <li>穴埋めは「答え」＋理由を一言</li>
+        <li>発表会メモは、後期の制作に活かせる形で</li>
+        <li>スクショ・図を貼ると理解が深まる</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div>MD2 ─ メディアクリエーション・データデザインⅡ ─ 第1回</div>
+    <div style="margin-top:0.5rem;font-size:0.8rem;color:#666">&copy;2026 Ryota Nakamura.</div>
+  </div>
+</footer>
+
+<!-- ============ SCRIPTS ============ -->
+<script>
+// Copy button for pre blocks
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var code = pre.textContent.replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|\.zshrc|Notion テンプレート)( ── [^\n]+)?\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+
+// Click-to-copy on inline code elements
+document.querySelectorAll(':not(pre) > code').forEach(function(code) {
+  code.title = 'クリックでコピー';
+  code.addEventListener('click', function() {
+    navigator.clipboard.writeText(code.textContent).then(function() {
+      code.classList.add('copied');
+      setTimeout(function() {
+        code.classList.remove('copied');
+      }, 1500);
+    });
+  });
+});
+</script>
+
+</body>
+</html>
