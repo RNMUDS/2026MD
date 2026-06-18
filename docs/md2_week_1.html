@@ -531,8 +531,6 @@ body { padding-top: 2.2rem; }
   <a href="#sec-html">4. HTML基礎</a>
   <a href="#sec-aframe">5. A-Frame基礎</a>
   <a href="#sec-loop" class="nav-assignment">6. for文で量産</a>
-  <a href="#sec-terms">用語ガイド</a>
-  <a href="#sec-homework" class="nav-assignment">予習・復習</a>
   <a href="#sec-notion">ノート</a>
 </nav>
 
@@ -567,7 +565,156 @@ body { padding-top: 2.2rem; }
         <li>ふつうの授業＝配られたデータを分析</li>
         <li>本科目＝<strong>データが生まれる舞台ごと自作</strong> → 出どころ・測り方・言えることを丸ごと理解</li>
       </ul>
-      <p style="font-size:0.9rem;color:#999;margin-bottom:0.5rem">流れは次の3ステップ。</p>
+
+      <!-- examples of DS in virtual space (100, in a toggle) -->
+      <details style="margin-top:1.2rem">
+        <summary>💡 「バーチャル空間でデータサイエンス」の例（100個）― クリックで開く</summary>
+        <div class="answer-content">
+          <p style="font-size:0.83rem;color:#999;margin-bottom:0.8rem">3D空間を実験の舞台にすると、データで調べられる問いの例。10分野×10例。実際にVR/メタバースの現場でも、視線ヒートマップ・動線分析・行動ログ解析などが使われている（例：Tobii Pro VR Analytics による注視分析、不動産VR内見の視線データ、VR研修の行動解析）。</p>
+
+          <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.6rem 0 0.2rem">A. 小売・マーケティング（バーチャルショッピング）</p>
+          <ul class="point-list" style="font-size:0.84rem">
+            <li>1. バーチャルショッピング ─ 目に付く・手に取られる商品は？（視線・操作）</li>
+            <li>2. 棚割り（陳列）A/B ─ 並べ方で売れ筋が変わるか（選択率）</li>
+            <li>3. 店内動線 ─ 入口からの回遊ルート（移動軌跡）</li>
+            <li>4. パッケージ比較 ─ 色・形で注視時間が変わるか（注視時間）</li>
+            <li>5. POP・サイネージ位置 ─ 見られる広告はどれか（視線ヒートマップ）</li>
+            <li>6. レジ・出口配置 ─ 離脱しやすい場所（滞在・離脱率）</li>
+            <li>7. バーチャル展示販売会 ─ ブースごとの集客（来場・滞在）</li>
+            <li>8. 価格・割引の見せ方 ─ 購買意欲が変わるか（選択率＋主観）</li>
+            <li>9. 試食・サンプル導線 ─ 立ち寄り率（位置・滞在）</li>
+            <li>10. リピート来店 ─ 再訪者の動きの特徴（時系列・滞在）</li>
+          </ul>
+
+          <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.8rem 0 0.2rem">B. スポーツ・身体運動</p>
+          <ul class="point-list" style="font-size:0.84rem">
+            <li>11. テニス素振り ─ スイング軌道・タイミングのクセ（動作軌跡・反応時間）</li>
+            <li>12. ゴルフスイング ─ フォームの再現性（関節角度・速度）</li>
+            <li>13. バスケのシュート ─ 成功/失敗の動作差（軌跡・角度）</li>
+            <li>14. ボクシング・フェンシング ─ 反応速度・回避（反応時間）</li>
+            <li>15. ランニングフォーム ─ 着地・歩幅の傾向（位置・周期）</li>
+            <li>16. ダンス練習 ─ 振付の正確さ・タイミング（動作一致度）</li>
+            <li>17. 野球の打撃 ─ スイング軌道とミート率（軌跡・成功率）</li>
+            <li>18. スキー・スノボ ─ コース取りの分布（軌跡）</li>
+            <li>19. eスポーツ ─ 視点移動・操作（視線・操作ログ・反応時間）</li>
+            <li>20. 卓球の反応練習 ─ 返球の成功率と反応時間（成功率・時間）</li>
+          </ul>
+
+          <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.8rem 0 0.2rem">C. 教育・トレーニング</p>
+          <ul class="point-list" style="font-size:0.84rem">
+            <li>21. VR安全研修 ─ 危険認知のつまずき（操作ミス・反応時間）</li>
+            <li>22. 手順トレーニング ─ どの工程で迷うか（滞在・やり直し回数）</li>
+            <li>23. 接客・語学ロールプレイ ─ 発話・選択の傾向（選択・時間）</li>
+            <li>24. 実験シミュレーション ─ 操作手順の正確さ（手順一致度）</li>
+            <li>25. 避難訓練 ─ 正しい経路を選べるか（軌跡・所要時間）</li>
+            <li>26. 機械操作訓練 ─ 習熟による時間短縮（時系列・反応時間）</li>
+            <li>27. 学習定着の比較 ─ VR vs 動画の理解度（テスト得点＋主観）</li>
+            <li>28. 注意の集中 ─ 教材のどこを見ているか（視線ヒートマップ）</li>
+            <li>29. つまずき箇所 ─ 再挑戦が多い課題（やり直し回数）</li>
+            <li>30. グループ学習 ─ 協力時の動き・発話（位置・時間）</li>
+          </ul>
+
+          <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.8rem 0 0.2rem">D. 医療・ヘルスケア・リハビリ</p>
+          <ul class="point-list" style="font-size:0.84rem">
+            <li>31. リハビリVR ─ 到達範囲・動作の改善（可動域・軌跡）</li>
+            <li>32. バランス訓練 ─ 重心の揺れ（位置の分散）</li>
+            <li>33. 認知トレーニング ─ 課題の正答率・反応時間（成功率・時間）</li>
+            <li>34. 痛み軽減VR ─ 体験前後の主観評価（リッカート尺度）</li>
+            <li>35. 暴露療法（不安・恐怖）─ 心拍・回避行動（生体・回避）</li>
+            <li>36. 手術トレーニング ─ 手技の正確さ・所要時間（軌跡・時間）</li>
+            <li>37. 高齢者の歩行訓練 ─ 歩幅・速度（位置・周期）</li>
+            <li>38. 視野・注意のスクリーニング ─ 見落とし位置（視線分布）</li>
+            <li>39. 動作模倣評価 ─ 手本との一致度（動作一致度）</li>
+            <li>40. 健康教育 ─ 理解度と行動変容（テスト＋主観）</li>
+          </ul>
+
+          <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.8rem 0 0.2rem">E. エンタメ・音楽ライブ・ゲーム</p>
+          <ul class="point-list" style="font-size:0.84rem">
+            <li>41. バーチャル音楽ライブ ─ 観客の集まり・盛り上がる演出（位置・反応）</li>
+            <li>42. ステージ演出A/B ─ 照明・花火で歓声が変わるか（反応・主観）</li>
+            <li>43. ゲームの難所 ─ 離脱しやすいステージ（クリア率・滞在）</li>
+            <li>44. アトラクション動線 ─ 人気エリア（移動軌跡・滞在）</li>
+            <li>45. 報酬・演出 ─ 満足度の比較（主観評価）</li>
+            <li>46. マルチプレイの協力 ─ プレイヤー間の距離・連携（位置・時間）</li>
+            <li>47. 没入感の比較 ─ 演出条件で没入度が変わるか（主観＋滞在）</li>
+            <li>48. 推し活イベント ─ 注目される演者・位置（視線・滞在）</li>
+            <li>49. 合いの手タイミング ─ 盛り上がりの時系列（反応・時間）</li>
+            <li>50. 体験時間 ─ 飽きずに遊べる長さ（滞在・離脱）</li>
+          </ul>
+
+          <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.8rem 0 0.2rem">F. 建築・不動産・インテリア</p>
+          <ul class="point-list" style="font-size:0.84rem">
+            <li>51. バーチャル内見 ─ 見られる部屋・設備（視線・滞在）</li>
+            <li>52. 間取りA/B ─ 回遊性・印象の比較（軌跡＋主観）</li>
+            <li>53. 照明・内装の印象 ─ 明るさで評価が変わるか（主観評価）</li>
+            <li>54. オフィスレイアウト ─ 人の集まりやすい場所（位置分布）</li>
+            <li>55. 店舗デザイン ─ 入りやすい入口（進入率・動線）</li>
+            <li>56. 家具配置 ─ 通行のしやすさ（軌跡・衝突）</li>
+            <li>57. モデルルーム ─ 成約につながる注視ポイント（注視時間）</li>
+            <li>58. 公共空間設計 ─ ベンチ・サインの使われ方（滞在・位置）</li>
+            <li>59. 色・素材の好み ─ 選ばれる組み合わせ（選択率）</li>
+            <li>60. バリアフリー検証 ─ 動きにくい場所（軌跡・所要時間）</li>
+          </ul>
+
+          <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.8rem 0 0.2rem">G. 都市・観光・防災</p>
+          <ul class="point-list" style="font-size:0.84rem">
+            <li>61. 観光地の人気スポット ─ 集まる場所の可視化（分布ヒートマップ）</li>
+            <li>62. 街歩きシミュレーション ─ 歩かれるルート（軌跡）</li>
+            <li>63. 避難シミュレーション ─ 避難経路・所要時間（軌跡・時間）</li>
+            <li>64. 混雑予測 ─ ボトルネックの特定（密度・滞在）</li>
+            <li>65. イベント会場設計 ─ 入退場の流れ（動線・時間）</li>
+            <li>66. 案内サインの効果 ─ 迷う地点（停滞・引き返し）</li>
+            <li>67. 観光ルート提案 ─ 満足度の高い順路（主観＋滞在）</li>
+            <li>68. 災害体験VR ─ 危険認知と行動（反応・選択）</li>
+            <li>69. 交通結節点 ─ 乗り換え動線（軌跡・所要時間）</li>
+            <li>70. 景観評価 ─ 眺めの好み（視線・主観）</li>
+          </ul>
+
+          <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.8rem 0 0.2rem">H. 製造・産業・物流</p>
+          <ul class="point-list" style="font-size:0.84rem">
+            <li>71. 組立作業訓練 ─ 手順のミス・時間（やり直し・時間）</li>
+            <li>72. 倉庫ピッキング ─ 移動効率（軌跡・所要時間）</li>
+            <li>73. 危険作業の安全確認 ─ 見落とし（視線・チェック漏れ）</li>
+            <li>74. 設備レイアウト ─ 作業動線の最短化（軌跡）</li>
+            <li>75. 検査作業 ─ 欠陥の見落とし位置（視線分布）</li>
+            <li>76. 遠隔操作 ─ 操作の正確さ・遅延の影響（操作ログ・反応時間）</li>
+            <li>77. 工具配置 ─ 手の届きやすさ（動作・時間）</li>
+            <li>78. 作業負荷 ─ 姿勢のきつさ（関節角度・主観）</li>
+            <li>79. 新人とベテランの差 ─ 動作の違い（軌跡比較）</li>
+            <li>80. ライン設計A/B ─ 生産性の比較（時間・エラー率）</li>
+          </ul>
+
+          <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.8rem 0 0.2rem">I. コミュニケーション・働き方</p>
+          <ul class="point-list" style="font-size:0.84rem">
+            <li>81. バーチャル会議 ─ 集まり方と発話の関係（位置・時間）</li>
+            <li>82. バーチャルオフィス ─ 雑談が起きる場所（位置・滞在）</li>
+            <li>83. アバター距離 ─ 会話しやすい間隔（位置・発話）</li>
+            <li>84. 着席位置 ─ 発言量との関係（位置・発話）</li>
+            <li>85. オンライン商談 ─ 立ち寄られるブース（来場・滞在）</li>
+            <li>86. チームビルディング ─ 協力タスクの動き（位置・時間）</li>
+            <li>87. 面接・プレゼン訓練 ─ 視線・間（視線・時間）</li>
+            <li>88. 交流イベント ─ 人脈の広がり（接触・時間）</li>
+            <li>89. 受付・案内 ─ 迷わず進めるか（軌跡・時間）</li>
+            <li>90. 休憩スペース設計 ─ 使われ方（滞在・位置）</li>
+          </ul>
+
+          <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.8rem 0 0.2rem">J. 研究・実験・心理</p>
+          <ul class="point-list" style="font-size:0.84rem">
+            <li>91. 視線研究 ─ 注目を集めるデザイン（視線ヒートマップ）</li>
+            <li>92. 空間認知 ─ 道に迷いやすい構造（軌跡・引き返し）</li>
+            <li>93. 色・形の印象 ─ 主観評価の定量化（リッカート尺度）</li>
+            <li>94. 注意の分散 ─ マルチタスク時の反応（反応時間・正答率）</li>
+            <li>95. 対人距離（プロキシミクス）─ 文化・個人差（位置）</li>
+            <li>96. 高所・恐怖反応 ─ 回避行動と生体反応（回避・心拍）</li>
+            <li>97. 意思決定 ─ 選択肢の見せ方と選ばれ方（選択率）</li>
+            <li>98. 学習効果の検定 ─ 条件間で得点に有意差があるか（得点＋検定）</li>
+            <li>99. ユーザビリティ評価 ─ 操作のしやすさ比較（反応時間＋主観）</li>
+            <li>100. 没入感・VR酔いの研究 ─ 体験条件と主観・離脱（主観＋滞在）</li>
+          </ul>
+        </div>
+      </details>
+
+      <p style="font-size:0.9rem;color:#999;margin:1.2rem 0 0.5rem">流れは次の3ステップ。</p>
 
       <!-- 3 steps -->
       <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin:0.5rem 0 1rem">
@@ -647,7 +794,8 @@ body { padding-top: 2.2rem; }
         <a href="#sec-showcase" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>MD1発表会メモ</a>
         <a href="#std1-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std1-1 box+sphere</a>
         <a href="#std1-2" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std1-2 for文で量産</a>
-        <a href="#adv1-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv1-1 二重for</a>
+        <a href="#std1-3" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std1-3 二重forグリッド</a>
+        <a href="#adv1-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv1-1 アート作品</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.85rem;color:#93D500">
         <strong>提出方法:</strong> 下記の項目をすべて<strong>1つのNotionページにまとめて記録</strong> → PDFにエクスポート → Google Classroomに<strong>PDF 1ファイル</strong>を提出
@@ -659,7 +807,7 @@ body { padding-top: 2.2rem; }
       <!-- Notionに書くべき項目チェックリスト -->
       <div id="notion-checklist" style="background:#141414;border:1px solid #333;border-radius:0.4rem;padding:1rem;margin-top:1rem">
         <p style="color:#76B900;font-weight:700;font-size:0.85rem;margin-bottom:0.3rem">ノート: Notionに記録する項目（提出前に確認）</p>
-        <p style="font-size:0.75rem;color:#999;margin-bottom:0.8rem">以下の項目を1つのNotionページに記録し、PDF化して提出します。各項目は資料内の該当箇所にテンプレートがあります。</p>
+        <p style="font-size:0.75rem;color:#999;margin-bottom:0.8rem">以下の項目を1つのNotionページに記録し、PDF化して提出します。テンプレートは配りません。構成は自分で考えること。</p>
         <table style="font-size:0.8rem;width:100%;table-layout:fixed">
           <tr><th style="width:5%"></th><th style="width:30%">セクション</th><th>記録する内容</th><th style="width:8%">リンク</th></tr>
           <tr>
@@ -682,14 +830,14 @@ body { padding-top: 2.2rem; }
           </tr>
           <tr>
             <td><input type="checkbox"></td>
-            <td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std1-1 / std1-2</td>
-            <td>box+sphereの表示コードと実行スクショ／for文で10個並べたコードとスクショ</td>
+            <td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std1-1 / std1-2 / std1-3</td>
+            <td>box+sphere／for文で10個並べる／二重forでグリッド ─ 各コードと実行スクショ</td>
             <td><a href="#std1-1" style="color:#76B900">移動</a></td>
           </tr>
           <tr>
             <td><input type="checkbox"></td>
             <td><span class="tag tag-advanced" style="font-size:0.65rem">発展課題</span> adv1-1</td>
-            <td>二重for文でグリッド状に並べたコードとスクショ（任意）</td>
+            <td>for文でつくったアート作品のコードとスクショ＋工夫（任意）</td>
             <td><a href="#adv1-1" style="color:#76B900">移動</a></td>
           </tr>
         </table>
@@ -837,12 +985,12 @@ body { padding-top: 2.2rem; }
     <div class="card standard">
       <div class="card-header"><h3>記録テンプレート（3作品以上）</h3></div>
       <table>
-        <tr><th style="width:16%">チーム/作品</th><th>良かった点</th><th>データ活用の工夫</th><th>自分の学び</th><th style="width:20%">自分がした質問</th><th style="width:20%">その回答</th></tr>
+        <tr><th style="width:16%">チーム/作品</th><th>良かった点</th><th>データ活用の工夫</th><th>自分の学び</th><th style="width:20%">自分がした質問</th><th style="width:20%">回答</th></tr>
         <tr><td>　</td><td>　</td><td>　</td><td>　</td><td>　</td><td>　</td></tr>
         <tr><td>　</td><td>　</td><td>　</td><td>　</td><td>　</td><td>　</td></tr>
         <tr><td>　</td><td>　</td><td>　</td><td>　</td><td>　</td><td>　</td></tr>
       </table>
-      <p style="font-size:0.82rem;color:#999;margin-top:0.4rem">※ 「自分がした質問」「その回答」は、最低1つは必ず記入。</p>
+      <p style="font-size:0.82rem;color:#999;margin-top:0.4rem">※ 「自分がした質問」「回答」は、最低1つは必ず記入。</p>
     </div>
 
     <div class="notion-submit">
@@ -1052,6 +1200,10 @@ body { padding-top: 2.2rem; }
         <li>または、ターミナルで <code>open index.html</code></li>
         <li>画面に<strong>自分の名前</strong>が大きく表示されれば成功</li>
       </ul>
+      <figure style="margin:1rem 0 0">
+        <img src="img/md2w1_h1_name.png" alt="h1タグに書いた名前がブラウザに大きく表示された実行結果" style="width:100%;border-radius:10px;border:1px solid #333;display:block">
+        <figcaption style="font-size:0.78rem;color:#999;margin-top:0.4rem;text-align:center">▲ 実行結果：<code>&lt;h1&gt;</code> に書いた名前が見出しとして大きく表示される</figcaption>
+      </figure>
 
       <div class="notion-submit"><div><strong>提出:</strong> 自分の名前が表示された画面のスクショ＋書いたHTMLをNotionに貼る</div></div>
     </div>
@@ -1080,6 +1232,30 @@ body { padding-top: 2.2rem; }
         <li><code>A-Frame</code>＝HTMLのタグで3D/WebXR空間を作れるフレームワーク</li>
         <li><code>&lt;a-scene&gt;</code>（3D空間自体）の中に <code>&lt;a-box&gt;</code> や <code>&lt;a-sphere&gt;</code> など<strong>プリミティブ（基本図形）</strong>を配置</li>
         <li>読み込みは <code>&lt;head&gt;</code> に1行追加するだけ</li>
+      </ul>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3>大事なルール：オブジェクトは <code>&lt;a-scene&gt;</code> の中に書く</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.6rem">3D空間に置くものは、<strong>すべて <code>&lt;a-scene&gt;</code> 〜 <code>&lt;/a-scene&gt;</code> の間（中）</strong>に書く。外に書くと表示されない。</p>
+
+      <!-- nesting diagram -->
+      <div style="background:#0a1a0a;border:2px solid #76B900;border-radius:0.6rem;padding:0.8rem;font-family:'JetBrains Mono',monospace">
+        <div style="color:#76B900;font-weight:700;font-size:0.85rem;margin-bottom:0.5rem">&lt;a-scene&gt;　← 3D空間（いれもの）</div>
+        <div style="margin-left:1.2rem;display:flex;flex-direction:column;gap:0.4rem">
+          <div style="background:#1a1a1a;border:1px solid #FF7043;border-radius:0.4rem;padding:0.4rem 0.6rem;font-size:0.78rem;color:#e0e0e0">📦 &lt;a-box&gt;　箱</div>
+          <div style="background:#1a1a1a;border:1px solid #4FC3F7;border-radius:0.4rem;padding:0.4rem 0.6rem;font-size:0.78rem;color:#e0e0e0">🔵 &lt;a-sphere&gt;　球</div>
+          <div style="background:#1a1a1a;border:1px solid #93D500;border-radius:0.4rem;padding:0.4rem 0.6rem;font-size:0.78rem;color:#e0e0e0">⬛ &lt;a-plane&gt;　地面</div>
+          <div style="background:#1a1a1a;border:1px solid #FFB800;border-radius:0.4rem;padding:0.4rem 0.6rem;font-size:0.78rem;color:#e0e0e0">🌌 &lt;a-sky&gt;　背景</div>
+          <div style="color:#999;font-size:0.72rem;text-align:center">… 置きたいオブジェクトはすべて &lt;a-scene&gt; の中へ …</div>
+        </div>
+        <div style="color:#76B900;font-weight:700;font-size:0.85rem;margin-top:0.5rem">&lt;/a-scene&gt;</div>
+      </div>
+
+      <ul class="point-list" style="margin-top:0.6rem">
+        <li><code>&lt;a-scene&gt;</code>＝3D空間という「いれもの（箱）」</li>
+        <li>箱・球・地面・背景などは、<strong>すべて中に入れる</strong>（入れ子＝ネスト）</li>
+        <li><code>&lt;/a-scene&gt;</code> の<strong>外</strong>に書いたオブジェクトは3D空間に出てこない</li>
       </ul>
     </div>
 
@@ -1189,7 +1365,62 @@ body { padding-top: 2.2rem; }
       <h2>for文でたくさん表示する</h2>
     </div>
 
-    <p style="margin-bottom:1rem">同じタグを手で100個は大変。代わりに <strong>JavaScriptのfor文</strong> で「量産」。for文は後の回の「たくさんの計測対象・データ点」の基礎。</p>
+    <div class="concept-box">
+      <h4>JavaScriptとは</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li><strong>Webページに動きや処理を加えるプログラミング言語</strong></li>
+        <li>HTML＝見た目の部品 ／ JavaScript＝計算・くりかえし・データ操作などの「処理」</li>
+        <li>本日は <code>&lt;script&gt;</code> 〜 <code>&lt;/script&gt;</code> の中にJavaScriptを書く</li>
+        <li>A-Frameのオブジェクトを「量産」したり、後の回でデータ取得・集計にも使う</li>
+      </ul>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3>まず：console.log でメッセージを表示</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem"><code>console.log( )</code> ＝ 開発者ツールの「コンソール」に文字や数値を出す命令。プログラムの動作確認の基本。</p>
+<pre>HTML
+<span class="op">&lt;</span><span class="kw">script</span><span class="op">&gt;</span>
+  <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'こんにちは！'</span>);   <span class="cmt">// 文字を表示</span>
+  <span class="fn">console</span>.<span class="fn">log</span>(<span class="num">1</span> + <span class="num">2</span>);          <span class="cmt">// 計算結果 3 を表示</span>
+<span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span></pre>
+      <ul class="point-list" style="margin-top:0.4rem">
+        <li>HTMLファイルをブラウザで開く → <strong>右クリック →「検証」→「Console」タブ</strong>を開く</li>
+        <li>コンソールに <code>こんにちは！</code> と <code>3</code> が表示されればOK</li>
+        <li>文字は <code>'　'</code>（クォート）で囲む。数値はクォートなしで書く</li>
+      </ul>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3>JavaScriptの基本文法（今日使う分だけ）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.6rem">文法を全部は覚えない。<strong>演習で実際に使う基礎だけ</strong>を押さえる。</p>
+
+      <p style="font-weight:700;color:#93D500;font-size:0.88rem;margin:0.5rem 0 0.2rem">① 変数：値に名前をつけて入れておく箱</p>
+<pre>JavaScript
+<span class="kw">const</span> name = <span class="str">'みな'</span>;   <span class="cmt">// const = あとで変えない</span>
+<span class="kw">let</span> count = <span class="num">0</span>;       <span class="cmt">// let = あとで変える</span></pre>
+
+      <p style="font-weight:700;color:#93D500;font-size:0.88rem;margin:0.7rem 0 0.2rem">② 値の型：文字列 と 数値</p>
+<pre>JavaScript
+<span class="str">'こんにちは'</span>   <span class="cmt">// 文字列 → クォート '　' で囲む</span>
+<span class="num">42</span>          <span class="cmt">// 数値 → クォートなし</span></pre>
+
+      <p style="font-weight:700;color:#93D500;font-size:0.88rem;margin:0.7rem 0 0.2rem">③ 計算：＋ − ＊ ／</p>
+<pre>JavaScript
+count = count + <span class="num">1</span>;   <span class="cmt">// count を 1 増やす</span></pre>
+
+      <p style="font-weight:700;color:#93D500;font-size:0.88rem;margin:0.7rem 0 0.2rem">④ テンプレートリテラル：文字列に値を埋め込む（重要）</p>
+<pre>JavaScript
+<span class="kw">const</span> i = <span class="num">3</span>;
+<span class="str">`${i - 5} 1 -5`</span>   <span class="cmt">// → "-2 1 -5"（位置の文字列を作れる）</span></pre>
+      <ul class="point-list" style="margin-top:0.3rem">
+        <li>バッククォート <code>`　`</code> で囲み、<code>${ }</code> の中に式を書くと計算結果が入る</li>
+        <li>for文で <code>position</code> を作るときに使う（部品④の空欄）</li>
+      </ul>
+
+      <p style="font-weight:700;color:#93D500;font-size:0.88rem;margin:0.7rem 0 0.2rem">⑤ コメント：<code>//</code> から後ろはメモ（実行されない）</p>
+    </div>
+
+    <p style="margin-bottom:1rem">次に、同じタグを手で100個書くのは大変なので、<strong>JavaScriptのfor文</strong> で「量産」する。for文は後の回の「たくさんの計測対象・データ点」の基礎。</p>
 
     <div class="concept-box">
       <h4>for文の形</h4>
@@ -1300,12 +1531,16 @@ group.<span class="fn">appendChild</span>(box);</pre>
         <li>個数・色・大きさ・位置の式を変えて、自分なりの並べ方に</li>
         <li>発展：<code>'a-box'</code>→<code>'a-sphere'</code>、<code>width/height/depth</code>→<code>radius</code> で球を量産</li>
       </ul>
+      <figure style="margin:1rem 0 0">
+        <img src="img/md2w1_std1_2_spheres.png" alt="a-sphereに変えて色をhslで変化させ、球を10個並べた実行結果の例" style="width:100%;border-radius:10px;border:1px solid #333;display:block">
+        <figcaption style="font-size:0.78rem;color:#999;margin-top:0.4rem;text-align:center">▲ 改造例：球（<code>radius=0.3</code>）＋ <code>hsl()</code> で1個ずつ色を変えた結果</figcaption>
+      </figure>
       <div class="notion-submit"><div><strong>提出:</strong> 完成コード＋実行画面のスクショをNotionに貼る</div></div>
     </div>
 
-    <!-- adv1-1 -->
-    <div id="adv1-1" class="card advanced">
-      <div class="card-header"><h3><span class="tag tag-advanced" style="font-size:0.7rem">発展課題</span> adv1-1：forをもう1つ足してグリッドにする（任意）</h3></div>
+    <!-- std1-3 -->
+    <div id="std1-3" class="card standard">
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std1-3：forをもう1つ足してグリッドにする</h3></div>
       <ul class="point-list" style="margin-bottom:0.6rem">
         <li>いまは「横一列（x）」だけ → <strong>縦×横の格子</strong>にする</li>
         <li>forを<strong>もう1つ外側に追加</strong>し、奥行き（z）もずらす</li>
@@ -1313,7 +1548,7 @@ group.<span class="fn">appendChild</span>(box);</pre>
         <li>完成コードは伏せる。部品をヒントに組み立て</li>
       </ul>
 
-      <p style="font-weight:700;color:#FFB800;font-size:0.9rem;margin:0.6rem 0 0.2rem">部品A 二重forのわく（x＝横、z＝奥行き）</p>
+      <p style="font-weight:700;color:#93D500;font-size:0.9rem;margin:0.6rem 0 0.2rem">部品A 二重forのわく（x＝横、z＝奥行き）</p>
 <pre>JavaScript
 <span class="kw">for</span> (<span class="kw">let</span> x = <span class="num">0</span>; x &lt; <span class="num">5</span>; x++) {
   <span class="kw">for</span> (<span class="kw">let</span> z = <span class="num">0</span>; z &lt; <span class="num">5</span>; z++) {
@@ -1321,13 +1556,45 @@ group.<span class="fn">appendChild</span>(box);</pre>
   }
 }</pre>
 
-      <p style="font-weight:700;color:#FFB800;font-size:0.9rem;margin:0.9rem 0 0.2rem">部品B 球を作る（position の空欄を埋める）</p>
+      <p style="font-weight:700;color:#93D500;font-size:0.9rem;margin:0.9rem 0 0.2rem">部品B 球を作る（position の空欄を埋める）</p>
 <pre>JavaScript
 <span class="kw">const</span> s = <span class="fn">document</span>.<span class="fn">createElement</span>(<span class="str">'a-sphere'</span>);
 s.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, <span class="str">`${x - 2} 1 ____`</span>);   <span class="cmt">// 空欄: z を使って奥にずらす式</span>
 s.<span class="fn">setAttribute</span>(<span class="str">'radius'</span>, <span class="str">'0.3'</span>);
 s.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, <span class="str">`hsl(${(x * 5 + z) * 12}, 70%, 60%)`</span>);  <span class="cmt">// 1個ずつ色が変わる</span>
 group.<span class="fn">appendChild</span>(s);</pre>
+
+      <!-- diagram: how the position string is built from variables -->
+      <div class="card" style="background:#0a0a0a;border:1px solid #76B900;margin:0.9rem 0 0">
+        <div style="font-weight:700;color:#76B900;font-size:0.9rem;margin-bottom:0.5rem">図解：<code>`${x - 2} 1 ____`</code> ＝ 変数を組み合わせて position を作る</div>
+
+        <p style="font-size:0.85rem;color:#ccc;margin-bottom:0.5rem"><code>position</code> は <strong>「x y z」＝半角スペース区切りの3つの数値</strong>。バッククォート <code>`　`</code> で全体を1つの文字列にし、<code>${ }</code> の中だけが計算されて数値に化ける。</p>
+
+        <!-- segmented breakdown -->
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.9rem;background:#141414;border-radius:0.4rem;padding:0.8rem;overflow-x:auto">
+          <div style="white-space:nowrap">
+            <span style="color:#666">`</span><span style="background:rgba(79,195,247,0.25);border-radius:3px;padding:0.1rem 0.2rem">${x - 2}</span><span style="color:#666">␣</span><span style="background:rgba(118,185,0,0.25);border-radius:3px;padding:0.1rem 0.2rem">1</span><span style="color:#666">␣</span><span style="background:rgba(255,184,0,0.25);border-radius:3px;padding:0.1rem 0.2rem">____</span><span style="color:#666">`</span>
+          </div>
+          <div style="white-space:nowrap;margin-top:0.4rem;font-size:0.78rem">
+            <span style="color:#4FC3F7">└ x座標（横）</span>　<span style="color:#76B900">└ y座標（高さ＝1で固定）</span>　<span style="color:#FFB800">└ z座標（奥行き）</span>
+          </div>
+        </div>
+
+        <ul class="point-list" style="margin-top:0.6rem">
+          <li><span style="color:#4FC3F7;font-weight:700">${x - 2}</span>：<code>${ }</code> の中は<strong>計算される</strong>。<code>x</code> が変わると数値も変わる（横の位置）</li>
+          <li><span style="color:#76B900;font-weight:700">␣1␣</span>：<code>${ }</code> の<strong>外は書いた通りの文字</strong>。前後の半角スペースが「x y z」の区切り</li>
+          <li><span style="color:#FFB800;font-weight:700">____</span>：ここに <strong><code>z</code> を使った式</strong>を入れると、奥行きの数値になる（＝今回の空欄）</li>
+        </ul>
+
+        <p style="font-size:0.85rem;color:#ccc;margin:0.5rem 0 0.2rem">代入の例（空欄に <code>z</code> の式を入れた後のイメージ）</p>
+        <table style="font-size:0.82rem">
+          <tr><th>x</th><th>z</th><th><code>${x - 2}</code></th><th>できる文字列</th></tr>
+          <tr><td>0</td><td>0</td><td>-2</td><td><code>"-2 1 （zの値）"</code></td></tr>
+          <tr><td>1</td><td>2</td><td>-1</td><td><code>"-1 1 （zの値）"</code></td></tr>
+          <tr><td>3</td><td>4</td><td>1</td><td><code>"1 1 （zの値）"</code></td></tr>
+        </table>
+        <p style="font-size:0.8rem;color:#999;margin-top:0.4rem">※ <code>x</code> と <code>z</code> の2つの変数を組み合わせるので、二重forの全マスに1個ずつ球が置ける。</p>
+      </div>
 
       <div class="callout-info" style="margin-top:0.9rem">
         <h4>組み立てチャレンジ</h4>
@@ -1360,67 +1627,40 @@ group.<span class="fn">appendChild</span>(s);</pre>
         <img src="img/md2w1_grid.png" alt="二重for文で生成した5×5の球がHSLで虹色に並んだ実行画面" style="width:100%;border-radius:10px;border:1px solid #333;display:block">
         <figcaption style="font-size:0.78rem;color:#999;margin-top:0.4rem;text-align:center">▲ 組み立てが成功した状態（ゴール）：25個の <code>a-sphere</code> が <code>hsl()</code> で色違いに並ぶ</figcaption>
       </figure>
-      <div class="notion-submit"><div><strong>提出（任意）:</strong> 完成コード＋グリッドの実行画面のスクショをNotionに貼る</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ TERMS GUIDE ============ -->
-<section id="sec-terms">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-num" style="background:#93D500">用</div>
-      <h2>読み方 ― 用語ガイド</h2>
-    </div>
-    <p style="margin-bottom:0.8rem">繰り返し登場する英単語。発音と意味を先に押さえると、コード読解が楽。</p>
-    <table>
-      <tr><th style="width:22%">英単語</th><th style="width:22%">カタカナ読み</th><th>意味・メモ</th></tr>
-      <tr><td><code>WebXR</code></td><td>ウェブ・エックスアール</td><td>Webブラウザ上でVR/AR/3D体験を実現する技術の総称。XR = Extended Reality。</td></tr>
-      <tr><td><code>A-Frame</code></td><td>エーフレーム</td><td>HTMLのように書ける3D/WebXRフレームワーク。第5回以降の主役。</td></tr>
-      <tr><td><code>Three.js</code></td><td>スリー・ジェイエス</td><td>A-Frameの背後で動く低レベルな3D描画ライブラリ。第10回で扱う。</td></tr>
-      <tr><td><code>geometry</code></td><td>ジオメトリ</td><td>形状（箱・球・平面など）。「幾何」の意。空間を構成する部品。</td></tr>
-      <tr><td><code>position</code></td><td>ポジション</td><td>位置。x, y, z の3つの数値で表す。</td></tr>
-      <tr><td><code>coordinate</code></td><td>コーディネート</td><td>座標。空間内の場所を数で指定する仕組み。</td></tr>
-      <tr><td><code>event</code></td><td>イベント</td><td>「クリックした」「移動した」など、起きた出来事。データ取得のきっかけ。</td></tr>
-      <tr><td><code>log</code></td><td>ログ</td><td>記録。いつ・何が起きたかを残したデータ。</td></tr>
-      <tr><td><code>texture</code></td><td>テクスチャ</td><td>表面に貼る画像。質感。第7回で「環境条件」として扱う。</td></tr>
-      <tr><td><code>Likert scale</code></td><td>リッカート・スケール</td><td>「とても良い〜とても悪い」を5段階などで答える主観評価の尺度。</td></tr>
-    </table>
-  </div>
-</section>
-
-<!-- ============ HOMEWORK ============ -->
-<section id="sec-homework">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-num" style="background:#93D500">宿</div>
-      <h2>予習・復習</h2>
+      <div class="notion-submit"><div><strong>提出:</strong> 完成コード＋グリッドの実行画面のスクショをNotionに貼る</div></div>
     </div>
 
-    <div class="card standard">
-      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">予習</span> WebXRの事例調査</h3></div>
-      <p style="font-size:0.9rem">WebXR / A-Frame の3D Web空間の事例を <strong>2つ以上</strong> 探し、各事例で次をまとめる。</p>
-      <ul class="point-list" style="margin-top:0.5rem">
-        <li>URL（出典）＋スクショ</li>
-        <li>どんな体験か（1〜2行）</li>
-        <li>「実験環境」にするなら、取れそうなデータは？</li>
+    <!-- adv1-1 -->
+    <div id="adv1-1" class="card advanced">
+      <div class="card-header"><h3><span class="tag tag-advanced" style="font-size:0.7rem">発展課題</span> adv1-1：for文でアート作品をつくる（自由創作・任意）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">ここまでの技を全部使って、<strong>for文でたくさんのオブジェクトを配置し、自分だけのアート作品</strong>をつくる。正解はなし。見て楽しい・面白いを目指す。</p>
+
+      <p style="font-weight:700;color:#FFB800;font-size:0.88rem;margin:0.5rem 0 0.2rem">使える技（組み合わせ自由）</p>
+      <ul class="point-list">
+        <li>オブジェクト：<code>a-box</code> / <code>a-sphere</code> / <code>a-cylinder</code> / <code>a-cone</code> / <code>a-torus</code> など</li>
+        <li>for文：1重で「並べる」／二重で「敷き詰める」</li>
+        <li><code>position</code> の式：<code>i</code> や <code>x,z</code> を計算して、らせん・波・円・タワーなどの形に</li>
+        <li>色：<code>hsl()</code> や <code>i</code> で1個ずつ変化させてグラデーション</li>
+        <li>大きさ：<code>radius</code> や <code>scale</code> を <code>i</code> で変えて、だんだん大きく／小さく</li>
       </ul>
-    </div>
 
-    <div class="card standard">
-      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">復習</span> コードの数値を変えた実験メモ</h3></div>
-      <p style="font-size:0.9rem">std1-2のコードで数値を変え、結果を観察して表を完成。</p>
-      <table style="margin-top:0.5rem">
-        <tr><th style="width:34%">変えた箇所</th><th>変えた値</th><th>見た目の変化</th></tr>
-        <tr><td>くりかえし回数（<code>i &lt; 10</code>）</td><td>　</td><td>　</td></tr>
-        <tr><td>position の式</td><td>　</td><td>　</td></tr>
-        <tr><td>color の指定</td><td>　</td><td>　</td></tr>
-      </table>
-      <p style="font-size:0.85rem;color:#999;margin-top:0.5rem">※ ねらい＝「数値を変える → 見た目が変わる」＝プログラムはデータで動く、を体感。</p>
-    </div>
+      <p style="font-weight:700;color:#FFB800;font-size:0.88rem;margin:0.7rem 0 0.2rem">アイデアの例</p>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>色が変わる<strong>らせん階段</strong>（<code>y</code> を <code>i</code> で上げ、<code>x,z</code> を <code>Math.sin/Math.cos</code> で回す）</li>
+        <li>大きさが波打つ<strong>球の絨毯</strong>（二重forで敷き詰め、<code>radius</code> を場所で変える）</li>
+        <li>虹色の<strong>タワー</strong>（縦に積んで <code>hsl()</code> で色を回す）</li>
+      </ul>
 
-    <div class="notion-submit">
-      <div><strong>提出:</strong> 予習・復習・各ノートを1つのNotionページに → PDF化 → Google Classroomへ（次回授業開始まで）</div>
+      <div class="callout-tip" style="margin-top:0.7rem">
+        <h4>ヒント</h4>
+        <ul class="point-list" style="margin-bottom:0">
+          <li>まず std1-3 のコードをコピー → 数値や式を1か所ずつ変えて反応を見る</li>
+          <li><code>Math.sin(i)</code>・<code>Math.cos(i)</code> を使うと曲線・円が作れる</li>
+          <li>「なぜそうした」を一言メモしておくと、後の発表で語れる</li>
+        </ul>
+      </div>
+
+      <div class="notion-submit"><div><strong>提出（任意）:</strong> 作品のコード＋実行画面のスクショ＋作品タイトル・工夫した点をNotionに貼る</div></div>
     </div>
   </div>
 </section>
@@ -1431,6 +1671,14 @@ group.<span class="fn">appendChild</span>(s);</pre>
     <div class="section-header">
       <div class="section-num" style="background:#76B900">N</div>
       <h2>ノートの作り方（Notion）</h2>
+    </div>
+    <div class="callout-warning">
+      <h4>テンプレートは配りません ── 自分で書く</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>決まったひな形（テンプレート）は渡さない</li>
+        <li><strong>何を・どう記録するかを自分で考えて</strong>、見出しや表を作って構成する</li>
+        <li>「見やすく整理する」こと自体が、データを扱う練習になる</li>
+      </ul>
     </div>
     <div class="callout-info">
       <h4>1ページにまとめて提出</h4>
