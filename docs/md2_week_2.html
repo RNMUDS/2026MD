@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第2回: JavaScript基礎＋応用 ― 図形を描き、クリックで操作ログを取る | MD2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET & BASE ============ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: clamp(13px, 1.6vw, 28px); }
+html, body { overflow-x: hidden; max-width: 100%; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #111111;
+  color: #e0e0e0;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+/* Media and embeds should never overflow their container */
+img, video, iframe, svg, canvas { max-width: 100%; height: auto; }
+
+/* ============ LAYOUT ============ */
+.container { max-width: 1600px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+
+/* ============ HEADER ============ */
+.hero {
+  background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a);
+  color: white;
+  padding: clamp(3rem, 8vw, 6rem) 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(108,99,255,0.3), transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(155,89,182,0.2), transparent 50%);
+}
+.hero .container { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 100px;
+  padding: 0.35rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+}
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+
+/* ============ SUBMISSION BOX ============ */
+.submission-box {
+  background: linear-gradient(135deg, #1A1A1A, #1a2e0a);
+  border: 2px solid #76B900;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin: 2rem 0;
+}
+.submission-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #76B900;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.submission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.5rem;
+}
+.sub-item {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  gap: 0.3rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.4rem;
+  padding: 0.6rem 0.4rem;
+  font-size: 0.55rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.sub-item .sub-count {
+  margin-bottom: 0.1rem;
+}
+.sub-item .tag {
+  margin-bottom: 0.15rem;
+}
+.sub-count {
+  background: #76B900;
+  color: white;
+  border-radius: 0.2rem;
+  min-width: 1.5rem; height: 1.5rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700;
+}
+
+/* ============ TAGS ============ */
+.tag {
+  display: inline-flex; align-items: center; gap: 0.2rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 100px;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.tag-note      { background: #1a2e0a; color: #76B900; }
+.tag-standard  { background: #0a1a2e; color: #4FC3F7; }
+.tag-advanced  { background: #2e1a0a; color: #FFB800; }
+.tag-group     { background: #1a2e0a; color: #76B900; }
+
+/* ============ EXAM ALERT TAG ============ */
+.exam-alert {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  background: rgba(255, 82, 82, 0.15);
+  border: 1px solid #FFB800;
+  color: #FFB800;
+  padding: 0.2rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  animation: exam-pulse 2s ease-in-out 3;
+}
+@keyframes exam-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ============ SECTION HEADERS ============ */
+.section-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.section-num {
+  width: 2.5rem; height: 2.5rem;
+  border-radius: 0.4rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 900; color: white;
+  flex-shrink: 0;
+}
+.section-header h2 {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+/* ============ CARDS ============ */
+.card {
+  background: #141414;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  border: 1px solid #2a2a2a;
+}
+.card-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #222;
+}
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.standard  { border-left: 4px solid #76B900; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.card.group     { border-left: 4px solid #93D500; }
+
+/* ============ NOTION CALLOUT ============ */
+.notion-submit {
+  background: #1a2e0a;
+  border: 1px solid #76B900;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  display: flex; align-items: flex-start; gap: 0.5rem;
+}
+.notion-submit::before { content: '\1F4DD'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+
+/* ============ TABLES ============ */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem;
+  margin: 1rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+th {
+  background: rgba(108, 99, 255, 0.15);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  color: #76B900;
+  letter-spacing: 0.02em;
+}
+td {
+  padding: 0.55rem 0.8rem;
+  border-top: 1px solid #222;
+}
+tr:nth-child(even) td { background: #111; }
+
+/* ============ CODE ============ */
+pre {
+  background: #0A0A0A;
+  color: #E0E0E0;
+  border-radius: 12px;
+  padding: clamp(0.8rem, 2vw, 1.4rem);
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
+  font-size: clamp(0.75rem, 1.3vw, 0.88rem);
+  line-height: 1.7;
+  margin: 1rem 0;
+  position: relative;
+}
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #FFB800; }
+pre .op { color: #93D500; }
+.code-label {
+  position: absolute; top: 0; right: 0;
+  background: rgba(255,255,255,0.08);
+  color: #999999;
+  padding: 0.2rem 0.8rem;
+  border-radius: 0 12px 0 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+/* inline code */
+:not(pre) > code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(108,99,255,0.15);
+  padding: 0.15em 0.45em;
+  border-radius: 5px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+:not(pre) > code:hover { background: rgba(108,99,255,0.3); }
+:not(pre) > code.copied { background: rgba(108,99,255,0.5); }
+
+/* ============ EXPLANATION BLOCKS ============ */
+.concept-box {
+  background: rgba(108, 99, 255, 0.15);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  border: 1px solid #2a2a3a;
+}
+.concept-box h4 {
+  font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem;
+}
+.analogy {
+  background: #1a1a0a;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 0.75rem 0;
+  border-left: 3px solid #FFB800;
+  font-size: 0.95rem;
+}
+.analogy::before {
+  content: '\1F4A1 日常の例';
+  display: block;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #FFB800;
+  margin-bottom: 0.3rem;
+}
+.point-list {
+  list-style: none;
+  padding: 0;
+}
+.point-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+}
+.point-list li::before {
+  content: '\25B8';
+  position: absolute; left: 0;
+  color: #76B900;
+  font-weight: 700;
+}
+
+/* ============ ANSWERS (COLLAPSIBLE) ============ */
+details {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+details summary {
+  padding: 0.8rem 1.2rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 0.5rem;
+  background: #1a1a1a;
+  user-select: none;
+}
+details summary::marker { content: ''; }
+details summary::before {
+  content: '\25B6';
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+  color: #666;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
+
+/* ============ WARNING / DANGER CALLOUT ============ */
+.callout-danger {
+  background: rgba(255, 82, 82, 0.08);
+  border: 1px solid rgba(255, 82, 82, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-danger h4 {
+  color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-warning {
+  background: rgba(255, 184, 0, 0.08);
+  border: 1px solid rgba(255, 184, 0, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-warning h4 {
+  color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-info {
+  background: rgba(108, 99, 255, 0.08);
+  border: 1px solid rgba(108, 99, 255, 0.3);
+  border-left: 4px solid #76B900;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-info h4 {
+  color: #76B900; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-tip {
+  background: rgba(155, 89, 182, 0.08);
+  border: 1px solid rgba(155, 89, 182, 0.3);
+  border-left: 4px solid #93D500;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-tip h4 {
+  color: #93D500; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+
+/* ============ FOOTER ============ */
+footer {
+  background: #0A0A0A;
+  color: #999999;
+  padding: 2rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 640px) {
+  .submission-items { grid-template-columns: 1fr; }
+  .section-num { width: 2rem; height: 2rem; font-size: 0.85rem; }
+
+  /* Tables: allow horizontal scroll wrapper feel via smaller text + wrap */
+  table { max-width: 100%; font-size: 0.78rem; }
+  th, td { padding: 0.4rem 0.5rem; white-space: normal; }
+  th { font-size: 0.72rem; }
+  th[style*="width"], td[style*="width"] { width: auto !important; min-width: 3rem; }
+
+  [style*="min-width:8rem"] { min-width: 0 !important; }
+  [style*="min-width:12rem"] { min-width: 0 !important; }
+  [style*="min-width: 8rem"] { min-width: 0 !important; }
+  [style*="min-width: 12rem"] { min-width: 0 !important; }
+
+  [style*="display:inline-block"],
+  [style*="display: inline-block"],
+  [style*="display:inline-flex"],
+  [style*="display: inline-flex"] { max-width: 100%; overflow-wrap: anywhere; }
+
+  .card > div, .card div[style] { max-width: 100%; overflow-wrap: anywhere; }
+  div[style*="border-radius"] { max-width: 100%; overflow-wrap: anywhere; }
+
+  .callout-danger, .callout-warning, .callout-info, .callout-tip,
+  .concept-box, .analogy, .notion-submit { padding: 0.8rem 0.9rem; border-radius: 10px; font-size: 0.88rem; overflow-x: hidden; }
+  details summary { padding: 0.7rem 0.9rem; font-size: 0.9rem; }
+  details .answer-content { padding: 0.8rem 0.9rem; overflow-x: auto; }
+
+  p, li, td, th, summary, .card, .callout-info, .callout-tip,
+  .callout-warning, .callout-danger, div { overflow-wrap: anywhere; }
+  :not(pre) > code { white-space: normal; overflow-wrap: anywhere; word-break: break-all; }
+
+  [style*="white-space:nowrap"],
+  [style*="white-space: nowrap"] { white-space: normal !important; }
+
+  [id] { scroll-margin-top: 2.5rem; }
+}
+
+/* Small phone */
+@media (max-width: 420px) {
+  .container { padding: 0 0.6rem; }
+  .submission-items { grid-template-columns: 1fr; }
+  .hero { padding: 1.3rem 0; }
+  .hero h1 { font-size: 1rem !important; }
+  .hero p { font-size: 0.78rem !important; }
+  .hero-badge { font-size: 0.65rem; padding: 0.22rem 0.65rem; }
+  .section-header h2 { font-size: 0.95rem; }
+  .section-num { width: 1.7rem; height: 1.7rem; font-size: 0.78rem; }
+  .card { padding: 0.75rem; }
+  .card-header h3 { font-size: 0.92rem; }
+  th, td { padding: 0.3rem 0.35rem; font-size: 0.7rem; }
+  th[style*="width"], td[style*="width"] { min-width: 2rem !important; }
+  pre { font-size: 0.65rem; padding: 0.55rem; }
+  .section-nav a { font-size: 0.6rem !important; padding: 0.2rem 0.4rem !important; }
+  .submission-box { padding: 0.8rem; }
+  .submission-box h3 { font-size: 0.88rem; }
+  .sub-item { font-size: 0.62rem; }
+}
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
+/* ============ SUB-ITEM LINKS ============ */
+a.sub-item { transition: transform 0.15s, box-shadow 0.15s; }
+a.sub-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(118,185,0,0.3);
+  border-color: #76B900;
+}
+
+/* ============ SECTION NAV (always visible at top) ============ */
+.section-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.2rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+body { padding-top: 2.2rem; }
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.45rem;
+  font-weight: 500;
+  padding: 0.15rem 0.4rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-exam { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3.5rem; }
+
+/* ============ REDUCED MOTION ============ */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  details summary::before { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SECTION NAV ============ -->
+<nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_1.html">1</a> <a style="color:#76B900;background:rgba(118,185,0,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="md2_week_2.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_3.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_4.html">4</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_5.html">5</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_6.html">6</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_7.html">7</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_8.html">8</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_9.html">9</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_10.html">10</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_11.html">11</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_12.html">12</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_13.html">13</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_14.html">14</a> </div>
+  <a href="#sec-purpose">第2回の位置づけ</a>
+  <a href="#sec-flow">本日の流れ</a>
+  <a href="#sec-recap">1. 第1回の復習</a>
+  <a href="#sec-js">2. JavaScript基礎</a>
+  <a href="#sec-draw">3. 図形を描く道具</a>
+  <a href="#sec-challenge" class="nav-assignment">4. 図形アート課題</a>
+  <a href="#sec-event" class="nav-assignment">5. イベント</a>
+  <a href="#sec-ds">6. データとのつながり</a>
+  <a href="#sec-notion">ノート</a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">Media creation Data design 2（MD2）─ 2026年度</div>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.1rem">武蔵野大学データサイエンス学部</p>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.3rem">武蔵野大学国際データサイエンス学部（通信教育部）</p>
+    <p style="font-size:0.95rem;opacity:0.85;margin-bottom:1rem">中村 亮太</p>
+    <h1>MD2 第2回: JavaScriptで図形を描き、操作を記録する ― 変数・配列・関数・イベントで「測れる空間」をつくる</h1>
+    <p>前半はJavaScriptの基礎（変数・型・配列・オブジェクト・条件分岐・関数・Math）を、A-Frameで「図形を自在に描く」遊びで身につける。後半は図形を<strong>クリックできるようにし、「いつ・何を触ったか」を操作ログとして配列に記録</strong>する。図形アートが、そのまま「データを取る環境」に変わる。</p>
+    <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:0.3rem;padding:0.4rem 0.8rem;margin-top:1rem;font-size:0.7rem;display:inline-block;max-width:100%;overflow-wrap:anywhere">
+      <strong>第2回のメイン:</strong> ① JavaScript基礎（変数・配列・オブジェクト＝データ表現） ＋ ② 図形アート実習 ＋ ③ イベント駆動：図形を〇で狙ってクリックし、操作を受け取る（＝シラバス「JavaScript基礎」＋「JavaScript応用」の2回ぶん）
+    </div>
+  </div>
+</header>
+
+<!-- ============ COURSE PURPOSE (はじめに) ============ -->
+<section id="sec-purpose" style="padding-top:2.5rem;padding-bottom:0">
+  <div class="container">
+    <div class="card" style="border-left:4px solid #76B900;background:linear-gradient(135deg,#141414,#152011)">
+      <div class="card-header"><h3>📌 第2回の位置づけ：なぜ「図形を描く」のか（はじめに読もう）</h3></div>
+
+      <p style="font-size:1.05rem;margin-bottom:0.7rem">テーマは引き続き <strong style="color:#76B900">「バーチャル空間で、データサイエンスを実践する」</strong>。第2回は、その舞台を動かす <strong style="color:#76B900">JavaScript</strong> の基礎と応用を、2つの山で進める。</p>
+
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin:0.5rem 0 0.8rem">
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-left:3px solid #93D500;border-radius:0.5rem;padding:0.8rem 0.9rem">
+          <div style="font-weight:800;font-size:0.92rem;color:#93D500;margin-bottom:0.2rem">前半：JavaScript基礎（データ表現）</div>
+          <div style="font-size:0.84rem;color:#ccc">変数・配列・オブジェクトでデータを表す。図形を描く遊びで体得。<span style="color:#999">（シラバス第3回ぶん）</span></div>
+        </div>
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-left:3px solid #FFB800;border-radius:0.5rem;padding:0.8rem 0.9rem">
+          <div style="font-weight:800;font-size:0.92rem;color:#FFB800;margin-bottom:0.2rem">後半：JavaScript応用（イベント駆動）</div>
+          <div style="font-size:0.84rem;color:#ccc">クリック等のイベントで、ユーザの操作を受け取って反応させる仕組みを学ぶ。<span style="color:#999">（シラバス第4回ぶん）</span></div>
+        </div>
+      </div>
+
+      <div class="callout-info" style="margin-top:0.5rem">
+        <h4>「図形を描いて、触る」は、実は「データを扱う」練習そのもの</h4>
+        <ul class="point-list" style="margin-bottom:0">
+          <li>図形の位置 <code>{x, y, z}</code>＝<strong>1個の座標データ</strong>（後の回の「行動ログ1件」と同じ形）</li>
+          <li>色や大きさのリスト＝<strong>配列</strong>（後の「データ列・時系列」と同じ形）</li>
+          <li>図形を<strong>クリック</strong>すると反応する＝ユーザの操作（イベント）を受け取る第一歩</li>
+          <li>つまり今日は、<strong>楽しく図形を描き・触りながら、データの表現と記録を手で覚える</strong></li>
+        </ul>
+      </div>
+
+      <p style="font-size:0.9rem;color:#999;margin:1.2rem 0 0.5rem">本科目全体の流れ（再確認）。第2回は <strong style="color:#76B900">STEP 1（舞台づくり）</strong> を進めつつ、すべての回で使う <strong style="color:#76B900">プログラミング基礎</strong> を固める回。</p>
+
+      <!-- 3 steps -->
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin:0.5rem 0 1rem">
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #76B900;border-radius:0.5rem;padding:0.9rem">
+          <div style="color:#76B900;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 1 ─ 舞台をつくる <span style="font-size:0.7rem;background:#1a2e0a;border:1px solid #76B900;border-radius:100px;padding:0.05rem 0.5rem">今ここ</span></div>
+          <div style="font-size:0.88rem"><strong>3D空間を自分で作る</strong>。HTML＋A-Frame＋JavaScriptでオブジェクトを配置。<span style="color:#999">（第1〜10回）</span></div>
+        </div>
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #4FC3F7;border-radius:0.5rem;padding:0.9rem">
+          <div style="color:#4FC3F7;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 2 ─ データを取る環境をつくる</div>
+          <div style="font-size:0.88rem"><strong>データを自分で取る</strong>。位置・操作・時間・主観評価を記録。<span style="color:#999">（第4・9・11回ほか）</span></div>
+        </div>
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #FFB800;border-radius:0.5rem;padding:0.9rem">
+          <div style="color:#FFB800;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 3 ─ データを分析する</div>
+          <div style="font-size:0.88rem">取ったデータを<strong>統計で分析</strong>。根拠ある結論へ。<span style="color:#999">（第12〜14回）</span></div>
+        </div>
+      </div>
+
+      <!-- today's goal -->
+      <h4 style="color:#76B900;font-weight:700;font-size:1.05rem;margin:1.5rem 0 0.3rem">🎯 第2回のゴール</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>JavaScriptの基本部品（<strong>変数・データ型・配列・オブジェクト・if・関数・Math</strong>）を使える</li>
+        <li>JavaScriptから A-Frame の図形を<strong>作って・色をつけて・並べる</strong>ことができる</li>
+        <li><strong>三角関数（sin/cos）や乱数（random）</strong>で、円・らせん・星空などの「図形アート」を描ける</li>
+        <li>図形を<strong>画面中央の〇で狙ってクリックし、操作を「イベント」として受け取れる</strong></li>
+        <li>配列とオブジェクトが、後の回の<strong>「ログデータの正体」</strong>であることを理解する</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div class="submission-box">
+      <h3>提出ガイド（1つのNotionページにまとめ、PDF 1枚を提出）</h3>
+      <div class="submission-items">
+        <a href="#notion-checklist" class="sub-item" style="text-decoration:none;color:inherit;border-color:#76B900"><span class="sub-count" style="background:#76B900">5</span><span class="tag" style="background:#1a2e0a;color:#76B900">ノート</span>穴埋め・記録</a>
+        <a href="#std2-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std2-1 配列でカラフル</a>
+        <a href="#std2-2" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std2-2 関数＋if分岐</a>
+        <a href="#std2-3" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std2-3 三角関数アート</a>
+        <a href="#std2-4" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std2-4 乱数で星空</a>
+        <a href="#std2-5" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std2-5 〇で狙ってクリック</a>
+        <a href="#adv2-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv2-1 自由創作</a>
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.85rem;color:#93D500">
+        <strong>提出方法:</strong> 下記の項目をすべて<strong>1つのNotionページにまとめて記録</strong> → PDFにエクスポート → Google Classroomに<strong>PDF 1ファイル</strong>を提出
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:0.5rem;font-size:0.85rem;color:#FFB800">
+        <strong>提出期限:</strong> 第3回授業開始まで（次回の授業開始時刻）
+      </div>
+
+      <!-- Notionに書くべき項目チェックリスト -->
+      <div id="notion-checklist" style="background:#141414;border:1px solid #333;border-radius:0.4rem;padding:1rem;margin-top:1rem">
+        <p style="color:#76B900;font-weight:700;font-size:0.85rem;margin-bottom:0.3rem">ノート: Notionに記録する項目（提出前に確認）</p>
+        <p style="font-size:0.75rem;color:#999;margin-bottom:0.8rem">以下の項目を1つのNotionページに記録し、PDF化して提出します。テンプレートは配りません。構成は自分で考えること。</p>
+        <table style="font-size:0.8rem;width:100%;table-layout:fixed">
+          <tr><th style="width:5%"></th><th style="width:30%">セクション</th><th>記録する内容</th><th style="width:8%">リンク</th></tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> JavaScript基礎</td>
+            <td>変数・配列・オブジェクト・if・関数・Mathの穴埋め</td>
+            <td><a href="#sec-js" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std2-1 / std2-2</td>
+            <td>配列でカラフルに並べる／関数とifで形・色を分岐 ─ 各コードと実行スクショ</td>
+            <td><a href="#std2-1" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std2-3 / std2-4</td>
+            <td>三角関数で円・らせん／乱数で星空 ─ 各コードと実行スクショ</td>
+            <td><a href="#std2-3" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std2-5</td>
+            <td>4要件（10個以上／クリックで色変化／重ねて拡大／離れて縮小）を満たす index.html ─ コードと実行スクショ</td>
+            <td><a href="#std2-5" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> イベント</td>
+            <td>「イベント」「リスナー」「光線（レイ）」の穴埋め</td>
+            <td><a href="#sec-event" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-advanced" style="font-size:0.65rem">発展課題</span> adv2-1</td>
+            <td>図形アートの自由創作のコードとスクショ＋工夫（任意）</td>
+            <td><a href="#adv2-1" style="color:#76B900">移動</a></td>
+          </tr>
+        </table>
+        <p style="font-size:0.75rem;color:#999;margin-top:0.5rem">※ 発展課題（adv2-1）は任意。ほかはすべて記録が必要です。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TIME FLOW ============ -->
+<section id="sec-flow" style="padding-top:1rem;padding-bottom:0">
+  <div class="container">
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>本日の授業の流れ</h3></div>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin:0.5rem 0">
+        <div style="flex:1;min-width:8rem;background:#1A1A1A;border:2px solid #76B900;border-radius:0.4rem;padding:0.6rem;text-align:center">
+          <div style="font-size:1rem;font-weight:900;color:#76B900">① 復習</div>
+          <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">第1回をふり返る</div>
+          <div style="font-size:0.65rem;color:#999">HTML / A-Frame / for文 / console.log</div>
+        </div>
+        <div style="flex:2;min-width:11rem;background:#1A1A1A;border:2px solid #93D500;border-radius:0.4rem;padding:0.6rem;text-align:center">
+          <div style="font-size:1rem;font-weight:900;color:#93D500">② JavaScript基礎</div>
+          <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">データを扱う部品をそろえる</div>
+          <div style="font-size:0.65rem;color:#999">変数 / 型 / 配列 / オブジェクト / if / 関数 / Math</div>
+        </div>
+        <div style="flex:2;min-width:11rem;background:#1A1A1A;border:2px solid #FFB800;border-radius:0.4rem;padding:0.6rem;text-align:center">
+          <div style="font-size:1rem;font-weight:900;color:#FFB800">③ 図形アート実習</div>
+          <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">コードで描いて試す</div>
+          <div style="font-size:0.65rem;color:#999">配列カラフル → 関数 → 三角関数 → 乱数 → 自由創作</div>
+        </div>
+        <div style="flex:2;min-width:11rem;background:#1A1A1A;border:2px solid #B388FF;border-radius:0.4rem;padding:0.6rem;text-align:center">
+          <div style="font-size:1rem;font-weight:900;color:#B388FF">④ イベント</div>
+          <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">図形を〇で狙って触る</div>
+          <div style="font-size:0.65rem;color:#999">中央の〇を重ねてクリック → 反応</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 1: 復習 ============ -->
+<section id="sec-recap">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>第1回の復習：今日の出発点</h2>
+    </div>
+
+    <div class="callout-info">
+      <h4>第1回でやったこと（思い出そう）</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li><strong>HTML</strong>＝<code>&lt;タグ 属性="値"&gt;</code> で部品を作る言語</li>
+        <li><strong>A-Frame</strong>＝<code>&lt;a-scene&gt;</code> の中に <code>&lt;a-box&gt;</code> や <code>&lt;a-sphere&gt;</code> を置くと3D空間ができる</li>
+        <li><strong>JavaScript</strong>＝<code>&lt;script&gt;</code> の中に書く「処理」。<code>for</code> 文で図形を量産した</li>
+        <li><code>position="x y z"</code> の3つの数値で位置を決める（z はマイナスで奥）</li>
+      </ul>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3>今日のひな形（これをベースに進めます）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">第1回と同じ「土台のHTML」。<code>index.html</code> という名前で保存し、ブラウザで開く。本日の課題はすべて、この <code>&lt;script&gt;</code> の中身を書きかえて進める。</p>
+<pre>HTML
+<span class="op">&lt;!DOCTYPE html&gt;</span>
+<span class="op">&lt;</span><span class="kw">html</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">head</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">script</span> <span class="fn">src</span>=<span class="str">"https://aframe.io/releases/1.6.0/aframe.min.js"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">head</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">body</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">a-scene</span><span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-sky</span> <span class="fn">color</span>=<span class="str">"#111"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-sky</span><span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-plane</span> <span class="fn">rotation</span>=<span class="str">"-90 0 0"</span> <span class="fn">width</span>=<span class="str">"30"</span> <span class="fn">height</span>=<span class="str">"30"</span> <span class="fn">color</span>=<span class="str">"#1a1a1a"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-plane</span><span class="op">&gt;</span>
+      <span class="cmt">&lt;!-- 生成した図形を入れる場所（コンテナ） --&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-entity</span> <span class="fn">id</span>=<span class="str">"group"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-entity</span><span class="op">&gt;</span>
+    <span class="op">&lt;/</span><span class="kw">a-scene</span><span class="op">&gt;</span>
+
+    <span class="op">&lt;</span><span class="kw">script</span><span class="op">&gt;</span>
+      <span class="kw">const</span> group = <span class="fn">document</span>.<span class="fn">querySelector</span>(<span class="str">'#group'</span>);
+      <span class="cmt">// ★ ここに今日のコードを書く ★</span>
+    <span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">body</span><span class="op">&gt;</span>
+<span class="op">&lt;/</span><span class="kw">html</span><span class="op">&gt;</span></pre>
+      <ul class="point-list" style="margin-top:0.5rem">
+        <li><code>group</code>＝図形を入れる「いれもの」。新しく作った図形は <code>group.appendChild(...)</code> で中に入れる</li>
+        <li>コードを書きかえたら<strong>保存（⌘+S）→ ブラウザを再読み込み（⌘+R）</strong>で結果が変わる</li>
+      </ul>
+    </div>
+
+    <div class="callout-warning">
+      <h4>ノート：穴埋め（第1回の復習）</h4>
+      <ul class="point-list" style="margin-top:0.4rem">
+        <li>JavaScriptは <code>&lt;</code>（　　　　）<code>&gt;</code> タグの中に書く。</li>
+        <li>くりかえし処理に使うのは（　　　　）文である。</li>
+        <li>コンソールに値を出して動作確認する命令は <code>console.</code>（　　　　）<code>()</code> である。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 2: JavaScript基礎 ============ -->
+<section id="sec-js">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#93D500">2</div>
+      <h2>JavaScript基礎：データを扱う7つの部品</h2>
+    </div>
+
+    <div class="concept-box">
+      <h4>このセクションでそろえる部品</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>① 変数　② データ型　③ 配列　④ オブジェクト　⑤ if（条件分岐）　⑥ 関数　⑦ Math（計算）</li>
+        <li>全部を「図形を描く」ために使う。覚えるのではなく、<strong>手で動かして体に入れる</strong></li>
+        <li>文法を完璧にする必要はない。<strong>今日の課題で使う分だけ</strong>を押さえる</li>
+      </ul>
+    </div>
+
+    <div class="callout-tip">
+      <h4>出力の確認方法（先に開いておこう）</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>各コードの結果は <code>console.log()</code> でコンソールに出す。動いているか必ず確認できる</li>
+        <li>ブラウザで<strong>右クリック →「検証」→「Console」タブ</strong>を開いておく</li>
+        <li>コードを書きかえたら<strong>保存（⌘+S）→ 再読み込み（⌘+R）</strong>。Consoleに出力が出る</li>
+      </ul>
+    </div>
+
+    <!-- ① 変数 -->
+    <div class="card standard">
+      <div class="card-header"><h3>① 変数：値に名前をつけて覚えておく箱</h3></div>
+<pre>JavaScript
+<span class="kw">const</span> color = <span class="str">'tomato'</span>;   <span class="cmt">// const = あとで変えない値</span>
+<span class="kw">let</span> count = <span class="num">0</span>;          <span class="cmt">// let = あとで変える値</span>
+count = count + <span class="num">1</span>;        <span class="cmt">// count を 1 増やす</span>
+<span class="fn">console</span>.<span class="fn">log</span>(color);     <span class="cmt">// → tomato（コンソールで確認）</span>
+<span class="fn">console</span>.<span class="fn">log</span>(count);     <span class="cmt">// → 1</span></pre>
+      <ul class="point-list" style="margin-top:0.4rem">
+        <li><code>const</code>＝定数（中身を変えない）／<code>let</code>＝変数（中身を変える）</li>
+        <li><code>=</code> は「等しい」ではなく「右の値を左に<strong>入れる</strong>」という意味</li>
+      </ul>
+      <div class="analogy">変数は<strong>ラベルを貼った箱</strong>。<code>const color = 'tomato'</code> ＝「color という箱に tomato を入れる」。あとは <code>color</code> と書けば中身を取り出せる。</div>
+    </div>
+
+    <!-- ② データ型 -->
+    <div class="card standard">
+      <div class="card-header"><h3>② データ型：値には種類がある</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">データサイエンスでは「これは数値か、文字か、はい/いいえか」を意識するのが超重要。JavaScriptの基本3種類。</p>
+<pre>JavaScript
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="num">42</span>);          <span class="cmt">// 数値（Number）→ クォートなし。計算できる</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'skyblue'</span>);   <span class="cmt">// 文字列（String）→ クォート '　' で囲む</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="kw">true</span>);        <span class="cmt">// 真偽値（Boolean）→ true / false の2択</span></pre>
+      <table style="font-size:0.85rem">
+        <tr><th style="width:24%">型</th><th>例</th><th>図形では何に使う？</th></tr>
+        <tr><td><strong>数値</strong></td><td><code>0.6</code> <code>-5</code> <code>3.14</code></td><td>位置・大きさ・角度・色相</td></tr>
+        <tr><td><strong>文字列</strong></td><td><code>'tomato'</code> <code>'a-box'</code></td><td>色名・図形の種類</td></tr>
+        <tr><td><strong>真偽値</strong></td><td><code>true</code> <code>false</code></td><td>「偶数か？」などの条件の結果</td></tr>
+      </table>
+    </div>
+
+    <!-- ③ 配列 -->
+    <div class="card standard">
+      <div class="card-header"><h3>③ 配列：値を「並べて」持つ（データ列の正体）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">配列＝<strong>同じ仲間の値を順番に並べた箱</strong>。色のリスト、点数のリスト、ログの時系列…みんな配列。</p>
+<pre>JavaScript
+<span class="kw">const</span> colors = [<span class="str">'tomato'</span>, <span class="str">'skyblue'</span>, <span class="str">'gold'</span>, <span class="str">'violet'</span>];
+
+<span class="fn">console</span>.<span class="fn">log</span>(colors[<span class="num">0</span>]);       <span class="cmt">// → tomato（先頭は 0 番から数える！）</span>
+<span class="fn">console</span>.<span class="fn">log</span>(colors[<span class="num">2</span>]);       <span class="cmt">// → gold</span>
+<span class="fn">console</span>.<span class="fn">log</span>(colors.<span class="fn">length</span>);   <span class="cmt">// → 4（要素の個数）</span></pre>
+      <ul class="point-list" style="margin-top:0.4rem">
+        <li><strong>番号（インデックス）は 0 から</strong>。1番目＝<code>[0]</code>、2番目＝<code>[1]</code></li>
+        <li><code>colors[i % colors.length]</code>＝<strong>i が増えても色がぐるぐる循環</strong>する書き方（今日よく使う）</li>
+      </ul>
+      <div class="callout-info" style="margin-top:0.6rem">
+        <h4>データサイエンスとのつながり</h4>
+        <p style="font-size:0.88rem;margin-bottom:0">配列は <strong>表の1列（カラム）</strong>そのもの。例：<code>scores = [3, 4, 5, 4, 2]</code> ＝ アンケートの回答列。第13回で平均や検定を計算するのも、この配列。</p>
+      </div>
+    </div>
+
+    <!-- ④ オブジェクト -->
+    <div class="card standard">
+      <div class="card-header"><h3>④ オブジェクト：1件の情報を「まとめて」持つ（1レコードの正体）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">オブジェクト＝<strong>名前つきの値をまとめた箱</strong>。「1個の図形」や「1人の回答」のような<strong>1件分のデータ</strong>を表す。</p>
+<pre>JavaScript
+<span class="cmt">// 図形1個ぶんのデータ</span>
+<span class="kw">const</span> shape = { x: <span class="num">1</span>, y: <span class="num">1</span>, z: -<span class="num">3</span>, color: <span class="str">'gold'</span> };
+
+<span class="fn">console</span>.<span class="fn">log</span>(shape.x);       <span class="cmt">// → 1（ドットで取り出す）</span>
+<span class="fn">console</span>.<span class="fn">log</span>(shape.color);   <span class="cmt">// → gold</span></pre>
+      <div class="analogy"><strong>名簿の1行</strong>と同じ。<code>{ 名前: '太郎', 点数: 80 }</code> のように、見出し（キー）と値がセット。配列が「列」なら、オブジェクトは「1行」。</div>
+    </div>
+
+    <!-- 配列×オブジェクト = テーブル -->
+    <div class="card" style="background:#0a0a0a;border:1px solid #76B900">
+      <div style="font-weight:700;color:#76B900;font-size:0.95rem;margin-bottom:0.5rem">図解：配列 × オブジェクト ＝ データテーブル（＝後の回の「ログ」）</div>
+      <p style="font-size:0.88rem;color:#ccc;margin-bottom:0.6rem"><strong>オブジェクト（1行）を、配列（並べる）で束ねる</strong>と、表（テーブル）になる。これがCSVやログデータの正体。</p>
+<pre>JavaScript
+<span class="kw">const</span> shapes = [
+  { x: -<span class="num">1</span>, y: <span class="num">1</span>, z: -<span class="num">3</span>, color: <span class="str">'tomato'</span>  },   <span class="cmt">// 1件目</span>
+  { x:  <span class="num">0</span>, y: <span class="num">1</span>, z: -<span class="num">3</span>, color: <span class="str">'skyblue'</span> },   <span class="cmt">// 2件目</span>
+  { x:  <span class="num">1</span>, y: <span class="num">1</span>, z: -<span class="num">3</span>, color: <span class="str">'gold'</span>    },   <span class="cmt">// 3件目</span>
+];</pre>
+      <table style="font-size:0.82rem">
+        <tr><th>件</th><th>x</th><th>y</th><th>z</th><th>color</th></tr>
+        <tr><td>1</td><td>-1</td><td>1</td><td>-3</td><td>tomato</td></tr>
+        <tr><td>2</td><td>0</td><td>1</td><td>-3</td><td>skyblue</td></tr>
+        <tr><td>3</td><td>1</td><td>1</td><td>-3</td><td>gold</td></tr>
+      </table>
+      <p style="font-size:0.82rem;color:#999;margin-top:0.4rem">※ 今日は「図形の表」。第11回では「行動ログの表」になる。<strong>形はまったく同じ</strong>。</p>
+    </div>
+
+    <!-- ⑤ if -->
+    <div class="card standard">
+      <div class="card-header"><h3>⑤ if：条件で処理を分ける</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">「もし〜なら A、そうでなければ B」。条件A/B の切りかえや、しきい値の判定に使う基本。</p>
+<pre>JavaScript
+<span class="kw">if</span> (i % <span class="num">2</span> === <span class="num">0</span>) {
+  color = <span class="str">'gold'</span>;       <span class="cmt">// i が偶数のとき</span>
+} <span class="kw">else</span> {
+  color = <span class="str">'skyblue'</span>;    <span class="cmt">// それ以外（奇数）のとき</span>
+}</pre>
+      <ul class="point-list" style="margin-top:0.4rem">
+        <li><code>i % 2</code>＝「i を 2 で割った<strong>あまり</strong>」。0なら偶数、1なら奇数</li>
+        <li><code>===</code>＝「等しいか？」を調べる（結果は <code>true</code>/<code>false</code> ＝ ②の真偽値）</li>
+        <li>他に <code>&gt;</code>（より大きい）<code>&lt;</code>（より小さい）<code>&gt;=</code>（以上）<code>&lt;=</code>（以下）も使える</li>
+      </ul>
+    </div>
+
+    <!-- ⑥ 関数 -->
+    <div class="card standard">
+      <div class="card-header"><h3>⑥ 関数：処理に名前をつけて、何度でも使う「道具」</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">同じ処理を毎回書くのは大変。<strong>処理に名前をつけて道具化</strong>すると、呼ぶだけで使える。</p>
+<pre>JavaScript
+<span class="cmt">// 「あいさつする」道具を作る（定義）</span>
+<span class="kw">function</span> <span class="fn">greet</span>(name) {
+  <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">`こんにちは、${name}さん`</span>);
+}
+
+<span class="fn">greet</span>(<span class="str">'みな'</span>);   <span class="cmt">// 使う（呼び出し）→ こんにちは、みなさん</span>
+<span class="fn">greet</span>(<span class="str">'太郎'</span>);   <span class="cmt">// 何度でも呼べる → こんにちは、太郎さん</span></pre>
+      <ul class="point-list" style="margin-top:0.4rem">
+        <li><code>function 名前(引数) { 処理 }</code> で道具を作る</li>
+        <li><strong>引数（ひきすう）</strong>＝道具に渡す材料。<code>name</code> の中身が処理に差しこまれる</li>
+        <li>今日は「図形を1つ描く」道具（<code>drawShape</code>）を作って使う</li>
+      </ul>
+    </div>
+
+    <!-- ⑦ Math -->
+    <div class="card standard">
+      <div class="card-header"><h3>⑦ Math：計算の道具箱（アートの心臓部）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem"><code>Math</code> は最初から用意された計算の道具箱。円・らせん・ランダムな散らばりは、ここから生まれる。</p>
+<pre>JavaScript
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">Math</span>.<span class="fn">random</span>());          <span class="cmt">// 0以上1未満のランダムな数（毎回ちがう）</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">Math</span>.<span class="fn">random</span>() * <span class="num">10</span>);     <span class="cmt">// 0〜10 のランダムな数</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">Math</span>.<span class="fn">sin</span>(<span class="fn">Math</span>.<span class="fn">PI</span> / <span class="num">2</span>));  <span class="cmt">// サイン（角度を渡す）→ 1</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">Math</span>.<span class="fn">cos</span>(<span class="num">0</span>));            <span class="cmt">// コサイン（角度を渡す）→ 1</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">Math</span>.<span class="fn">PI</span>);               <span class="cmt">// 円周率 3.14159...（1周＝2 * Math.PI）</span></pre>
+      <div class="callout-tip" style="margin-top:0.6rem">
+        <h4>円の描き方の「魔法の公式」（std2-3で使う）</h4>
+        <p style="font-size:0.88rem;margin-bottom:0.3rem">角度を <code>0</code> から <code>1周（2π）</code> まで動かしながら、</p>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.88rem">
+          <li>x ＝ <code>Math.cos(角度) * 半径</code></li>
+          <li>z ＝ <code>Math.sin(角度) * 半径</code></li>
+          <li>この2つを位置にすると、図形が<strong>きれいな円</strong>に並ぶ</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card group">
+      <div class="card-header"><h3>この章を試す完成HTML（コピーして開く）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">①〜⑦のコードは、すべて <code>&lt;script&gt;</code> 〜 <code>&lt;/script&gt;</code> の中に書く。下を <code>basic.html</code> などの名前で保存 → 開く →「検証」→「Console」を見ると、結果が並ぶ。</p>
+<pre>HTML
+<span class="op">&lt;!DOCTYPE html&gt;</span>
+<span class="op">&lt;</span><span class="kw">html</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">body</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">script</span><span class="op">&gt;</span>
+      <span class="cmt">// ① 変数</span>
+      <span class="kw">let</span> count = <span class="num">0</span>;
+      count = count + <span class="num">1</span>;
+      <span class="fn">console</span>.<span class="fn">log</span>(count);            <span class="cmt">// → 1</span>
+
+      <span class="cmt">// ③ 配列</span>
+      <span class="kw">const</span> colors = [<span class="str">'tomato'</span>, <span class="str">'skyblue'</span>, <span class="str">'gold'</span>, <span class="str">'violet'</span>];
+      <span class="fn">console</span>.<span class="fn">log</span>(colors[<span class="num">0</span>]);        <span class="cmt">// → tomato</span>
+      <span class="fn">console</span>.<span class="fn">log</span>(colors.<span class="fn">length</span>);    <span class="cmt">// → 4</span>
+
+      <span class="cmt">// ④ オブジェクト</span>
+      <span class="kw">const</span> shape = { x: <span class="num">1</span>, y: <span class="num">1</span>, z: -<span class="num">3</span>, color: <span class="str">'gold'</span> };
+      <span class="fn">console</span>.<span class="fn">log</span>(shape.color);      <span class="cmt">// → gold</span>
+
+      <span class="cmt">// ⑤ if</span>
+      <span class="kw">const</span> i = <span class="num">4</span>;
+      <span class="kw">if</span> (i % <span class="num">2</span> === <span class="num">0</span>) {
+        <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'偶数'</span>);          <span class="cmt">// → 偶数（i が 4 なので）</span>
+      } <span class="kw">else</span> {
+        <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'奇数'</span>);
+      }
+
+      <span class="cmt">// ⑦ Math</span>
+      <span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">Math</span>.<span class="fn">random</span>());     <span class="cmt">// 0以上1未満（毎回ちがう）</span>
+    <span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">body</span><span class="op">&gt;</span>
+<span class="op">&lt;/</span><span class="kw">html</span><span class="op">&gt;</span></pre>
+      <p style="font-size:0.82rem;color:#999;margin-top:0.3rem">※ この章は画面に図形は出ない。<strong>Consoleに出る文字・数値</strong>が「結果」。次の章からは、これらの部品でA-Frameの図形を動かす。</p>
+    </div>
+
+    <div class="callout-warning">
+      <h4>ノート：穴埋め（JavaScript基礎）</h4>
+      <ul class="point-list" style="margin-top:0.4rem">
+        <li>あとで変える値は <code>const</code> ではなく（　　　　）で宣言する。</li>
+        <li>値を並べて持つのが（　　　　）、1件の情報をまとめて持つのが（　　　　）である。</li>
+        <li>配列の先頭の要素は <code>配列名[</code>（　　　　）<code>]</code> で取り出す。</li>
+        <li>0以上1未満のランダムな数を返すのは <code>Math.</code>（　　　　）<code>()</code> である。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 3: 図形を描く道具 ============ -->
+<section id="sec-draw">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">3</div>
+      <h2>JavaScriptで図形を描く道具（3手順）</h2>
+    </div>
+
+    <div class="concept-box">
+      <h4>図形を1つ描くのは、たった3ステップ</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li><strong>① 作る</strong>：<code>document.createElement('a-box')</code> で図形を1つ生成</li>
+        <li><strong>② 設定する</strong>：<code>図形.setAttribute('属性', 値)</code> で位置・色・大きさを指定</li>
+        <li><strong>③ 入れる</strong>：<code>group.appendChild(図形)</code> で3D空間に追加</li>
+      </ul>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3>3ステップを1つにまとめる（まず手で1個）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">ひな形の <code>&lt;script&gt;</code>（<code>group</code> 取得の<strong>次</strong>）にこれを書くと、金色の箱が1つ出る。</p>
+<pre>JavaScript
+<span class="kw">const</span> box = <span class="fn">document</span>.<span class="fn">createElement</span>(<span class="str">'a-box'</span>);   <span class="cmt">// ① 作る</span>
+box.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, <span class="str">'0 1 -3'</span>);             <span class="cmt">// ② 位置</span>
+box.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, <span class="str">'gold'</span>);                  <span class="cmt">// ② 色</span>
+group.<span class="fn">appendChild</span>(box);                            <span class="cmt">// ③ 空間に追加</span></pre>
+      <p style="font-size:0.85rem;color:#999;margin-top:0.4rem">保存 → ブラウザ再読み込み。正面の少し奥に金色の箱が見えれば成功。</p>
+    </div>
+
+    <div class="card group">
+      <div class="card-header"><h3>道具化：1個描く処理を「関数」にする（今日の主役）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">毎回4行書くのは大変。<strong>「図形を1つ描く道具 <code>drawShape</code>」</strong>を作っておくと、1行で何個でも描ける。今日の課題はこの道具を使い倒す。</p>
+<pre>JavaScript
+<span class="cmt">// 種類・位置・色・大きさを渡すと、図形を1つ描く道具</span>
+<span class="kw">function</span> <span class="fn">drawShape</span>(type, x, y, z, color, size) {
+  <span class="kw">const</span> el = <span class="fn">document</span>.<span class="fn">createElement</span>(type);
+  el.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, <span class="str">`${x} ${y} ${z}`</span>);
+  el.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, color);
+  el.<span class="fn">setAttribute</span>(<span class="str">'scale'</span>, <span class="str">`${size} ${size} ${size}`</span>);
+  group.<span class="fn">appendChild</span>(el);
+}
+
+<span class="cmt">// 使い方：1行で1個描ける！</span>
+<span class="fn">drawShape</span>(<span class="str">'a-box'</span>, <span class="num">0</span>, <span class="num">1</span>, -<span class="num">3</span>, <span class="str">'gold'</span>, <span class="num">1</span>);
+<span class="fn">drawShape</span>(<span class="str">'a-sphere'</span>, <span class="num">2</span>, <span class="num">1</span>, -<span class="num">3</span>, <span class="str">'tomato'</span>, <span class="num">0.6</span>);</pre>
+      <ul class="point-list" style="margin-top:0.5rem">
+        <li><code>type</code>＝図形の種類（<code>'a-box'</code> <code>'a-sphere'</code> <code>'a-cylinder'</code> <code>'a-cone'</code> <code>'a-torus'</code>）</li>
+        <li><code>scale</code>＝拡大率。<code>1</code> がもとの大きさ、<code>0.5</code> で半分、<code>2</code> で2倍（どの図形にも使える）</li>
+        <li>あとは <code>for</code> 文の中で <code>drawShape(...)</code> を呼ぶだけで、図形が量産できる</li>
+      </ul>
+      <div class="callout-info" style="margin-top:0.6rem">
+        <h4>この道具を for と組み合わせると…</h4>
+<pre>JavaScript
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; <span class="num">8</span>; i++) {
+  <span class="fn">drawShape</span>(<span class="str">'a-box'</span>, i - <span class="num">4</span>, <span class="num">1</span>, -<span class="num">5</span>, <span class="str">'gold'</span>, <span class="num">0.6</span>);
+}
+<span class="cmt">// → 金色の箱が横に8個ならぶ（第1回のfor文と同じ仕組み）</span></pre>
+      </div>
+    </div>
+
+    <div class="callout-tip">
+      <h4>今日の進め方（組み立て式）</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>課題ごとに<strong>部品</strong>を配る。完成コードは伏せる（つまったらヒントを開く）</li>
+        <li>空欄 <code>____</code> を自分で埋めるのがポイント。<strong>1か所変えて再読み込み</strong>を繰り返す</li>
+        <li>「正解」より<strong>「動いた！」「きれい！」</strong>を楽しむ。数値はどんどん変えてOK</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 4: 図形アート課題 ============ -->
+<section id="sec-challenge">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#93D500">4</div>
+      <h2>図形アート課題：コードを変えて、結果を観察する</h2>
+    </div>
+
+    <div class="callout-info">
+      <h4>このセクションの標準課題（描く編）</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li><strong>std2-1</strong> 配列でカラフルに　→　<strong>std2-2</strong> 関数＋ifで形・色を分岐</li>
+        <li><strong>std2-3</strong> 三角関数で円・らせん　→　<strong>std2-4</strong> 乱数で星空（リロードで毎回ちがう）</li>
+        <li>続く「イベント」章で <strong>std2-5</strong>、最後に発展課題 <strong>adv2-1</strong>（自由創作）に進む</li>
+        <li>どれも セクション3の <code>drawShape</code> 関数を使う。最初に <code>drawShape</code> を <code>&lt;script&gt;</code> に貼っておこう</li>
+      </ul>
+    </div>
+
+    <div class="card group">
+      <div class="card-header"><h3>全課題で使う土台HTML（drawShape入り・コピーして使う）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">std2-1〜std2-4 は、この <code>index.html</code> の <code>&lt;script&gt;</code> 内「<strong>★ここに書く★</strong>」の部分を入れかえるだけ。まずこれを保存して開く。</p>
+<pre>HTML
+<span class="op">&lt;!DOCTYPE html&gt;</span>
+<span class="op">&lt;</span><span class="kw">html</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">head</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">script</span> <span class="fn">src</span>=<span class="str">"https://aframe.io/releases/1.6.0/aframe.min.js"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">head</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">body</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">a-scene</span><span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-sky</span> <span class="fn">color</span>=<span class="str">"#111"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-sky</span><span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-plane</span> <span class="fn">rotation</span>=<span class="str">"-90 0 0"</span> <span class="fn">width</span>=<span class="str">"30"</span> <span class="fn">height</span>=<span class="str">"30"</span> <span class="fn">color</span>=<span class="str">"#1a1a1a"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-plane</span><span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-entity</span> <span class="fn">id</span>=<span class="str">"group"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-entity</span><span class="op">&gt;</span>
+    <span class="op">&lt;/</span><span class="kw">a-scene</span><span class="op">&gt;</span>
+
+    <span class="op">&lt;</span><span class="kw">script</span><span class="op">&gt;</span>
+      <span class="kw">const</span> group = <span class="fn">document</span>.<span class="fn">querySelector</span>(<span class="str">'#group'</span>);
+
+      <span class="cmt">// 図形を1つ描く道具（全課題で使う）</span>
+      <span class="kw">function</span> <span class="fn">drawShape</span>(type, x, y, z, color, size) {
+        <span class="kw">const</span> el = <span class="fn">document</span>.<span class="fn">createElement</span>(type);
+        el.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, <span class="str">`${x} ${y} ${z}`</span>);
+        el.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, color);
+        el.<span class="fn">setAttribute</span>(<span class="str">'scale'</span>, <span class="str">`${size} ${size} ${size}`</span>);
+        group.<span class="fn">appendChild</span>(el);
+      }
+
+      <span class="cmt">// ★ ここに std2-1〜std2-4 のコードを書く ★</span>
+
+    <span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">body</span><span class="op">&gt;</span>
+<span class="op">&lt;/</span><span class="kw">html</span><span class="op">&gt;</span></pre>
+    </div>
+
+    <!-- std2-1 -->
+    <div id="std2-1" class="card standard">
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std2-1：配列でカラフルに並べる</h3></div>
+      <p style="font-size:0.9rem;margin-bottom:0.5rem">第1回は同じ色の箱を並べた。今回は<strong>色の配列</strong>を用意し、図形ごとに色を変える。<code>colors[i % colors.length]</code> で色が循環する。</p>
+
+      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.6rem 0 0.2rem">部品（<code>drawShape</code> の後ろに書く）</p>
+<pre>JavaScript
+<span class="kw">const</span> colors = [<span class="str">'tomato'</span>, <span class="str">'gold'</span>, <span class="str">'skyblue'</span>, <span class="str">'violet'</span>, <span class="str">'lime'</span>];
+
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; <span class="num">12</span>; i++) {
+  <span class="kw">const</span> c = colors[____];   <span class="cmt">// ★空欄: 色を循環させる式★</span>
+  <span class="fn">drawShape</span>(<span class="str">'a-box'</span>, i - <span class="num">6</span>, <span class="num">1</span>, -<span class="num">5</span>, c, <span class="num">0.7</span>);
+}</pre>
+
+      <div class="callout-info" style="margin-top:0.6rem">
+        <h4>組み立てチャレンジ</h4>
+        <ul class="point-list" style="margin-top:0.3rem">
+          <li>空欄 <code>____</code> に、<code>i</code> が色数を超えても先頭に戻る式を入れる<br><span style="font-size:0.82rem;color:#999">ヒント：あまり（<code>%</code>）を使う。<code>colors.length</code> は色の個数（5）</span></li>
+          <li>できたら <code>colors</code> の中身を自分の好きな色に変える（色名でも <code>'#76B900'</code> のような16進でもOK）</li>
+          <li>余裕があれば <code>'a-box'</code> を <code>'a-sphere'</code> に変えてみる</li>
+        </ul>
+      </div>
+
+      <details>
+        <summary>つまったら：完成コードを見る</summary>
+        <div class="answer-content">
+<pre>JavaScript
+<span class="kw">const</span> colors = [<span class="str">'tomato'</span>, <span class="str">'gold'</span>, <span class="str">'skyblue'</span>, <span class="str">'violet'</span>, <span class="str">'lime'</span>];
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; <span class="num">12</span>; i++) {
+  <span class="kw">const</span> c = colors[i % colors.<span class="fn">length</span>];
+  <span class="fn">drawShape</span>(<span class="str">'a-box'</span>, i - <span class="num">6</span>, <span class="num">1</span>, -<span class="num">5</span>, c, <span class="num">0.7</span>);
+}</pre>
+          <p style="font-size:0.85rem;color:#999">空欄＝<code>i % colors.length</code>。i が 0,1,2,3,4,5,6... のとき あまりは 0,1,2,3,4,0,1... と循環し、5色がくり返される。</p>
+        </div>
+      </details>
+
+      <div class="callout-tip" style="margin-top:0.6rem">
+        <h4>予想される結果</h4>
+        <p style="font-size:0.88rem;margin-bottom:0">5色の箱が横一列に12個、色をくり返しながら並ぶ。<code>colors</code> を増やすほど虹のグラデーションに近づく。</p>
+      </div>
+      <div class="notion-submit"><div><strong>提出:</strong> 完成コード＋実行画面のスクショをNotionに貼る</div></div>
+    </div>
+
+    <!-- std2-2 -->
+    <div id="std2-2" class="card standard">
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std2-2：関数とifで「形」と「色」を分岐する</h3></div>
+      <p style="font-size:0.9rem;margin-bottom:0.5rem"><code>if</code> を使って、<strong>偶数番は箱・奇数番は球</strong>のように交互に描く。条件によって見た目が変わることを確認する。</p>
+
+      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.6rem 0 0.2rem">部品（空欄は2か所）</p>
+<pre>JavaScript
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; <span class="num">10</span>; i++) {
+  <span class="kw">let</span> type, color;
+  <span class="kw">if</span> (____) {                 <span class="cmt">// ★空欄1: i が偶数かどうかの条件★</span>
+    type = <span class="str">'a-box'</span>;    color = <span class="str">'gold'</span>;
+  } <span class="kw">else</span> {
+    type = ____;             <span class="cmt">// ★空欄2: 奇数のときの図形（球）★</span>
+    color = <span class="str">'skyblue'</span>;
+  }
+  <span class="fn">drawShape</span>(type, i - <span class="num">5</span>, <span class="num">1</span>, -<span class="num">5</span>, color, <span class="num">0.6</span>);
+}</pre>
+
+      <div class="callout-info" style="margin-top:0.6rem">
+        <h4>組み立てチャレンジ</h4>
+        <ul class="point-list" style="margin-top:0.3rem">
+          <li>空欄1：<code>i</code> が偶数のときだけ <code>true</code> になる条件（あまりを使う）</li>
+          <li>空欄2：奇数のときに描く図形の種類（球）を文字列で</li>
+          <li>発展：<code>else if</code> を足して<strong>3種類以上</strong>を順番に切りかえてみる</li>
+        </ul>
+      </div>
+
+      <details>
+        <summary>つまったら：完成コードを見る</summary>
+        <div class="answer-content">
+<pre>JavaScript
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; <span class="num">10</span>; i++) {
+  <span class="kw">let</span> type, color;
+  <span class="kw">if</span> (i % <span class="num">2</span> === <span class="num">0</span>) {
+    type = <span class="str">'a-box'</span>;    color = <span class="str">'gold'</span>;
+  } <span class="kw">else</span> {
+    type = <span class="str">'a-sphere'</span>;
+    color = <span class="str">'skyblue'</span>;
+  }
+  <span class="fn">drawShape</span>(type, i - <span class="num">5</span>, <span class="num">1</span>, -<span class="num">5</span>, color, <span class="num">0.6</span>);
+}</pre>
+          <p style="font-size:0.85rem;color:#999">空欄1＝<code>i % 2 === 0</code>（偶数）、空欄2＝<code>'a-sphere'</code>。箱と球が交互に並ぶ。</p>
+        </div>
+      </details>
+
+      <div class="callout-tip" style="margin-top:0.6rem">
+        <h4>予想される結果</h4>
+        <p style="font-size:0.88rem;margin-bottom:0">金色の箱と水色の球が交互に10個。条件を <code>i % 3 === 0</code> などに変えると、リズムが変わる。</p>
+      </div>
+      <div class="notion-submit"><div><strong>提出:</strong> 完成コード＋実行画面のスクショをNotionに貼る</div></div>
+    </div>
+
+    <!-- std2-3 -->
+    <div id="std2-3" class="card standard">
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std2-3：三角関数で円・らせんを描く（数式アート）</h3></div>
+      <p style="font-size:0.9rem;margin-bottom:0.5rem">ここからが本番。<code>Math.sin</code> と <code>Math.cos</code> で、図形を<strong>きれいな円</strong>に並べる。角度を1周ぶん回すのがコツ。</p>
+
+      <!-- diagram: angle around a circle -->
+      <div class="card" style="background:#0a0a0a;border:1px solid #76B900;margin:0.6rem 0">
+        <div style="font-weight:700;color:#76B900;font-size:0.9rem;margin-bottom:0.5rem">図解：角度を1周まわすと、図形が円に並ぶ</div>
+        <p style="font-size:0.85rem;color:#ccc;margin-bottom:0.5rem"><code>i</code> 番目の角度を <code>i / 個数 × 2π</code> で計算し、その角度の <code>cos</code> を x、<code>sin</code> を z にする。半径 <code>R</code> をかけると円の大きさが決まる。</p>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.88rem;background:#141414;border-radius:0.4rem;padding:0.8rem;overflow-x:auto">
+          <div style="white-space:nowrap">角度 angle ＝ <span style="background:rgba(79,195,247,0.25);border-radius:3px;padding:0.1rem 0.3rem">i / 個数</span> × <span style="background:rgba(255,184,0,0.25);border-radius:3px;padding:0.1rem 0.3rem">2 * Math.PI</span></div>
+          <div style="white-space:nowrap;margin-top:0.3rem">x ＝ <span style="color:#4FC3F7">Math.cos(angle)</span> * R　　z ＝ <span style="color:#FFB800">Math.sin(angle)</span> * R</div>
+        </div>
+      </div>
+
+      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.6rem 0 0.2rem">部品（空欄は2か所）</p>
+<pre>JavaScript
+<span class="kw">const</span> N = <span class="num">20</span>;          <span class="cmt">// 図形の個数</span>
+<span class="kw">const</span> R = <span class="num">3</span>;           <span class="cmt">// 円の半径</span>
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; N; i++) {
+  <span class="kw">const</span> angle = (i / N) * <span class="num">2</span> * <span class="fn">Math</span>.<span class="fn">PI</span>;   <span class="cmt">// i番目の角度（0〜1周）</span>
+  <span class="kw">const</span> x = ____ * R;        <span class="cmt">// ★空欄1: 横（cos）★</span>
+  <span class="kw">const</span> z = ____ * R - <span class="num">5</span>;    <span class="cmt">// ★空欄2: 奥行き（sin）。-5で前へ★</span>
+  <span class="kw">const</span> color = <span class="str">`hsl(${i / N * 360}, 70%, 60%)`</span>;  <span class="cmt">// 1周ぶん虹色</span>
+  <span class="fn">drawShape</span>(<span class="str">'a-sphere'</span>, x, <span class="num">1.5</span>, z, color, <span class="num">0.4</span>);
+}</pre>
+
+      <div class="callout-info" style="margin-top:0.6rem">
+        <h4>組み立てチャレンジ</h4>
+        <ul class="point-list" style="margin-top:0.3rem">
+          <li>空欄1・2に、上の図解の <code>x</code>・<code>z</code> の式（<code>Math.cos(angle)</code> / <code>Math.sin(angle)</code>）を入れる</li>
+          <li>うまくいくと、20個の球が<strong>虹色の輪</strong>になる</li>
+          <li>発展（らせんにする）：<code>drawShape</code> の <code>y</code>（今は <code>1.5</code>）を <code>i * 0.2</code> に変えると、上に伸びる<strong>らせん</strong>になる</li>
+        </ul>
+      </div>
+
+      <details>
+        <summary>つまったら：完成コードを見る</summary>
+        <div class="answer-content">
+<pre>JavaScript
+<span class="kw">const</span> N = <span class="num">20</span>;
+<span class="kw">const</span> R = <span class="num">3</span>;
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; N; i++) {
+  <span class="kw">const</span> angle = (i / N) * <span class="num">2</span> * <span class="fn">Math</span>.<span class="fn">PI</span>;
+  <span class="kw">const</span> x = <span class="fn">Math</span>.<span class="fn">cos</span>(angle) * R;
+  <span class="kw">const</span> z = <span class="fn">Math</span>.<span class="fn">sin</span>(angle) * R - <span class="num">5</span>;
+  <span class="kw">const</span> color = <span class="str">`hsl(${i / N * 360}, 70%, 60%)`</span>;
+  <span class="fn">drawShape</span>(<span class="str">'a-sphere'</span>, x, <span class="num">1.5</span>, z, color, <span class="num">0.4</span>);
+}
+<span class="cmt">// らせん版: drawShape の y を i * 0.2 にする</span></pre>
+          <p style="font-size:0.85rem;color:#999">空欄1＝<code>Math.cos(angle)</code>、空欄2＝<code>Math.sin(angle)</code>。<code>hsl()</code> の色相を 0〜360 で回すと、輪に沿って虹色になる。</p>
+        </div>
+      </details>
+
+      <div class="callout-tip" style="margin-top:0.6rem">
+        <h4>もっと遊ぶ（数値を変えるだけ）</h4>
+        <ul class="point-list" style="margin-bottom:0">
+          <li><code>N</code> を <code>60</code> に増やすと、より滑らかな輪に</li>
+          <li><code>R</code> を <code>i * 0.15</code>（変数）にすると、外へ広がる<strong>うずまき</strong>に</li>
+          <li><code>y</code> を <code>Math.sin(angle * 3)</code> にすると、輪が<strong>波打つ</strong></li>
+        </ul>
+      </div>
+      <div class="notion-submit"><div><strong>提出:</strong> 円（またはらせん）の完成コード＋実行画面のスクショをNotionに貼る</div></div>
+    </div>
+
+    <!-- std2-4 -->
+    <div id="std2-4" class="card standard">
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std2-4：乱数で星空・銀河をばらまく（リロードで毎回ちがう）</h3></div>
+      <p style="font-size:0.9rem;margin-bottom:0.5rem"><code>Math.random()</code> で位置・色・大きさをランダムに決め、空間いっぱいに図形を散らす。<strong>再読み込みするたびに違う配置</strong>になることを観察する。</p>
+
+      <div class="concept-box" style="margin:0.5rem 0">
+        <h4>ランダムな数を「ほしい範囲」にする式</h4>
+<pre>JavaScript
+<span class="fn">Math</span>.<span class="fn">random</span>()              <span class="cmt">// 0以上1未満</span>
+<span class="fn">Math</span>.<span class="fn">random</span>() * <span class="num">10</span>         <span class="cmt">// 0〜10</span>
+<span class="fn">Math</span>.<span class="fn">random</span>() * <span class="num">10</span> - <span class="num">5</span>     <span class="cmt">// -5〜+5（中央を0にずらす）</span></pre>
+      </div>
+
+      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.6rem 0 0.2rem">部品（空欄は2か所）</p>
+<pre>JavaScript
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; <span class="num">100</span>; i++) {
+  <span class="kw">const</span> x = <span class="fn">Math</span>.<span class="fn">random</span>() * <span class="num">16</span> - <span class="num">8</span>;     <span class="cmt">// -8〜+8</span>
+  <span class="kw">const</span> y = <span class="fn">Math</span>.<span class="fn">random</span>() * <span class="num">6</span>;          <span class="cmt">// 0〜6（高さ）</span>
+  <span class="kw">const</span> z = ____;     <span class="cmt">// ★空欄1: 奥行き。-2〜-14あたりに散らす★</span>
+  <span class="kw">const</span> hue = ____;   <span class="cmt">// ★空欄2: 色相 0〜360 のランダム★</span>
+  <span class="kw">const</span> size = <span class="fn">Math</span>.<span class="fn">random</span>() * <span class="num">0.4</span> + <span class="num">0.1</span>;  <span class="cmt">// 0.1〜0.5</span>
+  <span class="fn">drawShape</span>(<span class="str">'a-sphere'</span>, x, y, z, <span class="str">`hsl(${hue}, 80%, 70%)`</span>, size);
+}</pre>
+
+      <div class="callout-info" style="margin-top:0.6rem">
+        <h4>組み立てチャレンジ</h4>
+        <ul class="point-list" style="margin-top:0.3rem">
+          <li>空欄1：奥行き <code>z</code> を <code>-2</code> 〜 <code>-14</code> の範囲のランダムに（<code>Math.random() * 12 - 14</code> など）</li>
+          <li>空欄2：色相 <code>hue</code> を <code>0</code> 〜 <code>360</code> のランダムに（<code>Math.random() * 360</code>）</li>
+          <li>できたら<strong>何度も再読み込み</strong>して、毎回ちがう星空を眺める</li>
+          <li>個数 <code>100</code> を <code>300</code> に増やすと、より「銀河」っぽくなる</li>
+        </ul>
+      </div>
+
+      <details>
+        <summary>つまったら：完成コードを見る</summary>
+        <div class="answer-content">
+<pre>JavaScript
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; <span class="num">100</span>; i++) {
+  <span class="kw">const</span> x = <span class="fn">Math</span>.<span class="fn">random</span>() * <span class="num">16</span> - <span class="num">8</span>;
+  <span class="kw">const</span> y = <span class="fn">Math</span>.<span class="fn">random</span>() * <span class="num">6</span>;
+  <span class="kw">const</span> z = <span class="fn">Math</span>.<span class="fn">random</span>() * <span class="num">12</span> - <span class="num">14</span>;
+  <span class="kw">const</span> hue = <span class="fn">Math</span>.<span class="fn">random</span>() * <span class="num">360</span>;
+  <span class="kw">const</span> size = <span class="fn">Math</span>.<span class="fn">random</span>() * <span class="num">0.4</span> + <span class="num">0.1</span>;
+  <span class="fn">drawShape</span>(<span class="str">'a-sphere'</span>, x, y, z, <span class="str">`hsl(${hue}, 80%, 70%)`</span>, size);
+}</pre>
+          <p style="font-size:0.85rem;color:#999">空欄1＝<code>Math.random() * 12 - 14</code>、空欄2＝<code>Math.random() * 360</code>。<code>Math.random()</code> は呼ぶたびに違う値なので、再読み込みで星の配置が毎回変わる。</p>
+        </div>
+      </details>
+
+      <div class="callout-warning" style="margin-top:0.6rem">
+        <h4>データサイエンスの目で見ると</h4>
+        <p style="font-size:0.88rem;margin-bottom:0">この「ランダムに散らばった点」は、第6回の<strong>位置データの分布</strong>や、統計でいう<strong>ばらつき（分散）</strong>のイメージそのもの。後で「この散らばりは偏っているか？」を数値で調べることになる。</p>
+      </div>
+      <div class="notion-submit"><div><strong>提出:</strong> 完成コード＋お気に入りの1枚（実行画面のスクショ）をNotionに貼る</div></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ SECTION 5: イベントとデータ記録 ============ -->
+<section id="sec-event">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#B388FF">5</div>
+      <h2>イベント：図形を〇で狙って触る（操作を受け取る）</h2>
+    </div>
+
+    <div class="callout-info">
+      <h4>ここからが「データを取る環境」の入口（STEP 2）</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>これまでは図形を<strong>「描く・見る」</strong>だけ。ここからは図形を<strong>「触る（クリック）」</strong></li>
+        <li>クリックは<strong>イベント</strong>＝ユーザの操作。プログラムで受け取れる</li>
+        <li>受け取った操作を記録すれば<strong>操作ログ</strong>になる（＝後の回でデータを集める仕組みの土台）</li>
+      </ul>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3>まず：画面の中央に〇（黒丸）カーソルを出す</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">イベントの前に、まず「触る道具」を画面に出す。<code>&lt;a-camera&gt;</code>（自分の視点）の中に <code>&lt;a-cursor&gt;</code> を入れると、画面の<strong>中央にいつも〇（黒丸）</strong>が表示される。</p>
+<pre>HTML
+<span class="cmt">&lt;!-- a-scene の中に書く --&gt;</span>
+<span class="op">&lt;</span><span class="kw">a-camera</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">a-cursor</span> <span class="fn">color</span>=<span class="str">"black"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-cursor</span><span class="op">&gt;</span>   <span class="cmt">&lt;!-- 画面の中央に出る黒い〇 --&gt;</span>
+<span class="op">&lt;/</span><span class="kw">a-camera</span><span class="op">&gt;</span></pre>
+      <ul class="point-list" style="margin-top:0.4rem">
+        <li><code>&lt;a-cursor&gt;</code>＝視点の中央にいつも出る〇（照準）。視点を回しても、つねに画面の真ん中にある</li>
+        <li><code>color="black"</code> で<strong>黒丸</strong>にする（背景が暗くて見えにくいときは <code>"white"</code> でもよい）</li>
+        <li>この〇が、3D空間の図形を「指す・触る」道具になる</li>
+      </ul>
+      <p style="font-size:0.82rem;color:#999;margin-top:0.3rem">※ いまはまだ、〇を重ねてクリックしても何も起きない。次に、この〇で図形に触れる仕組みを学ぶ。</p>
+    </div>
+
+    <div class="concept-box">
+      <h4>仕組み：その〇から「見えない光線」が前にのびている</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>中央の〇（黒丸）から、まっすぐ前へ<strong>見えない光線（レイ）</strong>がのびている</li>
+        <li>視点を動かして〇をオブジェクトに<strong>重ねる</strong>と、光線がそのオブジェクトに当たる</li>
+        <li>当たった状態で<strong>クリック</strong>すると、そのオブジェクトに <code>'click'</code> イベントが起きる</li>
+      </ul>
+      <div class="analogy" style="margin-top:0.6rem"><strong>レーザーポインターで的を狙う</strong>のと同じ。画面中央の〇が照準。〇を的（図形）に合わせて押す、という操作。視点はドラッグ（マウスで画面を動かす）で回せる。</div>
+    </div>
+
+    <div class="concept-box">
+      <h4>イベントとは ─ 「何かが起きた合図」</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>クリック・マウス移動・キー入力・選択… ユーザの操作はすべて<strong>イベント</strong>として発生する</li>
+        <li>イベントを<strong>聞く係（リスナー）</strong>を登録しておくと、起きた瞬間に処理が動く</li>
+        <li>「いつ・何が起きたか」を順番に書き出すと、それが<strong>時系列データ（ログ）</strong>になる</li>
+      </ul>
+      <div class="analogy" style="margin-top:0.6rem"><strong>玄関のチャイム</strong>と同じ。「押されたら鳴る」とあらかじめ決めておく（リスナー登録）と、訪問（イベント）のたびに反応する。誰がいつ来たかをメモすれば来客ログになる。</div>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3>イベントを聞く基本：addEventListener</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">「この要素が<strong>クリックされたら</strong>、この処理をして」を登録する命令。形を覚えるだけでよい。</p>
+<pre>JavaScript
+要素.<span class="fn">addEventListener</span>(<span class="str">'click'</span>, <span class="kw">function</span> () {
+  <span class="cmt">// クリックされた“瞬間”に、ここが動く</span>
+  <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'クリックされた！'</span>);
+});</pre>
+      <ul class="point-list" style="margin-top:0.4rem">
+        <li><code>'click'</code>＝聞きたいイベントの名前（他に <code>'mouseenter'</code> 等）</li>
+        <li><code>function () { ... }</code>＝起きたときに動かす処理（⑥関数の仲間）</li>
+      </ul>
+
+      <p style="font-weight:700;color:#93D500;font-size:0.9rem;margin:0.8rem 0 0.2rem">まず仕組みだけを試す完成HTML（A-Frame不要・ボタンで体験）</p>
+      <p style="font-size:0.85rem;color:#ccc;margin-bottom:0.3rem">下をそのまま <code>button.html</code> などの名前で保存 → ブラウザで開く → ボタンを押すと、Consoleに文字が出る。</p>
+<pre>HTML
+<span class="op">&lt;!DOCTYPE html&gt;</span>
+<span class="op">&lt;</span><span class="kw">html</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">body</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">button</span> <span class="fn">id</span>=<span class="str">"btn"</span><span class="op">&gt;</span>クリックしてね<span class="op">&lt;/</span><span class="kw">button</span><span class="op">&gt;</span>
+
+    <span class="op">&lt;</span><span class="kw">script</span><span class="op">&gt;</span>
+      <span class="kw">const</span> btn = <span class="fn">document</span>.<span class="fn">querySelector</span>(<span class="str">'#btn'</span>);
+      btn.<span class="fn">addEventListener</span>(<span class="str">'click'</span>, <span class="kw">function</span> () {
+        <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'クリックされた！'</span>);   <span class="cmt">// 押すたびに出る</span>
+      });
+    <span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">body</span><span class="op">&gt;</span>
+<span class="op">&lt;/</span><span class="kw">html</span><span class="op">&gt;</span></pre>
+      <p style="font-size:0.82rem;color:#999;margin-top:0.3rem">※ 次は、このクリックの仕組みを<strong>3D図形</strong>に対して使う。</p>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3>図形を〇で触れるようにする（2つの準備）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">さきほど出した〇カーソルが、図形に当たって反応するように、あと2つだけ設定する。</p>
+      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.5rem 0 0.2rem">準備① 〇カーソルに「狙う対象」を教える（<code>raycaster</code> を足す）</p>
+<pre>HTML
+<span class="op">&lt;</span><span class="kw">a-camera</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">a-cursor</span> <span class="fn">color</span>=<span class="str">"black"</span> <span class="fn">raycaster</span>=<span class="str">"objects: .clickable"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-cursor</span><span class="op">&gt;</span>
+<span class="op">&lt;/</span><span class="kw">a-camera</span><span class="op">&gt;</span></pre>
+      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.7rem 0 0.2rem">準備② 図形に <code>clickable</code> という目印（クラス）をつける</p>
+<pre>JavaScript
+el.<span class="fn">classList</span>.<span class="fn">add</span>(<span class="str">'clickable'</span>);   <span class="cmt">// この図形はクリック対象、という目印</span></pre>
+      <ul class="point-list" style="margin-top:0.4rem">
+        <li><code>raycaster="objects: .clickable"</code>＝〇の光線が<strong><code>clickable</code> 印のついた図形だけ</strong>を狙う</li>
+        <li>準備②の <code>classList.add('clickable')</code> で、図形にその目印をつける</li>
+        <li>この2つで、〇を図形に重ねてクリックすると、その図形が <code>'click'</code> を出す</li>
+      </ul>
+    </div>
+
+    <!-- std2-5 -->
+    <div id="std2-5" class="card standard">
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std2-5：クリックしたら色が変わる ─ 完成コードを動かして「応用」する</h3></div>
+      <p style="font-size:0.9rem;margin-bottom:0.5rem">まず<strong>下の完成コードをそのままコピーして動かす</strong>。〇を図形に重ねてクリックすると、その図形の色がランダムに変わる。仕組みを理解したら、後半の<strong>応用課題（必須）</strong>＝「4つの要件をすべて満たす index.html を1つ作る」に取り組む。</p>
+
+      <p style="font-weight:700;color:#93D500;font-size:0.9rem;margin:0.5rem 0 0.2rem">完成コード（<code>index.html</code> として保存 → 開く → 〇を図形に重ねてクリック）</p>
+<pre>HTML
+<span class="op">&lt;!DOCTYPE html&gt;</span>
+<span class="op">&lt;</span><span class="kw">html</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">head</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">script</span> <span class="fn">src</span>=<span class="str">"https://aframe.io/releases/1.6.0/aframe.min.js"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">head</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">body</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">a-scene</span><span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-sky</span> <span class="fn">color</span>=<span class="str">"#111"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-sky</span><span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-plane</span> <span class="fn">rotation</span>=<span class="str">"-90 0 0"</span> <span class="fn">width</span>=<span class="str">"30"</span> <span class="fn">height</span>=<span class="str">"30"</span> <span class="fn">color</span>=<span class="str">"#1a1a1a"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-plane</span><span class="op">&gt;</span>
+      <span class="cmt">&lt;!-- 画面中央に〇（黒丸）カーソルを出す（カメラの中に入れる） --&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-camera</span><span class="op">&gt;</span>
+        <span class="op">&lt;</span><span class="kw">a-cursor</span> <span class="fn">color</span>=<span class="str">"black"</span> <span class="fn">raycaster</span>=<span class="str">"objects: .clickable"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-cursor</span><span class="op">&gt;</span>
+      <span class="op">&lt;/</span><span class="kw">a-camera</span><span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-entity</span> <span class="fn">id</span>=<span class="str">"group"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-entity</span><span class="op">&gt;</span>
+    <span class="op">&lt;/</span><span class="kw">a-scene</span><span class="op">&gt;</span>
+
+    <span class="op">&lt;</span><span class="kw">script</span><span class="op">&gt;</span>
+      <span class="kw">const</span> group = <span class="fn">document</span>.<span class="fn">querySelector</span>(<span class="str">'#group'</span>);
+
+      <span class="cmt">// 図形を1つ作る。クリックすると色がランダムに変わる</span>
+      <span class="kw">function</span> <span class="fn">drawClickable</span>(type, x, y, z, color) {
+        <span class="kw">const</span> el = <span class="fn">document</span>.<span class="fn">createElement</span>(type);
+        el.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, <span class="str">`${x} ${y} ${z}`</span>);
+        el.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, color);
+        el.<span class="fn">classList</span>.<span class="fn">add</span>(<span class="str">'clickable'</span>);          <span class="cmt">// 〇の狙う対象にする</span>
+        el.<span class="fn">addEventListener</span>(<span class="str">'click'</span>, <span class="kw">function</span> () {  <span class="cmt">// クリックされたら…</span>
+          <span class="kw">const</span> hue = <span class="fn">Math</span>.<span class="fn">random</span>() * <span class="num">360</span>;
+          el.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, <span class="str">`hsl(${hue}, 80%, 60%)`</span>);  <span class="cmt">// 色を変える</span>
+        });
+        group.<span class="fn">appendChild</span>(el);
+      }
+
+      <span class="cmt">// 箱を8個ならべる</span>
+      <span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; <span class="num">8</span>; i++) {
+        <span class="fn">drawClickable</span>(<span class="str">'a-box'</span>, i - <span class="num">4</span>, <span class="num">1.5</span>, -<span class="num">4</span>, <span class="str">'gray'</span>);
+      }
+    <span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">body</span><span class="op">&gt;</span>
+<span class="op">&lt;/</span><span class="kw">html</span><span class="op">&gt;</span></pre>
+
+      <div class="callout-info" style="margin-top:0.6rem">
+        <h4>コードの読みどころ（クリックで色が変わる仕組み）</h4>
+        <ul class="point-list" style="margin-top:0.3rem">
+          <li><code>el.classList.add('clickable')</code>＝この図形を〇の<strong>狙う対象</strong>にする（準備②）</li>
+          <li><code>el.addEventListener('click', function () { ... })</code>＝<strong>クリックされた瞬間</strong>に <code>{ }</code> の中が動く</li>
+          <li><code>Math.random() * 360</code> で色相を作り、<code>setAttribute('color', ...)</code> で<strong>色を変える</strong></li>
+          <li>まずコピーして保存 → 開く → 視点をドラッグで回し、〇を箱に重ねてクリック → 色が変われば成功</li>
+        </ul>
+      </div>
+
+      <div class="callout-warning" style="margin-top:0.6rem">
+        <h4>応用課題（必須）：次の4つをすべて満たす index.html を1つ新しく作る</h4>
+        <p style="font-size:0.88rem;margin-bottom:0.4rem">上の完成コードをもとに、<strong>1つの新しいファイル</strong>を作り、その中に<strong>下の4つの要件をすべて</strong>盛り込む。</p>
+        <ul class="point-list" style="margin-bottom:0">
+          <li><strong>要件1：</strong>図形を <code>for</code> 文で<strong>10個以上</strong>ならべる（形は自由：<code>a-box</code> / <code>a-sphere</code> など）</li>
+          <li><strong>要件2：</strong>図形を〇で重ねて<strong>クリックすると色が変わる</strong>（変えた色はそのまま残る）</li>
+          <li><strong>要件3：</strong>〇を<strong>重ねた瞬間（<code>mouseenter</code>）に大きくなる</strong>（<code>scale</code> を大きく）</li>
+          <li><strong>要件4：</strong>〇が<strong>離れた瞬間（<code>mouseleave</code>）に元の大きさにもどる</strong></li>
+        </ul>
+        <p style="font-size:0.82rem;color:#999;margin-top:0.4rem">※ <code>mouseenter</code> / <code>mouseleave</code> は公式ドキュメントの cursor イベント（上の📖参照）。1つの <code>drawClickable</code> 関数の中に、<code>click</code>・<code>mouseenter</code>・<code>mouseleave</code> の<strong>3つの <code>addEventListener</code></strong>を書くのがコツ。</p>
+      </div>
+
+      <details>
+        <summary>ヒント：要件2〜4を1つの関数にまとめる書き方</summary>
+        <div class="answer-content">
+          <p style="font-size:0.85rem;color:#ccc;margin-bottom:0.4rem">完成コードの <code>drawClickable</code> の中（<code>addEventListener('click', …)</code> の行）を、次の<strong>3つ</strong>にする。要件1は <code>for</code> の回数を10以上にすればよい。</p>
+<pre>JavaScript
+<span class="cmt">// 要件2：クリックすると色が変わる（色は残る）</span>
+el.<span class="fn">addEventListener</span>(<span class="str">'click'</span>, <span class="kw">function</span> () {
+  <span class="kw">const</span> hue = <span class="fn">Math</span>.<span class="fn">random</span>() * <span class="num">360</span>;
+  el.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, <span class="str">`hsl(${hue}, 80%, 60%)`</span>);
+});
+<span class="cmt">// 要件3：〇を重ねた瞬間に大きくする</span>
+el.<span class="fn">addEventListener</span>(<span class="str">'mouseenter'</span>, <span class="kw">function</span> () {
+  el.<span class="fn">setAttribute</span>(<span class="str">'scale'</span>, <span class="str">'1.5 1.5 1.5'</span>);
+});
+<span class="cmt">// 要件4：〇が離れたら元の大きさにもどす</span>
+el.<span class="fn">addEventListener</span>(<span class="str">'mouseleave'</span>, <span class="kw">function</span> () {
+  el.<span class="fn">setAttribute</span>(<span class="str">'scale'</span>, <span class="str">'1 1 1'</span>);
+});</pre>
+          <p style="font-size:0.82rem;color:#999">これを <code>drawClickable</code> の中（<code>group.appendChild(el)</code> の前）に入れる。要件1は <code>for (let i = 0; i &lt; 10; i++)</code> のように回数を10以上に。</p>
+        </div>
+      </details>
+      <div class="notion-submit"><div><strong>提出:</strong> 4要件をすべて満たす index.html のコード全文＋実行画面のスクショ（クリックで色変化・重ねて拡大）をNotionに貼る</div></div>
+    </div>
+
+    <div class="callout-info">
+      <h4>📖 公式ドキュメントを読もう：A-Frame の <code>cursor</code></h4>
+      <p style="font-size:0.9rem;margin-bottom:0.4rem">カーソルの細かい設定や、<strong>クリック以外のイベント</strong>は公式ドキュメントにまとまっている。英語だが、下の表（Events）を眺めるだけでも役立つ。<strong>困ったらまず公式を読む</strong>のがプログラミングの基本姿勢。</p>
+      <p style="font-size:0.85rem;margin-bottom:0.6rem">▶ <a href="https://aframe.io/docs/1.7.0/components/cursor.html" target="_blank" rel="noopener" style="color:#4FC3F7;word-break:break-all">https://aframe.io/docs/1.7.0/components/cursor.html</a></p>
+      <p style="font-weight:700;color:#76B900;font-size:0.88rem;margin-bottom:0.2rem">カーソルが出すイベント（<code>click</code> 以外も使える）</p>
+      <table style="font-size:0.82rem">
+        <tr><th style="width:32%">イベント名</th><th>いつ起きる</th></tr>
+        <tr><td><code>click</code></td><td>〇を重ねてクリックした瞬間</td></tr>
+        <tr><td><code>mouseenter</code></td><td>〇がオブジェクトに<strong>重なった</strong>瞬間（重なりの開始）</td></tr>
+        <tr><td><code>mouseleave</code></td><td>〇がオブジェクトから<strong>離れた</strong>瞬間（重なりの終了）</td></tr>
+        <tr><td><code>mousedown</code> / <code>mouseup</code></td><td>ボタンを押した瞬間／離した瞬間</td></tr>
+        <tr><td><code>fusing</code></td><td>（VRなど）見つめて待つfuse方式が始まったとき</td></tr>
+      </table>
+      <p style="font-size:0.82rem;color:#999;margin-top:0.4rem">※ ウェブ（DOM）の <code>mouseover</code> ではなく、A-Frameのカーソルでは <code>mouseenter</code> / <code>mouseleave</code> を使う。たとえば <code>mouseenter</code> で色を明るく、<code>mouseleave</code> で元に戻すと、<strong>「〇を重ねるだけで光る」</strong>演出ができる（クリック不要）。</p>
+    </div>
+
+    <div class="callout-warning">
+      <h4>ノート：穴埋め（イベント）</h4>
+      <ul class="point-list" style="margin-top:0.4rem">
+        <li>クリックなど「何かが起きた合図」を（　　　　）と呼ぶ。</li>
+        <li>それを聞いて処理を動かす登録は <code>要素.</code>（　　　　）<code>('click', ...)</code> で行う。</li>
+        <li>画面中央の〇から前にのびる、当たり判定の見えない線を（　　　　）という。</li>
+      </ul>
+    </div>
+
+    <!-- adv2-1（すべての標準課題のあとに置く締めの課題） -->
+    <div id="adv2-1" class="card advanced">
+      <div class="card-header"><h3><span class="tag tag-advanced" style="font-size:0.7rem">発展課題</span> adv2-1：自由創作（任意・本日の総まとめ）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">std2-1〜std2-5で学んだ技（配列・if・関数・三角関数・乱数・クリックイベント）を<strong>自由に組み合わせて</strong>、自分だけの作品をつくる。正解はなし。自分なりのテーマを決めて作ってみる。</p>
+
+      <p style="font-weight:700;color:#FFB800;font-size:0.88rem;margin:0.5rem 0 0.2rem">使える技（組み合わせ自由）</p>
+      <ul class="point-list">
+        <li>図形：<code>a-box</code> / <code>a-sphere</code> / <code>a-cylinder</code> / <code>a-cone</code> / <code>a-torus</code>（配列で混ぜてもよい）</li>
+        <li>並べ方：<code>for</code>（1重で線・2重で面）／三角関数で円・らせん・波／乱数で散らす</li>
+        <li>色：<code>colors</code> 配列で循環／<code>hsl()</code> でグラデーション／乱数でカラフル</li>
+        <li>大きさ：<code>size</code> を <code>i</code> や <code>Math.sin</code> で変えて、だんだん大きく／脈打つように</li>
+        <li>操作：図形を<code>clickable</code> にして、画面中央の〇で狙ってクリックすると色や形が変わる（std2-5の応用）</li>
+      </ul>
+
+      <p style="font-weight:700;color:#FFB800;font-size:0.88rem;margin:0.7rem 0 0.2rem">アイデアの例</p>
+      <ul class="point-list" style="margin-bottom:0">
+        <li><strong>虹色の二重らせん</strong>（角度をずらした円を2本、<code>y</code> で上へ）</li>
+        <li><strong>波打つ床</strong>（二重forで敷き詰め、<code>y = Math.sin(x + z)</code> で高さを波に）</li>
+        <li><strong>銀河</strong>（半径を <code>i</code> で広げ、角度も回す＝うずまき＋乱数の揺らぎ）</li>
+        <li><strong>クリックで色が変わる庭</strong>（図形を並べ、〇で狙って押すたびに色が変わる）</li>
+      </ul>
+
+      <div class="callout-tip" style="margin-top:0.7rem">
+        <h4>ヒント</h4>
+        <ul class="point-list" style="margin-bottom:0">
+          <li>まず std2-3 か std2-4 のコードをコピー → 数値や式を1か所ずつ変えて結果を見る</li>
+          <li><code>Math.sin</code> / <code>Math.cos</code> の中の <code>angle</code> を <code>angle * 2</code> などにすると、形が大きく変わる</li>
+          <li>「なぜそうしたか」を一言メモしておくと、後の発表で語れる</li>
+        </ul>
+      </div>
+
+      <div class="notion-submit"><div><strong>提出（任意）:</strong> 作品のコード＋実行画面のスクショ＋音声（工夫した点とコードの説明）</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 6: データとのつながり ============ -->
+<section id="sec-ds">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">6</div>
+      <h2>今日の道具が、これから「データ」になる</h2>
+    </div>
+
+    <div class="callout-info">
+      <h4>図形を描く道具 ＝ データを扱う道具</h4>
+      <p style="font-size:0.9rem;margin-bottom:0.6rem">今日は図形を描いて触ったが、まったく同じ部品が、これから「データの取得・整形・分析」で主役になる。</p>
+      <table style="font-size:0.85rem">
+        <tr><th style="width:26%">今日の使い方</th><th>これからの使い方（データ）</th></tr>
+        <tr><td>変数に色や位置を入れる</td><td>ユーザの操作・入力を変数で受け取って記録</td></tr>
+        <tr><td>配列に値を並べる</td><td>操作の履歴・回答列を配列にためる → CSVへ整形</td></tr>
+        <tr><td>オブジェクト <code>{...}</code> で1件</td><td>行動ログ1件 <code>{時刻, 対象, 操作}</code> ＝ 表の1行</td></tr>
+        <tr><td>配列×オブジェクト＝表</td><td>CSV／ログテーブルそのもの（次回以降で整形・保存）</td></tr>
+        <tr><td>イベント（click）で受け取る</td><td>クリックした瞬間を記録すれば操作ログに。移動・選択へ拡張</td></tr>
+        <tr><td>if で分岐／Math で計算</td><td>条件A/B の切りかえ・しきい値判定／平均・分散など統計計算の素地</td></tr>
+      </table>
+    </div>
+
+    <div class="callout-tip">
+      <h4>次回の予告：A-Frameの空間づくりと「座標データ」</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>A-Frameの<strong>基本ジオメトリ</strong>で、計測対象となる3D空間を本格的に構築する</li>
+        <li>オブジェクトの <code>x, y, z</code> 座標を<strong>「位置データ」</strong>として読み解く</li>
+        <li>今日の<strong>イベントログ</strong>と組み合わせると、「いつ・どこで・何をしたか」が取れるようになる</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NOTION GUIDE ============ -->
+<section id="sec-notion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">N</div>
+      <h2>ノートの作り方（Notion）</h2>
+    </div>
+    <div class="callout-warning">
+      <h4>テンプレートは配りません ── 自分で書く</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>決まったひな形（テンプレート）は渡さない</li>
+        <li><strong>何を・どう記録するかを自分で考えて</strong>、見出しや表を作って構成する</li>
+        <li>「見やすく整理する」こと自体が、データを扱う練習になる</li>
+      </ul>
+    </div>
+    <div class="callout-info">
+      <h4>1ページにまとめて提出</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>穴埋め（第1回の復習・JavaScript基礎・イベント）＋ std2-1〜std2-5 のコードとスクショを1つのNotionページに集約</li>
+        <li><strong>PDFにエクスポート</strong> → Google Classroomに <strong>PDF 1ファイル</strong></li>
+        <li>上部に「グループ番号・氏名・第2回」を明記</li>
+      </ul>
+    </div>
+    <div class="callout-tip">
+      <h4>記録のコツ</h4>
+      <ul class="point-list" style="margin-top:0.4rem">
+        <li>穴埋めは「答え」＋なぜそうなるかを一言</li>
+        <li>課題は<strong>コード全文</strong>＋<strong>実行画面のスクショ</strong>をセットで貼る</li>
+        <li>「数値を変えたら見た目がどう変わったか」を1行メモすると、理解が深まる</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div>MD2 ─ メディアクリエーション・データデザインⅡ ─ 第2回</div>
+    <div style="margin-top:0.5rem;font-size:0.8rem;color:#666">&copy;2026 Ryota Nakamura.</div>
+  </div>
+</footer>
+
+<!-- ============ SCRIPTS ============ -->
+<script>
+// Copy button for pre blocks
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var code = pre.textContent.replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|\.zshrc|Notion テンプレート)( ── [^\n]+)?\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+
+// Click-to-copy on inline code elements
+document.querySelectorAll(':not(pre) > code').forEach(function(code) {
+  code.title = 'クリックでコピー';
+  code.addEventListener('click', function() {
+    navigator.clipboard.writeText(code.textContent).then(function() {
+      code.classList.add('copied');
+      setTimeout(function() {
+        code.classList.remove('copied');
+      }, 1500);
+    });
+  });
+});
+</script>
+
+</body>
+</html>
