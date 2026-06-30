@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第3回: A-Frameジオメトリと座標系 ― 空間をつくり、x・y・zを位置データとして読む | MD2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET & BASE ============ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: clamp(13px, 1.6vw, 28px); }
+html, body { overflow-x: hidden; max-width: 100%; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #111111;
+  color: #e0e0e0;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+/* Media and embeds should never overflow their container */
+img, video, iframe, svg, canvas { max-width: 100%; height: auto; }
+
+/* ============ LAYOUT ============ */
+.container { max-width: 1600px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+
+/* ============ HEADER ============ */
+.hero {
+  background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a);
+  color: white;
+  padding: clamp(3rem, 8vw, 6rem) 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(108,99,255,0.3), transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(155,89,182,0.2), transparent 50%);
+}
+.hero .container { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 100px;
+  padding: 0.35rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+}
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+
+/* ============ SUBMISSION BOX ============ */
+.submission-box {
+  background: linear-gradient(135deg, #1A1A1A, #1a2e0a);
+  border: 2px solid #76B900;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin: 2rem 0;
+}
+.submission-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #76B900;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.submission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.5rem;
+}
+.sub-item {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  gap: 0.3rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.4rem;
+  padding: 0.6rem 0.4rem;
+  font-size: 0.55rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.sub-item .sub-count {
+  margin-bottom: 0.1rem;
+}
+.sub-item .tag {
+  margin-bottom: 0.15rem;
+}
+.sub-count {
+  background: #76B900;
+  color: white;
+  border-radius: 0.2rem;
+  min-width: 1.5rem; height: 1.5rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700;
+}
+
+/* ============ TAGS ============ */
+.tag {
+  display: inline-flex; align-items: center; gap: 0.2rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 100px;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.tag-note      { background: #1a2e0a; color: #76B900; }
+.tag-standard  { background: #0a1a2e; color: #4FC3F7; }
+.tag-advanced  { background: #2e1a0a; color: #FFB800; }
+.tag-group     { background: #1a2e0a; color: #76B900; }
+
+/* ============ EXAM ALERT TAG ============ */
+.exam-alert {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  background: rgba(255, 82, 82, 0.15);
+  border: 1px solid #FFB800;
+  color: #FFB800;
+  padding: 0.2rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  animation: exam-pulse 2s ease-in-out 3;
+}
+@keyframes exam-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ============ SECTION HEADERS ============ */
+.section-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.section-num {
+  width: 2.5rem; height: 2.5rem;
+  border-radius: 0.4rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 900; color: white;
+  flex-shrink: 0;
+}
+.section-header h2 {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+/* ============ CARDS ============ */
+.card {
+  background: #141414;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  border: 1px solid #2a2a2a;
+}
+.card-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #222;
+}
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.standard  { border-left: 4px solid #76B900; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.card.group     { border-left: 4px solid #93D500; }
+
+/* ============ NOTION CALLOUT ============ */
+.notion-submit {
+  background: #1a2e0a;
+  border: 1px solid #76B900;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  display: flex; align-items: flex-start; gap: 0.5rem;
+}
+.notion-submit::before { content: '\1F4DD'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+
+/* ============ TABLES ============ */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem;
+  margin: 1rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+th {
+  background: rgba(108, 99, 255, 0.15);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  color: #76B900;
+  letter-spacing: 0.02em;
+}
+td {
+  padding: 0.55rem 0.8rem;
+  border-top: 1px solid #222;
+}
+tr:nth-child(even) td { background: #111; }
+
+/* ============ CODE ============ */
+pre {
+  background: #0A0A0A;
+  color: #E0E0E0;
+  border-radius: 12px;
+  padding: clamp(0.8rem, 2vw, 1.4rem);
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
+  font-size: clamp(0.75rem, 1.3vw, 0.88rem);
+  line-height: 1.7;
+  margin: 1rem 0;
+  position: relative;
+}
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #FFB800; }
+pre .op { color: #93D500; }
+.code-label {
+  position: absolute; top: 0; right: 0;
+  background: rgba(255,255,255,0.08);
+  color: #999999;
+  padding: 0.2rem 0.8rem;
+  border-radius: 0 12px 0 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+/* inline code */
+:not(pre) > code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(108,99,255,0.15);
+  padding: 0.15em 0.45em;
+  border-radius: 5px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+:not(pre) > code:hover { background: rgba(108,99,255,0.3); }
+:not(pre) > code.copied { background: rgba(108,99,255,0.5); }
+
+/* ============ EXPLANATION BLOCKS ============ */
+.concept-box {
+  background: rgba(108, 99, 255, 0.15);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  border: 1px solid #2a2a3a;
+}
+.concept-box h4 {
+  font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem;
+}
+.analogy {
+  background: #1a1a0a;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 0.75rem 0;
+  border-left: 3px solid #FFB800;
+  font-size: 0.95rem;
+}
+.analogy::before {
+  content: '\1F4A1 日常の例';
+  display: block;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #FFB800;
+  margin-bottom: 0.3rem;
+}
+.point-list {
+  list-style: none;
+  padding: 0;
+}
+.point-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+}
+.point-list li::before {
+  content: '\25B8';
+  position: absolute; left: 0;
+  color: #76B900;
+  font-weight: 700;
+}
+
+/* ============ ANSWERS (COLLAPSIBLE) ============ */
+details {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+details summary {
+  padding: 0.8rem 1.2rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 0.5rem;
+  background: #1a1a1a;
+  user-select: none;
+}
+details summary::marker { content: ''; }
+details summary::before {
+  content: '\25B6';
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+  color: #666;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
+
+/* ============ WARNING / DANGER CALLOUT ============ */
+.callout-danger {
+  background: rgba(255, 82, 82, 0.08);
+  border: 1px solid rgba(255, 82, 82, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-danger h4 {
+  color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-warning {
+  background: rgba(255, 184, 0, 0.08);
+  border: 1px solid rgba(255, 184, 0, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-warning h4 {
+  color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-info {
+  background: rgba(108, 99, 255, 0.08);
+  border: 1px solid rgba(108, 99, 255, 0.3);
+  border-left: 4px solid #76B900;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-info h4 {
+  color: #76B900; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.callout-tip {
+  background: rgba(155, 89, 182, 0.08);
+  border: 1px solid rgba(155, 89, 182, 0.3);
+  border-left: 4px solid #93D500;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-tip h4 {
+  color: #93D500; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+
+/* ============ FOOTER ============ */
+footer {
+  background: #0A0A0A;
+  color: #999999;
+  padding: 2rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 640px) {
+  .submission-items { grid-template-columns: 1fr; }
+  .section-num { width: 2rem; height: 2rem; font-size: 0.85rem; }
+
+  /* Tables: allow horizontal scroll wrapper feel via smaller text + wrap */
+  table { max-width: 100%; font-size: 0.78rem; }
+  th, td { padding: 0.4rem 0.5rem; white-space: normal; }
+  th { font-size: 0.72rem; }
+  th[style*="width"], td[style*="width"] { width: auto !important; min-width: 3rem; }
+
+  [style*="min-width:8rem"] { min-width: 0 !important; }
+  [style*="min-width:12rem"] { min-width: 0 !important; }
+  [style*="min-width: 8rem"] { min-width: 0 !important; }
+  [style*="min-width: 12rem"] { min-width: 0 !important; }
+
+  [style*="display:inline-block"],
+  [style*="display: inline-block"],
+  [style*="display:inline-flex"],
+  [style*="display: inline-flex"] { max-width: 100%; overflow-wrap: anywhere; }
+
+  .card > div, .card div[style] { max-width: 100%; overflow-wrap: anywhere; }
+  div[style*="border-radius"] { max-width: 100%; overflow-wrap: anywhere; }
+
+  .callout-danger, .callout-warning, .callout-info, .callout-tip,
+  .concept-box, .analogy, .notion-submit { padding: 0.8rem 0.9rem; border-radius: 10px; font-size: 0.88rem; overflow-x: hidden; }
+  details summary { padding: 0.7rem 0.9rem; font-size: 0.9rem; }
+  details .answer-content { padding: 0.8rem 0.9rem; overflow-x: auto; }
+
+  p, li, td, th, summary, .card, .callout-info, .callout-tip,
+  .callout-warning, .callout-danger, div { overflow-wrap: anywhere; }
+  :not(pre) > code { white-space: normal; overflow-wrap: anywhere; word-break: break-all; }
+
+  [style*="white-space:nowrap"],
+  [style*="white-space: nowrap"] { white-space: normal !important; }
+
+  [id] { scroll-margin-top: 2.5rem; }
+}
+
+/* Small phone */
+@media (max-width: 420px) {
+  .container { padding: 0 0.6rem; }
+  .submission-items { grid-template-columns: 1fr; }
+  .hero { padding: 1.3rem 0; }
+  .hero h1 { font-size: 1rem !important; }
+  .hero p { font-size: 0.78rem !important; }
+  .hero-badge { font-size: 0.65rem; padding: 0.22rem 0.65rem; }
+  .section-header h2 { font-size: 0.95rem; }
+  .section-num { width: 1.7rem; height: 1.7rem; font-size: 0.78rem; }
+  .card { padding: 0.75rem; }
+  .card-header h3 { font-size: 0.92rem; }
+  th, td { padding: 0.3rem 0.35rem; font-size: 0.7rem; }
+  th[style*="width"], td[style*="width"] { min-width: 2rem !important; }
+  pre { font-size: 0.65rem; padding: 0.55rem; }
+  .section-nav a { font-size: 0.6rem !important; padding: 0.2rem 0.4rem !important; }
+  .submission-box { padding: 0.8rem; }
+  .submission-box h3 { font-size: 0.88rem; }
+  .sub-item { font-size: 0.62rem; }
+}
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
+/* ============ SUB-ITEM LINKS ============ */
+a.sub-item { transition: transform 0.15s, box-shadow 0.15s; }
+a.sub-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(118,185,0,0.3);
+  border-color: #76B900;
+}
+
+/* ============ SECTION NAV (always visible at top) ============ */
+.section-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.2rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+body { padding-top: 2.2rem; }
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.45rem;
+  font-weight: 500;
+  padding: 0.15rem 0.4rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-exam { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3.5rem; }
+
+/* ============ REDUCED MOTION ============ */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  details summary::before { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SECTION NAV ============ -->
+<nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_1.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_2.html">2</a> <a style="color:#76B900;background:rgba(118,185,0,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="md2_week_3.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_4.html">4</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_5.html">5</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_6.html">6</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_7.html">7</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_8.html">8</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_9.html">9</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_10.html">10</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_11.html">11</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_12.html">12</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_13.html">13</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_14.html">14</a> </div>
+  <a href="#sec-purpose">第3回の位置づけ</a>
+  <a href="#sec-flow">本日の流れ</a>
+  <a href="#sec-recap">1. 第2回の復習</a>
+  <a href="#sec-geo">2. ジオメトリ図鑑</a>
+  <a href="#sec-attr">3. 属性で形を変える</a>
+  <a href="#sec-build" class="nav-assignment">4. 空間づくり課題</a>
+  <a href="#sec-coord">5. 座標系と位置データ</a>
+  <a href="#sec-posdata" class="nav-assignment">6. 位置を測る課題</a>
+  <a href="#sec-notion">ノート</a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">Media creation Data design 2（MD2）─ 2026年度</div>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.1rem">武蔵野大学データサイエンス学部</p>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.3rem">武蔵野大学国際データサイエンス学部（通信教育部）</p>
+    <p style="font-size:0.95rem;opacity:0.85;margin-bottom:1rem">中村 亮太</p>
+    <h1>MD2 第3回: A-Frameのジオメトリで空間をつくり、x・y・z座標を「位置データ」として読む</h1>
+    <p>前半はA-Frameの<strong>基本ジオメトリ（プリミティブ図形）</strong>を一通り使い、太さ・高さ・半径などの属性で形を自在に変えて、計測対象となる3D空間を組み立てる。後半は <code>position</code> の <strong>x・y・z座標</strong>を、ただの「置き場所」ではなく <strong>「1件の位置データ」</strong>として読み取り、配列にためて表にし、距離や重心（平均位置）を計算する。空間づくりが、そのまま「位置データを取って測る」練習になる。</p>
+    <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:0.3rem;padding:0.4rem 0.8rem;margin-top:1rem;font-size:0.7rem;display:inline-block;max-width:100%;overflow-wrap:anywhere">
+      <strong>第3回のメイン:</strong> ① A-Frame基本ジオメトリ（プリミティブ図鑑＋属性で形を変える） ＋ ② 座標系（x・y・z／右手系／単位＝メートル） ＋ ③ 位置データを取得・記録し、距離・重心を測る（＝シラバス「A-Frame基本ジオメトリ」＋「座標系と位置データ」の2回ぶん）
+    </div>
+  </div>
+</header>
+
+<!-- ============ COURSE PURPOSE (はじめに) ============ -->
+<section id="sec-purpose" style="padding-top:2.5rem;padding-bottom:0">
+  <div class="container">
+    <div class="card" style="border-left:4px solid #76B900;background:linear-gradient(135deg,#141414,#152011)">
+      <div class="card-header"><h3>📌 第3回の位置づけ：なぜ「ジオメトリと座標」なのか（はじめに読もう）</h3></div>
+
+      <p style="font-size:1.05rem;margin-bottom:0.7rem">テーマは引き続き <strong style="color:#76B900">「バーチャル空間で、データサイエンスを実践する」</strong>。第3回は、<strong style="color:#76B900">計測の舞台となる3D空間</strong>を本格的に組み立て、その空間の <strong style="color:#76B900">座標（x・y・z）を「データ」として読む目</strong>を養う。</p>
+
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin:0.5rem 0 0.8rem">
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-left:3px solid #93D500;border-radius:0.5rem;padding:0.8rem 0.9rem">
+          <div style="font-weight:800;font-size:0.92rem;color:#93D500;margin-bottom:0.2rem">前半：基本ジオメトリで空間をつくる</div>
+          <div style="font-size:0.84rem;color:#ccc">箱・球・円柱・トーラスなどのプリミティブと、その属性（半径・高さ）で形を自在に作る。<span style="color:#999">（シラバス第5回ぶん）</span></div>
+        </div>
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-left:3px solid #FFB800;border-radius:0.5rem;padding:0.8rem 0.9rem">
+          <div style="font-weight:800;font-size:0.92rem;color:#FFB800;margin-bottom:0.2rem">後半：座標系と位置データ</div>
+          <div style="font-size:0.84rem;color:#ccc">x・y・z（右手系・単位＝メートル）を理解し、位置を取得・記録して距離や重心を測る。<span style="color:#999">（シラバス第6回ぶん）</span></div>
+        </div>
+      </div>
+
+      <div class="callout-info" style="margin-top:0.5rem">
+        <h4>「図形を置く」は、実は「位置データを1件つくる」こと</h4>
+        <ul class="point-list" style="margin-bottom:0">
+          <li>図形の <code>position="x y z"</code>＝<strong>1個の位置データ（1レコード）</strong>。第11回の「行動ログ1件」とまったく同じ形</li>
+          <li>たくさんの図形の位置を並べる＝<strong>位置データの集合（データセット）</strong></li>
+          <li>2つの図形の<strong>距離</strong>を測る＝データ同士の「近さ」を数値にする第一歩</li>
+          <li>全部の図形の<strong>重心（平均位置）</strong>＝そのデータの「代表値（平均）」そのもの</li>
+        </ul>
+      </div>
+
+      <p style="font-size:0.9rem;color:#999;margin:1.2rem 0 0.5rem">本科目全体の流れ（再確認）。第3回は <strong style="color:#76B900">STEP 1（舞台づくり）</strong> を完成に近づけつつ、<strong style="color:#76B900">STEP 2（データを取る）</strong>の入口「位置を測る」に踏み込む回。</p>
+
+      <!-- 3 steps -->
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin:0.5rem 0 1rem">
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #76B900;border-radius:0.5rem;padding:0.9rem">
+          <div style="color:#76B900;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 1 ─ 舞台をつくる <span style="font-size:0.7rem;background:#1a2e0a;border:1px solid #76B900;border-radius:100px;padding:0.05rem 0.5rem">今ここ</span></div>
+          <div style="font-size:0.88rem"><strong>3D空間を自分で作る</strong>。ジオメトリと座標でオブジェクトを正確に配置。<span style="color:#999">（第1〜10回）</span></div>
+        </div>
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #4FC3F7;border-radius:0.5rem;padding:0.9rem">
+          <div style="color:#4FC3F7;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 2 ─ データを取る環境をつくる <span style="font-size:0.7rem;background:#0a1a2e;border:1px solid #4FC3F7;border-radius:100px;padding:0.05rem 0.5rem">入口に到達</span></div>
+          <div style="font-size:0.88rem"><strong>データを自分で取る</strong>。位置・操作・時間・主観評価を記録。<span style="color:#999">（第4・9・11回ほか）</span></div>
+        </div>
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #FFB800;border-radius:0.5rem;padding:0.9rem">
+          <div style="color:#FFB800;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 3 ─ データを分析する</div>
+          <div style="font-size:0.88rem">取ったデータを<strong>統計で分析</strong>。根拠ある結論へ。<span style="color:#999">（第12〜14回）</span></div>
+        </div>
+      </div>
+
+      <!-- today's goal -->
+      <h4 style="color:#76B900;font-weight:700;font-size:1.05rem;margin:1.5rem 0 0.3rem">🎯 第3回のゴール</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>A-Frameの<strong>基本ジオメトリ（箱・球・円柱・円すい・平面・トーラスなど）</strong>を使い分けられる</li>
+        <li><strong>半径・高さ・太さなどの属性</strong>を変えて、同じ図形から「自分だけの形」を作れる</li>
+        <li><strong>x・y・z座標の意味（右が＋x／上が＋y／手前が＋z・単位はメートル）</strong>を体で説明できる</li>
+        <li>図形の <strong>位置を取得して console に出し、配列に記録して「表」</strong>にできる</li>
+        <li>2点間の<strong>距離</strong>と、全体の<strong>重心（平均位置）</strong>を計算でき、それが統計の平均・ばらつきにつながると理解する</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div class="submission-box">
+      <h3>提出ガイド（1つのNotionページにまとめ、PDF 1枚を提出）</h3>
+      <div class="submission-items">
+        <a href="#notion-checklist" class="sub-item" style="text-decoration:none;color:inherit;border-color:#76B900"><span class="sub-count" style="background:#76B900">4</span><span class="tag" style="background:#1a2e0a;color:#76B900">ノート</span>穴埋め・記録</a>
+        <a href="#std3-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std3-1 ジオメトリ図鑑</a>
+        <a href="#std3-2" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std3-2 属性で形を変える</a>
+        <a href="#std3-3" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std3-3 座標で3軸を作る</a>
+        <a href="#std3-4" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std3-4 位置データを記録</a>
+        <a href="#std3-5" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std3-5 距離・重心を測る</a>
+        <a href="#adv3-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv3-1 自由創作</a>
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.85rem;color:#93D500">
+        <strong>提出方法:</strong> 下記の項目をすべて<strong>1つのNotionページにまとめて記録</strong> → PDFにエクスポート → Google Classroomに<strong>PDF 1ファイル</strong>を提出
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:0.5rem;font-size:0.85rem;color:#FFB800">
+        <strong>提出期限:</strong> 第4回授業開始まで（次回の授業開始時刻）
+      </div>
+
+      <!-- Notionに書くべき項目チェックリスト -->
+      <div id="notion-checklist" style="background:#141414;border:1px solid #333;border-radius:0.4rem;padding:1rem;margin-top:1rem">
+        <p style="color:#76B900;font-weight:700;font-size:0.85rem;margin-bottom:0.3rem">ノート: Notionに記録する項目（提出前に確認）</p>
+        <p style="font-size:0.75rem;color:#999;margin-bottom:0.8rem">以下の項目を1つのNotionページに記録し、PDF化して提出します。テンプレートは配りません。構成は自分で考えること。</p>
+        <table style="font-size:0.8rem;width:100%;table-layout:fixed">
+          <tr><th style="width:5%"></th><th style="width:30%">セクション</th><th>記録する内容</th><th style="width:8%">リンク</th></tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> ジオメトリ</td>
+            <td>プリミティブの種類・主な属性（半径・高さ）の穴埋め</td>
+            <td><a href="#sec-geo" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std3-1 / std3-2</td>
+            <td>5種類以上のプリミティブを並べる／属性を変えて自分だけの形 ─ 各コードと実行スクショ</td>
+            <td><a href="#std3-1" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag" style="background:#1a2e0a;color:#76B900;font-size:0.65rem">ノート</span> 座標系</td>
+            <td>x・y・zの向きと単位（右手系・メートル）の穴埋め</td>
+            <td><a href="#sec-coord" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std3-3 / std3-4</td>
+            <td>x・y・z軸を色分けして作る／位置を取得し配列に記録して表にする ─ 各コードと実行スクショ</td>
+            <td><a href="#std3-3" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std3-5</td>
+            <td>2点間の距離と重心（平均位置）を計算して console に出す ─ コードと実行スクショ</td>
+            <td><a href="#std3-5" style="color:#76B900">移動</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="tag tag-advanced" style="font-size:0.65rem">発展課題</span> adv3-1</td>
+            <td>座標を活かした立体構成の自由創作のコードとスクショ＋工夫（任意）</td>
+            <td><a href="#adv3-1" style="color:#76B900">移動</a></td>
+          </tr>
+        </table>
+        <p style="font-size:0.75rem;color:#999;margin-top:0.5rem">※ 発展課題（adv3-1）は任意。ほかはすべて記録が必要です。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TIME FLOW ============ -->
+<section id="sec-flow" style="padding-top:1rem;padding-bottom:0">
+  <div class="container">
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header"><h3>本日の授業の流れ</h3></div>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin:0.5rem 0">
+        <div style="flex:1;min-width:8rem;background:#1A1A1A;border:2px solid #76B900;border-radius:0.4rem;padding:0.6rem;text-align:center">
+          <div style="font-size:1rem;font-weight:900;color:#76B900">① 復習</div>
+          <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">第2回をふり返る</div>
+          <div style="font-size:0.65rem;color:#999">変数 / 配列 / 関数 / drawShape / イベント</div>
+        </div>
+        <div style="flex:2;min-width:11rem;background:#1A1A1A;border:2px solid #93D500;border-radius:0.4rem;padding:0.6rem;text-align:center">
+          <div style="font-size:1rem;font-weight:900;color:#93D500">② 基本ジオメトリ</div>
+          <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">図形の種類と属性をそろえる</div>
+          <div style="font-size:0.65rem;color:#999">box / sphere / cylinder / cone / torus …</div>
+        </div>
+        <div style="flex:2;min-width:11rem;background:#1A1A1A;border:2px solid #FFB800;border-radius:0.4rem;padding:0.6rem;text-align:center">
+          <div style="font-size:1rem;font-weight:900;color:#FFB800">③ 座標系を学ぶ</div>
+          <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">x・y・zの意味を体で覚える</div>
+          <div style="font-size:0.65rem;color:#999">右が＋x / 上が＋y / 手前が＋z / 単位＝m</div>
+        </div>
+        <div style="flex:2;min-width:11rem;background:#1A1A1A;border:2px solid #4FC3F7;border-radius:0.4rem;padding:0.6rem;text-align:center">
+          <div style="font-size:1rem;font-weight:900;color:#4FC3F7">④ 位置を測る</div>
+          <div style="font-size:0.85rem;font-weight:700;color:#E0E0E0;margin:0.3rem 0">座標を「データ」にする</div>
+          <div style="font-size:0.65rem;color:#999">位置を取得 → 配列 → 表 → 距離・重心</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 1: 復習 ============ -->
+<section id="sec-recap">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>第2回の復習：今日の出発点</h2>
+    </div>
+
+    <div class="callout-info">
+      <h4>第2回でやったこと（思い出そう）</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li><strong>変数・配列・オブジェクト</strong>＝データを表す部品。<code>{x, y, z, color}</code> が「図形1個ぶんのデータ」</li>
+        <li><strong>関数</strong>＝処理に名前をつけた道具。<code>drawShape(type, x, y, z, color, size)</code> で図形を1行で描いた</li>
+        <li><strong>for / if / Math</strong>＝くりかえし・分岐・計算。三角関数や乱数で図形アートを描いた</li>
+        <li><strong>イベント</strong>＝<code>addEventListener('click', ...)</code> で、図形を〇で狙ってクリックして操作を受け取った</li>
+      </ul>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3>今日も使う「図形を1つ描く道具」（drawShape）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">第2回で作った <code>drawShape</code> 関数は今日もそのまま使う。<code>type</code>（種類）を変えれば、いろいろなジオメトリを描ける。今日はここを掘り下げる。</p>
+<pre>JavaScript
+<span class="kw">const</span> group = <span class="fn">document</span>.<span class="fn">querySelector</span>(<span class="str">'#group'</span>);
+
+<span class="kw">function</span> <span class="fn">drawShape</span>(type, x, y, z, color, size) {
+  <span class="kw">const</span> el = <span class="fn">document</span>.<span class="fn">createElement</span>(type);
+  el.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, <span class="str">`${x} ${y} ${z}`</span>);   <span class="cmt">// 位置 = x・y・z座標（今日の主役）</span>
+  el.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, color);
+  el.<span class="fn">setAttribute</span>(<span class="str">'scale'</span>, <span class="str">`${size} ${size} ${size}`</span>);
+  group.<span class="fn">appendChild</span>(el);
+}</pre>
+      <ul class="point-list" style="margin-top:0.5rem">
+        <li>今日の前半は <code>type</code> を <code>'a-box'</code> 以外（<code>'a-cylinder'</code>・<code>'a-torus'</code> など）に変えて、図形の種類を増やす</li>
+        <li>今日の後半は、この <code>position</code> の <code>x・y・z</code> を「データ」として読み取り・記録する</li>
+      </ul>
+    </div>
+
+    <div class="callout-warning">
+      <h4>ノート：穴埋め（第2回の復習）</h4>
+      <ul class="point-list" style="margin-top:0.4rem">
+        <li>1件分の情報をまとめて持つのは（　　　　）、値を並べて持つのは（　　　　）である。</li>
+        <li>図形を新しく作る命令は <code>document.</code>（　　　　）<code>('a-box')</code> である。</li>
+        <li>クリックされたときに処理を動かす登録は <code>要素.</code>（　　　　）<code>('click', ...)</code> である。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 2: 基本ジオメトリ図鑑 ============ -->
+<section id="sec-geo">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#93D500">2</div>
+      <h2>A-Frame 基本ジオメトリ図鑑：空間をつくる部品をそろえる</h2>
+    </div>
+
+    <div class="concept-box">
+      <h4>ジオメトリ（プリミティブ）とは</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li><strong>ジオメトリ＝図形の「形」</strong>。A-Frameには、最初から使える基本図形（プリミティブ）が用意されている</li>
+        <li>第1回・第2回で使った <code>&lt;a-box&gt;</code> <code>&lt;a-sphere&gt;</code> も、その仲間。今日はもっと種類を増やす</li>
+        <li>どれも <code>position</code>（位置）・<code>rotation</code>（回転）・<code>scale</code>（拡大）・<code>color</code>（色）は共通で使える</li>
+      </ul>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3>よく使う基本ジオメトリ一覧</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">タグ名を <code>drawShape</code> の <code>type</code> に渡すだけで描ける。まずはどんな形があるかを眺めよう。</p>
+      <table style="font-size:0.85rem">
+        <tr><th style="width:22%">図形</th><th style="width:30%">タグ</th><th>どんな形 / 使いどころ</th></tr>
+        <tr><td><strong>箱</strong></td><td><code>&lt;a-box&gt;</code></td><td>直方体。壁・床・ブロック・建物</td></tr>
+        <tr><td><strong>球</strong></td><td><code>&lt;a-sphere&gt;</code></td><td>ボール・惑星・点（データ点の表現に便利）</td></tr>
+        <tr><td><strong>円柱</strong></td><td><code>&lt;a-cylinder&gt;</code></td><td>柱・筒・棒（後の課題で「軸」に使う）</td></tr>
+        <tr><td><strong>円すい</strong></td><td><code>&lt;a-cone&gt;</code></td><td>コーン・矢印の先・木</td></tr>
+        <tr><td><strong>平面</strong></td><td><code>&lt;a-plane&gt;</code></td><td>床・壁・パネル（厚みのない板）</td></tr>
+        <tr><td><strong>円</strong></td><td><code>&lt;a-circle&gt;</code></td><td>平らな円盤・敷物</td></tr>
+        <tr><td><strong>リング</strong></td><td><code>&lt;a-ring&gt;</code></td><td>輪（平面のドーナツ）・的</td></tr>
+        <tr><td><strong>トーラス</strong></td><td><code>&lt;a-torus&gt;</code></td><td>立体のドーナツ・浮き輪</td></tr>
+        <tr><td><strong>八面体</strong></td><td><code>&lt;a-octahedron&gt;</code></td><td>宝石・結晶のような形</td></tr>
+        <tr><td><strong>正十二面体</strong></td><td><code>&lt;a-dodecahedron&gt;</code></td><td>多面体・サイコロ風</td></tr>
+        <tr><td><strong>正四面体</strong></td><td><code>&lt;a-tetrahedron&gt;</code></td><td>三角すい・とがった形</td></tr>
+      </table>
+      <p style="font-size:0.82rem;color:#999;margin-top:0.4rem">※ ほかにも <code>&lt;a-triangle&gt;</code>（三角形）・<code>&lt;a-torus-knot&gt;</code>（結び目）などがある。<strong>困ったら公式ドキュメントの一覧を見る</strong>のが基本。</p>
+    </div>
+
+    <div class="card group">
+      <div class="card-header"><h3>まず試す：種類ちがいの図形を横に並べる完成HTML（コピーして開く）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">下を <code>geo.html</code> などの名前で保存 → 開く。5種類の図形が横にならんで、形のちがいがひと目でわかる。</p>
+<pre>HTML
+<span class="op">&lt;!DOCTYPE html&gt;</span>
+<span class="op">&lt;</span><span class="kw">html</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">head</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">script</span> <span class="fn">src</span>=<span class="str">"https://aframe.io/releases/1.6.0/aframe.min.js"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">head</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">body</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">a-scene</span><span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-sky</span> <span class="fn">color</span>=<span class="str">"#111"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-sky</span><span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-plane</span> <span class="fn">rotation</span>=<span class="str">"-90 0 0"</span> <span class="fn">width</span>=<span class="str">"30"</span> <span class="fn">height</span>=<span class="str">"30"</span> <span class="fn">color</span>=<span class="str">"#1a1a1a"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-plane</span><span class="op">&gt;</span>
+
+      <span class="cmt">&lt;!-- 5種類のジオメトリを横に並べる（HTMLに直接書く） --&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-box</span>      <span class="fn">position</span>=<span class="str">"-4 1 -5"</span> <span class="fn">color</span>=<span class="str">"tomato"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-box</span><span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-sphere</span>   <span class="fn">position</span>=<span class="str">"-2 1 -5"</span> <span class="fn">color</span>=<span class="str">"gold"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-sphere</span><span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-cylinder</span> <span class="fn">position</span>=<span class="str">"0 1 -5"</span>  <span class="fn">color</span>=<span class="str">"skyblue"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-cylinder</span><span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-cone</span>     <span class="fn">position</span>=<span class="str">"2 1 -5"</span>  <span class="fn">color</span>=<span class="str">"violet"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-cone</span><span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-torus</span>    <span class="fn">position</span>=<span class="str">"4 1 -5"</span>  <span class="fn">color</span>=<span class="str">"lime"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-torus</span><span class="op">&gt;</span>
+    <span class="op">&lt;/</span><span class="kw">a-scene</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">body</span><span class="op">&gt;</span>
+<span class="op">&lt;/</span><span class="kw">html</span><span class="op">&gt;</span></pre>
+      <ul class="point-list" style="margin-top:0.5rem">
+        <li>HTMLに直接書いても、第2回のように <strong>JavaScriptの <code>drawShape</code> で作っても</strong>、同じ図形が出る</li>
+        <li><code>position</code> の1つ目の数（<code>-4, -2, 0, 2, 4</code>）が<strong>左右の位置（x座標）</strong>。横に等間隔で並ぶ</li>
+      </ul>
+    </div>
+
+    <div class="callout-warning">
+      <h4>ノート：穴埋め（ジオメトリ）</h4>
+      <ul class="point-list" style="margin-top:0.4rem">
+        <li>立体のドーナツ形のプリミティブは <code>&lt;a-</code>（　　　　）<code>&gt;</code> である。</li>
+        <li>柱や筒の形は <code>&lt;a-</code>（　　　　）<code>&gt;</code> で描ける。</li>
+        <li>どのジオメトリでも共通で使える、位置・回転・拡大・色のうち「位置」を指定する属性は（　　　　）である。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 3: 属性で形を変える ============ -->
+<section id="sec-attr">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">3</div>
+      <h2>ジオメトリの属性で「形」を自在に変える</h2>
+    </div>
+
+    <div class="concept-box">
+      <h4>同じ図形でも、属性を変えれば別の形になる</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>各ジオメトリには、形を決める<strong>固有の属性</strong>がある（半径・高さ・太さなど）</li>
+        <li>属性は <code>図形.setAttribute('属性名', 値)</code>、またはHTMLに <code>属性名="値"</code> で書く</li>
+        <li><strong>長さ・半径の単位はすべてメートル（m）</strong>。<code>radius="0.5"</code> は半径50cmの意味</li>
+      </ul>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3>図形ごとの「形を決める属性」</h3></div>
+      <table style="font-size:0.85rem">
+        <tr><th style="width:26%">図形</th><th>形を決める主な属性</th></tr>
+        <tr><td><code>a-box</code></td><td><code>width</code>（幅）・<code>height</code>（高さ）・<code>depth</code>（奥行き）</td></tr>
+        <tr><td><code>a-sphere</code></td><td><code>radius</code>（半径）</td></tr>
+        <tr><td><code>a-cylinder</code></td><td><code>radius</code>（半径＝太さ）・<code>height</code>（高さ＝長さ）</td></tr>
+        <tr><td><code>a-cone</code></td><td><code>radius-bottom</code>（下の半径）・<code>radius-top</code>（上の半径）・<code>height</code></td></tr>
+        <tr><td><code>a-torus</code></td><td><code>radius</code>（輪の大きさ）・<code>radius-tubular</code>（チューブの太さ）</td></tr>
+        <tr><td><code>a-ring</code></td><td><code>radius-inner</code>（内側の半径）・<code>radius-outer</code>（外側の半径）</td></tr>
+        <tr><td><code>a-plane</code></td><td><code>width</code>（幅）・<code>height</code>（高さ）</td></tr>
+        <tr><td><code>a-octahedron</code> ほか多面体</td><td><code>radius</code>（大きさ）</td></tr>
+      </table>
+      <p style="font-size:0.82rem;color:#999;margin-top:0.4rem">※ 属性名はすべて公式ドキュメントに載っている。<strong>「a-frame 図形名」で検索 → 公式</strong>を見るクセをつけよう。</p>
+    </div>
+
+    <div class="card group">
+      <div class="card-header"><h3>JavaScriptで属性を細かく設定する道具（drawGeo）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem"><code>drawShape</code> は <code>scale</code> で大きさを変えたが、今度は<strong>図形ごとの属性をそのまま渡す</strong>道具を作る。<code>extra</code> に「属性のまとまり（オブジェクト）」を渡すのがポイント。</p>
+<pre>JavaScript
+<span class="cmt">// 種類・位置・色 ＋ 図形ごとの属性（extra）を渡して1つ描く道具</span>
+<span class="kw">function</span> <span class="fn">drawGeo</span>(type, x, y, z, color, extra) {
+  <span class="kw">const</span> el = <span class="fn">document</span>.<span class="fn">createElement</span>(type);
+  el.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, <span class="str">`${x} ${y} ${z}`</span>);
+  el.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, color);
+  <span class="cmt">// extra の中の属性を1つずつ設定する（例: {radius: 0.5, height: 2}）</span>
+  <span class="kw">for</span> (<span class="kw">const</span> key <span class="kw">in</span> extra) {
+    el.<span class="fn">setAttribute</span>(key, extra[key]);
+  }
+  group.<span class="fn">appendChild</span>(el);
+}
+
+<span class="cmt">// 使い方：細い高い円柱／太い浮き輪</span>
+<span class="fn">drawGeo</span>(<span class="str">'a-cylinder'</span>, -<span class="num">2</span>, <span class="num">1</span>, -<span class="num">5</span>, <span class="str">'skyblue'</span>, { radius: <span class="num">0.3</span>, height: <span class="num">3</span> });
+<span class="fn">drawGeo</span>(<span class="str">'a-torus'</span>,     <span class="num">2</span>, <span class="num">1</span>, -<span class="num">5</span>, <span class="str">'gold'</span>,   { radius: <span class="num">1</span>, <span class="str">'radius-tubular'</span>: <span class="num">0.3</span> });</pre>
+      <ul class="point-list" style="margin-top:0.5rem">
+        <li><code>extra</code>＝図形ごとの属性をまとめた<strong>オブジェクト</strong>（第2回④の復習）。<code>{ radius: 0.3, height: 3 }</code> のように書く</li>
+        <li>属性名に <code>-</code>（ハイフン）が入るもの（<code>radius-tubular</code> など）は <code>'radius-tubular'</code> とクォートで囲む</li>
+        <li><code>for (const key in extra)</code>＝オブジェクトの中身を1つずつ取り出して設定する書き方</li>
+      </ul>
+    </div>
+
+    <div class="callout-tip">
+      <h4>進め方（第2回と同じ：組み立て式）</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>課題ごとに<strong>部品</strong>を配る。空欄 <code>____</code> を埋めて、1か所ずつ変えて再読み込み</li>
+        <li>数値はどんどん変えてOK。<strong>「動いた！」「形が変わった！」</strong>を楽しむ</li>
+        <li>つまったら <code>details</code>（つまったら：完成コードを見る）を開く</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 4: 空間づくり課題 ============ -->
+<section id="sec-build">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#93D500">4</div>
+      <h2>空間づくり課題：ジオメトリで形をつくる</h2>
+    </div>
+
+    <div class="callout-info">
+      <h4>このセクションの標準課題（つくる編）</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li><strong>std3-1</strong> ジオメトリ図鑑を並べる（5種類以上） → <strong>std3-2</strong> 属性を変えて「自分だけの形」</li>
+        <li>続く「座標系」章で <strong>std3-3〜std3-5</strong>、最後に発展課題 <strong>adv3-1</strong>（自由創作）に進む</li>
+        <li>std3-1・std3-2 は、下の土台HTML（<code>drawGeo</code> 入り）の「<strong>★ここに書く★</strong>」を入れかえる</li>
+      </ul>
+    </div>
+
+    <div class="card group">
+      <div class="card-header"><h3>std3-1・std3-2 で使う土台HTML（drawGeo入り・コピーして使う）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">この <code>index.html</code> を保存して開き、<code>&lt;script&gt;</code> 内の「★ここに書く★」を入れかえる。</p>
+<pre>HTML
+<span class="op">&lt;!DOCTYPE html&gt;</span>
+<span class="op">&lt;</span><span class="kw">html</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">head</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">script</span> <span class="fn">src</span>=<span class="str">"https://aframe.io/releases/1.6.0/aframe.min.js"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">head</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">body</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">a-scene</span><span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-sky</span> <span class="fn">color</span>=<span class="str">"#111"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-sky</span><span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-plane</span> <span class="fn">rotation</span>=<span class="str">"-90 0 0"</span> <span class="fn">width</span>=<span class="str">"30"</span> <span class="fn">height</span>=<span class="str">"30"</span> <span class="fn">color</span>=<span class="str">"#1a1a1a"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-plane</span><span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-entity</span> <span class="fn">id</span>=<span class="str">"group"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-entity</span><span class="op">&gt;</span>
+    <span class="op">&lt;/</span><span class="kw">a-scene</span><span class="op">&gt;</span>
+
+    <span class="op">&lt;</span><span class="kw">script</span><span class="op">&gt;</span>
+      <span class="kw">const</span> group = <span class="fn">document</span>.<span class="fn">querySelector</span>(<span class="str">'#group'</span>);
+
+      <span class="cmt">// 図形ごとの属性(extra)を渡して1つ描く道具</span>
+      <span class="kw">function</span> <span class="fn">drawGeo</span>(type, x, y, z, color, extra) {
+        <span class="kw">const</span> el = <span class="fn">document</span>.<span class="fn">createElement</span>(type);
+        el.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, <span class="str">`${x} ${y} ${z}`</span>);
+        el.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, color);
+        <span class="kw">for</span> (<span class="kw">const</span> key <span class="kw">in</span> extra) { el.<span class="fn">setAttribute</span>(key, extra[key]); }
+        group.<span class="fn">appendChild</span>(el);
+      }
+
+      <span class="cmt">// ★ ここに std3-1・std3-2 のコードを書く ★</span>
+
+    <span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">body</span><span class="op">&gt;</span>
+<span class="op">&lt;/</span><span class="kw">html</span><span class="op">&gt;</span></pre>
+    </div>
+
+    <!-- std3-1 -->
+    <div id="std3-1" class="card standard">
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std3-1：ジオメトリ図鑑を並べる（5種類以上）</h3></div>
+      <p style="font-size:0.9rem;margin-bottom:0.5rem">図形の種類を<strong>配列</strong>に入れ、<code>for</code> で順番に取り出して横に並べる。第2回の「色の配列」と同じ仕組みを、今度は<strong>図形の種類</strong>に使う。</p>
+
+      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.6rem 0 0.2rem">部品（<code>drawGeo</code> の後ろに書く・空欄は1か所）</p>
+<pre>JavaScript
+<span class="kw">const</span> types = [<span class="str">'a-box'</span>, <span class="str">'a-sphere'</span>, <span class="str">'a-cylinder'</span>, <span class="str">'a-cone'</span>, <span class="str">'a-torus'</span>, <span class="str">'a-octahedron'</span>];
+<span class="kw">const</span> colors = [<span class="str">'tomato'</span>, <span class="str">'gold'</span>, <span class="str">'skyblue'</span>, <span class="str">'violet'</span>, <span class="str">'lime'</span>, <span class="str">'orange'</span>];
+
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; types.<span class="fn">length</span>; i++) {
+  <span class="kw">const</span> t = ____;          <span class="cmt">// ★空欄: i番目の図形の種類を取り出す★</span>
+  <span class="fn">drawGeo</span>(t, i * <span class="num">1.6</span> - <span class="num">4</span>, <span class="num">1.2</span>, -<span class="num">5</span>, colors[i], {});
+}</pre>
+
+      <div class="callout-info" style="margin-top:0.6rem">
+        <h4>組み立てチャレンジ</h4>
+        <ul class="point-list" style="margin-top:0.3rem">
+          <li>空欄に、<code>types</code> 配列の <code>i</code> 番目を取り出す式を入れる<br><span style="font-size:0.82rem;color:#999">ヒント：配列の取り出しは <code>配列名[i]</code>（第2回③）</span></li>
+          <li>できたら <code>types</code> に <code>'a-dodecahedron'</code> や <code>'a-tetrahedron'</code> を足してみる（色も足す）</li>
+          <li><code>i * 1.6 - 4</code> の <code>1.6</code> を変えると、図形の間隔が変わる</li>
+        </ul>
+      </div>
+
+      <details>
+        <summary>つまったら：完成コードを見る</summary>
+        <div class="answer-content">
+<pre>JavaScript
+<span class="kw">const</span> types = [<span class="str">'a-box'</span>, <span class="str">'a-sphere'</span>, <span class="str">'a-cylinder'</span>, <span class="str">'a-cone'</span>, <span class="str">'a-torus'</span>, <span class="str">'a-octahedron'</span>];
+<span class="kw">const</span> colors = [<span class="str">'tomato'</span>, <span class="str">'gold'</span>, <span class="str">'skyblue'</span>, <span class="str">'violet'</span>, <span class="str">'lime'</span>, <span class="str">'orange'</span>];
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; types.<span class="fn">length</span>; i++) {
+  <span class="kw">const</span> t = types[i];
+  <span class="fn">drawGeo</span>(t, i * <span class="num">1.6</span> - <span class="num">4</span>, <span class="num">1.2</span>, -<span class="num">5</span>, colors[i], {});
+}</pre>
+          <p style="font-size:0.85rem;color:#999">空欄＝<code>types[i]</code>。6種類の図形が横一列に並び、形のちがいが見比べられる。</p>
+        </div>
+      </details>
+
+      <div class="callout-tip" style="margin-top:0.6rem">
+        <h4>予想される結果</h4>
+        <p style="font-size:0.88rem;margin-bottom:0">箱・球・円柱・円すい・トーラス・八面体が、色ちがいで横に6個ならぶ。「図鑑」のように形を観察できる。</p>
+      </div>
+      <div class="notion-submit"><div><strong>提出:</strong> 完成コード＋実行画面のスクショをNotionに貼る</div></div>
+    </div>
+
+    <!-- std3-2 -->
+    <div id="std3-2" class="card standard">
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std3-2：属性を変えて「自分だけの形」を作る</h3></div>
+      <p style="font-size:0.9rem;margin-bottom:0.5rem">同じ <code>a-cone</code> でも、<code>radius-bottom</code> や <code>height</code> を変えれば、ずんぐりにも・とがった形にもなる。<code>extra</code>（属性のオブジェクト）を変えて、形の変化を観察する。</p>
+
+      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.6rem 0 0.2rem">部品（空欄は2か所）</p>
+<pre>JavaScript
+<span class="cmt">// 細くて高い円柱</span>
+<span class="fn">drawGeo</span>(<span class="str">'a-cylinder'</span>, -<span class="num">3</span>, <span class="num">1.5</span>, -<span class="num">5</span>, <span class="str">'skyblue'</span>, { radius: ____, height: <span class="num">3</span> });  <span class="cmt">// ★空欄1: 細く（小さい半径）★</span>
+
+<span class="cmt">// 太い浮き輪（トーラス）</span>
+<span class="fn">drawGeo</span>(<span class="str">'a-torus'</span>, <span class="num">0</span>, <span class="num">1.5</span>, -<span class="num">5</span>, <span class="str">'gold'</span>, { radius: <span class="num">1</span>, ____: <span class="num">0.4</span> });  <span class="cmt">// ★空欄2: チューブの太さの属性名★</span>
+
+<span class="cmt">// 上が細い円すい（とがった木）</span>
+<span class="fn">drawGeo</span>(<span class="str">'a-cone'</span>, <span class="num">3</span>, <span class="num">1.5</span>, -<span class="num">5</span>, <span class="str">'lime'</span>, { <span class="str">'radius-bottom'</span>: <span class="num">0.8</span>, <span class="str">'radius-top'</span>: <span class="num">0</span>, height: <span class="num">3</span> });</pre>
+
+      <div class="callout-info" style="margin-top:0.6rem">
+        <h4>組み立てチャレンジ</h4>
+        <ul class="point-list" style="margin-top:0.3rem">
+          <li>空欄1：円柱を細くする小さめの半径（例 <code>0.2</code>）。数値を変えて太さの違いを見る</li>
+          <li>空欄2：トーラスのチューブの太さを決める属性名（ハイフン入り。クォートで囲む）<br><span style="font-size:0.82rem;color:#999">ヒント：上の属性表を見る</span></li>
+          <li>発展：<code>a-cone</code> の <code>radius-top</code> を <code>0.5</code> にすると、先がとがらず「台形のコーン」になる</li>
+        </ul>
+      </div>
+
+      <details>
+        <summary>つまったら：完成コードを見る</summary>
+        <div class="answer-content">
+<pre>JavaScript
+<span class="fn">drawGeo</span>(<span class="str">'a-cylinder'</span>, -<span class="num">3</span>, <span class="num">1.5</span>, -<span class="num">5</span>, <span class="str">'skyblue'</span>, { radius: <span class="num">0.2</span>, height: <span class="num">3</span> });
+<span class="fn">drawGeo</span>(<span class="str">'a-torus'</span>, <span class="num">0</span>, <span class="num">1.5</span>, -<span class="num">5</span>, <span class="str">'gold'</span>, { radius: <span class="num">1</span>, <span class="str">'radius-tubular'</span>: <span class="num">0.4</span> });
+<span class="fn">drawGeo</span>(<span class="str">'a-cone'</span>, <span class="num">3</span>, <span class="num">1.5</span>, -<span class="num">5</span>, <span class="str">'lime'</span>, { <span class="str">'radius-bottom'</span>: <span class="num">0.8</span>, <span class="str">'radius-top'</span>: <span class="num">0</span>, height: <span class="num">3</span> });</pre>
+          <p style="font-size:0.85rem;color:#999">空欄1＝<code>0.2</code>（細い半径）、空欄2＝<code>'radius-tubular'</code>。3つの図形が、それぞれ違う属性で個性的な形になる。</p>
+        </div>
+      </details>
+
+      <div class="callout-tip" style="margin-top:0.6rem">
+        <h4>もっと遊ぶ（数値を変えるだけ）</h4>
+        <ul class="point-list" style="margin-bottom:0">
+          <li><code>a-box</code> で <code>{ width: 3, height: 0.2, depth: 0.2 }</code> ＝<strong>細長い棒</strong>になる（次の課題で「軸」に使う）</li>
+          <li><code>rotation: '45 0 0'</code> を <code>extra</code> に足すと、図形が<strong>傾く</strong>（回転も属性）</li>
+          <li><code>a-ring</code> で <code>{ 'radius-inner': 0.5, 'radius-outer': 1 }</code> ＝<strong>輪っか</strong></li>
+        </ul>
+      </div>
+      <div class="notion-submit"><div><strong>提出:</strong> 属性を変えた図形の完成コード＋実行画面のスクショをNotionに貼る</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 5: 座標系と位置データ ============ -->
+<section id="sec-coord">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">5</div>
+      <h2>座標系と位置データ：x・y・z の意味を体で覚える</h2>
+    </div>
+
+    <div class="callout-info">
+      <h4>ここからが「位置をデータとして読む」章（シラバス第6回）</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li><code>position="x y z"</code> の3つの数は、ただの置き場所ではなく <strong>3次元の座標データ</strong></li>
+        <li>x・y・zが<strong>それぞれどの向きか</strong>を正しく理解すると、図形を狙った場所に置ける</li>
+        <li>この座標が、後の回の<strong>「ユーザがどこにいたか」という位置ログ</strong>とまったく同じ形</li>
+      </ul>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3>A-Frameの座標系：3つの向き（右手系）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">A-Frameは画面の中央（原点 <code>0 0 0</code>）を基準に、3つの方向に数が伸びる。自分がカメラの位置から前を見ている、と考える。</p>
+      <table style="font-size:0.85rem">
+        <tr><th style="width:14%">軸</th><th style="width:30%">＋（プラス）の向き</th><th>イメージ / 主な使いどころ</th></tr>
+        <tr><td><strong style="color:#FF5252">x</strong></td><td>右（＋x） ／ 左（−x）</td><td>左右の位置。横ならび</td></tr>
+        <tr><td><strong style="color:#76B900">y</strong></td><td>上（＋y） ／ 下（−y）</td><td>高さ。床は <code>y=0</code>、宙に浮かせるなら ＋y</td></tr>
+        <tr><td><strong style="color:#4FC3F7">z</strong></td><td>手前＝自分の方（＋z） ／ 奥＝画面の中（−z）</td><td>奥行き。図形を前に出すには <code>z</code> をマイナスに（例 <code>-5</code>）</td></tr>
+      </table>
+      <div class="callout-tip" style="margin-top:0.6rem">
+        <h4>覚え方</h4>
+        <ul class="point-list" style="margin-bottom:0">
+          <li><strong>x＝右、y＝上</strong>はグラフと同じ。新しいのは <strong>z＝奥行き</strong></li>
+          <li>これまで図形を <code>z=-3</code> や <code>z=-5</code> に置いたのは、<strong>z をマイナスにして「画面の奥（前方）」に出すため</strong></li>
+          <li><strong>長さの単位はメートル（m）</strong>。<code>position="1 1.6 -3"</code> ＝「右に1m・高さ1.6m・奥に3m」</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" style="background:#0a0a0a;border:1px solid #76B900">
+      <div style="font-weight:700;color:#76B900;font-size:0.95rem;margin-bottom:0.5rem">図解：原点(0,0,0)から伸びる3本の軸</div>
+      <p style="font-size:0.88rem;color:#ccc;margin-bottom:0.6rem">次の課題（std3-3）では、この3本の軸を<strong>細長い箱</strong>で実際に作って、座標の向きを目で確かめる。</p>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.9rem;background:#141414;border-radius:0.4rem;padding:0.9rem;line-height:2">
+        <div style="white-space:nowrap"><span style="color:#FF5252">■ x軸（赤）</span> ＝ 左右に伸びる　<span style="color:#999">position の1つ目</span></div>
+        <div style="white-space:nowrap"><span style="color:#76B900">■ y軸（緑）</span> ＝ 上下に伸びる　<span style="color:#999">position の2つ目</span></div>
+        <div style="white-space:nowrap"><span style="color:#4FC3F7">■ z軸（青）</span> ＝ 前後に伸びる　<span style="color:#999">position の3つ目</span></div>
+      </div>
+    </div>
+
+    <div class="concept-box">
+      <h4>位置だけじゃない：rotation（回転）と scale（拡大）も x・y・z</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li><code>rotation="x y z"</code>＝各軸まわりの<strong>回転角（単位は度）</strong>。<code>rotation="0 45 0"</code> ＝ y軸まわりに45度回す（左右を向く）</li>
+        <li><code>scale="x y z"</code>＝各軸方向の<strong>拡大率</strong>。<code>scale="2 1 1"</code> ＝ 横にだけ2倍に伸ばす</li>
+        <li>位置・回転・拡大、すべてが <strong>x・y・z の3つ組</strong>。座標の考え方は全部に通じる</li>
+      </ul>
+    </div>
+
+    <!-- std3-3 -->
+    <div id="std3-3" class="card standard">
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std3-3：x・y・z 軸を色分けして作る（座標を体で覚える）</h3></div>
+      <p style="font-size:0.9rem;margin-bottom:0.5rem"><strong>細長い箱</strong>を3本作り、x軸＝赤・y軸＝緑・z軸＝青で表す。各軸の <code>position</code> と <code>scale</code> を変えて、3方向に伸ばす。座標の向きが目でわかるようになる。</p>
+
+      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.6rem 0 0.2rem">部品（<code>drawGeo</code> 入りの土台に書く・空欄は2か所）</p>
+<pre>JavaScript
+<span class="cmt">// 原点に小さな白い球（基準点 0,0,0）</span>
+<span class="fn">drawGeo</span>(<span class="str">'a-sphere'</span>, <span class="num">0</span>, <span class="num">0</span>, -<span class="num">4</span>, <span class="str">'white'</span>, { radius: <span class="num">0.15</span> });
+
+<span class="cmt">// x軸（赤）= 横に伸ばす</span>
+<span class="fn">drawGeo</span>(<span class="str">'a-box'</span>, <span class="num">0</span>, <span class="num">0</span>, -<span class="num">4</span>, <span class="str">'red'</span>,   { width: <span class="num">4</span>, height: <span class="num">0.08</span>, depth: <span class="num">0.08</span> });
+
+<span class="cmt">// y軸（緑）= 縦に伸ばす</span>
+<span class="fn">drawGeo</span>(<span class="str">'a-box'</span>, <span class="num">0</span>, <span class="num">0</span>, -<span class="num">4</span>, <span class="str">'lime'</span>,  { width: <span class="num">0.08</span>, height: ____, depth: <span class="num">0.08</span> });  <span class="cmt">// ★空欄1: 縦に4m★</span>
+
+<span class="cmt">// z軸（青）= 奥行き方向に伸ばす</span>
+<span class="fn">drawGeo</span>(<span class="str">'a-box'</span>, <span class="num">0</span>, <span class="num">0</span>, -<span class="num">4</span>, <span class="str">'skyblue'</span>, { width: <span class="num">0.08</span>, height: <span class="num">0.08</span>, depth: ____ });  <span class="cmt">// ★空欄2: 奥行きに4m★</span></pre>
+
+      <div class="callout-info" style="margin-top:0.6rem">
+        <h4>組み立てチャレンジ</h4>
+        <ul class="point-list" style="margin-top:0.3rem">
+          <li>空欄1：y軸（緑）を縦に伸ばす高さ（<code>4</code>）。<code>height</code> を大きくすると上下に伸びる</li>
+          <li>空欄2：z軸（青）を奥行きに伸ばす長さ（<code>4</code>）。<code>depth</code> が前後方向</li>
+          <li>できたら視点をドラッグで回し、<strong>赤＝左右・緑＝上下・青＝前後</strong>を確かめる</li>
+        </ul>
+      </div>
+
+      <details>
+        <summary>つまったら：完成コードを見る</summary>
+        <div class="answer-content">
+<pre>JavaScript
+<span class="fn">drawGeo</span>(<span class="str">'a-sphere'</span>, <span class="num">0</span>, <span class="num">0</span>, -<span class="num">4</span>, <span class="str">'white'</span>, { radius: <span class="num">0.15</span> });
+<span class="fn">drawGeo</span>(<span class="str">'a-box'</span>, <span class="num">0</span>, <span class="num">0</span>, -<span class="num">4</span>, <span class="str">'red'</span>,     { width: <span class="num">4</span>, height: <span class="num">0.08</span>, depth: <span class="num">0.08</span> });
+<span class="fn">drawGeo</span>(<span class="str">'a-box'</span>, <span class="num">0</span>, <span class="num">0</span>, -<span class="num">4</span>, <span class="str">'lime'</span>,    { width: <span class="num">0.08</span>, height: <span class="num">4</span>, depth: <span class="num">0.08</span> });
+<span class="fn">drawGeo</span>(<span class="str">'a-box'</span>, <span class="num">0</span>, <span class="num">0</span>, -<span class="num">4</span>, <span class="str">'skyblue'</span>, { width: <span class="num">0.08</span>, height: <span class="num">0.08</span>, depth: <span class="num">4</span> });</pre>
+          <p style="font-size:0.85rem;color:#999">空欄1＝<code>4</code>、空欄2＝<code>4</code>。原点から赤（x）・緑（y）・青（z）の3本が伸びる「座標軸」が見える。</p>
+        </div>
+      </details>
+
+      <div class="callout-tip" style="margin-top:0.6rem">
+        <h4>予想される結果</h4>
+        <p style="font-size:0.88rem;margin-bottom:0">原点の白い球から、赤・緑・青の細い棒が3方向に伸びる。図形を <code>position</code> で動かすと、どの軸に沿って動くかが直感的にわかる。</p>
+      </div>
+      <div class="notion-submit"><div><strong>提出:</strong> 3軸の完成コード＋実行画面のスクショ（赤・緑・青の軸が見える）をNotionに貼る</div></div>
+    </div>
+
+    <div class="callout-warning">
+      <h4>ノート：穴埋め（座標系）</h4>
+      <ul class="point-list" style="margin-top:0.4rem">
+        <li><code>position</code> の3つの数は、左から順に（　　　　）・（　　　　）・（　　　　）座標である。</li>
+        <li>図形を画面の奥（前方）に出すには、z座標を（　　　　：プラス／マイナス）にする。</li>
+        <li>A-Frameの長さの単位は（　　　　）である。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 6: 位置を測る課題 ============ -->
+<section id="sec-posdata">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">6</div>
+      <h2>位置を「データ」として取得・記録し、測る</h2>
+    </div>
+
+    <div class="callout-info">
+      <h4>座標を「読む・ためる・測る」3ステップ</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li><strong>① 読む</strong>：図形の <code>position</code> を <code>getAttribute</code> で取り出す → <code>{x, y, z}</code> が手に入る</li>
+        <li><strong>② ためる</strong>：取り出した位置を<strong>配列に記録</strong>する → 位置データの「表」になる</li>
+        <li><strong>③ 測る</strong>：表をもとに<strong>距離</strong>や<strong>重心（平均位置）</strong>を計算する＝統計の第一歩</li>
+      </ul>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3>① 位置を読む：getAttribute で座標を取り出す</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem"><code>setAttribute</code>（設定する）の反対が <code>getAttribute</code>（取り出す）。<code>position</code> を取り出すと、<code>{x, y, z}</code> のオブジェクトが返ってくる。</p>
+<pre>JavaScript
+<span class="kw">const</span> el = <span class="fn">document</span>.<span class="fn">createElement</span>(<span class="str">'a-box'</span>);
+el.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, <span class="str">'1 2 -3'</span>);
+
+<span class="kw">const</span> p = el.<span class="fn">getAttribute</span>(<span class="str">'position'</span>);   <span class="cmt">// 位置を取り出す</span>
+<span class="fn">console</span>.<span class="fn">log</span>(p);       <span class="cmt">// → {x: 1, y: 2, z: -3}（オブジェクト＝第2回④）</span>
+<span class="fn">console</span>.<span class="fn">log</span>(p.x);     <span class="cmt">// → 1（ドットで取り出す）</span>
+<span class="fn">console</span>.<span class="fn">log</span>(p.z);     <span class="cmt">// → -3</span></pre>
+      <div class="callout-info" style="margin-top:0.6rem">
+        <h4>これが「1件の位置データ」</h4>
+        <p style="font-size:0.88rem;margin-bottom:0"><code>{x: 1, y: 2, z: -3}</code> は、第2回で学んだ<strong>オブジェクト（1レコード）</strong>そのもの。第11回の行動ログ <code>{時刻, x, y}</code> とまったく同じ形。<strong>図形の位置 ＝ データ1件</strong>。</p>
+      </div>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3>② 位置をためる：配列に記録して「表」にする</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">図形を作るたびに、その位置を<strong>配列に <code>push</code>（追加）</strong>すると、位置データの一覧（表）ができる。これが CSV・ログの正体。</p>
+<pre>JavaScript
+<span class="kw">const</span> records = [];   <span class="cmt">// 位置をためる空の配列</span>
+
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; <span class="num">5</span>; i++) {
+  <span class="kw">const</span> x = i - <span class="num">2</span>;
+  <span class="fn">drawGeo</span>(<span class="str">'a-sphere'</span>, x, <span class="num">1</span>, -<span class="num">5</span>, <span class="str">'gold'</span>, { radius: <span class="num">0.3</span> });
+  records.<span class="fn">push</span>({ x: x, y: <span class="num">1</span>, z: -<span class="num">5</span> });   <span class="cmt">// 位置を1件ためる</span>
+}
+
+<span class="fn">console</span>.<span class="fn">table</span>(records);   <span class="cmt">// → 表の形でConsoleに出る（見やすい！）</span></pre>
+      <ul class="point-list" style="margin-top:0.4rem">
+        <li><code>配列.push(値)</code>＝配列の<strong>末尾に1件追加</strong>する命令</li>
+        <li><code>console.table(配列)</code>＝オブジェクトの配列を<strong>表形式</strong>でConsoleに表示（行と列で見える）</li>
+        <li>この <code>records</code> が、まさに<strong>位置データのテーブル</strong>。次はこれを使って距離や重心を測る</li>
+      </ul>
+    </div>
+
+    <!-- std3-4 -->
+    <div id="std3-4" class="card standard">
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std3-4：図形の位置を取得して記録し、表にする</h3></div>
+      <p style="font-size:0.9rem;margin-bottom:0.5rem">図形を円形に並べながら、その位置を <code>records</code> 配列にためて、<code>console.table</code> で表示する。<strong>「描く」と同時に「位置データを取る」</strong>のがポイント。</p>
+
+      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.6rem 0 0.2rem">部品（<code>drawGeo</code> 入りの土台に書く・空欄は2か所）</p>
+<pre>JavaScript
+<span class="kw">const</span> records = [];          <span class="cmt">// 位置をためる配列</span>
+<span class="kw">const</span> N = <span class="num">8</span>;
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; N; i++) {
+  <span class="kw">const</span> angle = (i / N) * <span class="num">2</span> * <span class="fn">Math</span>.<span class="fn">PI</span>;
+  <span class="kw">const</span> x = <span class="fn">Math</span>.<span class="fn">cos</span>(angle) * <span class="num">3</span>;
+  <span class="kw">const</span> z = <span class="fn">Math</span>.<span class="fn">sin</span>(angle) * <span class="num">3</span> - <span class="num">5</span>;
+  <span class="fn">drawGeo</span>(<span class="str">'a-sphere'</span>, x, <span class="num">1.2</span>, z, <span class="str">'skyblue'</span>, { radius: <span class="num">0.3</span> });
+  records.<span class="fn">push</span>({ x: ____, y: <span class="num">1.2</span>, z: ____ });   <span class="cmt">// ★空欄: 同じ x と z を記録★</span>
+}
+
+<span class="fn">console</span>.<span class="fn">table</span>(records);
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'記録した件数:'</span>, records.<span class="fn">length</span>);</pre>
+
+      <div class="callout-info" style="margin-top:0.6rem">
+        <h4>組み立てチャレンジ</h4>
+        <ul class="point-list" style="margin-top:0.3rem">
+          <li>空欄に、図形に渡したのと<strong>同じ <code>x</code> と <code>z</code></strong> を入れる（変数名をそのまま書く）</li>
+          <li>保存 → 開く →「検証」→「Console」に<strong>8行の表</strong>が出れば成功</li>
+          <li>表の <code>x</code>・<code>z</code> 列が、円の座標になっていることを確認する</li>
+        </ul>
+      </div>
+
+      <details>
+        <summary>つまったら：完成コードを見る</summary>
+        <div class="answer-content">
+<pre>JavaScript
+<span class="kw">const</span> records = [];
+<span class="kw">const</span> N = <span class="num">8</span>;
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; N; i++) {
+  <span class="kw">const</span> angle = (i / N) * <span class="num">2</span> * <span class="fn">Math</span>.<span class="fn">PI</span>;
+  <span class="kw">const</span> x = <span class="fn">Math</span>.<span class="fn">cos</span>(angle) * <span class="num">3</span>;
+  <span class="kw">const</span> z = <span class="fn">Math</span>.<span class="fn">sin</span>(angle) * <span class="num">3</span> - <span class="num">5</span>;
+  <span class="fn">drawGeo</span>(<span class="str">'a-sphere'</span>, x, <span class="num">1.2</span>, z, <span class="str">'skyblue'</span>, { radius: <span class="num">0.3</span> });
+  records.<span class="fn">push</span>({ x: x, y: <span class="num">1.2</span>, z: z });
+}
+<span class="fn">console</span>.<span class="fn">table</span>(records);
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'記録した件数:'</span>, records.<span class="fn">length</span>);   <span class="cmt">// → 8</span></pre>
+          <p style="font-size:0.85rem;color:#999">空欄＝<code>x</code> と <code>z</code>。図形を描くのと同じ座標を <code>records</code> にためると、画面の図形配置と表の数値が一致する。</p>
+        </div>
+      </details>
+
+      <div class="callout-warning" style="margin-top:0.6rem">
+        <h4>データサイエンスの目で見ると</h4>
+        <p style="font-size:0.88rem;margin-bottom:0">この <code>records</code> は、<strong>8件の位置データが入ったテーブル</strong>。第11回では、これが「ユーザがクリックした場所のログ」になる。<strong>取り方（描きながら push）は今日とまったく同じ</strong>。</p>
+      </div>
+      <div class="notion-submit"><div><strong>提出:</strong> 完成コード＋Consoleに出た表（console.table）のスクショをNotionに貼る</div></div>
+    </div>
+
+    <!-- std3-5 -->
+    <div id="std3-5" class="card standard">
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std3-5：距離と重心（平均位置）を計算する</h3></div>
+      <p style="font-size:0.9rem;margin-bottom:0.5rem">記録した位置データから、<strong>2点間の距離</strong>と、<strong>全体の重心（平均位置）</strong>を計算する。これは統計の「平均」「ばらつき」そのもの。</p>
+
+      <div class="card" style="background:#0a0a0a;border:1px solid #76B900;margin:0.6rem 0">
+        <div style="font-weight:700;color:#76B900;font-size:0.9rem;margin-bottom:0.5rem">図解：2点間の距離の公式（3D版のピタゴラス）</div>
+        <p style="font-size:0.85rem;color:#ccc;margin-bottom:0.5rem">2点 A<code>(x1,y1,z1)</code> と B<code>(x2,y2,z2)</code> の距離は、各軸の差を2乗して足し、ルートを取る。</p>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.88rem;background:#141414;border-radius:0.4rem;padding:0.8rem;overflow-x:auto">
+          <div style="white-space:nowrap">距離 ＝ <span style="color:#93D500">Math.sqrt</span>( <span style="background:rgba(255,82,82,0.25);border-radius:3px;padding:0.1rem 0.3rem">(x1−x2)²</span> ＋ <span style="background:rgba(118,185,0,0.25);border-radius:3px;padding:0.1rem 0.3rem">(y1−y2)²</span> ＋ <span style="background:rgba(79,195,247,0.25);border-radius:3px;padding:0.1rem 0.3rem">(z1−z2)²</span> )</div>
+        </div>
+      </div>
+
+      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.6rem 0 0.2rem">部品（std3-4 の <code>records</code> の後ろに書く・空欄は2か所）</p>
+<pre>JavaScript
+<span class="cmt">// (A) 1件目と2件目の距離を測る</span>
+<span class="kw">const</span> a = records[<span class="num">0</span>];
+<span class="kw">const</span> b = records[<span class="num">1</span>];
+<span class="kw">const</span> dx = a.x - b.x;
+<span class="kw">const</span> dy = a.y - b.y;
+<span class="kw">const</span> dz = a.z - b.z;
+<span class="kw">const</span> dist = <span class="fn">Math</span>.<span class="fn">sqrt</span>(____);   <span class="cmt">// ★空欄1: dx・dy・dz の2乗の和★</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'1件目と2件目の距離:'</span>, dist);
+
+<span class="cmt">// (B) 全部の位置の重心（平均位置）を計算する</span>
+<span class="kw">let</span> sx = <span class="num">0</span>, sy = <span class="num">0</span>, sz = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; records.<span class="fn">length</span>; i++) {
+  sx += records[i].x;    <span class="cmt">// x を全部たす</span>
+  sy += records[i].y;
+  sz += records[i].z;
+}
+<span class="kw">const</span> n = records.<span class="fn">length</span>;
+<span class="kw">const</span> center = { x: ____, y: sy / n, z: sz / n };   <span class="cmt">// ★空欄2: x の平均★</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'重心（平均位置）:'</span>, center);
+
+<span class="cmt">// 重心の場所に赤い球を置いて、目で確認する</span>
+<span class="fn">drawGeo</span>(<span class="str">'a-sphere'</span>, center.x, center.y, center.z, <span class="str">'red'</span>, { radius: <span class="num">0.25</span> });</pre>
+
+      <div class="callout-info" style="margin-top:0.6rem">
+        <h4>組み立てチャレンジ</h4>
+        <ul class="point-list" style="margin-top:0.3rem">
+          <li>空欄1：<code>dx</code>・<code>dy</code>・<code>dz</code> をそれぞれ2乗して足す式（<code>dx*dx + dy*dy + dz*dz</code>）</li>
+          <li>空欄2：<code>x</code> の平均（合計 <code>sx</code> ÷ 件数 <code>n</code>）</li>
+          <li>うまくいくと、円の<strong>中心あたりに赤い球</strong>が出る（重心＝平均位置）。Consoleにも距離と重心の数値が出る</li>
+        </ul>
+      </div>
+
+      <details>
+        <summary>つまったら：完成コードを見る</summary>
+        <div class="answer-content">
+<pre>JavaScript
+<span class="kw">const</span> a = records[<span class="num">0</span>], b = records[<span class="num">1</span>];
+<span class="kw">const</span> dx = a.x - b.x, dy = a.y - b.y, dz = a.z - b.z;
+<span class="kw">const</span> dist = <span class="fn">Math</span>.<span class="fn">sqrt</span>(dx*dx + dy*dy + dz*dz);
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'1件目と2件目の距離:'</span>, dist);
+
+<span class="kw">let</span> sx = <span class="num">0</span>, sy = <span class="num">0</span>, sz = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; records.<span class="fn">length</span>; i++) {
+  sx += records[i].x; sy += records[i].y; sz += records[i].z;
+}
+<span class="kw">const</span> n = records.<span class="fn">length</span>;
+<span class="kw">const</span> center = { x: sx / n, y: sy / n, z: sz / n };
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'重心（平均位置）:'</span>, center);
+<span class="fn">drawGeo</span>(<span class="str">'a-sphere'</span>, center.x, center.y, center.z, <span class="str">'red'</span>, { radius: <span class="num">0.25</span> });</pre>
+          <p style="font-size:0.85rem;color:#999">空欄1＝<code>dx*dx + dy*dy + dz*dz</code>、空欄2＝<code>sx / n</code>。円形に並べた点の重心は、円の中心（おおよそ <code>x≈0, z≈-5</code>）になる。</p>
+        </div>
+      </details>
+
+      <div class="callout-warning" style="margin-top:0.6rem">
+        <h4>これが統計につながる</h4>
+        <ul class="point-list" style="margin-bottom:0">
+          <li><strong>重心＝平均</strong>。データの「代表値」を1つの座標で表したもの（第13回の平均と同じ計算）</li>
+          <li><strong>各点から重心までの距離</strong>を平均すると、データの「<strong>ばらつき（散らばり具合）</strong>」になる＝分散・標準偏差の素地</li>
+          <li>今は図形の位置だが、第11〜14回では<strong>行動データの分布</strong>を、同じ計算で分析する</li>
+        </ul>
+      </div>
+      <div class="notion-submit"><div><strong>提出:</strong> 完成コード＋Console出力（距離・重心）と赤い球が見える実行スクショをNotionに貼る</div></div>
+    </div>
+
+    <!-- adv3-1 -->
+    <div id="adv3-1" class="card advanced">
+      <div class="card-header"><h3><span class="tag tag-advanced" style="font-size:0.7rem">発展課題</span> adv3-1：座標を活かした立体構成（任意・本日の総まとめ）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">今日学んだ技（ジオメトリの種類・属性・x/y/z座標・位置の記録）を<strong>自由に組み合わせて</strong>、座標を意識した立体作品をつくる。正解はなし。「どこに・どんな形を・なぜ置いたか」を考えながら作る。</p>
+
+      <p style="font-weight:700;color:#FFB800;font-size:0.88rem;margin:0.5rem 0 0.2rem">使える技（組み合わせ自由）</p>
+      <ul class="point-list">
+        <li>図形：<code>a-box</code> / <code>a-sphere</code> / <code>a-cylinder</code> / <code>a-cone</code> / <code>a-torus</code> / 多面体（属性で形を調整）</li>
+        <li>配置：<code>for</code> で規則的に／三角関数で円・らせん（第2回）／<code>x・y・z</code> を計算して立体的に</li>
+        <li>記録：作った図形の位置を <code>records</code> にためて <code>console.table</code> で確認</li>
+        <li>測る：重心を計算して、そこに目印の図形を置く（std3-5の応用）</li>
+      </ul>
+
+      <p style="font-weight:700;color:#FFB800;font-size:0.88rem;margin:0.7rem 0 0.2rem">アイデアの例</p>
+      <ul class="point-list" style="margin-bottom:0">
+        <li><strong>立体の塔</strong>（<code>y</code> を増やしながら、だんだん小さい箱を積む）</li>
+        <li><strong>3D星座</strong>（球を立体的に散らし、<code>a-cylinder</code> の細い棒で点と点をつなぐ）</li>
+        <li><strong>ジオメトリの森</strong>（円すいの木＋円柱の幹を <code>for</code> でランダムな座標に植える）</li>
+        <li><strong>データの山</strong>（位置を記録 → 重心を計算 → 中心に赤い球で「平均」を表示）</li>
+      </ul>
+
+      <div class="callout-tip" style="margin-top:0.7rem">
+        <h4>ヒント</h4>
+        <ul class="point-list" style="margin-bottom:0">
+          <li>まず std3-3〜std3-5 のどれかをコピー → 座標や属性を1か所ずつ変えて結果を見る</li>
+          <li>「<code>x・y・z</code> のどれを変えると、どの向きに動くか」を意識すると、狙った形が作りやすい</li>
+          <li>「なぜその座標にしたか」を一言メモしておくと、後の発表で語れる</li>
+        </ul>
+      </div>
+
+      <div class="notion-submit"><div><strong>提出（任意）:</strong> 作品のコード＋実行画面のスクショ＋音声（工夫した点とコードの説明）</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 7: データとのつながり ============ -->
+<section id="sec-ds">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">7</div>
+      <h2>今日の「座標」が、これから「位置データ」になる</h2>
+    </div>
+
+    <div class="callout-info">
+      <h4>空間をつくる道具 ＝ 位置データを扱う道具</h4>
+      <p style="font-size:0.9rem;margin-bottom:0.6rem">今日はジオメトリで空間を作り、座標を測ったが、まったく同じ部品が、これから「位置データの取得・分析」で主役になる。</p>
+      <table style="font-size:0.85rem">
+        <tr><th style="width:30%">今日の使い方</th><th>これからの使い方（データ）</th></tr>
+        <tr><td>ジオメトリで空間を作る</td><td>実験・計測の<strong>舞台（環境）</strong>を自分で設計する</td></tr>
+        <tr><td><code>position</code> の x・y・z</td><td>ユーザ・視点・オブジェクトの<strong>位置ログ</strong>（いつ・どこに）</td></tr>
+        <tr><td><code>getAttribute('position')</code></td><td>動いている対象の位置を<strong>取得して記録</strong>（第9・11回）</td></tr>
+        <tr><td>配列に <code>push</code> して表に</td><td>位置の時系列ログ → CSVへ整形して保存</td></tr>
+        <tr><td>距離を計算する</td><td>移動量・近さ・経路の長さ（行動の特徴量）</td></tr>
+        <tr><td>重心（平均位置）を出す</td><td>データの<strong>平均・代表値</strong>、ばらつき（分散）の分析（第13回）</td></tr>
+      </table>
+    </div>
+
+    <div class="callout-tip">
+      <h4>次回の予告：画像・テクスチャと、見た目の主観評価</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>図形に<strong>画像（テクスチャ）</strong>を貼って、リアルな質感の空間にする</li>
+        <li><strong>ライト（光）</strong>を当てて、見え方を変える</li>
+        <li>「どの見た目が良いか」を<strong>主観評価データ</strong>として集める準備に入る（STEP 2が本格化）</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NOTION GUIDE ============ -->
+<section id="sec-notion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">N</div>
+      <h2>ノートの作り方（Notion）</h2>
+    </div>
+    <div class="callout-warning">
+      <h4>テンプレートは配りません ── 自分で書く</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>決まったひな形（テンプレート）は渡さない</li>
+        <li><strong>何を・どう記録するかを自分で考えて</strong>、見出しや表を作って構成する</li>
+        <li>「見やすく整理する」こと自体が、データを扱う練習になる</li>
+      </ul>
+    </div>
+    <div class="callout-info">
+      <h4>1ページにまとめて提出</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>穴埋め（第2回の復習・ジオメトリ・座標系）＋ std3-1〜std3-5 のコードとスクショを1つのNotionページに集約</li>
+        <li><strong>PDFにエクスポート</strong> → Google Classroomに <strong>PDF 1ファイル</strong></li>
+        <li>上部に「グループ番号・氏名・第3回」を明記</li>
+      </ul>
+    </div>
+    <div class="callout-tip">
+      <h4>記録のコツ</h4>
+      <ul class="point-list" style="margin-top:0.4rem">
+        <li>穴埋めは「答え」＋なぜそうなるかを一言</li>
+        <li>課題は<strong>コード全文</strong>＋<strong>実行画面のスクショ</strong>をセットで貼る（Console出力も忘れずに）</li>
+        <li>「座標や属性を変えたら見た目・数値がどう変わったか」を1行メモすると、理解が深まる</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div>MD2 ─ メディアクリエーション・データデザインⅡ ─ 第3回</div>
+    <div style="margin-top:0.5rem;font-size:0.8rem;color:#666">&copy;2026 Ryota Nakamura.</div>
+  </div>
+</footer>
+
+<!-- ============ SCRIPTS ============ -->
+<script>
+// Copy button for pre blocks
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var code = pre.textContent.replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|\.zshrc|Notion テンプレート)( ── [^\n]+)?\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+
+// Click-to-copy on inline code elements
+document.querySelectorAll(':not(pre) > code').forEach(function(code) {
+  code.title = 'クリックでコピー';
+  code.addEventListener('click', function() {
+    navigator.clipboard.writeText(code.textContent).then(function() {
+      code.classList.add('copied');
+      setTimeout(function() {
+        code.classList.remove('copied');
+      }, 1500);
+    });
+  });
+});
+</script>
+
+</body>
+</html>
