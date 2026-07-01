@@ -796,6 +796,16 @@ body { padding-top: 2.2rem; }
           <li>だから<strong>デザイン（要素）を先に置き、ロジック（script）を後に置く</strong>。「材料をそろえてから料理する」イメージ</li>
         </ul>
       </div>
+
+      <div class="callout-info" style="margin-top:0.5rem">
+        <h4>「<code>&lt;script&gt;</code> は <code>&lt;body&gt;</code> の外に書けばいいのでは？」という疑問</h4>
+        <ul class="point-list" style="margin-bottom:0">
+          <li><code>&lt;script&gt;</code> を正しく置ける場所は <strong><code>&lt;head&gt;</code> の中</strong>か <strong><code>&lt;body&gt;</code> の中</strong>のどちらかだけ。<code>&lt;/body&gt;</code> より後ろに書いても、ブラウザは<strong>エラーとして body の中へ移動</strong>して読むので、結局 body 内と同じ＝<strong>外に出すメリットはない</strong>（むしろ不正なHTML）</li>
+          <li><code>&lt;head&gt;</code> に置くと、まだ図形の要素が作られていないうちに実行され、<code>querySelector('#group')</code> が <strong>null になってエラー</strong>。だから head でもダメ</li>
+          <li>結論：<strong>要素の後ろ＝<code>&lt;/a-scene&gt;</code> の後、<code>&lt;/body&gt;</code> の直前</strong>に置くのが、いちばん確実でシンプル。第1回・第2回の資料もすべてこの形</li>
+          <li>（発展）どうしても <code>&lt;head&gt;</code> に置きたいときは、外部ファイルに <code>&lt;script defer src="..."&gt;</code> を付けるか、<code>DOMContentLoaded</code> の完了を待つ書き方が必要。今は body 末尾でOK</li>
+        </ul>
+      </div>
     </div>
 
     <!-- std3-1 -->
