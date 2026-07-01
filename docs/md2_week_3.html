@@ -626,10 +626,11 @@ body { padding-top: 2.2rem; }
     <div class="callout-tip" style="margin-top:1rem">
       <h4>📂 今日使う教材データ（先にダウンロード）</h4>
       <ul class="point-list" style="margin-bottom:0.4rem">
-        <li>サッカー位置データ（サンプル・フル90分）：<a href="soccer.csv" download style="color:#4FC3F7">soccer.csv をダウンロード</a>（<strong>1コマ＝1秒 × 5400コマ（＝90分）× 23個＝124,200行</strong>／約2.7MB）</li>
+        <li>サッカー位置データ（サンプル・フル90分）：<a href="soccer.csv" download id="dl-soccer" style="color:#4FC3F7;font-weight:700">▶ soccer.csv をダウンロード</a>（<strong>1コマ＝1秒 × 5400コマ（＝90分）× 23個＝124,200行</strong>／約2.7MB）<span style="font-size:0.78rem;color:#888">※押すとブラウザ内で生成して保存します</span></li>
         <li>作業フォルダを1つ作り、その中に <code>index.html</code> と <code>soccer.csv</code> を<strong>同じ場所</strong>に置く</li>
       </ul>
       <p style="font-size:0.82rem;color:#999;margin:0.3rem 0 0"><strong>CSVの列（標準スキーマ）:</strong> <code>frame</code>（コマ番号）, <code>team</code>（ball/home/away）, <code>id</code>（背番号・ボールは0）, <code>x</code>, <code>y</code>（フィールド座標[m]・中心が原点／ピッチ 105m×68m）</p>
+      <p style="font-size:0.82rem;color:#999;margin:0.35rem 0 0"><strong>数値化の設定（サンプリング）:</strong> フレームレート <strong>1&nbsp;fps（1秒あたり1コマ）</strong>。連番 <code>frame</code>（0〜5399）がそのまま秒数（5400秒＝90分）を表す。座標は<strong>メートル単位</strong>で、ピッチ中央が原点 (0,&nbsp;0)、横 <code>x</code>＝−52.5〜+52.5、縦 <code>y</code>＝−34〜+34（＝105m×68m）。値は小数第1位まで。<span style="color:#888">※実試合の記録ではなく、教材用に数式で生成した合成サンプル（本物のトラッキングは約25&nbsp;fps）。</span></p>
     </div>
 
     <!-- data provenance -->
@@ -939,8 +940,8 @@ body { padding-top: 2.2rem; }
   <span class="op">&lt;/</span><span class="kw">body</span><span class="op">&gt;</span>
 <span class="op">&lt;/</span><span class="kw">html</span><span class="op">&gt;</span></pre>
       <div style="margin-top:0.5rem">
-        <img src="img/md2w3_setinterval.png" alt="setIntervalでconsole.logが0,1,2...と増える実行結果（ブラウザのConsole）" style="width:100%;max-width:600px;border:1px solid #333;border-radius:10px;display:block">
-        <p style="font-size:0.8rem;color:#999;margin-top:0.3rem">▲ 実行結果（ブラウザのConsole）：300ミリ秒ごとに 0, 1, 2, 3… と表示される</p>
+        <img src="img/md2w3_setinterval.gif" alt="setIntervalでconsole.logが0,1,2...と増えていくアニメーション" style="width:100%;max-width:600px;border:1px solid #333;border-radius:10px;display:block">
+        <p style="font-size:0.8rem;color:#999;margin-top:0.3rem">▲ 実行結果（アニメGIF・ブラウザのConsole）：300ミリ秒ごとに 0, 1, 2, 3… と増えていく</p>
       </div>
     </div>
 
@@ -983,8 +984,8 @@ body { padding-top: 2.2rem; }
   <span class="op">&lt;/</span><span class="kw">body</span><span class="op">&gt;</span>
 <span class="op">&lt;/</span><span class="kw">html</span><span class="op">&gt;</span></pre>
       <div style="margin-top:0.5rem">
-        <img src="img/md2w3_std3_2.png" alt="座標リストに沿って1つのスフィアが動く実行結果" style="width:100%;max-width:600px;border:1px solid #333;border-radius:10px;display:block">
-        <p style="font-size:0.8rem;color:#999;margin-top:0.3rem">▲ 実行結果（Webブラウザ）：赤い球が points の座標をたどって動く（画像は途中の1コマ）</p>
+        <img src="img/md2w3_std3_2.gif" alt="座標リストに沿って1つのスフィアが動くアニメーション" style="width:100%;max-width:600px;border:1px solid #333;border-radius:10px;display:block">
+        <p style="font-size:0.8rem;color:#999;margin-top:0.3rem">▲ 実行結果（アニメGIF）：赤い球が <code>points</code> の座標を順番にたどって動く</p>
       </div>
 
       <div class="callout-info" style="margin-top:0.6rem">
@@ -1047,7 +1048,7 @@ body { padding-top: 2.2rem; }
         <tr><th>index</th><th>frame</th><th>team</th><th>id</th><th>x</th><th>y</th></tr>
         <tr><td>0</td><td>0</td><td>ball</td><td>0</td><td>0.0</td><td>19.3</td></tr>
         <tr><td>1</td><td>0</td><td>home</td><td>1</td><td>-45.7</td><td>2.2</td></tr>
-        <tr><td>2</td><td>0</td><td>home</td><td>2</td><td>-29.0</td><td>-19.4</td></tr>
+        <tr><td>2</td><td>0</td><td>home</td><td>2</td><td>-28.6</td><td>-21.9</td></tr>
         <tr><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td></tr>
         <tr><td>124199</td><td>5399</td><td>away</td><td>11</td><td>-6.2</td><td>8.1</td></tr>
       </table>
@@ -1245,6 +1246,31 @@ python -m http.server 8000</pre>
       </ul>
     </div>
 
+    <div class="concept-box">
+      <h4>CSVを読む関数と「<code>async</code> / <code>await</code>」 ── 初心者向けにていねいに</h4>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">std3-4のコードには <code>async function loadCSV(...)</code> と <code>await</code> が出てくる。少し新しい書き方なので、ここだけ丁寧に説明する（<strong>意味が分かればOK。まずは丸ごとコピーして使ってよい</strong>）。</p>
+      <ul class="point-list" style="margin-bottom:0">
+        <li><strong>なぜ必要？</strong> <code>fetch</code>（ファイルを読む）は<strong>「時間がかかる処理」</strong>。押した<strong>瞬間には終わらず</strong>、データが届くまで少し待つ必要がある</li>
+        <li><strong><code>await</code></strong>＝「この処理が<strong>終わるまで待ってから</strong>次に進む」という命令。待って、届いたデータを受け取る</li>
+        <li><strong><code>await</code> は <code>async</code> を付けた関数の中でしか使えない</strong>約束。だから <code>loadCSV</code> の頭に <code>async</code> を付ける</li>
+      </ul>
+      <div class="analogy" style="margin-top:0.6rem"><strong>カップ麺</strong>と同じ。お湯を注いだら3分<strong>「待つ（＝await）」</strong>→ できてから食べる。<code>await</code> せずに<strong>まだできていないのに食べようとする</strong>と、中身が空っぽで失敗する（＝データが届く前に使おうとしてエラー）。</div>
+      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.7rem 0 0.2rem">コードの読み方</p>
+<pre>JavaScript
+<span class="kw">async</span> <span class="kw">function</span> <span class="fn">loadCSV</span>(url) {          <span class="cmt">// ← awaitを使うので async を付ける</span>
+  <span class="kw">const</span> text = <span class="kw">await</span> (<span class="kw">await</span> <span class="fn">fetch</span>(url)).<span class="fn">text</span>();  <span class="cmt">// ①ファイルを取りに行き ②文字として受け取る（両方 await で待つ）</span>
+  <span class="cmt">// ... text（CSVの中身）を1行ずつ分解して配列にする ...</span>
+}
+
+<span class="fn">loadCSV</span>(<span class="str">'soccer.csv'</span>).<span class="fn">then</span>(<span class="kw">function</span> (rows) {   <span class="cmt">// 読み終わったら、then の中が実行される</span>
+  <span class="cmt">// ここで rows（読み込んだデータ）を使う</span>
+});</pre>
+      <ul class="point-list" style="margin-bottom:0">
+        <li><code>.then(function (rows) { ... })</code>＝<strong>「読み終わったら、この中を実行して」</strong>。時間がかかる <code>loadCSV</code> の結果は、ここで受け取る（<code>await</code> と同じ「待つ」仲間）</li>
+        <li><strong>まとめ：</strong> 時間がかかる処理は <code>await</code> で待つ／その関数には <code>async</code> を付ける／呼び出し側は <code>.then()</code> で結果を受け取る。今は<strong>形を覚えて使えれば十分</strong></li>
+      </ul>
+    </div>
+
     <!-- std3-4 -->
     <div id="std3-4" class="card standard">
       <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std3-4：最初のコマの23個とフィールドを表示する</h3></div>
@@ -1404,8 +1430,8 @@ python -m http.server 8000</pre>
   }, ____);                            <span class="cmt">// ★空欄2: 間隔ミリ秒（例 100）★</span>
 });</pre>
       <div style="margin-top:0.5rem">
-        <img src="img/md2w3_std3_5.png" alt="CSVを反映して23個の選手とボールがアニメーションする実行結果" style="width:100%;max-width:640px;border:1px solid #333;border-radius:10px;display:block">
-        <p style="font-size:0.8rem;color:#999;margin-top:0.3rem">▲ 実行結果（Webブラウザ）：全コマを再生し、選手（青・赤）とボール（白）がデータ通りに動く（画像は途中の1コマ）</p>
+        <img src="img/md2w3_std3_5.gif" alt="CSVを反映して23個の選手とボールがアニメーションする様子" style="width:100%;max-width:640px;border:1px solid #333;border-radius:10px;display:block">
+        <p style="font-size:0.8rem;color:#999;margin-top:0.3rem">▲ 実行結果（アニメGIF）：全コマを再生し、選手（青・赤）とボール（白）がデータ通りに動き続ける</p>
       </div>
 
       <div class="callout-info" style="margin-top:0.6rem">
@@ -1728,6 +1754,52 @@ document.querySelectorAll(':not(pre) > code').forEach(function(code) {
     });
   });
 });
+
+// ===== soccer.csv をブラウザ内で生成してダウンロード（Safari / file:// でも確実） =====
+// soccer.csv と同じ内容を数式で生成する（サーバ配布ファイルとバイト単位で一致）
+function generateSoccerCSV() {
+  var N = 5400, TAU = 2 * Math.PI;
+  var home = [[-48,0],[-32,-22],[-32,-8],[-32,8],[-32,22],[-12,-20],[-12,-7],[-12,7],[-12,20],[6,-10],[6,10]];
+  var away = [[48,0],[32,-22],[32,-8],[32,8],[32,22],[12,-20],[12,-7],[12,7],[12,20],[-6,10],[-6,-10]];
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+  function f1(x) { return x.toFixed(1); }
+  var L = ['frame,team,id,x,y'];
+  for (var f = 0; f < N; f++) {
+    var t = f / N;
+    var bx = 44 * Math.sin(TAU * 9 * t) * (0.6 + 0.4 * Math.sin(TAU * 1.3 * t));
+    var by = 30 * Math.sin(TAU * 13 * t + 0.7);
+    L.push(f + ',ball,0,' + f1(clamp(bx, -52, 52)) + ',' + f1(clamp(by, -33, 33)));
+    var wave = Math.sin(TAU * 6 * t);
+    var teams = [['home', home], ['away', away]];
+    for (var ti = 0; ti < 2; ti++) {
+      var team = teams[ti][0], base = teams[ti][1];
+      var sign = team === 'home' ? 1 : -1;
+      var push = 10 * wave * sign;
+      for (var i = 0; i < base.length; i++) {
+        var idn = i + 1;
+        var ph = idn * 0.7 + (team === 'home' ? 0 : 1.3);
+        var ox = 3.5 * Math.sin(TAU * 20 * t + ph);
+        var oy = 3.0 * Math.cos(TAU * 17 * t + ph * 1.1);
+        var x = clamp(base[i][0] + push + ox, -52.5, 52.5);
+        var y = clamp(base[i][1] + oy, -34, 34);
+        L.push(f + ',' + team + ',' + idn + ',' + f1(x) + ',' + f1(y));
+      }
+    }
+  }
+  return L.join('\n') + '\n';
+}
+var dlSoccer = document.getElementById('dl-soccer');
+if (dlSoccer) {
+  dlSoccer.addEventListener('click', function(e) {
+    e.preventDefault();
+    var blob = new Blob([generateSoccerCSV()], { type: 'text/csv;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'soccer.csv';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+  });
+}
 </script>
 
 </body>
