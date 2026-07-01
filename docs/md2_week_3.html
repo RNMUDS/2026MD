@@ -543,7 +543,10 @@ body { padding-top: 2.2rem; }
     <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.3rem">武蔵野大学国際データサイエンス学部（通信教育部）</p>
     <p style="font-size:0.95rem;opacity:0.85;margin-bottom:1rem">中村 亮太</p>
     <h1>MD2 第3回: 座標データをアニメーションで動かす ― サッカーの位置データをA-Frameで可視化する</h1>
-    <p style="overflow-wrap:normal;word-break:normal">今日は「座標＝データ」を、<strong>動かして・見る</strong>回。まず <code style="word-break:normal">for</code> 文でスフィアを並べる復習から始め、次に <strong>x・y座標のリストを読み込んで1つのスフィアをアニメーションで動かす</strong>。そして<strong>サッカーの位置データ（CSV）</strong>を pandas で読んで中身を確かめ、A-Frameで<strong>選手22人＋ボールの計23個</strong>とフィールドを再現し、<strong>実データでアニメーション</strong>させる。1つずつ課題を進めながら、最後は自由創作の発展課題へ。</p>
+    <div style="display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap;margin-top:0.3rem">
+      <p style="overflow-wrap:normal;word-break:normal;flex:1 1 20rem;min-width:16rem;max-width:640px;margin:0">今日は「座標＝データ」を、<strong>動かして・見る</strong>回。まず <code style="word-break:normal">for</code> 文でスフィアを並べる復習から始め、次に <strong>x・y座標のリストを読み込んで1つのスフィアをアニメーションで動かす</strong>。そして<strong>サッカーの位置データ（CSV）</strong>を pandas で読んで中身を確かめ、A-Frameで<strong>選手22人＋ボールの計23個</strong>とフィールドを再現し、<strong>実データでアニメーション</strong>させる。1つずつ課題を進めながら、最後は自由創作の発展課題へ。</p>
+      <img src="img/md2w3_stadium.png" alt="A-Frameで作ったサッカースタジアム（夜のナイター・ピッチと観客スタンド）" style="flex:0 1 420px;width:420px;max-width:100%;border-radius:12px;border:1px solid rgba(255,255,255,0.18);box-shadow:0 8px 28px rgba(0,0,0,0.45)">
+    </div>
     <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:0.3rem;padding:0.4rem 0.8rem;margin-top:1rem;font-size:0.7rem;display:inline-block;max-width:100%;overflow-wrap:anywhere">
       <strong>第3回のメイン:</strong> ① for文でスフィア（復習） → ② 座標リストで1つ動かす → ③ pandasでサッカーCSVを見る → ④ 23個＋フィールドを配置 → ⑤ CSVでアニメーション → ⑥ 発展（装飾・可視化の自由創作）
     </div>
