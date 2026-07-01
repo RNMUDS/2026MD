@@ -543,7 +543,7 @@ body { padding-top: 2.2rem; }
     <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.3rem">武蔵野大学国際データサイエンス学部（通信教育部）</p>
     <p style="font-size:0.95rem;opacity:0.85;margin-bottom:1rem">中村 亮太</p>
     <h1>MD2 第3回: 座標データをアニメーションで動かす ― サッカーの位置データをA-Frameで可視化する</h1>
-    <p>今日は「座標＝データ」を、<strong>動かして・見る</strong>回。まず <code>for</code> 文でスフィアを並べる復習から始め、次に <strong>x・y座標のリストを読み込んで1つのスフィアをアニメーションで動かす</strong>。そして<strong>サッカーの位置データ（CSV）</strong>を pandas で読んで中身を確かめ、A-Frameで<strong>選手22人＋ボールの計23個</strong>とフィールドを再現し、<strong>実データでアニメーション</strong>させる。1つずつ課題を進めながら、最後は自由創作の発展課題へ。</p>
+    <p style="overflow-wrap:normal;word-break:normal">今日は「座標＝データ」を、<strong>動かして・見る</strong>回。まず <code style="word-break:normal">for</code> 文でスフィアを並べる復習から始め、次に <strong>x・y座標のリストを読み込んで1つのスフィアをアニメーションで動かす</strong>。そして<strong>サッカーの位置データ（CSV）</strong>を pandas で読んで中身を確かめ、A-Frameで<strong>選手22人＋ボールの計23個</strong>とフィールドを再現し、<strong>実データでアニメーション</strong>させる。1つずつ課題を進めながら、最後は自由創作の発展課題へ。</p>
     <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:0.3rem;padding:0.4rem 0.8rem;margin-top:1rem;font-size:0.7rem;display:inline-block;max-width:100%;overflow-wrap:anywhere">
       <strong>第3回のメイン:</strong> ① for文でスフィア（復習） → ② 座標リストで1つ動かす → ③ pandasでサッカーCSVを見る → ④ 23個＋フィールドを配置 → ⑤ CSVでアニメーション → ⑥ 発展（装飾・可視化の自由創作）
     </div>
@@ -630,6 +630,21 @@ body { padding-top: 2.2rem; }
         <li>作業フォルダを1つ作り、その中に <code>index.html</code> と <code>soccer.csv</code> を<strong>同じ場所</strong>に置く</li>
       </ul>
       <p style="font-size:0.82rem;color:#999;margin:0.3rem 0 0"><strong>CSVの列（標準スキーマ）:</strong> <code>frame</code>（コマ番号）, <code>team</code>（ball/home/away）, <code>id</code>（背番号・ボールは0）, <code>x</code>, <code>y</code>（フィールド座標[m]・中心が原点／ピッチ 105m×68m）</p>
+    </div>
+
+    <!-- data provenance -->
+    <div class="callout-info" style="margin-top:0.8rem">
+      <h4>📌 このデータはどこから？ ── 「サッカートラッキングデータ」の話</h4>
+      <p style="font-size:0.9rem;margin-bottom:0.5rem">プロサッカーの世界では、試合中の<strong>全選手とボールの位置</strong>を、カメラやセンサーで毎秒何十回も記録した<strong>トラッキングデータ</strong>が、実際に戦術分析に使われている。その代表例が、スポーツ分析企業 <strong>Metrica Sports</strong> が研究・教育向けに<strong>無償公開</strong>しているサンプルデータ。Kaggle でも配布されている。</p>
+      <p style="font-size:0.88rem;margin-bottom:0.5rem">▶ <a href="https://www.kaggle.com/datasets/ekrembayar/metrica-sports-football-tracking-data" target="_blank" rel="noopener" style="color:#4FC3F7;word-break:break-all">Kaggle: Metrica Sports Football Tracking Data</a></p>
+      <ul class="point-list" style="margin-bottom:0.5rem">
+        <li>実データは <strong>約25fps（毎秒25コマ）</strong>で、選手22人＋ボールの <code>x, y</code> 座標が延々と並ぶ巨大なCSV（本物は数十万行）</li>
+        <li>「いつ・誰が・どこにいたか」の表という<strong>形は、今日の <code>soccer.csv</code> とまったく同じ</strong>。今日学ぶ読み方・動かし方が、そのまま本物にも通用する</li>
+      </ul>
+      <div class="callout-warning" style="margin-top:0.4rem">
+        <h4>正直な注記：今日の soccer.csv は「本物を参考にした簡易サンプル」</h4>
+        <p style="font-size:0.86rem;margin-bottom:0">授業で扱いやすいよう、上のような実データ（Metrica Sports）の<strong>形式（列・単位・23個という構成）をまねて、数式で生成した簡易版</strong>を使っている（実試合の記録そのものではない）。まず小さく仕組みを覚え、<strong>興味が出たら本物のデータ（Kaggle）に挑戦</strong>してほしい。列名や単位は本物では少し違うので、pandas で <code>head()</code> して形を確かめてから使うのがコツ。</p>
+      </div>
     </div>
   </div>
 </section>
@@ -1613,6 +1628,20 @@ python -m http.server 8000</pre>
         </ul>
       </div>
 
+      <!-- 参考：大学・プロの分析（発展課題のヒント） -->
+      <div class="callout-info" style="margin-top:0.7rem">
+        <h4>📚 参考：大学・プロはどう分析している？（発展課題のヒント）</h4>
+        <p style="font-size:0.9rem;margin-bottom:0.4rem">今日の「座標を読んで・動かして・可視化する」の<strong>本格版</strong>が、大学の講座で公開されている。ウプサラ大学（スウェーデン）の David Sumpter 教授による、サッカーを数理モデルで分析する講座の1ページ：</p>
+        <p style="font-size:0.88rem;margin-bottom:0.4rem">▶ <a href="https://uppsala.instructure.com/courses/28112/pages/4-player-movements-on-the-pitch" target="_blank" rel="noopener" style="color:#4FC3F7;word-break:break-all">Uppsala University ─ Player movements on the pitch</a></p>
+        <p style="font-size:0.88rem;margin-bottom:0.3rem">ここで何をやっているか（＝そのまま発展課題のヒント）：</p>
+        <ul class="point-list" style="margin-bottom:0">
+          <li>本物のトラッキングデータ（前述の <strong>Metrica</strong>）を <strong>pandas</strong> で読み込み、<strong>選手とボールの動きをピッチ上に描画・アニメーション</strong>する</li>
+          <li>選手の<strong>走行距離・スピード</strong>などを計算し、「誰がどれだけ動いたか」を数値やグラフにする</li>
+          <li>今日は A-Frame（3D）でやったが、あちらは Python（matplotlib など）で<strong>2Dのピッチ図</strong>として同じことをしている。<strong>「座標データ → 可視化・指標化」という発想は同じ</strong></li>
+        </ul>
+        <p style="font-size:0.82rem;color:#999;margin-top:0.4rem">※ 英語だが、図やコードを眺めるだけでも「方向B（分析）」のアイデアがたくさん見つかる。真似できそうな指標を1つ選んで、今日の <code>soccer.csv</code> で作ってみよう。</p>
+      </div>
+
       <!-- 完成イメージのデモ動画（Driveリンク） -->
       <div class="callout-info" style="margin-top:0.8rem">
         <h4>🎬 完成イメージのデモ動画</h4>
@@ -1621,14 +1650,6 @@ python -m http.server 8000</pre>
       </div>
 
       <div class="notion-submit"><div><strong>提出（任意）:</strong> 作品のコード＋実行画面のスクショ＋音声（工夫した点とコードの説明）</div></div>
-    </div>
-
-    <div class="callout-tip">
-      <h4>次回の予告：画像・テクスチャと、見た目の主観評価</h4>
-      <ul class="point-list" style="margin-bottom:0">
-        <li>図形に<strong>画像（テクスチャ）</strong>を貼って、リアルな質感の空間にする</li>
-        <li><strong>ライト（光）</strong>で見え方を変え、「どの見た目が良いか」を<strong>主観評価データ</strong>として集める準備へ</li>
-      </ul>
     </div>
   </div>
 </section>
