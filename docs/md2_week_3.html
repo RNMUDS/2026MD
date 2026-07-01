@@ -530,7 +530,8 @@ body { padding-top: 2.2rem; }
   <a href="#sec-csv">3. pandasでCSVを見る</a>
   <a href="#sec-field" class="nav-assignment">4. 23個＋フィールド</a>
   <a href="#sec-play" class="nav-assignment">5. CSVでアニメ</a>
-  <a href="#sec-advance" class="nav-exam">6. 発展課題</a>
+  <a href="#sec-gltf">6. 3Dモデル</a>
+  <a href="#sec-advance" class="nav-exam">7. 発展課題</a>
   <a href="#sec-notion">ノート</a>
 </nav>
 
@@ -578,6 +579,20 @@ body { padding-top: 2.2rem; }
         </ul>
       </div>
 
+      <div class="callout-tip" style="margin-top:0.7rem">
+        <h4>道具の使い分け：JavaScript と Python を「適材適所」で使う</h4>
+        <p style="font-size:0.9rem;margin-bottom:0.5rem">今日は<strong>2つの言語</strong>を、それぞれの得意分野に合わせて使い分ける。これはデータサイエンスの実務でもよくある組み合わせ。</p>
+        <table style="font-size:0.85rem">
+          <tr><th style="width:16%">言語</th><th style="width:30%">今日の役割</th><th>得意なこと</th></tr>
+          <tr><td><strong style="color:#f7df1e">JavaScript</strong><br><span style="font-size:0.78rem;color:#999">(A-Frame / ブラウザ)</span></td><td>3D空間を作り、図形を<strong>動かして見せる</strong></td><td>ブラウザ上の表示・アニメーション・操作（インタラクション）。可視化のフロント側</td></tr>
+          <tr><td><strong style="color:#4FC3F7">Python</strong><br><span style="font-size:0.78rem;color:#999">(pandas)</span></td><td>CSVを<strong>読み込み・中身を確認・集計</strong></td><td>表データの処理・分析。統計・機械学習まで豊富なライブラリ</td></tr>
+        </table>
+        <ul class="point-list" style="margin-top:0.5rem;margin-bottom:0">
+          <li><strong>なぜ分ける？</strong> ブラウザで動くのは JavaScript、データ分析の定番ライブラリが揃うのは Python。<strong>それぞれの強みを活かす</strong>のが賢いやり方</li>
+          <li><strong>今日の流れ：</strong> ③で <strong>Python（pandas）</strong>でデータを理解 → ④⑤で <strong>JavaScript（A-Frame）</strong>で可視化。<strong>「分析はPython・見せるのはJavaScript」</strong>と覚えておこう</li>
+        </ul>
+      </div>
+
       <p style="font-size:0.9rem;color:#999;margin:1.2rem 0 0.5rem">本科目全体の流れ（再確認）。第3回は <strong style="color:#76B900">STEP 1（舞台づくり）</strong>の力を使って、<strong style="color:#76B900">STEP 2（データを取る・扱う）</strong>に本格的に踏み込み、<strong style="color:#76B900">pandas</strong>にも初めて触れる回。</p>
 
       <!-- 3 steps -->
@@ -611,7 +626,7 @@ body { padding-top: 2.2rem; }
     <div class="callout-tip" style="margin-top:1rem">
       <h4>📂 今日使う教材データ（先にダウンロード）</h4>
       <ul class="point-list" style="margin-bottom:0.4rem">
-        <li>サッカー位置データ（サンプル）：<a href="soccer.csv" download style="color:#4FC3F7">soccer.csv をダウンロード</a>（60コマ × 23個＝1380行）</li>
+        <li>サッカー位置データ（サンプル・フル90分）：<a href="soccer.csv" download style="color:#4FC3F7">soccer.csv をダウンロード</a>（<strong>1コマ＝1秒 × 5400コマ（＝90分）× 23個＝124,200行</strong>／約2.7MB）</li>
         <li>作業フォルダを1つ作り、その中に <code>index.html</code> と <code>soccer.csv</code> を<strong>同じ場所</strong>に置く</li>
       </ul>
       <p style="font-size:0.82rem;color:#999;margin:0.3rem 0 0"><strong>CSVの列（標準スキーマ）:</strong> <code>frame</code>（コマ番号）, <code>team</code>（ball/home/away）, <code>id</code>（背番号・ボールは0）, <code>x</code>, <code>y</code>（フィールド座標[m]・中心が原点／ピッチ 105m×68m）</p>
@@ -925,20 +940,90 @@ body { padding-top: 2.2rem; }
     </div>
 
     <div class="callout-info">
-      <h4>データを扱う前に、まず「中身を見る」</h4>
+      <h4>pandas（パンダス）とは ─ 表データを扱うPythonの定番ライブラリ</h4>
       <ul class="point-list" style="margin-bottom:0">
-        <li>いきなり可視化せず、<strong>どんな列があるか・何行あるか</strong>を確かめるのがデータサイエンスの鉄則</li>
-        <li>Pythonの <strong>pandas</strong> は、CSVのような表データを扱う定番の道具</li>
-        <li>今日使う <code>soccer.csv</code> は <code>frame, team, id, x, y</code> の5列（上の「教材データ」参照）</li>
+        <li><strong>pandas</strong>は、CSVやExcelのような<strong>表（テーブル）</strong>データを、読み込み・確認・集計・分析するためのPythonライブラリ。データサイエンスの現場で最もよく使われる道具の1つ</li>
+        <li>読み込んだ表は <strong>DataFrame（データフレーム）</strong>という形になる。<strong>行</strong>＝1件のデータ、<strong>列（カラム）</strong>＝項目（今回なら <code>frame・team・id・x・y</code>）</li>
+        <li>1つの列だけを取り出したものは <strong>Series（シリーズ）</strong>と呼ぶ（例 <code>df['x']</code>）</li>
+        <li>いきなり可視化せず、まず<strong>「何行・何列あるか」「どんな値か」</strong>を確かめるのがデータ分析の第一歩</li>
       </ul>
     </div>
 
+    <div class="card" style="background:#0a0a0a;border:1px solid #FFB800">
+      <div style="font-weight:700;color:#FFB800;font-size:0.95rem;margin-bottom:0.5rem">図解：DataFrame のイメージ（soccer.csv を読み込むと…）</div>
+      <p style="font-size:0.88rem;color:#ccc;margin-bottom:0.5rem">1行が「あるコマの、ある選手/ボール1つ」の位置。列が項目。左端には自動で <strong>index（行番号）</strong>が付く。</p>
+      <table style="font-size:0.82rem">
+        <tr><th>index</th><th>frame</th><th>team</th><th>id</th><th>x</th><th>y</th></tr>
+        <tr><td>0</td><td>0</td><td>ball</td><td>0</td><td>0.0</td><td>19.3</td></tr>
+        <tr><td>1</td><td>0</td><td>home</td><td>1</td><td>-45.7</td><td>2.2</td></tr>
+        <tr><td>2</td><td>0</td><td>home</td><td>2</td><td>-29.0</td><td>-19.4</td></tr>
+        <tr><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td></tr>
+        <tr><td>124199</td><td>5399</td><td>away</td><td>11</td><td>-6.2</td><td>8.1</td></tr>
+      </table>
+      <p style="font-size:0.82rem;color:#999;margin-top:0.4rem">※ <strong>列</strong>＝<code>df['team']</code> のように取り出す（Series）。<strong>行</strong>＝条件で抽出（<code>df[df['frame']==0]</code>）。この「行と列」の考え方が pandas の基本。</p>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3>準備：uv で pandas をインストールする</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem"><strong>uv</strong> は、Pythonのパッケージ管理・実行を高速に行う新しい定番ツール。次の手順で pandas を用意する。<span style="color:#999">（インストールせずに試したいなら Google Colab を使ってもよい → 下の囲み）</span></p>
+
+      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.5rem 0 0.2rem">① uv本体を入れる（初回だけ・すでに入っていれば飛ばす）</p>
+<pre>Terminal
+<span class="cmt"># Mac / Linux</span>
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+<span class="cmt"># Windows（PowerShell）の場合</span>
+<span class="cmt"># powershell -c "irm https://astral.sh/uv/install.ps1 | iex"</span></pre>
+
+      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.7rem 0 0.2rem">② 作業フォルダでプロジェクトを作り、pandas を追加する</p>
+<pre>Terminal
+<span class="cmt"># soccer.csv を置いた作業フォルダの中で実行</span>
+uv init            <span class="cmt"># プロジェクトを初期化（pyproject.toml ができる）</span>
+uv add pandas      <span class="cmt"># pandas をインストールして環境に追加</span></pre>
+
+      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.7rem 0 0.2rem">③ 分析スクリプト（例 <code>bunseki.py</code>）を実行する</p>
+<pre>Terminal
+uv run python bunseki.py   <span class="cmt"># uvが用意した環境でPythonを実行</span></pre>
+
+      <div class="callout-tip" style="margin-top:0.6rem">
+        <h4>もっと手軽に（1回きり試すだけなら）</h4>
+        <p style="font-size:0.88rem;margin-bottom:0"><code>uv init</code>／<code>uv add</code> を省いて、<strong>その場だけ</strong> pandas を使って実行できる：</p>
+<pre>Terminal
+uv run --with pandas python bunseki.py   <span class="cmt"># 一時的にpandasを入れて実行</span></pre>
+      </div>
+      <div class="callout-info" style="margin-top:0.5rem">
+        <h4>置き場所に注意</h4>
+        <p style="font-size:0.88rem;margin-bottom:0"><code>bunseki.py</code> と <code>soccer.csv</code> は<strong>同じフォルダ</strong>に置く。別の場所だと <code>read_csv('soccer.csv')</code> が見つけられずエラーになる。</p>
+      </div>
+    </div>
+
     <div class="callout-tip">
-      <h4>実行環境（どれか1つでOK）</h4>
+      <h4>インストール不要で試すなら：Google Colab</h4>
       <ul class="point-list" style="margin-bottom:0">
-        <li><strong>Google Colab</strong>（おすすめ・インストール不要）：ブラウザで開き、<code>soccer.csv</code> を左の「ファイル」にアップロードして実行</li>
-        <li><strong>手元のPython</strong>：<code>pip install pandas</code> 後、Jupyter や VS Code で実行（<code>soccer.csv</code> と同じフォルダで）</li>
+        <li>ブラウザで <code>colab.research.google.com</code> を開く → 「ノートブックを新規作成」</li>
+        <li>左の「ファイル」アイコンから <code>soccer.csv</code> をアップロード</li>
+        <li>セルに下の std3-3 のコードを貼って実行（pandasは最初から入っている）</li>
       </ul>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3>pandasのよく使う操作（今日使うぶん）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem"><code>df</code> は <code>pd.read_csv(...)</code> で読み込んだ DataFrame とする。まずはこの表の操作を覚えれば十分。</p>
+      <table style="font-size:0.84rem">
+        <tr><th style="width:40%">書き方</th><th>意味</th></tr>
+        <tr><td><code>pd.read_csv('soccer.csv')</code></td><td>CSVを読み込んで DataFrame にする</td></tr>
+        <tr><td><code>df.head(n)</code> / <code>df.tail(n)</code></td><td>先頭 / 末尾の n 行（省略で5行）</td></tr>
+        <tr><td><code>df.shape</code></td><td><code>(行数, 列数)</code> を返す</td></tr>
+        <tr><td><code>df.columns</code></td><td>列名の一覧</td></tr>
+        <tr><td><code>df.dtypes</code></td><td>各列のデータ型（数値か文字か）</td></tr>
+        <tr><td><code>df.info()</code></td><td>列・型・件数などのまとめ</td></tr>
+        <tr><td><code>df.describe()</code></td><td>数値列の統計（平均・最小・最大・四分位など）</td></tr>
+        <tr><td><code>df['x']</code></td><td>x列だけ取り出す（Series）</td></tr>
+        <tr><td><code>df[df['frame'] == 0]</code></td><td>条件で<strong>行を抽出</strong>（frameが0の行だけ）</td></tr>
+        <tr><td><code>df['team'].value_counts()</code></td><td>値ごとの件数を数える</td></tr>
+        <tr><td><code>df['x'].mean()</code></td><td>平均（他に <code>.min()</code> <code>.max()</code> <code>.sum()</code>）</td></tr>
+      </table>
+      <p style="font-size:0.82rem;color:#999;margin-top:0.4rem">※ <code>describe()</code> や <code>mean()</code> は、後の回で学ぶ<strong>統計</strong>の入口。今日は「こんなことができる」と知っておくだけでOK。</p>
     </div>
 
     <!-- std3-3 -->
@@ -957,7 +1042,7 @@ df = pd.<span class="fn">read_csv</span>(<span class="str">'soccer.csv'</span>)
 <span class="fn">print</span>(df.____())        <span class="cmt"># ★空欄1: 先頭数行を表示するメソッド★</span>
 
 <span class="cmt"># ② 行数・列数（形）を見る</span>
-<span class="fn">print</span>(df.shape)        <span class="cmt"># → (1380, 5) のように (行数, 列数)</span>
+<span class="fn">print</span>(df.shape)        <span class="cmt"># → (124200, 5) のように (行数, 列数)</span>
 
 <span class="cmt"># ③ 列の名前を見る</span>
 <span class="fn">print</span>(df.columns.<span class="fn">tolist</span>())   <span class="cmt"># → ['frame', 'team', 'id', 'x', 'y']</span>
@@ -986,12 +1071,12 @@ first = df[df[<span class="str">'frame'</span>] == ____]     <span class="cmt">#
 <span class="kw">import</span> pandas <span class="kw">as</span> pd
 df = pd.<span class="fn">read_csv</span>(<span class="str">'soccer.csv'</span>)
 <span class="fn">print</span>(df.<span class="fn">head</span>())
-<span class="fn">print</span>(df.shape)                 <span class="cmt"># (1380, 5)</span>
+<span class="fn">print</span>(df.shape)                 <span class="cmt"># (124200, 5)</span>
 <span class="fn">print</span>(df.columns.<span class="fn">tolist</span>())
-<span class="fn">print</span>(df[<span class="str">'team'</span>].<span class="fn">value_counts</span>())   <span class="cmt"># home 660 / away 660 / ball 60</span>
+<span class="fn">print</span>(df[<span class="str">'team'</span>].<span class="fn">value_counts</span>())   <span class="cmt"># home 59400 / away 59400 / ball 5400</span>
 first = df[df[<span class="str">'frame'</span>] == <span class="num">0</span>]
 <span class="fn">print</span>(<span class="fn">len</span>(first))              <span class="cmt"># 23</span></pre>
-          <p style="font-size:0.85rem;color:#999">空欄1＝<code>head</code>、空欄2＝<code>0</code>。全1380行＝60コマ×23個。各コマに必ず23件（選手22＋ボール1）ある。</p>
+          <p style="font-size:0.85rem;color:#999">空欄1＝<code>head</code>、空欄2＝<code>0</code>。全124,200行＝5400コマ×23個。各コマに必ず23件（選手22＋ボール1）ある。</p>
         </div>
       </details>
 
@@ -1175,7 +1260,8 @@ python -m http.server 8000</pre>
     <span class="kw">if</span> (!byFrame[r.frame]) byFrame[r.frame] = [];
     byFrame[r.frame].<span class="fn">push</span>(r);
   });
-  <span class="kw">const</span> maxFrame = <span class="fn">Math</span>.<span class="fn">max</span>.<span class="fn">apply</span>(<span class="kw">null</span>, rows.<span class="fn">map</span>(r =&gt; r.frame));   <span class="cmt">// 最後のコマ番号(=59)</span>
+  <span class="kw">let</span> maxFrame = <span class="num">0</span>;                    <span class="cmt">// 最後のコマ番号を探す（=5399）</span>
+  rows.<span class="fn">forEach</span>(<span class="kw">function</span> (r) { <span class="kw">if</span> (r.frame &gt; maxFrame) maxFrame = r.frame; });
 
   <span class="cmt">// (B) 23個の球を「1回だけ」作り、team-id をキーに覚える</span>
   <span class="kw">const</span> ents = {};
@@ -1201,7 +1287,7 @@ python -m http.server 8000</pre>
       <div class="callout-info" style="margin-top:0.6rem">
         <h4>組み立てチャレンジ</h4>
         <ul class="point-list" style="margin-top:0.3rem">
-          <li>空欄1：次のコマへ進め、最後（<code>maxFrame</code>）を超えたら0に戻す<br><span style="font-size:0.82rem;color:#999">ヒント：<code>(f + 1) % (maxFrame + 1)</code> で 0→59→0 と循環</span></li>
+          <li>空欄1：次のコマへ進め、最後（<code>maxFrame</code>）を超えたら0に戻す<br><span style="font-size:0.82rem;color:#999">ヒント：<code>(f + 1) % (maxFrame + 1)</code> で 0→5399→0 と循環</span></li>
           <li>空欄2：更新間隔（<code>100</code>ミリ秒くらい）。小さくすると速く、大きくするとゆっくり再生</li>
           <li>成功すると、選手とボールが<strong>データ通りに動き続ける</strong></li>
         </ul>
@@ -1216,9 +1302,9 @@ python -m http.server 8000</pre>
   byFrame[f].<span class="fn">forEach</span>(<span class="kw">function</span> (r) {
     <span class="fn">place</span>(ents[r.team + <span class="str">'-'</span> + r.id], r.x, r.y);
   });
-  f = (f + <span class="num">1</span>) % (maxFrame + <span class="num">1</span>);   <span class="cmt">// 0→1→…→59→0</span>
+  f = (f + <span class="num">1</span>) % (maxFrame + <span class="num">1</span>);   <span class="cmt">// 0→1→…→5399→0</span>
 }, <span class="num">100</span>);</pre>
-          <p style="font-size:0.85rem;color:#999">空欄1＝<code>(f + 1) % (maxFrame + 1)</code>、空欄2＝<code>100</code>。60コマを繰り返し再生し、動きがループする。</p>
+          <p style="font-size:0.85rem;color:#999">空欄1＝<code>(f + 1) % (maxFrame + 1)</code>、空欄2＝<code>100</code>。5400コマ（90分）を繰り返し再生し、動きがループする。間隔100msなら1周＝約9分。</p>
         </div>
       </details>
 
@@ -1235,11 +1321,156 @@ python -m http.server 8000</pre>
   </div>
 </section>
 
-<!-- ============ SECTION 6: 発展課題 ============ -->
+<!-- ============ SECTION 6: 3Dモデル (glTF/glb) ============ -->
+<section id="sec-gltf">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#26C6DA">6</div>
+      <h2>3Dモデル（glTF / glb）を Sketchfab から入手して配置する</h2>
+    </div>
+
+    <div class="callout-info">
+      <h4>プリミティブの次は「本格的な3Dモデル」</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>これまでは球や箱（プリミティブ）だったが、A-Frameは<strong>他の人が作った精巧な3Dモデル</strong>も読み込める</li>
+        <li><strong>glTF / glb</strong> は3Dモデルの標準フォーマット（“3DのJPEG”とも呼ばれる）。<code>.gltf</code>（テキスト＋画像の複数ファイル）と <code>.glb</code>（すべてを1つにまとめたファイル）がある</li>
+        <li>A-Frameは両方読めるが、<strong><code>.glb</code>（1ファイル）が扱いやすい</strong>のでおすすめ</li>
+        <li>例えば<strong>サッカーボールの3Dモデル</strong>を置けば、std3-5の白い球を本物のボールに置きかえられる</li>
+      </ul>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header"><h3>Sketchfab でモデルを入手する手順</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem"><a href="https://sketchfab.com" target="_blank" rel="noopener" style="color:#4FC3F7">Sketchfab</a> は3Dモデルの共有サイト。無料でダウンロードできるモデルも多い。</p>
+      <ol style="margin:0 0 0 1.1rem;font-size:0.92rem;line-height:1.9">
+        <li><a href="https://sketchfab.com" target="_blank" rel="noopener" style="color:#4FC3F7">sketchfab.com</a> を開き、キーワード検索（例：<code>soccer ball</code>）</li>
+        <li>左の絞り込みで <strong>Downloadable</strong>（ダウンロード可）にチェック</li>
+        <li>モデルのページで <strong>ライセンス</strong>を確認（多くは表示義務のある <code>CC</code>）。<strong>利用条件を守る</strong></li>
+        <li><strong>Download 3D Model</strong> ボタン →  <strong>glTF</strong> 形式を選んでダウンロード（<code>.glb</code> か <code>.zip</code>）</li>
+        <li><code>.zip</code> のときは解凍し、中の <strong><code>.glb</code></strong> ファイルを使う</li>
+        <li>その <code>.glb</code> を、<code>index.html</code> と<strong>同じフォルダ</strong>に置く（例：<code>model.glb</code>）</li>
+      </ol>
+      <div class="callout-warning" style="margin-top:0.6rem">
+        <h4>ライセンスに注意</h4>
+        <p style="font-size:0.88rem;margin-bottom:0">ダウンロードしたモデルには<strong>作者と利用条件（ライセンス）</strong>がある。授業の課題で使う範囲にとどめ、<strong>作者名の表示（クレジット）</strong>が必要なものは Notion に明記する。再配布・商用は条件をよく確認。</p>
+      </div>
+      <div class="callout-tip" style="margin-top:0.5rem">
+        <h4>すぐ試したい人へ：サンプルを用意しています</h4>
+        <p style="font-size:0.88rem;margin-bottom:0">この資料のサンプルモデル <a href="sample_model.glb" download style="color:#4FC3F7">sample_model.glb をダウンロード</a>（あひるの3Dモデル／glTF公式サンプル）。まずはこれで下のコードを試し、あとで自分のモデルに差しかえてもよい。</p>
+      </div>
+    </div>
+
+    <div class="callout-danger">
+      <h4>⚠ glbの表示も「ローカルサーバ」で開く</h4>
+      <p style="font-size:0.9rem;margin-bottom:0">モデルの読み込みも、ダブルクリック（file://）では動かないことがある。std3-4と同じく作業フォルダで <code>python -m http.server 8000</code> を立て、<code>http://localhost:8000/index.html</code> で開く。</p>
+    </div>
+
+    <!-- 表示① minimal -->
+    <div class="card standard">
+      <div class="card-header"><h3>表示①：いちばん簡単な書き方（<code>&lt;a-gltf-model&gt;</code>）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem"><code>&lt;a-gltf-model src="ファイル名"&gt;</code> を <code>a-scene</code> の中に置くだけ。位置は <code>position</code> で指定する。</p>
+<pre>HTML
+<span class="op">&lt;!DOCTYPE html&gt;</span>
+<span class="op">&lt;</span><span class="kw">html</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">head</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">script</span> <span class="fn">src</span>=<span class="str">"https://aframe.io/releases/1.6.0/aframe.min.js"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">head</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">body</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">a-scene</span><span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-sky</span> <span class="fn">color</span>=<span class="str">"#223"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-sky</span><span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-plane</span> <span class="fn">rotation</span>=<span class="str">"-90 0 0"</span> <span class="fn">width</span>=<span class="str">"30"</span> <span class="fn">height</span>=<span class="str">"30"</span> <span class="fn">color</span>=<span class="str">"#1a1a1a"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-plane</span><span class="op">&gt;</span>
+
+      <span class="cmt">&lt;!-- glbモデルを読み込んで置く（同じフォルダの sample_model.glb） --&gt;</span>
+      <span class="op">&lt;</span><span class="kw">a-gltf-model</span> <span class="fn">src</span>=<span class="str">"sample_model.glb"</span> <span class="fn">position</span>=<span class="str">"0 0 -4"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-gltf-model</span><span class="op">&gt;</span>
+    <span class="op">&lt;/</span><span class="kw">a-scene</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">body</span><span class="op">&gt;</span>
+<span class="op">&lt;/</span><span class="kw">html</span><span class="op">&gt;</span></pre>
+      <div style="margin-top:0.4rem">
+        <img src="img/md2w3_gltf_min.png" alt="a-gltf-modelでglbモデルを表示した実行結果（あひる）" style="width:100%;max-width:640px;border:1px solid #333;border-radius:10px;display:block">
+        <p style="font-size:0.8rem;color:#999;margin-top:0.3rem">▲ 実行結果：<code>sample_model.glb</code>（あひる）がそのまま表示される</p>
+      </div>
+      <p style="font-size:0.82rem;color:#999;margin-top:0.4rem">※ モデルが大きすぎ・小さすぎるとき、真っ黒で見えないときは、次の「表示②」で <code>scale</code> とライトを調整する。</p>
+    </div>
+
+    <!-- 表示② assets + transforms -->
+    <div class="card standard">
+      <div class="card-header"><h3>表示②：先読み（<code>a-assets</code>）＋ 位置・大きさ・回転・ライト</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">モデルを <code>a-assets</code> で<strong>先読み</strong>しておくと表示が安定する。<code>scale</code>（大きさ）・<code>rotation</code>（向き）・<code>a-light</code>（光）で見え方を整える。</p>
+<pre>HTML
+<span class="op">&lt;</span><span class="kw">a-scene</span><span class="op">&gt;</span>
+  <span class="cmt">&lt;!-- ① 先読み：id をつけて登録 --&gt;</span>
+  <span class="op">&lt;</span><span class="kw">a-assets</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">a-asset-item</span> <span class="fn">id</span>=<span class="str">"model"</span> <span class="fn">src</span>=<span class="str">"sample_model.glb"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-asset-item</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">a-assets</span><span class="op">&gt;</span>
+
+  <span class="op">&lt;</span><span class="kw">a-sky</span> <span class="fn">color</span>=<span class="str">"#223"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-sky</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">a-plane</span> <span class="fn">rotation</span>=<span class="str">"-90 0 0"</span> <span class="fn">width</span>=<span class="str">"30"</span> <span class="fn">height</span>=<span class="str">"30"</span> <span class="fn">color</span>=<span class="str">"#1a1a1a"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-plane</span><span class="op">&gt;</span>
+
+  <span class="cmt">&lt;!-- ② 光を足す（モデルが暗いとき明るくなる） --&gt;</span>
+  <span class="op">&lt;</span><span class="kw">a-light</span> <span class="fn">type</span>=<span class="str">"ambient"</span> <span class="fn">color</span>=<span class="str">"#888"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-light</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">a-light</span> <span class="fn">type</span>=<span class="str">"point"</span> <span class="fn">intensity</span>=<span class="str">"1.2"</span> <span class="fn">position</span>=<span class="str">"2 4 2"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-light</span><span class="op">&gt;</span>
+
+  <span class="cmt">&lt;!-- ③ 先読みしたモデルを #id で置く。大きさ・向きを調整 --&gt;</span>
+  <span class="op">&lt;</span><span class="kw">a-gltf-model</span> <span class="fn">src</span>=<span class="str">"#model"</span> <span class="fn">position</span>=<span class="str">"0 0 -3.5"</span> <span class="fn">scale</span>=<span class="str">"1.5 1.5 1.5"</span> <span class="fn">rotation</span>=<span class="str">"0 -30 0"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-gltf-model</span><span class="op">&gt;</span>
+<span class="op">&lt;/</span><span class="kw">a-scene</span><span class="op">&gt;</span></pre>
+      <ul class="point-list" style="margin-top:0.4rem">
+        <li><code>src="#model"</code>＝先読みした <code>a-asset-item</code> の <code>id</code> を <code>#</code> で参照する</li>
+        <li><code>scale="1.5 1.5 1.5"</code>＝1.5倍に拡大（小さすぎるモデルはここを大きく）</li>
+        <li><code>rotation="0 -30 0"</code>＝y軸まわりに回して、こちらを向かせる</li>
+      </ul>
+      <div style="margin-top:0.4rem">
+        <img src="img/md2w3_gltf_assets.png" alt="a-assetsで先読みし、scale・rotation・ライトを付けたglbモデルの実行結果" style="width:100%;max-width:640px;border:1px solid #333;border-radius:10px;display:block">
+        <p style="font-size:0.8rem;color:#999;margin-top:0.3rem">▲ 実行結果：拡大・回転し、ライトで明るくなったモデル</p>
+      </div>
+    </div>
+
+    <!-- 表示③ field tie-in -->
+    <div class="card standard">
+      <div class="card-header"><h3>表示③：サッカーの場面に置いてみる</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">std3-4のフィールドの上にモデルを1つ置く。選手（球）と3Dモデルを組み合わせると、一気に「作品」らしくなる。<strong>白い球の代わりにボールのモデルを置く</strong>のもこの応用。</p>
+<pre>HTML
+<span class="op">&lt;</span><span class="kw">a-scene</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">a-assets</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">a-asset-item</span> <span class="fn">id</span>=<span class="str">"model"</span> <span class="fn">src</span>=<span class="str">"sample_model.glb"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-asset-item</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">a-assets</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">a-sky</span> <span class="fn">color</span>=<span class="str">"#223"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-sky</span><span class="op">&gt;</span>
+
+  <span class="cmt">&lt;!-- フィールド --&gt;</span>
+  <span class="op">&lt;</span><span class="kw">a-box</span> <span class="fn">position</span>=<span class="str">"0 0 -6"</span> <span class="fn">width</span>=<span class="str">"14"</span> <span class="fn">height</span>=<span class="str">"0.1"</span> <span class="fn">depth</span>=<span class="str">"9"</span> <span class="fn">color</span>=<span class="str">"#2e7d32"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-box</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">a-light</span> <span class="fn">type</span>=<span class="str">"ambient"</span> <span class="fn">color</span>=<span class="str">"#999"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-light</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">a-light</span> <span class="fn">type</span>=<span class="str">"directional"</span> <span class="fn">intensity</span>=<span class="str">"0.8"</span> <span class="fn">position</span>=<span class="str">"1 3 1"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-light</span><span class="op">&gt;</span>
+
+  <span class="cmt">&lt;!-- 3Dモデル＋選手（球） --&gt;</span>
+  <span class="op">&lt;</span><span class="kw">a-gltf-model</span> <span class="fn">src</span>=<span class="str">"#model"</span> <span class="fn">position</span>=<span class="str">"0 0.1 -6"</span> <span class="fn">scale</span>=<span class="str">"1.6 1.6 1.6"</span> <span class="fn">rotation</span>=<span class="str">"0 -20 0"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-gltf-model</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">a-sphere</span> <span class="fn">position</span>=<span class="str">"-4 0.6 -5"</span> <span class="fn">radius</span>=<span class="str">"0.35"</span> <span class="fn">color</span>=<span class="str">"#2196f3"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-sphere</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">a-sphere</span> <span class="fn">position</span>=<span class="str">"4 0.6 -7"</span> <span class="fn">radius</span>=<span class="str">"0.35"</span> <span class="fn">color</span>=<span class="str">"#f44336"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-sphere</span><span class="op">&gt;</span>
+
+  <span class="cmt">&lt;!-- 上から見おろすカメラ --&gt;</span>
+  <span class="op">&lt;</span><span class="kw">a-entity</span> <span class="fn">position</span>=<span class="str">"0 5 0.5"</span> <span class="fn">rotation</span>=<span class="str">"-45 0 0"</span><span class="op">&gt;</span><span class="op">&lt;</span><span class="kw">a-camera</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-camera</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-entity</span><span class="op">&gt;</span>
+<span class="op">&lt;/</span><span class="kw">a-scene</span><span class="op">&gt;</span></pre>
+      <div style="margin-top:0.4rem">
+        <img src="img/md2w3_gltf_field.png" alt="緑のフィールド上に3Dモデルと青・赤の選手の球を配置した実行結果" style="width:100%;max-width:640px;border:1px solid #333;border-radius:10px;display:block">
+        <p style="font-size:0.8rem;color:#999;margin-top:0.3rem">▲ 実行結果：フィールド上に3Dモデル＋選手（青・赤の球）</p>
+      </div>
+    </div>
+
+    <div class="callout-warning">
+      <h4>よくあるつまずき（モデルが見えないとき）</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li><strong>大きすぎ／小さすぎ</strong>：<code>scale</code> を <code>0.1</code> や <code>10</code> など大きく変えて探す</li>
+        <li><strong>位置がずれている</strong>：<code>position</code> の <code>z</code> をマイナスに（手前すぎ・奥すぎに注意）</li>
+        <li><strong>真っ黒／暗い</strong>：<code>a-light</code>（ambient / point / directional）を足す</li>
+        <li><strong>そもそも読めない</strong>：<code>file://</code> で開いていないか確認（<code>python -m http.server</code> 経由で開く）／ファイル名・場所が合っているか</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 7: 発展課題 ============ -->
 <section id="sec-advance">
   <div class="container">
     <div class="section-header">
-      <div class="section-num" style="background:#FFB800">6</div>
+      <div class="section-num" style="background:#FFB800">7</div>
       <h2>発展課題：同じデータを「魅力的に・分析的に」見せる</h2>
     </div>
 
@@ -1251,6 +1482,7 @@ python -m http.server 8000</pre>
       <p style="font-weight:700;color:#FFB800;font-size:0.88rem;margin:0.5rem 0 0.2rem">方向A：装飾で魅力的にする</p>
       <ul class="point-list">
         <li>選手を球ではなく <code>a-cylinder</code>（人っぽく）や <code>a-cone</code> にする／背番号を <code>a-text</code> で頭上に表示</li>
+        <li><strong>Sketchfabの3Dモデル（セクション6）</strong>で、ボールや選手を本物らしいモデルに置きかえる</li>
         <li>フィールドにセンターサークル・ゴールを <code>a-ring</code>・<code>a-box</code> で描く／芝の色をリアルに</li>
         <li>ボールに<strong>軌跡（トレイル）</strong>：通った位置に小さな球を残す</li>
       </ul>
