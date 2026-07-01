@@ -1030,40 +1030,53 @@ body { padding-top: 2.2rem; }
     </div>
 
     <div class="card standard">
-      <div class="card-header"><h3>準備：uv で pandas をインストールする</h3></div>
-      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem"><strong>uv</strong> は、Pythonのパッケージ管理・実行を高速に行う新しい定番ツール。次の手順で pandas を用意する。<span style="color:#999">（インストールせずに試したいなら Google Colab を使ってもよい → 下の囲み）</span></p>
+      <div class="card-header"><h3>準備：uv で pandas をインストールする（第1回の py5 と同じ手順）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">これまでの授業で <code>py5</code> を入れたときと<strong>まったく同じ流れ</strong>。作業フォルダを作り、<strong>仮想環境（.venv）</strong>を作って、その中に <code>pandas</code> を入れる。<code>py5</code> の部分が <code>pandas</code> に変わるだけ。<span style="color:#999">（インストール不要で試すなら Google Colab → 下の囲み）</span></p>
 
-      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.5rem 0 0.2rem">① uv本体を入れる（初回だけ・すでに入っていれば飛ばす）</p>
+      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.5rem 0 0.2rem">① 作業フォルダを作って移動する</p>
 <pre>Terminal
-<span class="cmt"># Mac / Linux</span>
-curl -LsSf https://astral.sh/uv/install.sh | sh
+mkdir soccer
+cd soccer</pre>
 
-<span class="cmt"># Windows（PowerShell）の場合</span>
-<span class="cmt"># powershell -c "irm https://astral.sh/uv/install.ps1 | iex"</span></pre>
-
-      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.7rem 0 0.2rem">② 作業フォルダでプロジェクトを作り、pandas を追加する</p>
+      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.7rem 0 0.2rem">② 仮想環境（.venv）を作る</p>
 <pre>Terminal
-<span class="cmt"># soccer.csv を置いた作業フォルダの中で実行</span>
-uv init            <span class="cmt"># プロジェクトを初期化（pyproject.toml ができる）</span>
-uv add pandas      <span class="cmt"># pandas をインストールして環境に追加</span></pre>
+uv venv</pre>
 
-      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.7rem 0 0.2rem">③ 分析スクリプト（例 <code>bunseki.py</code>）を実行する</p>
+      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.7rem 0 0.2rem">③ 仮想環境を有効化する（プロンプトの先頭に <code>(.venv)</code> が出れば成功）</p>
 <pre>Terminal
-uv run python bunseki.py   <span class="cmt"># uvが用意した環境でPythonを実行</span></pre>
+source .venv/bin/activate      <span class="cmt"># Mac / Linux</span>
+<span class="cmt"># .venv\Scripts\activate       # Windows の場合</span></pre>
+
+      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.7rem 0 0.2rem">④ pandas をインストールする（<code>py5</code> のときと同じ <code>uv pip install</code>）</p>
+<pre>Terminal
+uv pip install pandas</pre>
+
+      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.7rem 0 0.2rem">⑤ 分析スクリプト（例 <code>bunseki.py</code>）を実行する</p>
+<pre>Terminal
+python bunseki.py</pre>
       <div style="margin-top:0.5rem">
-        <img src="img/md2w3_uv_out.png" alt="uvでpandasを入れてbunseki.pyを実行した実行結果" style="width:100%;max-width:640px;border:1px solid #333;border-radius:10px;display:block">
-        <p style="font-size:0.8rem;color:#999;margin-top:0.3rem">▲ 実行結果（ターミナル）：<code>uv</code> が pandas を用意し、bunseki.py の出力（データの中身）が表示される</p>
+        <img src="img/md2w3_uv_out.png" alt="uv venvで仮想環境を作りuv pip install pandasでpandasを入れて実行した実行結果" style="width:100%;max-width:640px;border:1px solid #333;border-radius:10px;display:block">
+        <p style="font-size:0.8rem;color:#999;margin-top:0.3rem">▲ 実行結果（ターミナル）：<code>uv venv</code> → <code>uv pip install pandas</code>（pandas が入る）→ <code>python bunseki.py</code> でデータの中身が表示される</p>
       </div>
 
-      <div class="callout-tip" style="margin-top:0.6rem">
-        <h4>もっと手軽に（1回きり試すだけなら）</h4>
-        <p style="font-size:0.88rem;margin-bottom:0"><code>uv init</code>／<code>uv add</code> を省いて、<strong>その場だけ</strong> pandas を使って実行できる：</p>
-<pre>Terminal
-uv run --with pandas python bunseki.py   <span class="cmt"># 一時的にpandasを入れて実行</span></pre>
+      <div class="callout-info" style="margin-top:0.6rem">
+        <h4>uv のよく使うコマンド（第1回の復習）</h4>
+        <table style="font-size:0.84rem">
+          <tr><th style="width:44%">コマンド</th><th>意味</th></tr>
+          <tr><td><code>uv venv</code></td><td>仮想環境（.venv）を作る</td></tr>
+          <tr><td><code>source .venv/bin/activate</code></td><td>仮想環境を有効化（Winは <code>.venv\Scripts\activate</code>）</td></tr>
+          <tr><td><code>uv pip install pandas</code></td><td>pandas をインストール（<code>pip install</code> の頭に <code>uv</code>）</td></tr>
+          <tr><td><code>uv pip list</code></td><td>インストール済み一覧（pandas が入ったか確認）</td></tr>
+          <tr><td><code>deactivate</code></td><td>仮想環境を抜ける（<code>(.venv)</code> が消える）</td></tr>
+        </table>
       </div>
-      <div class="callout-info" style="margin-top:0.5rem">
-        <h4>置き場所に注意</h4>
-        <p style="font-size:0.88rem;margin-bottom:0"><code>bunseki.py</code> と <code>soccer.csv</code> は<strong>同じフォルダ</strong>に置く。別の場所だと <code>read_csv('soccer.csv')</code> が見つけられずエラーになる。</p>
+      <div class="callout-warning" style="margin-top:0.5rem">
+        <h4>つまずいたら（第1回と同じ）</h4>
+        <ul class="point-list" style="margin-bottom:0">
+          <li>uv が未インストールなら、まず <code>curl -LsSf https://astral.sh/uv/install.sh | sh</code>（Mac/Linux）で入れる</li>
+          <li>VSCodeで実行するときは、右下や⌘⇧Pの「Python: インタープリターを選択」で <code>.venv/bin/python</code> を選ぶ</li>
+          <li><code>bunseki.py</code> と <code>soccer.csv</code> は<strong>同じフォルダ（soccer/）</strong>に置く。別の場所だと <code>read_csv('soccer.csv')</code> が見つからずエラー</li>
+        </ul>
       </div>
     </div>
 
