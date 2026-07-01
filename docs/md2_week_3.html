@@ -760,6 +760,44 @@ body { padding-top: 2.2rem; }
       </ul>
     </div>
 
+    <div class="card" style="background:#0a0a0a;border:1px solid #93D500">
+      <div style="font-weight:700;color:#93D500;font-size:0.95rem;margin-bottom:0.5rem">HTMLの書き方：「デザイン」と「ロジック」を分け、<code>&lt;script&gt;</code> を書く場所にこだわる</div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.6rem">A-FrameのHTMLは、大きく<strong>2つの部分</strong>に分けて考えると迷わない。</p>
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-bottom:0.7rem">
+        <div style="flex:1;min-width:13rem;background:#141414;border:1px solid #333;border-left:3px solid #4FC3F7;border-radius:0.5rem;padding:0.8rem">
+          <div style="font-weight:800;color:#4FC3F7;font-size:0.9rem;margin-bottom:0.2rem">① デザイン（見た目・構造）</div>
+          <div style="font-size:0.84rem;color:#ccc"><code>&lt;a-scene&gt;</code> の中のタグ（<code>a-sky</code>・<code>a-plane</code>・<code>a-entity</code>）。<strong>「何を置くか」</strong>を書く</div>
+        </div>
+        <div style="flex:1;min-width:13rem;background:#141414;border:1px solid #333;border-left:3px solid #93D500;border-radius:0.5rem;padding:0.8rem">
+          <div style="font-weight:800;color:#93D500;font-size:0.9rem;margin-bottom:0.2rem">② ロジック（処理）</div>
+          <div style="font-size:0.84rem;color:#ccc"><code>&lt;script&gt;</code> の中のJavaScript。<strong>「どう作るか・動かすか」</strong>を書く</div>
+        </div>
+      </div>
+      <p style="font-weight:700;color:#93D500;font-size:0.9rem;margin:0.4rem 0 0.2rem"><code>&lt;script&gt;</code> は <code>&lt;/a-scene&gt;</code> の後、<code>&lt;/body&gt;</code> の直前に書く</p>
+<pre>HTML
+<span class="op">&lt;</span><span class="kw">body</span><span class="op">&gt;</span>
+  <span class="cmt">&lt;!-- ① デザイン：何を置くか（先に書く） --&gt;</span>
+  <span class="op">&lt;</span><span class="kw">a-scene</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">a-sky</span> ...<span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-sky</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">a-entity</span> <span class="fn">id</span>=<span class="str">"group"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">a-entity</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">a-scene</span><span class="op">&gt;</span>
+
+  <span class="cmt">&lt;!-- ② ロジック：どう作る・動かすか（デザインの後に書く） --&gt;</span>
+  <span class="op">&lt;</span><span class="kw">script</span><span class="op">&gt;</span>
+    <span class="kw">const</span> group = <span class="fn">document</span>.<span class="fn">querySelector</span>(<span class="str">'#group'</span>);  <span class="cmt">// ← 上の #group を探す</span>
+    <span class="cmt">// ... 図形を作る処理 ...</span>
+  <span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
+<span class="op">&lt;/</span><span class="kw">body</span><span class="op">&gt;</span></pre>
+      <div class="callout-warning" style="margin-top:0.5rem">
+        <h4>なぜ「デザイン → ロジック」の順なのか</h4>
+        <ul class="point-list" style="margin-bottom:0">
+          <li>ブラウザはHTMLを<strong>上から順に</strong>読む。<code>&lt;script&gt;</code> を先に書くと、まだ <code>&lt;a-entity id="group"&gt;</code> が作られていない</li>
+          <li>その状態で <code>document.querySelector('#group')</code> を呼ぶと<strong>見つからず（null）エラー</strong>になる</li>
+          <li>だから<strong>デザイン（要素）を先に置き、ロジック（script）を後に置く</strong>。「材料をそろえてから料理する」イメージ</li>
+        </ul>
+      </div>
+    </div>
+
     <!-- std3-1 -->
     <div id="std3-1" class="card standard">
       <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std3-1：for文で N 個のスフィアを出す</h3></div>
@@ -770,7 +808,7 @@ body { padding-top: 2.2rem; }
 <span class="op">&lt;!DOCTYPE html&gt;</span>
 <span class="op">&lt;</span><span class="kw">html</span><span class="op">&gt;</span>
   <span class="op">&lt;</span><span class="kw">head</span><span class="op">&gt;</span>
-    <span class="op">&lt;</span><span class="kw">script</span> <span class="fn">src</span>=<span class="str">"https://aframe.io/releases/1.6.0/aframe.min.js"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">script</span> <span class="fn">src</span>=<span class="str">"https://aframe.io/releases/1.7.1/aframe.min.js"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
   <span class="op">&lt;/</span><span class="kw">head</span><span class="op">&gt;</span>
   <span class="op">&lt;</span><span class="kw">body</span><span class="op">&gt;</span>
     <span class="op">&lt;</span><span class="kw">a-scene</span><span class="op">&gt;</span>
@@ -793,6 +831,10 @@ body { padding-top: 2.2rem; }
     <span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
   <span class="op">&lt;/</span><span class="kw">body</span><span class="op">&gt;</span>
 <span class="op">&lt;/</span><span class="kw">html</span><span class="op">&gt;</span></pre>
+      <div style="margin-top:0.5rem">
+        <img src="img/md2w3_std3_1.png" alt="for文で金色のスフィアを10個ならべた実行結果" style="width:100%;max-width:600px;border:1px solid #333;border-radius:10px;display:block">
+        <p style="font-size:0.8rem;color:#999;margin-top:0.3rem">▲ 実行結果（Webブラウザ）：空欄を埋めて開くと、金色のスフィアが横に10個ならぶ</p>
+      </div>
 
       <div class="callout-info" style="margin-top:0.6rem">
         <h4>組み立てチャレンジ</h4>
@@ -855,6 +897,26 @@ body { padding-top: 2.2rem; }
         <li>第2引数の <code>300</code>＝<strong>間隔（ミリ秒）</strong>。<code>100</code> にすると3倍速く動く</li>
         <li>くりかえすたびに <code>i</code> を1増やして、<strong>次のコマ</strong>に進めるのがコツ</li>
       </ul>
+
+      <p style="font-weight:700;color:#93D500;font-size:0.9rem;margin:0.7rem 0 0.2rem">実際にコンソールで確かめる完成HTML</p>
+      <p style="font-size:0.85rem;color:#ccc;margin-bottom:0.3rem">下を <code>count.html</code> などで保存 → ブラウザで開く → <strong>右クリック →「検証」→「Console」</strong>を見ると、0, 1, 2… と増えていく。</p>
+<pre>HTML
+<span class="op">&lt;!DOCTYPE html&gt;</span>
+<span class="op">&lt;</span><span class="kw">html</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span><span class="kw">body</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">script</span><span class="op">&gt;</span>
+      <span class="kw">let</span> i = <span class="num">0</span>;
+      <span class="fn">setInterval</span>(<span class="kw">function</span> () {   <span class="cmt">// 300ミリ秒ごとに動く</span>
+        <span class="fn">console</span>.<span class="fn">log</span>(i);
+        i = i + <span class="num">1</span>;
+      }, <span class="num">300</span>);
+    <span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
+  <span class="op">&lt;/</span><span class="kw">body</span><span class="op">&gt;</span>
+<span class="op">&lt;/</span><span class="kw">html</span><span class="op">&gt;</span></pre>
+      <div style="margin-top:0.5rem">
+        <img src="img/md2w3_setinterval.png" alt="setIntervalでconsole.logが0,1,2...と増える実行結果（ブラウザのConsole）" style="width:100%;max-width:600px;border:1px solid #333;border-radius:10px;display:block">
+        <p style="font-size:0.8rem;color:#999;margin-top:0.3rem">▲ 実行結果（ブラウザのConsole）：300ミリ秒ごとに 0, 1, 2, 3… と表示される</p>
+      </div>
     </div>
 
     <!-- std3-2 -->
@@ -867,7 +929,7 @@ body { padding-top: 2.2rem; }
 <span class="op">&lt;!DOCTYPE html&gt;</span>
 <span class="op">&lt;</span><span class="kw">html</span><span class="op">&gt;</span>
   <span class="op">&lt;</span><span class="kw">head</span><span class="op">&gt;</span>
-    <span class="op">&lt;</span><span class="kw">script</span> <span class="fn">src</span>=<span class="str">"https://aframe.io/releases/1.6.0/aframe.min.js"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">script</span> <span class="fn">src</span>=<span class="str">"https://aframe.io/releases/1.7.1/aframe.min.js"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
   <span class="op">&lt;/</span><span class="kw">head</span><span class="op">&gt;</span>
   <span class="op">&lt;</span><span class="kw">body</span><span class="op">&gt;</span>
     <span class="op">&lt;</span><span class="kw">a-scene</span><span class="op">&gt;</span>
@@ -895,6 +957,10 @@ body { padding-top: 2.2rem; }
     <span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
   <span class="op">&lt;/</span><span class="kw">body</span><span class="op">&gt;</span>
 <span class="op">&lt;/</span><span class="kw">html</span><span class="op">&gt;</span></pre>
+      <div style="margin-top:0.5rem">
+        <img src="img/md2w3_std3_2.png" alt="座標リストに沿って1つのスフィアが動く実行結果" style="width:100%;max-width:600px;border:1px solid #333;border-radius:10px;display:block">
+        <p style="font-size:0.8rem;color:#999;margin-top:0.3rem">▲ 実行結果（Webブラウザ）：赤い球が points の座標をたどって動く（画像は途中の1コマ）</p>
+      </div>
 
       <div class="callout-info" style="margin-top:0.6rem">
         <h4>組み立てチャレンジ</h4>
@@ -984,6 +1050,10 @@ uv add pandas      <span class="cmt"># pandas をインストールして環境�
       <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.7rem 0 0.2rem">③ 分析スクリプト（例 <code>bunseki.py</code>）を実行する</p>
 <pre>Terminal
 uv run python bunseki.py   <span class="cmt"># uvが用意した環境でPythonを実行</span></pre>
+      <div style="margin-top:0.5rem">
+        <img src="img/md2w3_uv_out.png" alt="uvでpandasを入れてbunseki.pyを実行した実行結果" style="width:100%;max-width:640px;border:1px solid #333;border-radius:10px;display:block">
+        <p style="font-size:0.8rem;color:#999;margin-top:0.3rem">▲ 実行結果（ターミナル）：<code>uv</code> が pandas を用意し、bunseki.py の出力（データの中身）が表示される</p>
+      </div>
 
       <div class="callout-tip" style="margin-top:0.6rem">
         <h4>もっと手軽に（1回きり試すだけなら）</h4>
@@ -1054,6 +1124,10 @@ df = pd.<span class="fn">read_csv</span>(<span class="str">'soccer.csv'</span>)
 first = df[df[<span class="str">'frame'</span>] == ____]     <span class="cmt"># ★空欄2: 最初のコマ番号★</span>
 <span class="fn">print</span>(first)
 <span class="fn">print</span>(<span class="str">'最初のコマの件数:'</span>, <span class="fn">len</span>(first))</pre>
+      <div style="margin-top:0.5rem">
+        <img src="img/md2w3_pandas_out.png" alt="pandasでsoccer.csvを読み込んだ実行結果（head・shape・value_counts・件数）" style="width:100%;max-width:640px;border:1px solid #333;border-radius:10px;display:block">
+        <p style="font-size:0.8rem;color:#999;margin-top:0.3rem">▲ 実行結果（ターミナル）：空欄を埋めて実行した実際の出力。行数(124200, 5)・件数23 などが確認できる</p>
+      </div>
 
       <div class="callout-info" style="margin-top:0.6rem">
         <h4>組み立てチャレンジ</h4>
@@ -1107,7 +1181,11 @@ first = df[df[<span class="str">'frame'</span>] == <span class="num">0</span>]
 <pre>Terminal
 <span class="cmt"># 作業フォルダに移動して、次を実行（Pythonが入っていればOK）</span>
 python -m http.server 8000</pre>
-      <p style="font-size:0.85rem;margin-bottom:0">→ ブラウザで <code>http://localhost:8000/index.html</code> を開く。<span style="color:#999">（VS Codeの「Live Server」拡張でもOK）</span></p>
+      <p style="font-size:0.85rem;margin-bottom:0.4rem">→ ブラウザで <code>http://localhost:8000/index.html</code> を開く。<span style="color:#999">（VS Codeの「Live Server」拡張でもOK）</span></p>
+      <div style="margin-top:0.3rem">
+        <img src="img/md2w3_httpserver_out.png" alt="python -m http.server を起動した実行結果（Serving HTTP on ...）" style="width:100%;max-width:640px;border:1px solid #333;border-radius:10px;display:block">
+        <p style="font-size:0.8rem;color:#999;margin-top:0.3rem">▲ 実行結果（ターミナル）：<code>Serving HTTP on … port 8000</code> と出れば起動成功。以降ブラウザからアクセスできる</p>
+      </div>
     </div>
 
     <div class="card standard">
@@ -1139,7 +1217,7 @@ python -m http.server 8000</pre>
 <span class="op">&lt;!DOCTYPE html&gt;</span>
 <span class="op">&lt;</span><span class="kw">html</span><span class="op">&gt;</span>
   <span class="op">&lt;</span><span class="kw">head</span><span class="op">&gt;</span>
-    <span class="op">&lt;</span><span class="kw">script</span> <span class="fn">src</span>=<span class="str">"https://aframe.io/releases/1.6.0/aframe.min.js"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">script</span> <span class="fn">src</span>=<span class="str">"https://aframe.io/releases/1.7.1/aframe.min.js"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
   <span class="op">&lt;/</span><span class="kw">head</span><span class="op">&gt;</span>
   <span class="op">&lt;</span><span class="kw">body</span><span class="op">&gt;</span>
     <span class="op">&lt;</span><span class="kw">a-scene</span><span class="op">&gt;</span>
@@ -1191,6 +1269,10 @@ python -m http.server 8000</pre>
     <span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
   <span class="op">&lt;/</span><span class="kw">body</span><span class="op">&gt;</span>
 <span class="op">&lt;/</span><span class="kw">html</span><span class="op">&gt;</span></pre>
+      <div style="margin-top:0.5rem">
+        <img src="img/md2w3_std3_4.png" alt="緑のフィールド上に最初のコマの23個（青11・赤11・白1）を配置した実行結果" style="width:100%;max-width:640px;border:1px solid #333;border-radius:10px;display:block">
+        <p style="font-size:0.8rem;color:#999;margin-top:0.3rem">▲ 実行結果（Webブラウザ）：緑のフィールドに、青11・赤11・白1（ボール）の計23個が配置される</p>
+      </div>
 
       <div class="callout-info" style="margin-top:0.6rem">
         <h4>組み立てチャレンジ</h4>
@@ -1283,6 +1365,10 @@ python -m http.server 8000</pre>
     f = ____;                          <span class="cmt">// ★空欄1: 次のコマへ。最後まで行ったら0に戻す★</span>
   }, ____);                            <span class="cmt">// ★空欄2: 間隔ミリ秒（例 100）★</span>
 });</pre>
+      <div style="margin-top:0.5rem">
+        <img src="img/md2w3_std3_5.png" alt="CSVを反映して23個の選手とボールがアニメーションする実行結果" style="width:100%;max-width:640px;border:1px solid #333;border-radius:10px;display:block">
+        <p style="font-size:0.8rem;color:#999;margin-top:0.3rem">▲ 実行結果（Webブラウザ）：全コマを再生し、選手（青・赤）とボール（白）がデータ通りに動く（画像は途中の1コマ）</p>
+      </div>
 
       <div class="callout-info" style="margin-top:0.6rem">
         <h4>組み立てチャレンジ</h4>
@@ -1373,7 +1459,7 @@ python -m http.server 8000</pre>
 <span class="op">&lt;!DOCTYPE html&gt;</span>
 <span class="op">&lt;</span><span class="kw">html</span><span class="op">&gt;</span>
   <span class="op">&lt;</span><span class="kw">head</span><span class="op">&gt;</span>
-    <span class="op">&lt;</span><span class="kw">script</span> <span class="fn">src</span>=<span class="str">"https://aframe.io/releases/1.6.0/aframe.min.js"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="kw">script</span> <span class="fn">src</span>=<span class="str">"https://aframe.io/releases/1.7.1/aframe.min.js"</span><span class="op">&gt;</span><span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
   <span class="op">&lt;/</span><span class="kw">head</span><span class="op">&gt;</span>
   <span class="op">&lt;</span><span class="kw">body</span><span class="op">&gt;</span>
     <span class="op">&lt;</span><span class="kw">a-scene</span><span class="op">&gt;</span>
