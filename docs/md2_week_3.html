@@ -1670,21 +1670,28 @@ python -m http.server 8000</pre>
 
       <!-- 実際にやってみた：10例の分析・可視化ギャラリー -->
       <div class="card group" style="margin-top:0.8rem">
-        <div class="card-header"><h3>✅ 実際にやってみた：<code>soccer.csv</code> を分析・可視化した10例</h3></div>
-        <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">ウプサラ大学の例のように、今日の <code>soccer.csv</code> <strong>だけ</strong>から Python（<strong>pandas + matplotlib</strong>）でサッカーピッチ上に描いた分析例。<strong>特に注目：ホーム／アウェイが「フィールドのどこをよく使ったか」のヒートマップ（下の 1・2）</strong>。</p>
+        <div class="card-header"><h3>✅ 実際にやってみた：<strong>本物のトラッキングデータ</strong>を分析・可視化した10例</h3></div>
+        <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">ウプサラ大学の例と同じように、<strong>本物のサッカーのトラッキングデータ</strong>（<a href="https://github.com/metrica-sports/sample-data" target="_blank" rel="noopener" style="color:#4FC3F7">Metrica Sports が公開する Sample Game 1</a>・約90分・25fps・実試合）を Python（<strong>pandas + matplotlib</strong>）で分析した結果。<strong>特に注目：ホーム／アウェイが「フィールドのどこをよく使ったか」のヒートマップ（下の 1・2）</strong>。今日 <code>soccer.csv</code> で学んだ読み方が、そのまま本物にも通用する。</p>
 
         <div class="callout-tip" style="margin-bottom:0.6rem">
-          <h4>自分で動かすには</h4>
-          <p style="font-size:0.88rem;margin-bottom:0.3rem">分析スクリプトを配布しています：<a href="soccer_analysis.py" download style="color:#4FC3F7;font-weight:700">soccer_analysis.py をダウンロード</a>（<code>soccer.csv</code> と同じフォルダに置く）。第3回の手順で pandas を入れたら、matplotlib も足して実行：</p>
+          <h4>自分で動かすには（本物データを入手して実行）</h4>
+          <p style="font-size:0.88rem;margin-bottom:0.3rem">分析スクリプト <a href="metrica_analysis.py" download style="color:#4FC3F7;font-weight:700">metrica_analysis.py をダウンロード</a>し、Metrica の公開データを同じフォルダに置いて実行する：</p>
 <pre>Terminal
+<span class="cmt"># ① Metricaの公開サンプルデータを取得</span>
+B=https://raw.githubusercontent.com/metrica-sports/sample-data/master/data/Sample_Game_1
+curl -L "$B/Sample_Game_1_RawTrackingData_Home_Team.csv" -o home.csv
+curl -L "$B/Sample_Game_1_RawTrackingData_Away_Team.csv" -o away.csv
+
+<span class="cmt"># ② ライブラリを入れて実行</span>
 uv pip install pandas matplotlib
-python soccer_analysis.py      <span class="cmt"># anal_01.png 〜 anal_10.png が出力される</span></pre>
+python metrica_analysis.py     <span class="cmt"># anal_01.png 〜 anal_10.png が出力される</span></pre>
         </div>
 
         <p style="font-weight:700;color:#93D500;font-size:0.9rem;margin:0.4rem 0 0.2rem">ヒートマップの中心となるコード（＝位置をマス目で数えて色にする）</p>
 <pre>Python
-<span class="kw">import</span> pandas <span class="kw">as</span> pd, numpy <span class="kw">as</span> np, matplotlib.pyplot <span class="kw">as</span> plt
-df = pd.<span class="fn">read_csv</span>(<span class="str">'soccer.csv'</span>)
+<span class="kw">import</span> numpy <span class="kw">as</span> np, matplotlib.pyplot <span class="kw">as</span> plt
+<span class="cmt"># Metricaデータを読み込み→メートルに変換→縦持ちにした表（読み込み処理は metrica_analysis.py）</span>
+df = <span class="fn">load_metrica</span>()
 home = df[df[<span class="str">'team'</span>] == <span class="str">'home'</span>]          <span class="cmt"># ホームだけ抽出</span>
 
 <span class="cmt"># 位置を2次元ヒストグラムにする（＝フィールドをマス目に区切って数える）</span>
@@ -1694,27 +1701,29 @@ H, _, _ = np.<span class="fn">histogram2d</span>(home[<span class="str">'x'</spa
 plt.<span class="fn">imshow</span>(H.T, origin=<span class="str">'lower'</span>, extent=[-<span class="num">52.5</span>, <span class="num">52.5</span>, -<span class="num">34</span>, <span class="num">34</span>],
            cmap=<span class="str">'YlOrRd'</span>)                <span class="cmt"># よく使ったマスほど濃い色に</span>
 plt.<span class="fn">savefig</span>(<span class="str">'home_heatmap.png'</span>)</pre>
-        <p style="font-size:0.82rem;color:#999;margin:0.2rem 0 0.6rem">※ 上は要点だけ。緑のピッチや白線を描く <code>draw_pitch()</code> を含む全コードは <code>soccer_analysis.py</code> にある。</p>
+        <p style="font-size:0.82rem;color:#999;margin:0.2rem 0 0.6rem">※ 上は要点だけ。Metricaデータの読み込み（0〜1座標→メートル変換、後半の向きそろえ）や、緑のピッチを描く <code>draw_pitch()</code> を含む全コードは <code>metrica_analysis.py</code> にある。</p>
 
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:0.7rem">
-          <figure style="margin:0"><img src="img/md2w3_anal_01.png" alt="ホームチームのフィールド利用ヒートマップ" style="width:100%;border:1px solid #333;border-radius:8px;display:block"><figcaption style="font-size:0.8rem;color:#ccc;margin-top:0.2rem">① ホームは<strong>自陣（左）〜中央</strong>をよく使う</figcaption></figure>
-          <figure style="margin:0"><img src="img/md2w3_anal_02.png" alt="アウェイチームのフィールド利用ヒートマップ" style="width:100%;border:1px solid #333;border-radius:8px;display:block"><figcaption style="font-size:0.8rem;color:#ccc;margin-top:0.2rem">② アウェイは<strong>自陣（右）〜中央</strong>が中心</figcaption></figure>
-          <figure style="margin:0"><img src="img/md2w3_anal_03.png" alt="ボールのフィールド利用ヒートマップ" style="width:100%;border:1px solid #333;border-radius:8px;display:block"><figcaption style="font-size:0.8rem;color:#ccc;margin-top:0.2rem">③ ボールは<strong>広く動き回る</strong></figcaption></figure>
-          <figure style="margin:0"><img src="img/md2w3_anal_04.png" alt="陣地の優勢（ホーム−アウェイの密度差）" style="width:100%;border:1px solid #333;border-radius:8px;display:block"><figcaption style="font-size:0.8rem;color:#ccc;margin-top:0.2rem">④ 陣地の優勢：<strong>青=左（ホーム）／赤=右（アウェイ）</strong></figcaption></figure>
-          <figure style="margin:0"><img src="img/md2w3_anal_05.png" alt="ホームの平均フォーメーション" style="width:100%;border:1px solid #333;border-radius:8px;display:block"><figcaption style="font-size:0.8rem;color:#ccc;margin-top:0.2rem">⑤ ホームの<strong>平均フォーメーション</strong>（背番号つき）</figcaption></figure>
-          <figure style="margin:0"><img src="img/md2w3_anal_06.png" alt="アウェイの平均フォーメーション" style="width:100%;border:1px solid #333;border-radius:8px;display:block"><figcaption style="font-size:0.8rem;color:#ccc;margin-top:0.2rem">⑥ アウェイの<strong>平均フォーメーション</strong></figcaption></figure>
-          <figure style="margin:0"><img src="img/md2w3_anal_07.png" alt="選手ごとの移動距離" style="width:100%;border:1px solid #333;border-radius:8px;display:block"><figcaption style="font-size:0.8rem;color:#ccc;margin-top:0.2rem">⑦ 選手ごとの<strong>移動距離</strong>（誰がよく走ったか）</figcaption></figure>
-          <figure style="margin:0"><img src="img/md2w3_anal_08.png" alt="ボールの軌跡" style="width:100%;border:1px solid #333;border-radius:8px;display:block"><figcaption style="font-size:0.8rem;color:#ccc;margin-top:0.2rem">⑧ <strong>ボールの軌跡</strong>（90分ぶん）</figcaption></figure>
-          <figure style="margin:0"><img src="img/md2w3_anal_09.png" alt="チーム重心Xの時間変化" style="width:100%;border:1px solid #333;border-radius:8px;display:block"><figcaption style="font-size:0.8rem;color:#ccc;margin-top:0.2rem">⑨ チーム重心X の時間変化＝<strong>攻め上がり／守りの波</strong></figcaption></figure>
+          <figure style="margin:0"><img src="img/md2w3_anal_01.png" alt="ホームのフィールド利用ヒートマップ（Metrica実データ）" style="width:100%;border:1px solid #333;border-radius:8px;display:block"><figcaption style="font-size:0.8rem;color:#ccc;margin-top:0.2rem">① ホームは<strong>自陣＋中央</strong>に長くいた（濃い所ほど滞在が長い）</figcaption></figure>
+          <figure style="margin:0"><img src="img/md2w3_anal_02.png" alt="アウェイのフィールド利用ヒートマップ（Metrica実データ）" style="width:100%;border:1px solid #333;border-radius:8px;display:block"><figcaption style="font-size:0.8rem;color:#ccc;margin-top:0.2rem">② アウェイも<strong>自陣＋中央</strong>が濃い</figcaption></figure>
+          <figure style="margin:0"><img src="img/md2w3_anal_03.png" alt="ボールのフィールド利用ヒートマップ（Metrica実データ）" style="width:100%;border:1px solid #333;border-radius:8px;display:block"><figcaption style="font-size:0.8rem;color:#ccc;margin-top:0.2rem">③ ボールは<strong>中央のレーンを軸に</strong>動く</figcaption></figure>
+          <figure style="margin:0"><img src="img/md2w3_anal_04.png" alt="陣地の優勢（ホーム−アウェイの密度差）" style="width:100%;border:1px solid #333;border-radius:8px;display:block"><figcaption style="font-size:0.8rem;color:#ccc;margin-top:0.2rem">④ 陣地の優勢：<strong>青=左（ホーム）／赤=右（アウェイ）</strong>で自陣側を支配</figcaption></figure>
+          <figure style="margin:0"><img src="img/md2w3_anal_05.png" alt="ホームの平均ポジション" style="width:100%;border:1px solid #333;border-radius:8px;display:block"><figcaption style="font-size:0.8rem;color:#ccc;margin-top:0.2rem">⑤ ホームの<strong>平均ポジション</strong>（実際の布陣が浮かぶ）</figcaption></figure>
+          <figure style="margin:0"><img src="img/md2w3_anal_06.png" alt="アウェイの平均ポジション" style="width:100%;border:1px solid #333;border-radius:8px;display:block"><figcaption style="font-size:0.8rem;color:#ccc;margin-top:0.2rem">⑥ アウェイの<strong>平均ポジション</strong></figcaption></figure>
+          <figure style="margin:0"><img src="img/md2w3_anal_07.png" alt="選手ごとの移動距離" style="width:100%;border:1px solid #333;border-radius:8px;display:block"><figcaption style="font-size:0.8rem;color:#ccc;margin-top:0.2rem">⑦ <strong>移動距離</strong>：中盤は約10km、GKが最少 ← サッカーの常識どおり</figcaption></figure>
+          <figure style="margin:0"><img src="img/md2w3_anal_08.png" alt="ボールの軌跡" style="width:100%;border:1px solid #333;border-radius:8px;display:block"><figcaption style="font-size:0.8rem;color:#ccc;margin-top:0.2rem">⑧ <strong>ボールの軌跡</strong>（試合開始〜15分）</figcaption></figure>
+          <figure style="margin:0"><img src="img/md2w3_anal_09.png" alt="チーム重心Xの時間変化" style="width:100%;border:1px solid #333;border-radius:8px;display:block"><figcaption style="font-size:0.8rem;color:#ccc;margin-top:0.2rem">⑨ チーム重心X の時間変化＝<strong>攻守で前後する波</strong>（両チーム連動）</figcaption></figure>
           <figure style="margin:0"><img src="img/md2w3_anal_10.png" alt="両チーム重心の軌跡" style="width:100%;border:1px solid #333;border-radius:8px;display:block"><figcaption style="font-size:0.8rem;color:#ccc;margin-top:0.2rem">⑩ 両チーム<strong>重心の軌跡</strong>（青=ホーム／赤=アウェイ）</figcaption></figure>
         </div>
 
         <div class="callout-info" style="margin-top:0.6rem">
           <h4>この結果の読み方（＝発展課題のヒント）</h4>
           <ul class="point-list" style="margin-bottom:0">
-            <li>ヒートマップ①②で、両チームが<strong>それぞれ自陣寄りをよく使い、中央で押し合っている</strong>のが見える</li>
-            <li>これらは<strong>すべて <code>soccer.csv</code> だけ</strong>から作れる。あなたも <code>soccer_analysis.py</code> の1つを選んで改造したり、A-Frame（3D）で同じ指標を表示すれば、りっぱな発展課題になる</li>
-            <li><span style="color:#999">※ 今回は合成サンプルなので分布が規則的だが、本物のトラッキングデータでも<strong>同じコード</strong>で分析できる。</span></li>
+            <li>ヒートマップ①②で、両チームとも<strong>自陣＋中央に長くいて、相手ゴール前（攻撃サード）は薄い</strong> ── 守る時間が長く、中央を経由する、という<strong>本物の試合の傾向</strong>が読み取れる</li>
+            <li>⑦の移動距離で <strong>GK が最少・中盤が最多（約10km）</strong>という、サッカーの常識どおりの結果が計算だけから出る</li>
+            <li><strong>これは正真正銘、実際のプロの試合データ（Metrica）の分析結果</strong>。今日 <code>soccer.csv</code> で覚えた「読み込む → 抽出する → <code>histogram2d</code> で数える」手順が、そのまま本物に通用する</li>
+            <li>あなたも指標を1つ選んで作り、A-Frame（3D）で同じものを表示すれば、りっぱな発展課題になる</li>
+            <li><span style="color:#999">データ出典：Metrica Sports Sample Data（研究・教育用に無償公開）。</span></li>
           </ul>
         </div>
       </div>
