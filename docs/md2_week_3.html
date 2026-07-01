@@ -663,7 +663,6 @@ body { padding-top: 2.2rem; }
         <a href="#std3-4" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std3-4 23個＋フィールド</a>
         <a href="#std3-5" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std3-5 CSVでアニメ</a>
         <a href="#adv3-1" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv3-1 自由創作</a>
-        <a href="#adv3-2" class="sub-item" style="text-decoration:none;color:inherit"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv3-2 反実仮想(オフサイド)</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.85rem;color:#93D500">
         <strong>提出方法:</strong> 下記の項目をすべて<strong>1つのNotionページにまとめて記録</strong> → PDFにエクスポート → Google Classroomに<strong>PDF 1ファイル</strong>を提出
@@ -1728,59 +1727,6 @@ plt.<span class="fn">savefig</span>(<span class="str">'home_heatmap.png'</span>)
       </div>
 
       <div class="notion-submit"><div><strong>提出（任意）:</strong> 作品のコード＋実行画面のスクショ＋音声（工夫した点とコードの説明）</div></div>
-    </div>
-
-    <!-- adv3-2 : 反実仮想（オフサイド） -->
-    <div id="adv3-2" class="card advanced">
-      <div class="card-header"><h3><span class="tag tag-advanced" style="font-size:0.7rem">発展課題</span> adv3-2：反実仮想シミュレーション ―「もしオフサイドが無かったら？」</h3></div>
-      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">データの強力な使い方が <strong>反実仮想（counterfactual＝「もし〜だったら？」）</strong>。実際の記録を分析するだけでなく、<strong>条件を変えたら結果がどう変わるかをシミュレーションする</strong>。ここでは<strong>オフサイド</strong>を題材に、「もしオフサイドのルールが無かったら試合はどうなるか」を、選手を動かして体験できる WebXR を作る。</p>
-
-      <div class="callout-info">
-        <h4>オフサイドとは（超要約）</h4>
-        <ul class="point-list" style="margin-bottom:0">
-          <li>攻撃側の選手が、パスが出された<strong>瞬間</strong>に「<strong>後ろから2番目の相手選手</strong>（＝最終ラインの守備者）」より相手ゴールに近い位置にいると<strong>オフサイド</strong>（＝反則、ノーゴール）</li>
-          <li>ざっくり言えば「<strong>ゴール前で待ち伏せ（点取り屋のサボり）を禁止する</strong>」ルール。だから攻撃側は守備ラインの<strong>手前</strong>で我慢し、パスの瞬間に飛び出す</li>
-        </ul>
-      </div>
-
-      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:0.7rem 0 0.2rem">▶ 実際に動くサンプル（そのまま試せる）</p>
-      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.4rem"><a href="offside_sim.html" target="_blank" rel="noopener" style="color:#4FC3F7;font-weight:700">オフサイド反実仮想シミュレータを開く</a>（<a href="offside_sim.html" download style="color:#4FC3F7">ダウンロード</a>）。アタッカー（<span style="color:#00e5ff">水色▼</span>）を「前に走る」で動かし、「<strong>スルーパス！</strong>」を押す。<strong>「オフサイド: あり／なし」を切り替えると、同じ動きでも結果が変わる</strong>のがポイント。<span style="color:#888;font-size:0.82rem">（このHTMLは1シーンのデータを内蔵しているので、サーバ不要でそのまま開ける）</span></p>
-      <div style="margin-top:0.4rem">
-        <img src="img/md2w3_offside.gif" alt="オフサイド反実仮想シミュレータの動作：同じスルーパスでもオフサイドあり=ノーゴール、なし=ゴール" style="width:100%;max-width:660px;border:1px solid #333;border-radius:10px;display:block">
-        <p style="font-size:0.8rem;color:#999;margin-top:0.3rem">▲ 実行結果（アニメGIF）：同じスルーパスでも <strong>オフサイドあり＝🚩ノーゴール</strong> ／ <strong>なし＝⚽ゴール</strong>。ルールが無いと「ゴール前で待ち伏せ」し放題になり、試合が成り立たなくなる ＝ <strong>だからオフサイドがある</strong>、が体感できる。</p>
-      </div>
-
-      <p style="font-weight:700;color:#93D500;font-size:0.9rem;margin:0.8rem 0 0.2rem">反実仮想のしくみ（中心となるコード）</p>
-<pre>JavaScript
-<span class="cmt">// オフサイドライン＝守備側を x の大きい順に並べた「2番目」（最後尾GKの1つ前）</span>
-<span class="kw">function</span> <span class="fn">offsideLineX</span>() {
-  <span class="kw">const</span> xs = players.<span class="fn">filter</span>(p =&gt; p.team === <span class="str">'away'</span>)
-                    .<span class="fn">map</span>(p =&gt; p.fx).<span class="fn">sort</span>((a, b) =&gt; b - a);
-  <span class="kw">return</span> xs[<span class="num">1</span>];
-}
-
-<span class="cmt">// アタッカーがライン＆ボールより前 → 「オフサイドの位置」</span>
-<span class="kw">function</span> <span class="fn">isOffsidePosition</span>() {
-  <span class="kw">return</span> attacker.fx &gt; <span class="fn">offsideLineX</span>() &amp;&amp; attacker.fx &gt; ball.fx;
-}
-
-<span class="cmt">// スルーパスの判定：オフサイドON かつ オフサイド位置 → ノーゴール（反則）</span>
-<span class="kw">const</span> flagged = offsideOn &amp;&amp; <span class="fn">isOffsidePosition</span>();
-<span class="cmt">// flagged なら「🚩 オフサイド！ ノーゴール」、そうでなければ パスが通って「⚽ ゴール！」</span></pre>
-      <p style="font-size:0.82rem;color:#999;margin:0.2rem 0 0.5rem">※ 全コードは <code>offside_sim.html</code> にある（ピッチ・選手の描画、スルーパスのアニメ、HUDなど）。<code>offsideOn</code> を切り替えるだけで「反実仮想」になる。</p>
-
-      <div class="callout-warning">
-        <h4>課題（あなたがつくる）</h4>
-        <p style="font-size:0.88rem;margin-bottom:0.4rem">上のサンプルを土台に（改造でOK）、1シーンを対象に「<strong>もしオフサイドが無かったら</strong>」を体験できるものを作る。最低ラインは次の4つ：</p>
-        <ul class="point-list" style="margin-bottom:0">
-          <li><strong>①</strong> オフサイドライン（後ろから2番目の守備者）を画面に表示する</li>
-          <li><strong>②</strong> アタッカーを前後に動かせる（オンサイド／オフサイドの位置を作れる）</li>
-          <li><strong>③</strong> スルーパスを出すと、<strong>結果（ゴール／ノーゴール）が変わる</strong></li>
-          <li><strong>④</strong> <strong>オフサイドあり／なしを切り替え</strong>られる（＝反実仮想）</li>
-        </ul>
-        <p style="font-size:0.82rem;color:#999;margin-top:0.4rem">発展アイデア：守備ラインを上げ下げして<strong>オフサイドトラップ</strong>を再現／複数のアタッカー／パスコースに敵がいたら失敗、など。</p>
-      </div>
-      <div class="notion-submit"><div><strong>提出（任意）:</strong> コード＋実行GIF・スクショ＋「オフサイドが無いと試合はどうなるか」の考察を数行</div></div>
     </div>
   </div>
 </section>
