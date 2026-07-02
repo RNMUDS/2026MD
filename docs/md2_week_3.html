@@ -892,6 +892,54 @@ body { padding-top: 2.2rem; }
       </details>
       <div class="notion-submit"><div><strong>提出:</strong> 完成コード＋実行画面のスクショをNotionに貼る</div></div>
     </div>
+
+    <!-- グループワーク：出題ラリー -->
+    <div class="card standard" style="border-color:#93D500">
+      <div class="card-header"><h3>🗣️ グループワーク：for文「出題ラリー」（口頭で説明する）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">std3-1 で書いた「for文で複数オブジェクトを並べるコード」を、<strong>人に説明できるか</strong>を確かめるワーク。コードは「動かせる」だけでなく「<strong>なぜそう動くか言葉にできる</strong>」ようになると本物。</p>
+
+      <div class="concept-box" style="margin-bottom:0.6rem">
+        <h4>進め方（時計回りの出題ラリー・4〜5人）</h4>
+        <ul class="point-list" style="margin-bottom:0">
+          <li><strong>①</strong> 円になって座る。<strong>時計回り</strong>に進行する。まず1人が<strong>質問者</strong>、その左どなり（時計回りの次の人）が<strong>回答者</strong>。</li>
+          <li><strong>②</strong> 質問者は下の「出題カード」から1問選んで出題する。</li>
+          <li><strong>③</strong> 回答者は自分の画面・コードを見ながら<strong>口頭で説明</strong>する（黙読ではなく声に出す）。</li>
+          <li><strong>④</strong> <strong>まわりのメンバー全員</strong>は、その回答をノート（Notion）に書き留める。</li>
+          <li><strong>⑤</strong> 1問終わったら<strong>1つ時計回りにずれる</strong>：さっきの回答者が次の質問者になり、そのとなりが次の回答者。全員が質問者・回答者を最低1回ずつやる。</li>
+        </ul>
+        <div class="analogy" style="margin-top:0.6rem">回答は「正解を当てる」ゲームではない。<strong>詰まったらまわりがヒントを出してOK</strong>。全員でコードの流れを言葉にするのが目的。</div>
+      </div>
+
+      <div class="callout-info">
+        <h4>出題カード（質問者はここから1問選ぶ）</h4>
+        <ul class="point-list" style="margin-top:0.3rem">
+          <li><strong>Q1（基本・おすすめ）</strong> 「<code>a-box</code> を for文で10個配置したい」。コードの流れを<strong>最初から最後まで</strong>順番に説明して。</li>
+          <li><strong>Q2</strong> <code>for (let i = 0; i &lt; N; i++)</code> の <code>i++</code> は何をしている？ もし書き忘れたら何が起きる？</li>
+          <li><strong>Q3</strong> <code>createElement</code> と <code>appendChild</code> の役割の違いは？ どちらか片方だけだとどうなる？</li>
+          <li><strong>Q4</strong> 位置の <code>`${i - 4.5} 1.5 -5`</code> の <code>i - 4.5</code> は何のため？ i=0 と i=9 の箱はそれぞれどこに来る？</li>
+          <li><strong>Q5</strong> <code>N</code> を 10 から 20 に変えると何が起きる？ なぜ？</li>
+          <li><strong>Q6</strong> スフィア（<code>a-sphere</code>）ではなく <code>a-box</code> にするには、どの行をどう書きかえる？</li>
+          <li><strong>Q7（応用）</strong> 箱の色を1個ずつ変えるには、どこにどんな1行を足す？（ヒント：<code>i</code> を使う）</li>
+        </ul>
+      </div>
+
+      <details style="margin-top:0.6rem">
+        <summary>採点ポイント：Q1「a-boxを10個」の模範的な説明の流れ</summary>
+        <div class="answer-content">
+          <ul class="point-list" style="margin-top:0.3rem">
+            <li><strong>1.</strong> <code>querySelector('#group')</code> で、箱を入れる<strong>場所</strong>を取ってくる。</li>
+            <li><strong>2.</strong> <code>const N = 10</code> で<strong>個数</strong>を決める（あとで変えたい値）。</li>
+            <li><strong>3.</strong> <code>for (let i = 0; i &lt; N; i++)</code> で<strong>10回くりかえす</strong>（i は 0,1,2…9）。</li>
+            <li><strong>4.</strong> 毎回 <code>createElement('a-box')</code> で<strong>箱を1個つくる</strong>。</li>
+            <li><strong>5.</strong> <code>setAttribute</code> で <code>position</code> や <code>color</code> を設定。位置は <code>i</code> を使って<strong>1個ずつ横にずらす</strong>。</li>
+            <li><strong>6.</strong> <code>appendChild</code> で<strong>空間（group）に追加</strong>する。</li>
+            <li><strong>7.</strong> くりかえしが終わると、横に10個ならんだ状態になる。</li>
+          </ul>
+          <p style="font-size:0.85rem;color:#999;margin-top:0.4rem">「つくる（createElement）→設定する（setAttribute）→追加する（appendChild）」の3ステップを <code>i</code> を変えながら10回くりかえす、と言えていれば◎。<code>a-sphere</code> を <code>a-box</code> にするだけで箱になる点も押さえられると完璧。</p>
+        </div>
+      </details>
+      <div class="notion-submit"><div><strong>提出:</strong> 自分が回答した問題と、まわりの人の回答メモ（要点だけでOK）をNotionに書き留める</div></div>
+    </div>
   </div>
 </section>
 
@@ -1258,20 +1306,91 @@ python -m http.server 8000</pre>
         <li><strong><code>await</code> は <code>async</code> を付けた関数の中でしか使えない</strong>約束。だから <code>loadCSV</code> の頭に <code>async</code> を付ける</li>
       </ul>
       <div class="analogy" style="margin-top:0.6rem"><strong>カップ麺</strong>と同じ。お湯を注いだら3分<strong>「待つ（＝await）」</strong>→ できてから食べる。<code>await</code> せずに<strong>まだできていないのに食べようとする</strong>と、中身が空っぽで失敗する（＝データが届く前に使おうとしてエラー）。</div>
-      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.7rem 0 0.2rem">コードの読み方</p>
+      <p style="font-weight:700;color:#76B900;font-size:0.9rem;margin:0.7rem 0 0.2rem">CSVを読む関数の全体（むずかしい書き方は使わず、<code>for</code> 文と <code>if</code> だけで書く）</p>
+      <p style="font-size:0.85rem;color:#ccc;margin-bottom:0.3rem">やることは<strong>たった2段階</strong>。①ファイルを文字として受け取る（ここだけ <code>await</code>）→ ②その文字を <code>for</code> 文で1行ずつ「データの箱」に詰めかえる。②は第1回・第2回で習った <code>for</code> と同じ。</p>
 <pre>JavaScript
-<span class="kw">async</span> <span class="kw">function</span> <span class="fn">loadCSV</span>(url) {          <span class="cmt">// ← awaitを使うので async を付ける</span>
-  <span class="kw">const</span> text = <span class="kw">await</span> (<span class="kw">await</span> <span class="fn">fetch</span>(url)).<span class="fn">text</span>();  <span class="cmt">// ①ファイルを取りに行き ②文字として受け取る（両方 await で待つ）</span>
-  <span class="cmt">// ... text（CSVの中身）を1行ずつ分解して配列にする ...</span>
+<span class="kw">async</span> <span class="kw">function</span> <span class="fn">loadCSV</span>(url) {              <span class="cmt">// ← awaitを使うので async を付ける</span>
+  <span class="kw">const</span> res  = <span class="kw">await</span> <span class="fn">fetch</span>(url);           <span class="cmt">// ① ファイルを取りに行く（届くまで待つ）</span>
+  <span class="kw">const</span> text = <span class="kw">await</span> res.<span class="fn">text</span>();           <span class="cmt">// ② 中身を1つの長い文字にして受け取る（受け取るまで待つ）</span>
+
+  <span class="kw">const</span> lines = text.<span class="fn">trim</span>().<span class="fn">split</span>(<span class="str">'\n'</span>);   <span class="cmt">// ③ 改行(\n)で「1行ずつ」に分ける</span>
+  <span class="kw">const</span> rows = [];                          <span class="cmt">// ④ 詰めかえ先の空っぽの配列</span>
+  <span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">1</span>; i &lt; lines.<span class="fn">length</span>; i++) {   <span class="cmt">// i=1 から：1行目(見出し frame,team,…)は飛ばす</span>
+    <span class="kw">const</span> c = lines[i].<span class="fn">split</span>(<span class="str">','</span>);         <span class="cmt">// カンマで5つの値に分ける → c[0]…c[4]</span>
+    <span class="kw">const</span> row = {                           <span class="cmt">// 5つの値を「名前つきの箱」にまとめる</span>
+      frame: <span class="fn">Number</span>(c[<span class="num">0</span>]),                    <span class="cmt">// Number(...) は「文字→数値」に直す（"0"→0）</span>
+      team:  c[<span class="num">1</span>],                            <span class="cmt">// team は文字のまま（'home'など）</span>
+      id:    <span class="fn">Number</span>(c[<span class="num">2</span>]),
+      x:     <span class="fn">Number</span>(c[<span class="num">3</span>]),
+      y:     <span class="fn">Number</span>(c[<span class="num">4</span>])
+    };
+    rows.<span class="fn">push</span>(row);                        <span class="cmt">// 配列のうしろに1件ずつ足していく</span>
+  }
+  <span class="kw">return</span> rows;                             <span class="cmt">// ⑤ 「行データの箱」を集めた配列を返す</span>
 }
 
 <span class="fn">loadCSV</span>(<span class="str">'soccer.csv'</span>).<span class="fn">then</span>(<span class="kw">function</span> (rows) {   <span class="cmt">// 読み終わったら、then の中が実行される</span>
-  <span class="cmt">// ここで rows（読み込んだデータ）を使う</span>
+  <span class="cmt">// ここで rows（読み込んだデータの配列）を使う</span>
 });</pre>
       <ul class="point-list" style="margin-bottom:0">
+        <li><code>split('\n')</code>＝<strong>改行で切る</strong>→行の配列。<code>split(',')</code>＝<strong>カンマで切る</strong>→列（値）の配列。文字を切り分ける命令</li>
+        <li><code>Number('19.3')</code>＝<strong>文字を数値に直す</strong>。CSVから読むと最初は全部「文字」なので、計算に使う <code>x・y</code> は数値へ直す</li>
+        <li><code>rows.push(row)</code>＝配列の<strong>うしろに1件足す</strong>。<code>for</code> で124,200回くりかえすと、全データが <code>rows</code> にそろう</li>
         <li><code>.then(function (rows) { ... })</code>＝<strong>「読み終わったら、この中を実行して」</strong>。時間がかかる <code>loadCSV</code> の結果は、ここで受け取る（<code>await</code> と同じ「待つ」仲間）</li>
-        <li><strong>まとめ：</strong> 時間がかかる処理は <code>await</code> で待つ／その関数には <code>async</code> を付ける／呼び出し側は <code>.then()</code> で結果を受け取る。今は<strong>形を覚えて使えれば十分</strong></li>
+        <li><strong>まとめ：</strong> 待つのは <code>fetch</code> と <code>text()</code> の<strong>2か所だけ</strong>（<code>await</code>）。あとは<strong>知っている <code>for</code> と <code>if</code> だけ</strong>で書ける</li>
       </ul>
+    </div>
+
+    <!-- 図解＋アニメーション：CSVの1行が「データの箱」になるまで -->
+    <style>
+      .csvflow { background:#0a0a0a; border:1px solid #4FC3F7; border-radius:12px; padding:1rem 1.1rem; margin:0.8rem 0; }
+      .csvflow .cf-title { font-weight:700; color:#4FC3F7; font-size:0.95rem; margin-bottom:0.2rem; }
+      .csvflow .cf-sub { font-size:0.85rem; color:#ccc; margin-bottom:0.9rem; }
+      .csvflow .cf-step { opacity:0; transform:translateY(8px); animation:cfIn 0.6s ease forwards; }
+      @keyframes cfIn { to { opacity:1; transform:translateY(0); } }
+      .csvflow .cf-label { font-size:0.78rem; color:#4FC3F7; font-weight:700; margin:0.1rem 0 0.25rem; }
+      .csvflow .cf-arrow { text-align:center; color:#4FC3F7; font-size:1.1rem; line-height:1; margin:0.15rem 0; }
+      .csvflow .cf-arrow span { font-size:0.72rem; color:#999; margin-left:0.4rem; }
+      .csvflow .cf-code { font-family:ui-monospace,Menlo,Consolas,monospace; font-size:0.82rem; background:#141414; border:1px solid #2a2a2a; border-radius:8px; padding:0.5rem 0.7rem; color:#e6e6e6; overflow-x:auto; }
+      .csvflow .cf-cells { display:flex; flex-wrap:wrap; gap:0.4rem; }
+      .csvflow .cf-cell { background:#141414; border:1px solid #4FC3F7; border-radius:8px; padding:0.35rem 0.55rem; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:0.8rem; }
+      .csvflow .cf-cell b { color:#4FC3F7; font-size:0.68rem; display:block; font-weight:700; }
+      .csvflow .cf-box { background:#141414; border:1px dashed #93D500; border-radius:8px; padding:0.5rem 0.7rem; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:0.82rem; color:#e6e6e6; }
+      .csvflow .cf-box .k { color:#93D500; }
+      @media (prefers-reduced-motion: reduce){ .csvflow .cf-step{ animation:none; opacity:1; transform:none; } }
+    </style>
+    <div class="csvflow">
+      <div class="cf-title">図解＋アニメ：CSVの「1行」が「データの箱」になるまで（上から順に流れます）</div>
+      <div class="cf-sub"><code>loadCSV</code> の中で起きていることを、1行分だけ追いかけた図。<strong>切って → 数値に直して → 名前をつける</strong>、それだけ。</div>
+
+      <div class="cf-step" style="animation-delay:0.1s">
+        <div class="cf-label">① 読み込んだ CSV（1つの長い文字）＝ text</div>
+        <div class="cf-code">frame,team,id,x,y<br>0,ball,0,0.0,19.3<br>0,home,1,-45.7,2.2<br>…（全124,200行）</div>
+      </div>
+      <div class="cf-step cf-arrow" style="animation-delay:0.6s">↓ <span><code>text.split('\n')</code> ＝ 改行で切る</span></div>
+
+      <div class="cf-step" style="animation-delay:1.0s">
+        <div class="cf-label">② 行ごとの配列 lines[]（1行目の見出しは <code>i=1</code> から始めて飛ばす）</div>
+        <div class="cf-code">lines[1] = <span style="color:#FFD37A">"0,ball,0,0.0,19.3"</span></div>
+      </div>
+      <div class="cf-step cf-arrow" style="animation-delay:1.5s">↓ <span><code>lines[1].split(',')</code> ＝ カンマで切る</span></div>
+
+      <div class="cf-step" style="animation-delay:1.9s">
+        <div class="cf-label">③ 値ごとの配列 c[]（この時点では全部「文字」）</div>
+        <div class="cf-cells">
+          <div class="cf-cell"><b>c[0]</b>"0"</div>
+          <div class="cf-cell"><b>c[1]</b>"ball"</div>
+          <div class="cf-cell"><b>c[2]</b>"0"</div>
+          <div class="cf-cell"><b>c[3]</b>"0.0"</div>
+          <div class="cf-cell"><b>c[4]</b>"19.3"</div>
+        </div>
+      </div>
+      <div class="cf-step cf-arrow" style="animation-delay:2.4s">↓ <span>名前をつけ、数の列は <code>Number(...)</code> で数値に直す</span></div>
+
+      <div class="cf-step" style="animation-delay:2.8s">
+        <div class="cf-label">④ 名前つきの「データの箱」row（これを rows に push）</div>
+        <div class="cf-box">{ <span class="k">frame:</span> 0, <span class="k">team:</span> "ball", <span class="k">id:</span> 0, <span class="k">x:</span> 0.0, <span class="k">y:</span> 19.3 }</div>
+      </div>
     </div>
 
     <!-- std3-4 -->
@@ -1310,27 +1429,39 @@ python -m http.server 8000</pre>
         <span class="kw">return</span> <span class="str">'white'</span>;                          <span class="cmt">// ボール</span>
       }
 
-      <span class="cmt">// CSVを読み込んで、1行=1オブジェクトの配列にする</span>
+      <span class="cmt">// CSVを読み込んで、1行=1オブジェクトの配列にする（for文だけで書く）</span>
       <span class="kw">async</span> <span class="kw">function</span> <span class="fn">loadCSV</span>(url) {
-        <span class="kw">const</span> text = <span class="kw">await</span> (<span class="kw">await</span> <span class="fn">fetch</span>(url)).<span class="fn">text</span>();
-        <span class="kw">const</span> lines = text.<span class="fn">trim</span>().<span class="fn">split</span>(<span class="str">'\n'</span>);
-        <span class="kw">return</span> lines.<span class="fn">slice</span>(<span class="num">1</span>).<span class="fn">map</span>(<span class="kw">function</span> (line) {   <span class="cmt">// 1行目(見出し)は飛ばす</span>
-          <span class="kw">const</span> c = line.<span class="fn">split</span>(<span class="str">','</span>);
-          <span class="kw">return</span> { frame: +c[<span class="num">0</span>], team: c[<span class="num">1</span>], id: +c[<span class="num">2</span>], x: +c[<span class="num">3</span>], y: +c[<span class="num">4</span>] };
-        });
+        <span class="kw">const</span> res  = <span class="kw">await</span> <span class="fn">fetch</span>(url);         <span class="cmt">// ファイルを取りに行く（届くまで待つ）</span>
+        <span class="kw">const</span> text = <span class="kw">await</span> res.<span class="fn">text</span>();         <span class="cmt">// 中身を文字として受け取る（待つ）</span>
+        <span class="kw">const</span> lines = text.<span class="fn">trim</span>().<span class="fn">split</span>(<span class="str">'\n'</span>);   <span class="cmt">// 改行で1行ずつに分ける</span>
+        <span class="kw">const</span> rows = [];
+        <span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">1</span>; i &lt; lines.<span class="fn">length</span>; i++) {   <span class="cmt">// 1行目(見出し)は飛ばして2行目から</span>
+          <span class="kw">const</span> c = lines[i].<span class="fn">split</span>(<span class="str">','</span>);          <span class="cmt">// カンマで5つの値に分ける</span>
+          rows.<span class="fn">push</span>({ frame: <span class="fn">Number</span>(c[<span class="num">0</span>]), team: c[<span class="num">1</span>], id: <span class="fn">Number</span>(c[<span class="num">2</span>]), x: <span class="fn">Number</span>(c[<span class="num">3</span>]), y: <span class="fn">Number</span>(c[<span class="num">4</span>]) });
+        }
+        <span class="kw">return</span> rows;
       }
 
       <span class="fn">loadCSV</span>(<span class="str">'soccer.csv'</span>).<span class="fn">then</span>(<span class="kw">function</span> (rows) {
-        <span class="cmt">// 最初のコマ(frame === 0)だけ取り出す → 23件</span>
-        <span class="kw">const</span> first = rows.<span class="fn">filter</span>(<span class="kw">function</span> (r) { <span class="kw">return</span> r.frame === ____; });  <span class="cmt">// ★空欄1: 最初のコマ番号★</span>
+        <span class="cmt">// 最初のコマ(frame === 0)だけ取り出す → 23件（for文とifで選ぶ）</span>
+        <span class="kw">const</span> first = [];
+        <span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; rows.<span class="fn">length</span>; i++) {
+          <span class="kw">if</span> (rows[i].frame === ____) {             <span class="cmt">// ★空欄1: 最初のコマ番号★</span>
+            first.<span class="fn">push</span>(rows[i]);
+          }
+        }
 
-        first.<span class="fn">forEach</span>(<span class="kw">function</span> (r) {
+        <span class="cmt">// 23件を1件ずつ球にして置く</span>
+        <span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; first.<span class="fn">length</span>; i++) {
+          <span class="kw">const</span> r = first[i];
           <span class="kw">const</span> el = <span class="fn">document</span>.<span class="fn">createElement</span>(<span class="str">'a-sphere'</span>);
-          el.<span class="fn">setAttribute</span>(<span class="str">'radius'</span>, r.team === <span class="str">'ball'</span> ? <span class="num">0.2</span> : <span class="num">0.35</span>);
+          <span class="kw">let</span> radius = <span class="num">0.35</span>;                     <span class="cmt">// 選手は 0.35</span>
+          <span class="kw">if</span> (r.team === <span class="str">'ball'</span>) { radius = <span class="num">0.2</span>; }  <span class="cmt">// ボールだけ小さく</span>
+          el.<span class="fn">setAttribute</span>(<span class="str">'radius'</span>, radius);
           el.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, <span class="fn">colorOf</span>(r.team));
           <span class="fn">place</span>(el, r.x, ____);                     <span class="cmt">// ★空欄2: フィールドのy★</span>
           group.<span class="fn">appendChild</span>(el);
-        });
+        }
         <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'配置した数:'</span>, first.<span class="fn">length</span>);   <span class="cmt">// → 23</span>
       });
     <span class="op">&lt;/</span><span class="kw">script</span><span class="op">&gt;</span>
@@ -1355,16 +1486,22 @@ python -m http.server 8000</pre>
         <div class="answer-content">
 <pre>JavaScript
 <span class="fn">loadCSV</span>(<span class="str">'soccer.csv'</span>).<span class="fn">then</span>(<span class="kw">function</span> (rows) {
-  <span class="kw">const</span> first = rows.<span class="fn">filter</span>(r =&gt; r.frame === <span class="num">0</span>);
-  first.<span class="fn">forEach</span>(<span class="kw">function</span> (r) {
+  <span class="kw">const</span> first = [];
+  <span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; rows.<span class="fn">length</span>; i++) {
+    <span class="kw">if</span> (rows[i].frame === <span class="num">0</span>) { first.<span class="fn">push</span>(rows[i]); }
+  }
+  <span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; first.<span class="fn">length</span>; i++) {
+    <span class="kw">const</span> r = first[i];
     <span class="kw">const</span> el = <span class="fn">document</span>.<span class="fn">createElement</span>(<span class="str">'a-sphere'</span>);
-    el.<span class="fn">setAttribute</span>(<span class="str">'radius'</span>, r.team === <span class="str">'ball'</span> ? <span class="num">0.2</span> : <span class="num">0.35</span>);
+    <span class="kw">let</span> radius = <span class="num">0.35</span>;
+    <span class="kw">if</span> (r.team === <span class="str">'ball'</span>) { radius = <span class="num">0.2</span>; }
+    el.<span class="fn">setAttribute</span>(<span class="str">'radius'</span>, radius);
     el.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, <span class="fn">colorOf</span>(r.team));
     <span class="fn">place</span>(el, r.x, r.y);
     group.<span class="fn">appendChild</span>(el);
-  });
+  }
 });</pre>
-          <p style="font-size:0.85rem;color:#999">空欄1＝<code>0</code>、空欄2＝<code>r.y</code>。<code>filter</code> で最初のコマの23件に絞り、<code>forEach</code> で1件ずつ球にして置く。</p>
+          <p style="font-size:0.85rem;color:#999">空欄1＝<code>0</code>、空欄2＝<code>r.y</code>。1つ目の <code>for</code>＋<code>if</code> で最初のコマの23件に絞り、2つ目の <code>for</code> で1件ずつ球にして置く。</p>
         </div>
       </details>
 
@@ -1405,30 +1542,37 @@ python -m http.server 8000</pre>
 
   <span class="cmt">// (A) コマごとにデータを仕分ける： byFrame[f] = そのコマの23件</span>
   <span class="kw">const</span> byFrame = {};
-  rows.<span class="fn">forEach</span>(<span class="kw">function</span> (r) {
-    <span class="kw">if</span> (!byFrame[r.frame]) byFrame[r.frame] = [];
-    byFrame[r.frame].<span class="fn">push</span>(r);
-  });
-  <span class="kw">let</span> maxFrame = <span class="num">0</span>;                    <span class="cmt">// 最後のコマ番号を探す（=5399）</span>
-  rows.<span class="fn">forEach</span>(<span class="kw">function</span> (r) { <span class="kw">if</span> (r.frame &gt; maxFrame) maxFrame = r.frame; });
+  <span class="kw">let</span> maxFrame = <span class="num">0</span>;                          <span class="cmt">// 最後のコマ番号(=5399)も同時に探す</span>
+  <span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; rows.<span class="fn">length</span>; i++) {
+    <span class="kw">const</span> r = rows[i];
+    <span class="kw">if</span> (!byFrame[r.frame]) { byFrame[r.frame] = []; }  <span class="cmt">// そのコマの入れ物がまだ無ければ作る</span>
+    byFrame[r.frame].<span class="fn">push</span>(r);               <span class="cmt">// 同じコマ番号の所にためる</span>
+    <span class="kw">if</span> (r.frame &gt; maxFrame) { maxFrame = r.frame; }
+  }
 
   <span class="cmt">// (B) 23個の球を「1回だけ」作り、team-id をキーに覚える</span>
   <span class="kw">const</span> ents = {};
-  byFrame[<span class="num">0</span>].<span class="fn">forEach</span>(<span class="kw">function</span> (r) {
+  <span class="kw">const</span> firstFrame = byFrame[<span class="num">0</span>];               <span class="cmt">// 最初のコマの23件</span>
+  <span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; firstFrame.<span class="fn">length</span>; i++) {
+    <span class="kw">const</span> r = firstFrame[i];
     <span class="kw">const</span> el = <span class="fn">document</span>.<span class="fn">createElement</span>(<span class="str">'a-sphere'</span>);
-    el.<span class="fn">setAttribute</span>(<span class="str">'radius'</span>, r.team === <span class="str">'ball'</span> ? <span class="num">0.2</span> : <span class="num">0.35</span>);
+    <span class="kw">let</span> radius = <span class="num">0.35</span>;
+    <span class="kw">if</span> (r.team === <span class="str">'ball'</span>) { radius = <span class="num">0.2</span>; }
+    el.<span class="fn">setAttribute</span>(<span class="str">'radius'</span>, radius);
     el.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, <span class="fn">colorOf</span>(r.team));
     group.<span class="fn">appendChild</span>(el);
     ents[r.team + <span class="str">'-'</span> + r.id] = el;      <span class="cmt">// 例: "home-7" → その球</span>
-  });
+  }
 
   <span class="cmt">// (C) コマを順に進めて、位置を書きかえる（=アニメーション）</span>
   <span class="kw">let</span> f = <span class="num">0</span>;
   <span class="fn">setInterval</span>(<span class="kw">function</span> () {
-    byFrame[f].<span class="fn">forEach</span>(<span class="kw">function</span> (r) {
+    <span class="kw">const</span> now = byFrame[f];             <span class="cmt">// 今のコマの23件</span>
+    <span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; now.<span class="fn">length</span>; i++) {
+      <span class="kw">const</span> r = now[i];
       <span class="kw">const</span> el = ents[r.team + <span class="str">'-'</span> + r.id];
       <span class="fn">place</span>(el, r.x, r.y);            <span class="cmt">// このコマの位置へ移動</span>
-    });
+    }
     f = ____;                          <span class="cmt">// ★空欄1: 次のコマへ。最後まで行ったら0に戻す★</span>
   }, ____);                            <span class="cmt">// ★空欄2: 間隔ミリ秒（例 100）★</span>
 });</pre>
@@ -1452,9 +1596,11 @@ python -m http.server 8000</pre>
 <pre>JavaScript
 <span class="kw">let</span> f = <span class="num">0</span>;
 <span class="fn">setInterval</span>(<span class="kw">function</span> () {
-  byFrame[f].<span class="fn">forEach</span>(<span class="kw">function</span> (r) {
+  <span class="kw">const</span> now = byFrame[f];
+  <span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; now.<span class="fn">length</span>; i++) {
+    <span class="kw">const</span> r = now[i];
     <span class="fn">place</span>(ents[r.team + <span class="str">'-'</span> + r.id], r.x, r.y);
-  });
+  }
   f = (f + <span class="num">1</span>) % (maxFrame + <span class="num">1</span>);   <span class="cmt">// 0→1→…→5399→0</span>
 }, <span class="num">100</span>);</pre>
           <p style="font-size:0.85rem;color:#999">空欄1＝<code>(f + 1) % (maxFrame + 1)</code>、空欄2＝<code>100</code>。5400コマ（90分）を繰り返し再生し、動きがループする。間隔100msなら1周＝約9分。</p>
