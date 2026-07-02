@@ -630,10 +630,12 @@ body { padding-top: 2.2rem; }
       <h4>📂 今日使う教材データ（先にダウンロード）</h4>
       <ul class="point-list" style="margin-bottom:0.4rem">
         <li>サッカー位置データ（サンプル・フル90分）：<a href="soccer.csv" download id="dl-soccer" style="color:#4FC3F7;font-weight:700">▶ soccer.csv をダウンロード</a>（<strong>1コマ＝1秒 × 5400コマ（＝90分）× 23個＝124,200行</strong>／約2.7MB）<span style="font-size:0.78rem;color:#888">※押すとブラウザ内で生成して保存します</span></li>
-        <li>作業フォルダを1つ作り、その中に <code>index.html</code> と <code>soccer.csv</code> を<strong>同じ場所</strong>に置く</li>
+        <li>もっと<strong>なめらかなフル版（25fps）</strong>：<a href="soccer_25fps.csv" download id="dl-soccer-25" style="color:#93D500;font-weight:700">▶ soccer_25fps.csv をダウンロード</a>（<strong>1秒＝25コマ × 135,000コマ（＝90分）× 23個＝約310万行</strong>／約65MB）<span style="font-size:0.78rem;color:#888">※生成に数秒かかります。列の形は同じなので、まず軽い soccer.csv で作り、動いたらファイル名を差しかえて試すとよい</span></li>
+        <li>作業フォルダを1つ作り、その中に <code>index.html</code> と <code>soccer.csv</code>（または <code>soccer_25fps.csv</code>）を<strong>同じ場所</strong>に置く</li>
       </ul>
       <p style="font-size:0.82rem;color:#999;margin:0.3rem 0 0"><strong>CSVの列（標準スキーマ）:</strong> <code>frame</code>（コマ番号）, <code>team</code>（ball/home/away）, <code>id</code>（背番号・ボールは0）, <code>x</code>, <code>y</code>（フィールド座標[m]・中心が原点／ピッチ 105m×68m）</p>
       <p style="font-size:0.82rem;color:#999;margin:0.35rem 0 0"><strong>数値化の設定（サンプリング）:</strong> フレームレート <strong>1&nbsp;fps（1秒あたり1コマ）</strong>。連番 <code>frame</code>（0〜5399）がそのまま秒数（5400秒＝90分）を表す。座標は<strong>メートル単位</strong>で、ピッチ中央が原点 (0,&nbsp;0)、横 <code>x</code>＝−52.5〜+52.5、縦 <code>y</code>＝−34〜+34（＝105m×68m）。値は小数第1位まで。<span style="color:#888">※実試合の記録ではなく、教材用に数式で生成した合成サンプル（本物のトラッキングは約25&nbsp;fps）。</span></p>
+      <p style="font-size:0.82rem;color:#999;margin:0.35rem 0 0"><strong>フル版（<code>soccer_25fps.csv</code>）:</strong> 動きは同じだが <strong>1コマ＝1/25秒</strong>で <code>frame</code> が 0〜134999（＝135,000コマ）。列の並びは <code>soccer.csv</code> と完全に同じなので、コードはそのまま使える。実時間で再生したいときは <code>setInterval</code> の間隔を <strong>40（＝1000÷25）ミリ秒</strong>にする（std3-5）。</p>
     </div>
 
     <!-- data provenance -->
@@ -779,6 +781,44 @@ body { padding-top: 2.2rem; }
       </ul>
     </div>
 
+    <div class="card standard">
+      <div class="card-header"><h3>DOM操作の4つの命令 ─ 機能と使い方（早見表）</h3></div>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">JavaScriptで図形を出すときに毎回使う4つ。<strong>「場所を探す → 作る → 設定する → 入れる」</strong>の順で使う。この表は今日ずっと手元に置いておくとよい。</p>
+      <table style="font-size:0.82rem">
+        <tr><th style="width:16%">命令</th><th style="width:30%">何をするか（機能）</th><th style="width:26%">書き方（使い方）</th><th>具体例</th></tr>
+        <tr>
+          <td><code>querySelector</code></td>
+          <td><strong>すでにある要素を1つ探して</strong>取ってくる（新しくは作らない）</td>
+          <td><code>親.querySelector('セレクタ')</code></td>
+          <td><code>document.querySelector('#group')</code><br><span style="color:#999">→ <code>id="group"</code> の要素を取得</span></td>
+        </tr>
+        <tr>
+          <td><code>createElement</code></td>
+          <td><strong>新しい要素（タグ）を1つ作る</strong>。この時点ではまだ<strong>画面に出ない</strong></td>
+          <td><code>document.createElement('タグ名')</code></td>
+          <td><code>document.createElement('a-sphere')</code><br><span style="color:#999">→ 中身が空の a-sphere が1つできる</span></td>
+        </tr>
+        <tr>
+          <td><code>setAttribute</code></td>
+          <td>要素に<strong>属性（設定）を与える／書きかえる</strong>（位置・色・大きさなど）</td>
+          <td><code>要素.setAttribute('属性名', 値)</code></td>
+          <td><code>ball.setAttribute('color', 'gold')</code><br><span style="color:#999">→ その球を金色にする</span></td>
+        </tr>
+        <tr>
+          <td><code>appendChild</code></td>
+          <td>作った要素を<strong>親の中に入れる</strong>。<strong>ここで初めて画面に出る</strong></td>
+          <td><code>親.appendChild(要素)</code></td>
+          <td><code>group.appendChild(ball)</code><br><span style="color:#999">→ #group の中に球が追加され表示される</span></td>
+        </tr>
+      </table>
+      <ul class="point-list" style="margin-top:0.5rem">
+        <li><strong>セレクタの書き方</strong>（<code>querySelector</code> に渡す文字）：<code>'#group'</code>＝id、<code>'.box'</code>＝class、<code>'a-sphere'</code>＝タグ名。CSSと同じ書き方</li>
+        <li><strong>createElement と appendChild はセット</strong>。<code>createElement</code> で作っただけでは見えず、<code>appendChild</code> で入れて初めて表示される（「作る」と「置く」は別の作業）</li>
+        <li><strong>使う順番</strong>：<code>querySelector</code> で入れ物を得る → <code>createElement</code> で作る → <code>setAttribute</code> で設定 → <code>appendChild</code> で入れる</li>
+      </ul>
+      <div class="analogy" style="margin-top:0.5rem"><strong>料理でたとえると</strong>：<code>querySelector</code>＝盛りつける皿を用意する／<code>createElement</code>＝料理を1品作る／<code>setAttribute</code>＝味つけ・盛りつけ／<code>appendChild</code>＝皿にのせて食卓に出す。</div>
+    </div>
+
     <div class="card" style="background:#0a0a0a;border:1px solid #93D500">
       <div style="font-weight:700;color:#93D500;font-size:0.95rem;margin-bottom:0.5rem">HTMLの書き方：「デザイン」と「ロジック」を分け、<code>&lt;script&gt;</code> を書く場所にこだわる</div>
       <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.6rem">A-FrameのHTMLは、大きく<strong>2つの部分</strong>に分けて考えると迷わない。</p>
@@ -819,7 +859,9 @@ body { padding-top: 2.2rem; }
       <div class="callout-info" style="margin-top:0.5rem">
         <h4>「<code>&lt;script&gt;</code> は <code>&lt;body&gt;</code> の外に書けばいいのでは？」という疑問</h4>
         <ul class="point-list" style="margin-bottom:0">
-          <li><code>&lt;script&gt;</code> を正しく置ける場所は <strong><code>&lt;head&gt;</code> の中</strong>か <strong><code>&lt;body&gt;</code> の中</strong>のどちらかだけ。<code>&lt;/body&gt;</code> より後ろに書いても、ブラウザは<strong>エラーとして body の中へ移動</strong>して読むので、結局 body 内と同じ＝<strong>外に出すメリットはない</strong>（むしろ不正なHTML）</li>
+          <li><code>&lt;script&gt;</code> を正しく置ける場所は <strong><code>&lt;head&gt;</code> の中</strong>か <strong><code>&lt;body&gt;</code> の中</strong>のどちらかだけ。<code>&lt;/body&gt;</code> や <code>&lt;/html&gt;</code> より<strong>後ろ</strong>に書くのは<strong>HTMLの仕様上は不正</strong></li>
+          <li>ただし多くのブラウザは<strong>エラー回復処理</strong>を行うので、<code>&lt;/body&gt;</code> の後ろに書いても<strong>実際には実行されることが多い</strong>。ここは「body 内に移動して DOM が書きかわる」のではなく、<strong>パーサがそう解釈してくれる</strong>だけ、というのが正確（動的にHTMLを読み込む場合や XML/XHTML として解析される場合は、期待どおり動かないこともある）</li>
+          <li>まとめると、<strong>実際には動くことが多いが、仕様上は書くべきではない</strong>。<code>&lt;body&gt;</code> の外に出すメリットは無いので、素直に body 内に置けばよい</li>
           <li><code>&lt;head&gt;</code> に置くと、まだ図形の要素が作られていないうちに実行され、<code>querySelector('#group')</code> が <strong>null になってエラー</strong>。だから head でもダメ</li>
           <li>結論：<strong>要素の後ろ＝<code>&lt;/a-scene&gt;</code> の後、<code>&lt;/body&gt;</code> の直前</strong>に置くのが、いちばん確実でシンプル。第1回・第2回の資料もすべてこの形</li>
           <li>（発展）どうしても <code>&lt;head&gt;</code> に置きたいときは、外部ファイルに <code>&lt;script defer src="..."&gt;</code> を付けるか、<code>DOMContentLoaded</code> の完了を待つ書き方が必要。今は body 末尾でOK</li>
@@ -868,8 +910,8 @@ body { padding-top: 2.2rem; }
       <div class="callout-info" style="margin-top:0.6rem">
         <h4>組み立てチャレンジ</h4>
         <ul class="point-list" style="margin-top:0.3rem">
-          <li>空欄1：<code>N</code> 回くりかえす条件（<code>i &lt; N</code>）</li>
-          <li>空欄2：スフィアの色を文字列で（例 <code>'gold'</code> や <code>'#4FC3F7'</code>）</li>
+          <li>空欄1：<code>N</code> 回くりかえすための条件。<code>for</code> の真ん中は「いつまで続けるか」。<code>i</code> と <code>N</code> をどう比べる？</li>
+          <li>空欄2：スフィアの色。<strong>文字列（クォートで囲む）</strong>で指定する。色名でも <code>#</code> 始まりの16進でもOK（自由に選ぶ）</li>
           <li>できたら <code>N</code> を <code>5</code> や <code>20</code> に変えて、個数が変わることを確認する</li>
         </ul>
       </div>
@@ -975,6 +1017,39 @@ body { padding-top: 2.2rem; }
         <li>くりかえすたびに <code>i</code> を1増やして、<strong>次のコマ</strong>に進めるのがコツ</li>
       </ul>
 
+      <div class="callout-info" style="margin-top:0.7rem">
+        <h4>上の書き方は「省略形」── 平たく書くとこうなる</h4>
+        <p style="font-size:0.88rem;color:#ccc;margin-bottom:0.5rem"><code>setInterval(<span style="color:#93D500">function () { … }</span>, 300)</code> は、じつは<strong>少し省略した書き方</strong>。まずは省略せず、<strong>2ステップに分けて</strong>書いてみると分かりやすい。</p>
+
+        <p style="font-weight:700;color:#93D500;font-size:0.9rem;margin:0.3rem 0 0.2rem">① 平たい書き方（関数に名前をつけて、別々に書く）</p>
+<pre>JavaScript
+<span class="kw">let</span> i = <span class="num">0</span>;
+
+<span class="cmt">// (1) くりかえす中身を、名前つきの関数として先に作っておく</span>
+<span class="kw">function</span> <span class="fn">tick</span>() {
+  <span class="fn">console</span>.<span class="fn">log</span>(i);
+  i = i + <span class="num">1</span>;
+}
+
+<span class="cmt">// (2) その関数を setInterval に「渡す」。300ミリ秒ごとに tick が呼ばれる</span>
+<span class="fn">setInterval</span>(tick, <span class="num">300</span>);   <span class="cmt">// ← tick だけ書く（tick() と書くと「今すぐ1回呼んだ結果」を渡してしまうのでNG）</span></pre>
+
+        <p style="font-weight:700;color:#93D500;font-size:0.9rem;margin:0.6rem 0 0.2rem">② 省略した書き方（名前をつけず、その場に直接書く＝上の例）</p>
+<pre>JavaScript
+<span class="kw">let</span> i = <span class="num">0</span>;
+
+<span class="fn">setInterval</span>(<span class="kw">function</span> () {   <span class="cmt">// ← tick の中身を、名前をつけずここへ直接書いた（無名関数）</span>
+  <span class="fn">console</span>.<span class="fn">log</span>(i);
+  i = i + <span class="num">1</span>;
+}, <span class="num">300</span>);</pre>
+
+        <ul class="point-list" style="margin-top:0.4rem;margin-bottom:0">
+          <li>①と②は<strong>まったく同じ動き</strong>。②は「一度しか使わない関数に、わざわざ名前をつけるのは面倒」なので、<strong>名前を省いてその場に書いた</strong>だけ（この名前なしの関数を<strong>無名関数</strong>と呼ぶ）</li>
+          <li>ポイントは、<code>setInterval</code> に渡すのは<strong>「関数そのもの（＝あとで実行してほしい処理のかたまり）」</strong>だということ。①の <code>tick</code>（名前）も、②の <code>function () {…}</code>（中身そのもの）も、渡しているのは同じ「関数」</li>
+          <li>まず①で意味をつかみ、慣れたら②の省略形で書けばよい。<strong>今日のコードは②の形</strong>で書いていく</li>
+        </ul>
+      </div>
+
       <p style="font-weight:700;color:#93D500;font-size:0.9rem;margin:0.7rem 0 0.2rem">実際にコンソールで確かめる完成HTML</p>
       <p style="font-size:0.85rem;color:#ccc;margin-bottom:0.3rem">下を <code>count.html</code> などで保存 → ブラウザで開く → <strong>右クリック →「検証」→「Console」</strong>を見ると、0, 1, 2… と増えていく。</p>
 <pre>HTML
@@ -1042,8 +1117,8 @@ body { padding-top: 2.2rem; }
       <div class="callout-info" style="margin-top:0.6rem">
         <h4>組み立てチャレンジ</h4>
         <ul class="point-list" style="margin-top:0.3rem">
-          <li>空欄1：位置を <code>`${x} 1 ${z}`</code>（高さは1で固定）の形で <code>setAttribute</code> に渡す</li>
-          <li>空欄2：次のコマへ進める（<code>i + 1</code>）</li>
+          <li>空欄1：<code>position</code> に「<code>x 高さ z</code>」の3つの数を渡す。<code>x</code>・<code>z</code> は変数から、高さは <code>1</code> に固定。<strong>テンプレート文字列</strong>（<code>`...`</code> と <code>${ }</code>）を使うと組み立てやすい</li>
+          <li>空欄2：次のコマへ進める。<code>i</code> を<strong>1つ増やす</strong>には？（この章の <code>setInterval</code> の例と同じやり方）</li>
           <li>できたら <code>points</code> に自分で座標を足す／<code>300</code> を <code>100</code> にして速くしてみる</li>
         </ul>
       </div>
@@ -1222,8 +1297,8 @@ first = df[df[<span class="str">'frame'</span>] == ____]     <span class="cmt">#
       <div class="callout-info" style="margin-top:0.6rem">
         <h4>組み立てチャレンジ</h4>
         <ul class="point-list" style="margin-top:0.3rem">
-          <li>空欄1：先頭数行を表示するメソッド（<code>head</code>）</li>
-          <li>空欄2：最初のコマ番号（<code>0</code>）。取り出した件数が<strong>23</strong>になればOK（選手22＋ボール1）</li>
+          <li>空欄1：先頭数行を表示するメソッド。上の早見表「pandasのよく使う操作」に載っている（末尾なら <code>tail</code>、では先頭は？）</li>
+          <li>空欄2：最初のコマ番号。<code>frame</code> は<strong>何番から</strong>始まる？ 取り出した件数が<strong>23</strong>になれば正解（選手22＋ボール1）</li>
           <li>発展：<code>df[df['team'] == 'ball']</code> でボールだけ取り出し、<code>x</code>・<code>y</code> がどう動くか眺める</li>
         </ul>
       </div>
@@ -1298,8 +1373,8 @@ python -m http.server 8000</pre>
     </div>
 
     <div class="concept-box">
-      <h4>CSVを読む関数と「<code>async</code> / <code>await</code>」 ── 初心者向けにていねいに</h4>
-      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">std3-4のコードには <code>async function loadCSV(...)</code> と <code>await</code> が出てくる。少し新しい書き方なので、ここだけ丁寧に説明する（<strong>意味が分かればOK。まずは丸ごとコピーして使ってよい</strong>）。</p>
+      <h4>CSVを読む関数と「<code>async</code> / <code>await</code>」</h4>
+      <p style="font-size:0.9rem;color:#ccc;margin-bottom:0.5rem">std3-4のコードには <code>async function loadCSV(...)</code> と <code>await</code> が出てくる。少し新しい書き方なので、ここだけ説明する（<strong>意味が分かればOK。まずは丸ごとコピーして使ってよい</strong>）。</p>
       <ul class="point-list" style="margin-bottom:0">
         <li><strong>なぜ必要？</strong> <code>fetch</code>（ファイルを読む）は<strong>「時間がかかる処理」</strong>。押した<strong>瞬間には終わらず</strong>、データが届くまで少し待つ必要がある</li>
         <li><strong><code>await</code></strong>＝「この処理が<strong>終わるまで待ってから</strong>次に進む」という命令。待って、届いたデータを受け取る</li>
@@ -1475,8 +1550,8 @@ python -m http.server 8000</pre>
       <div class="callout-info" style="margin-top:0.6rem">
         <h4>組み立てチャレンジ</h4>
         <ul class="point-list" style="margin-top:0.3rem">
-          <li>空欄1：最初のコマ番号（<code>0</code>）で23件だけに絞る</li>
-          <li>空欄2：<code>place</code> に渡すフィールドの <code>y</code>（<code>r.y</code>）</li>
+          <li>空欄1：最初のコマ番号で23件だけに絞る（std3-3で確かめた番号と同じ）</li>
+          <li>空欄2：<code>place(el, x, y)</code> の2つ目に渡すのは、その行のフィールドの <code>y</code>。<code>r</code> の中のどれ？</li>
           <li>成功すると、緑のフィールド上に<strong>青11・赤11・白1</strong>の球が配置される（Consoleに「配置した数: 23」）</li>
         </ul>
       </div>
@@ -1584,8 +1659,8 @@ python -m http.server 8000</pre>
       <div class="callout-info" style="margin-top:0.6rem">
         <h4>組み立てチャレンジ</h4>
         <ul class="point-list" style="margin-top:0.3rem">
-          <li>空欄1：次のコマへ進め、最後（<code>maxFrame</code>）を超えたら0に戻す<br><span style="font-size:0.82rem;color:#999">ヒント：<code>(f + 1) % (maxFrame + 1)</code> で 0→5399→0 と循環</span></li>
-          <li>空欄2：更新間隔（<code>100</code>ミリ秒くらい）。小さくすると速く、大きくするとゆっくり再生</li>
+          <li>空欄1：次のコマへ進め、最後（<code>maxFrame</code>）を超えたら <code>0</code> に戻したい。<code>f</code> を1つ増やしつつ、<strong>あまり（<code>%</code> 剰余）</strong>を使うと 0→…→最後→0 と1行で循環できる</li>
+          <li>空欄2：更新間隔（ミリ秒）。<code>setInterval</code> の第2引数。小さいほど速い（まずは <code>100</code> くらいから試す）</li>
           <li>成功すると、選手とボールが<strong>データ通りに動き続ける</strong></li>
         </ul>
       </div>
@@ -1613,6 +1688,7 @@ python -m http.server 8000</pre>
           <li>間隔を <code>50</code> にして倍速／<code>300</code> にしてスロー再生</li>
           <li>ボールだけ <code>radius</code> を大きく・色を <code>'yellow'</code> にして目立たせる</li>
           <li>カメラの <code>rotation</code>（今は <code>-55</code>）を <code>-90</code> にすると<strong>真上からの戦術ビュー</strong>になる</li>
+          <li><strong>なめらかなフル版で試す</strong>：<code>loadCSV('soccer.csv')</code> を <code>loadCSV('soccer_25fps.csv')</code> に変えるだけ。コマ数が25倍（135,000）に増えるので動きが<strong>ぬるぬる</strong>に。実時間で再生するなら間隔を <code>40</code>（＝1000÷25）にする</li>
         </ul>
       </div>
       <div class="notion-submit"><div><strong>提出:</strong> 完成コード＋実行画面のスクショ（動いている様子）をNotionに貼る。ふりかえり（1コマ＝1件／コマ送り＝再生）も1〜2行記入</div></div>
@@ -1965,9 +2041,10 @@ document.querySelectorAll(':not(pre) > code').forEach(function(code) {
 });
 
 // ===== soccer.csv をブラウザ内で生成してダウンロード（Safari / file:// でも確実） =====
-// soccer.csv と同じ内容を数式で生成する（サーバ配布ファイルとバイト単位で一致）
-function generateSoccerCSV() {
-  var N = 5400, TAU = 2 * Math.PI;
+// totalFrames を変えるだけで 1fps 版(5400) / 25fps フル版(135000) の両方を生成できる。
+// t = f / totalFrames なので、コマ数が変わっても「90分ぶんの動き」は同じ（byte一致：1fps版=サーバ配布ファイル）
+function generateSoccerCSV(totalFrames) {
+  var N = totalFrames, TAU = 2 * Math.PI;
   var home = [[-48,0],[-32,-22],[-32,-8],[-32,8],[-32,22],[-12,-20],[-12,-7],[-12,7],[-12,20],[6,-10],[6,10]];
   var away = [[48,0],[32,-22],[32,-8],[32,8],[32,22],[12,-20],[12,-7],[12,7],[12,20],[-6,10],[-6,-10]];
   function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
@@ -1997,16 +2074,35 @@ function generateSoccerCSV() {
   }
   return L.join('\n') + '\n';
 }
+function downloadCSV(text, filename) {
+  var blob = new Blob([text], { type: 'text/csv;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+}
 var dlSoccer = document.getElementById('dl-soccer');
 if (dlSoccer) {
   dlSoccer.addEventListener('click', function(e) {
     e.preventDefault();
-    var blob = new Blob([generateSoccerCSV()], { type: 'text/csv;charset=utf-8' });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url; a.download = 'soccer.csv';
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+    downloadCSV(generateSoccerCSV(5400), 'soccer.csv');   // 1fps
+  });
+}
+var dlSoccer25 = document.getElementById('dl-soccer-25');
+if (dlSoccer25) {
+  dlSoccer25.addEventListener('click', function(e) {
+    e.preventDefault();
+    var label = dlSoccer25.textContent;
+    dlSoccer25.textContent = '⏳ 生成中…（数秒かかります）';
+    // UI更新を反映させてから重い生成を実行
+    setTimeout(function() {
+      try {
+        downloadCSV(generateSoccerCSV(135000), 'soccer_25fps.csv');   // 25fps フル版（約310万行）
+      } finally {
+        dlSoccer25.textContent = label;
+      }
+    }, 50);
   });
 }
 </script>
