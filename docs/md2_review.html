@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>実技 理解度チェック（ランダム出題）| MD2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: clamp(14px, 1.7vw, 22px); }
+html, body { overflow-x: hidden; max-width: 100%; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #111111;
+  color: #e0e0e0;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  min-height: 100vh;
+}
+img, video, iframe, svg, canvas { max-width: 100%; height: auto; }
+.container { max-width: 900px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2.5rem); }
+section { padding: clamp(1.5rem, 4vw, 2.5rem) 0; }
+
+/* ============ HERO ============ */
+.hero {
+  background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a);
+  color: white;
+  padding: clamp(2rem, 6vw, 3.5rem) 0 clamp(1.5rem, 4vw, 2.5rem);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 85% 15%, rgba(118,185,0,0.25), transparent 55%),
+              radial-gradient(circle at 15% 90%, rgba(155,89,182,0.18), transparent 55%);
+}
+.hero .container { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-flex; align-items:center; gap:0.4rem;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 100px;
+  padding: 0.35rem 1.1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+.hero h1 {
+  font-size: clamp(1.5rem, 5vw, 2.6rem);
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 0.5rem;
+}
+.hero p { font-size: clamp(0.85rem, 1.8vw, 1rem); opacity: 0.85; }
+
+/* ============ TASK CARD ============ */
+.task-meta {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+.cat-badge {
+  display: inline-flex; align-items:center; gap:0.4rem;
+  padding: 0.35rem 1rem;
+  border-radius: 100px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+.cat-A { background:#1a2e0a; color:#93D500; border:1px solid #76B900; }
+.cat-B { background:#0a1a2e; color:#4FC3F7; border:1px solid #2f6fa0; }
+.cat-C { background:#2e1a0a; color:#FFB800; border:1px solid #b07d1a; }
+.odai-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: #888;
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  padding: 0.25rem 0.7rem;
+}
+
+.task-card {
+  background: #141414;
+  border-radius: 18px;
+  padding: clamp(1.3rem, 4vw, 2.2rem);
+  border: 1px solid #2a2a2a;
+  border-top: 5px solid #76B900;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+  animation: pop 0.35s ease;
+}
+.task-card.cat-A-top { border-top-color:#76B900; }
+.task-card.cat-B-top { border-top-color:#4FC3F7; }
+.task-card.cat-C-top { border-top-color:#FFB800; }
+@keyframes pop { from { opacity:0; transform: translateY(10px) scale(0.99); } to { opacity:1; transform:none; } }
+
+.task-card h2 {
+  font-size: clamp(1.15rem, 3vw, 1.5rem);
+  font-weight: 900;
+  line-height: 1.4;
+  margin-bottom: 0.9rem;
+}
+.task-statement {
+  background: rgba(118,185,0,0.08);
+  border-left: 4px solid #76B900;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  font-size: clamp(0.95rem, 2.2vw, 1.08rem);
+  line-height: 1.9;
+  margin-bottom: 1.4rem;
+}
+.task-statement .hl {
+  color: #93D500;
+  font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(118,185,0,0.12);
+  padding: 0.05em 0.4em;
+  border-radius: 5px;
+}
+.task-card.cat-B-top .task-statement { border-left-color:#4FC3F7; background:rgba(79,195,247,0.07); }
+.task-card.cat-B-top .task-statement .hl { color:#4FC3F7; background:rgba(79,195,247,0.12); }
+.task-card.cat-C-top .task-statement { border-left-color:#FFB800; background:rgba(255,184,0,0.07); }
+.task-card.cat-C-top .task-statement .hl { color:#FFB800; background:rgba(255,184,0,0.12); }
+
+/* ============ DOWNLOAD BUTTON ============ */
+.task-download { margin: -0.6rem 0 1.4rem; }
+.dl-btn {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: #1a1a0a;
+  color: #FFB800;
+  border: 1px solid #b07d1a;
+  border-radius: 100px;
+  padding: 0.55rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-decoration: none;
+  font-family: 'JetBrains Mono', monospace;
+  transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
+}
+.dl-btn:hover {
+  background: #FFB800; color: #111;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(255,184,0,0.35);
+}
+
+.steps-title {
+  font-size: 0.9rem; font-weight: 800; color:#999;
+  letter-spacing: 0.05em; margin-bottom: 0.7rem;
+  display:flex; align-items:center; gap:0.4rem;
+}
+ol.steps { list-style: none; counter-reset: step; padding: 0; }
+ol.steps li {
+  counter-increment: step;
+  position: relative;
+  padding: 0.55rem 0 0.55rem 2.6rem;
+  font-size: clamp(0.9rem, 2.1vw, 1rem);
+  border-bottom: 1px solid #1f1f1f;
+}
+ol.steps li:last-child { border-bottom: none; }
+ol.steps li::before {
+  content: counter(step);
+  position: absolute; left: 0; top: 0.5rem;
+  width: 1.8rem; height: 1.8rem;
+  background: #76B900; color: #fff;
+  border-radius: 50%;
+  display:flex; align-items:center; justify-content:center;
+  font-weight: 800; font-size: 0.85rem;
+}
+.task-card.cat-B-top ol.steps li::before { background:#4FC3F7; }
+.task-card.cat-C-top ol.steps li::before { background:#FFB800; }
+ol.steps code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(255,255,255,0.07);
+  padding: 0.1em 0.4em; border-radius: 5px; font-size: 0.9em;
+}
+
+/* ============ CONTROLS ============ */
+.controls {
+  display: flex; gap: 0.8rem; flex-wrap: wrap;
+  justify-content: center; margin-top: 1.8rem;
+}
+.btn {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 1rem; font-weight: 800;
+  border: none; border-radius: 100px;
+  padding: 0.85rem 1.8rem;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
+  display:inline-flex; align-items:center; gap:0.5rem;
+}
+.btn-primary { background:#76B900; color:#fff; box-shadow:0 4px 16px rgba(118,185,0,0.35); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow:0 8px 24px rgba(118,185,0,0.5); }
+.btn-primary:active { transform: translateY(0); }
+.btn-ghost { background:#1a1a1a; color:#bbb; border:1px solid #333; }
+.btn-ghost:hover { color:#fff; border-color:#76B900; }
+
+.note {
+  text-align:center; color:#777; font-size:0.82rem;
+  margin-top: 1.4rem; line-height:1.7;
+}
+
+footer {
+  background: #0A0A0A; color:#777; padding: 1.5rem 0;
+  text-align:center; font-size: 0.8rem; margin-top: 1rem;
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">🎲 ランダム出題</div>
+    <h1>実技 理解度チェック</h1>
+    <p>下の課題を、その場で実演してください。アクセスするたびに内容が変わります。</p>
+  </div>
+</header>
+
+<section>
+  <div class="container">
+    <div class="task-meta">
+      <span id="catBadge" class="cat-badge cat-A">課題</span>
+      <span id="odaiId" class="odai-id">お題 #----</span>
+    </div>
+
+    <div id="taskCard" class="task-card cat-A-top">
+      <h2 id="taskTitle">読み込み中…</h2>
+      <div id="taskStatement" class="task-statement"></div>
+      <div id="taskDownload" class="task-download" hidden>
+        <a id="dlLink" class="dl-btn" href="#" download>⬇ CSVをダウンロード</a>
+      </div>
+      <div class="steps-title">▸ 実演する手順</div>
+      <ol id="taskSteps" class="steps"></ol>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-primary" id="rerollBtn">🎲 別のお題を出す（次の人へ）</button>
+      <button class="btn btn-ghost" id="reloadBtn">↻ 最初から</button>
+    </div>
+
+    <p class="note">
+      ※ 出題される課題（3種類）と、フォルダ名・ライブラリ・ファイル名などの具体的な内容は毎回ランダムです。<br>
+      履修者ごとに内容が変わるので、隣の人と同じにはなりません。
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div class="container">武蔵野大学 データサイエンス学科 ｜ MD2 実技理解度チェック</div>
+</footer>
+
+<script>
+"use strict";
+
+/* ---------- ランダムユーティリティ ---------- */
+function pick(arr){ return arr[Math.floor(Math.random() * arr.length)]; }
+function makeId(){ return Math.floor(1000 + Math.random() * 9000); }
+
+/* ---------- ランダム化する部品プール ---------- */
+const FOLDERS = ["data_lab","my_project","practice01","study2026","work_dir","analysis_ws",
+                 "sample_app","md2_test","kadai_work","python_lab","web_practice","try_it"];
+const LIBS    = ["pandas","numpy","matplotlib","requests","seaborn","pillow"];
+const PYFILES = ["main.py","app.py","analysis.py","script.py","run.py","practice.py"];
+const LOGVALS =['1 + 2 の計算結果', '"Hello World" という文字列', '変数に入れた自分の名前',
+                 '10 × 5 の計算結果', '今日の日付', '好きな数字を2倍した値'];
+
+/* ---------- 3種類の課題定義（答えは載せない：実演で確認） ---------- */
+const TASKS = {
+  A: () => {
+    const folder = pick(FOLDERS), lib = pick(LIBS), py = pick(PYFILES);
+    return {
+      cat: "A",
+      title: "ターミナルで環境構築 → Pythonを実行",
+      statement:
+        `ターミナルを開き、<span class="hl">${folder}</span> という名前のフォルダを作って移動し、`
+        + `その中に<span class="hl">仮想環境</span>を作って有効化しなさい。`
+        + `次に Pythonライブラリ <span class="hl">${lib}</span> をインストールし、`
+        + `VSCodeを開いて <span class="hl">${py}</span> を作成・実行し、動くことを見せなさい。`,
+      steps: [
+        `<code>${folder}</code> フォルダを作成し、その中に移動する`,
+        `仮想環境を作成し、有効化する（プロンプトの表示が変わることを確認）`,
+        `ライブラリ <code>${lib}</code> をインストールする`,
+        `ターミナルから VSCode を開く`,
+        `<code>${py}</code> を作り、<code>${lib}</code> を import して実行し、結果を見せる`
+      ]
+    };
+  },
+  B: () => {
+    const folder = pick(FOLDERS), val = pick(LOGVALS);
+    return {
+      cat: "B",
+      title: "VSCodeでHTML作成 → コンソールを確認",
+      statement:
+        `ターミナルから <span class="hl">${folder}</span> フォルダを VSCode で開き、`
+        + `<span class="hl">index.html</span> を作成しなさい。`
+        + `ブラウザでプレビュー表示し、開発者ツールの<span class="hl">コンソール</span>で `
+        + `<span class="hl">${val}</span> を <code>console.log</code> で出力して確認し、`
+        + `わざと出した<span class="hl">エラー</span>も見せて説明しなさい。`,
+      steps: [
+        `<code>${folder}</code> フォルダを作り、ターミナルから VSCode で開く`,
+        `<code>index.html</code> を作成する（見出しなど簡単な内容でよい）`,
+        `ブラウザでプレビュー表示する`,
+        `<code>&lt;script&gt;</code> の中で <code>console.log</code> を使い ${val} を出力する`,
+        `ブラウザの開発者ツール → コンソールで、出力した値を確認する`,
+        `わざとエラー（例：存在しない変数）を書き、コンソールの赤いエラー表示を確認・説明する`
+      ]
+    };
+  },
+  C: () => {
+    const csv = "soccer.csv";
+    return {
+      cat: "C",
+      title: "pandasでCSVを読み込み → 中身を確認",
+      download: { href: "data/soccer.csv", name: csv },
+      statement:
+        `下のボタンから <span class="hl">${csv}</span> をダウンロードし、<span class="hl">pandas</span> で読み込み、`
+        + `<span class="hl">先頭部分</span>・各列の<span class="hl">データの種類（型）</span>・`
+        + `<span class="hl">欠損値の数</span>・<span class="hl">統計量</span>を表示しなさい。`,
+      steps: [
+        `<code>${csv}</code> を作業フォルダに置き、pandas を import して読み込む`,
+        `データの<code>先頭部分（先頭5行）</code>を表示する`,
+        `各列の<code>データの種類（型）</code>を表示する`,
+        `各列の<code>欠損値の数</code>を表示する`,
+        `数値列の<code>統計量</code>（平均・標準偏差・最大・最小など）を表示する`
+      ]
+    };
+  }
+};
+
+const KEYS = ["A", "B", "C"];
+let lastKey = null;
+
+function render() {
+  // 直前と同じ課題は避けて、より切り替わりを感じられるように
+  let key;
+  do { key = pick(KEYS); } while (KEYS.length > 1 && key === lastKey);
+  lastKey = key;
+
+  const t = TASKS[key]();
+
+  const card = document.getElementById("taskCard");
+  card.className = "task-card cat-" + t.cat + "-top";
+
+  const badge = document.getElementById("catBadge");
+  badge.className = "cat-badge cat-" + t.cat;
+  badge.textContent = "課題タイプ " + t.cat;
+
+  document.getElementById("odaiId").textContent = "お題 #" + makeId();
+  document.getElementById("taskTitle").textContent = t.title;
+  document.getElementById("taskStatement").innerHTML = t.statement;
+
+  // ダウンロードボタン（課題Cのみ）
+  const dlWrap = document.getElementById("taskDownload");
+  const dlLink = document.getElementById("dlLink");
+  if (t.download) {
+    dlLink.href = t.download.href;
+    dlLink.setAttribute("download", t.download.name);
+    dlLink.textContent = "⬇ " + t.download.name + " をダウンロード";
+    dlWrap.hidden = false;
+  } else {
+    dlWrap.hidden = true;
+  }
+
+  const ol = document.getElementById("taskSteps");
+  ol.innerHTML = "";
+  t.steps.forEach(function (s) {
+    const li = document.createElement("li");
+    li.innerHTML = s;
+    ol.appendChild(li);
+  });
+
+  // アニメーション再生
+  card.style.animation = "none";
+  void card.offsetWidth;
+  card.style.animation = "";
+}
+
+document.getElementById("rerollBtn").addEventListener("click", render);
+document.getElementById("reloadBtn").addEventListener("click", function () {
+  lastKey = null;
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
