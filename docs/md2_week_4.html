@@ -38,8 +38,8 @@ section + section { border-top: 1px solid #222; }
 .hero::before {
   content: '';
   position: absolute; inset: 0;
-  background: radial-gradient(circle at 80% 20%, rgba(79,195,247,0.3), transparent 50%),
-              radial-gradient(circle at 20% 80%, rgba(118,185,0,0.2), transparent 50%);
+  background: radial-gradient(circle at 80% 20%, rgba(79,195,247,0.28), transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(79,195,247,0.12), transparent 50%);
 }
 .hero .container { position: relative; z-index: 1; }
 .hero-badge {
@@ -116,10 +116,10 @@ section + section { border-top: 1px solid #222; }
   text-transform: uppercase;
   vertical-align: middle;
 }
-.tag-note      { background: #1a2e0a; color: #76B900; }
+.tag-note      { background: #0a1a2e; color: #4FC3F7; }
 .tag-standard  { background: #0a1a2e; color: #4FC3F7; }
-.tag-advanced  { background: #2e1a0a; color: #FFB800; }
-.tag-group     { background: #1a2e0a; color: #76B900; }
+.tag-advanced  { background: #2e2410; color: #FFB800; }
+.tag-group     { background: #0a1a2e; color: #4FC3F7; }
 
 /* ============ BLANK (穴埋め) ============ */
 .blk {
@@ -127,10 +127,10 @@ section + section { border-top: 1px solid #222; }
   min-width: 2.2em;
   padding: 0 0.5em;
   margin: 0 0.1em;
-  background: rgba(255,184,0,0.12);
-  border: 1px dashed #FFB800;
+  background: rgba(79,195,247,0.14);
+  border: 1px dashed #4FC3F7;
   border-radius: 5px;
-  color: #FFB800;
+  color: #4FC3F7;
   font-weight: 700;
   text-align: center;
 }
@@ -171,7 +171,7 @@ section + section { border-top: 1px solid #222; }
 .card-header h3 { font-size: 1.1rem; font-weight: 700; }
 .card.standard  { border-left: 4px solid #4FC3F7; }
 .card.advanced  { border-left: 4px solid #FFB800; }
-.card.group     { border-left: 4px solid #93D500; }
+.card.group     { border-left: 4px solid #4FC3F7; }
 
 /* ============ NOTION CALLOUT ============ */
 .notion-submit {
@@ -224,11 +224,11 @@ pre {
   position: relative;
 }
 pre .kw { color: #4FC3F7; }
-pre .fn { color: #93D500; }
+pre .fn { color: #C3CEDA; }
 pre .str { color: #FFB800; }
 pre .cmt { color: #616161; font-style: italic; }
 pre .num { color: #FFB800; }
-pre .op { color: #93D500; }
+pre .op { color: #9AA6B2; }
 .code-label {
   position: absolute; top: 0; right: 0;
   background: rgba(255,255,255,0.08);
@@ -370,14 +370,14 @@ details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
 }
 .callout-info h4 { color: #4FC3F7; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
 .callout-tip {
-  background: rgba(147, 213, 0, 0.08);
-  border: 1px solid rgba(147, 213, 0, 0.3);
-  border-left: 4px solid #93D500;
+  background: rgba(79, 195, 247, 0.08);
+  border: 1px solid rgba(79, 195, 247, 0.3);
+  border-left: 4px solid #4FC3F7;
   border-radius: 12px;
   padding: 1rem 1.2rem;
   margin: 1rem 0;
 }
-.callout-tip h4 { color: #93D500; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
+.callout-tip h4 { color: #4FC3F7; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
 
 /* ============ FOOTER ============ */
 footer {
@@ -530,16 +530,16 @@ body { padding-top: 2.2rem; }
       <p style="font-size:0.9rem;color:#999;margin:1.2rem 0 0.5rem">本科目全体の流れ（再確認）。第4回は <strong style="color:#4FC3F7">STEP 2（データを取る・扱う）</strong>の中でも、<strong style="color:#4FC3F7">「データを自分たちで取りにいく」</strong>ための仕組みづくりの回。</p>
 
       <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin:0.5rem 0 1rem">
-        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #76B900;border-radius:0.5rem;padding:0.9rem">
-          <div style="color:#76B900;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 1 ─ 舞台をつくる</div>
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #4FC3F7;border-radius:0.5rem;padding:0.9rem">
+          <div style="color:#4FC3F7;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 1 ─ 舞台をつくる</div>
           <div style="font-size:0.88rem"><strong>3D空間を自分で作る</strong>。<span style="color:#999">（第1〜2回）</span></div>
         </div>
         <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #4FC3F7;border-radius:0.5rem;padding:0.9rem">
           <div style="color:#4FC3F7;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 2 ─ データを扱う <span style="font-size:0.7rem;background:#0a1a2e;border:1px solid #4FC3F7;border-radius:100px;padding:0.05rem 0.5rem">今ここ</span></div>
           <div style="font-size:0.88rem">CSVを可視化（第3回）→ <strong>みんなで動いてデータを生む装置を作る（第4回）</strong>。<span style="color:#999">（第3〜4回）</span></div>
         </div>
-        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #FFB800;border-radius:0.5rem;padding:0.9rem">
-          <div style="color:#FFB800;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 3 ─ データを分析する</div>
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #4FC3F7;border-radius:0.5rem;padding:0.9rem">
+          <div style="color:#4FC3F7;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 3 ─ データを分析する</div>
           <div style="font-size:0.88rem">集めたデータを<strong>統計で分析</strong>。<span style="color:#999">（第5〜6回）</span></div>
         </div>
       </div>
@@ -616,6 +616,48 @@ body { padding-top: 2.2rem; }
           <li><strong>Socket.IO</strong>：ブラウザとサーバを<strong>通話状態でつなぎ</strong>、メッセージを送り合うためのライブラリ</li>
         </ul>
       </div>
+
+      <h4 style="color:#4FC3F7;font-weight:700;font-size:0.98rem;margin:1.2rem 0 0.3rem">図で見る：サーバは「中継役」── 2人のクライアントをつなぐ</h4>
+      <p style="font-size:0.92rem;margin-bottom:0.4rem">クライアント同士は<strong>直接つながらない</strong>。全員がまず<strong>サーバ</strong>につなぎ、サーバが相手へ<strong>中継</strong>する。下の図で、クライアントAの動きが<strong>サーバを経由して</strong>クライアントBに届く様子が流れる。</p>
+      <div style="margin:0.6rem 0">
+        <svg viewBox="0 0 720 250" width="720" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333;max-width:100%">
+          <!-- links -->
+          <line x1="150" y1="170" x2="330" y2="92" stroke="#3a5a72" stroke-width="2"/>
+          <line x1="570" y1="170" x2="390" y2="92" stroke="#3a5a72" stroke-width="2"/>
+
+          <!-- server -->
+          <rect x="285" y="34" width="150" height="58" rx="10" fill="#141414" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="360" y="60" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700">サーバ</text>
+          <text x="360" y="79" text-anchor="middle" fill="#999" font-size="9">中継役（ハブ）</text>
+
+          <!-- client A -->
+          <rect x="60" y="168" width="180" height="66" rx="10" fill="#141414" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="150" y="196" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700">クライアントA</text>
+          <text x="150" y="216" text-anchor="middle" fill="#999" font-size="9">（友達のブラウザ）</text>
+
+          <!-- client B -->
+          <rect x="480" y="168" width="180" height="66" rx="10" fill="#141414" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="570" y="196" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700">クライアントB</text>
+          <text x="570" y="216" text-anchor="middle" fill="#999" font-size="9">（自分のブラウザ）</text>
+
+          <text x="360" y="128" text-anchor="middle" fill="#8fb7d4" font-size="10">A が動く → サーバ → B に届く（Bが動けば逆向きに同じことが起きる）</text>
+
+          <!-- animated packet: A -> server -> B -->
+          <circle r="8" fill="#4FC3F7">
+            <animate attributeName="cx" values="150;360;360;570" keyTimes="0;0.45;0.55;1" dur="3s" repeatCount="indefinite"/>
+            <animate attributeName="cy" values="185;63;63;185" keyTimes="0;0.45;0.55;1" dur="3s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;1;1;1;1;0" keyTimes="0;0.05;0.45;0.55;0.95;1" dur="3s" repeatCount="indefinite"/>
+          </circle>
+        </svg>
+      </div>
+      <div class="callout-info" style="margin-top:0.3rem">
+        <h4>補足：なぜ「サーバ経由」なのか</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li>クライアント（ブラウザ）同士は、たがいの居場所を知らない。<strong>サーバだけが全員とつながっている</strong>ので、サーバが橋渡しをする</li>
+          <li>この形なら、参加者が<strong>3人・4人…と増えても同じしくみ</strong>で回せる（全員がサーバにつなぐだけ）</li>
+          <li>だから今日は、まず<strong>サーバ（<code>server.js</code>）を立てる</strong>ことから始める</li>
+        </ul>
+      </div>
     </div>
 
     <div class="card">
@@ -637,8 +679,53 @@ socket.<span class="fn">on</span>(<span class="str">'move'</span>, (data) <span 
         <tr><td><code>socket.on('名前', (データ) =&gt; {…})</code></td><td>その名前が届いたら処理する（受信）</td></tr>
       </table>
       <div class="callout-info" style="margin-top:0.5rem">
-        <h4>なぜ「自分以外の全員」に送るのか</h4>
-        <p style="font-size:0.9rem;margin-bottom:0">自分の動きを自分に送り返す必要はない（自分のカメラはもう自分で動かしている）。だからアバター同期では <code>socket.broadcast.emit</code> を使って<strong>他の人にだけ</strong>「私はここに動いたよ」と伝える。</p>
+        <h4>なぜ「自分以外の全員」に送るのか（<code>broadcast</code>）</h4>
+        <p style="font-size:0.9rem;margin-bottom:0.5rem">自分の動きを自分に送り返す必要はない（自分のカメラはもう自分で動かしている）。だからアバター同期では <code>socket.broadcast.emit</code> を使って<strong>他の人にだけ</strong>「私はここに動いたよ」と伝える。下の図で、自分の <code>emit</code> がサーバから<strong>他の人にだけ</strong>配られ、<strong>自分には戻らない</strong>様子が流れる。</p>
+        <div style="margin:0.4rem 0 0">
+          <svg viewBox="0 0 720 220" width="720" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333;max-width:100%">
+            <!-- links -->
+            <line x1="190" y1="120" x2="285" y2="120" stroke="#3a5a72" stroke-width="2"/>
+            <line x1="435" y1="112" x2="540" y2="60" stroke="#3a5a72" stroke-width="2"/>
+            <line x1="435" y1="128" x2="540" y2="172" stroke="#3a5a72" stroke-width="2"/>
+            <!-- return path (blocked) -->
+            <line x1="285" y1="132" x2="192" y2="150" stroke="#555" stroke-width="2" stroke-dasharray="5 4"/>
+            <text x="238" y="168" text-anchor="middle" fill="#e57373" font-size="16" font-weight="700">✕</text>
+            <text x="232" y="185" text-anchor="middle" fill="#b0b0b0" font-size="9">自分には戻さない</text>
+
+            <!-- me -->
+            <rect x="40" y="94" width="150" height="52" rx="10" fill="#141414" stroke="#4FC3F7" stroke-width="2"/>
+            <text x="115" y="118" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700">自分</text>
+            <text x="115" y="135" text-anchor="middle" fill="#999" font-size="9">emit('move')</text>
+            <!-- server -->
+            <rect x="285" y="94" width="150" height="52" rx="10" fill="#141414" stroke="#4FC3F7" stroke-width="2"/>
+            <text x="360" y="118" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700">サーバ</text>
+            <text x="360" y="135" text-anchor="middle" fill="#999" font-size="9">broadcast.emit</text>
+            <!-- others -->
+            <rect x="540" y="34" width="150" height="50" rx="10" fill="#141414" stroke="#4FC3F7" stroke-width="2"/>
+            <text x="615" y="63" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700">他の人 1</text>
+            <rect x="540" y="150" width="150" height="50" rx="10" fill="#141414" stroke="#4FC3F7" stroke-width="2"/>
+            <text x="615" y="179" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700">他の人 2</text>
+
+            <!-- packet me->server -->
+            <circle r="7" fill="#4FC3F7">
+              <animate attributeName="cx" values="115;360" keyTimes="0;1" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="cy" values="120;120" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.4;0.42;1" dur="3s" repeatCount="indefinite"/>
+            </circle>
+            <!-- packet server->other1 -->
+            <circle r="7" fill="#4FC3F7">
+              <animate attributeName="cx" values="360;360;540" keyTimes="0;0.45;1" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="cy" values="120;120;58" keyTimes="0;0.45;1" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.45;0.5;0.95;1" dur="3s" repeatCount="indefinite"/>
+            </circle>
+            <!-- packet server->other2 -->
+            <circle r="7" fill="#4FC3F7">
+              <animate attributeName="cx" values="360;360;540" keyTimes="0;0.45;1" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="cy" values="120;120;172" keyTimes="0;0.45;1" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.45;0.5;0.95;1" dur="3s" repeatCount="indefinite"/>
+            </circle>
+          </svg>
+        </div>
       </div>
     </div>
   </div>
@@ -749,6 +836,21 @@ io.<span class="fn">on</span>(<span class="str">'connection'</span>, (socket) <s
   console.<span class="fn">log</span>(<span class="str">'接続しました:'</span>, socket.id);   <span class="cmt">// ← 入室ログ</span>
 });</pre>
 
+      <div class="concept-box">
+        <h4>文法：<code>io.on('connection', (socket) =&gt; { … })</code> を読み解く</h4>
+        <p style="font-size:0.9rem;margin-bottom:0.5rem">この1行は「<strong>あることが起きたら、決めた処理を実行する</strong>」という<strong>イベント駆動</strong>の書き方。分解すると次の3つ。</p>
+        <table style="font-size:0.85rem;margin:0.3rem 0">
+          <tr><th style="width:34%">部分</th><th>意味</th></tr>
+          <tr><td><code>io.on( … )</code></td><td>「〜が起きたら…する」を登録する命令（<code>on</code>＝〜のとき）</td></tr>
+          <tr><td><code>'connection'</code></td><td><strong>起きること（イベント名）</strong>。「誰かがサーバに接続した」瞬間を表す</td></tr>
+          <tr><td><code>(socket) =&gt; { … }</code></td><td><strong>実行する処理（関数）</strong>。接続してきた相手を表す <code>socket</code> を受け取り、<code>{ }</code> の中を実行する</td></tr>
+        </table>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><code>(socket) =&gt; { … }</code> は「<strong>アロー関数</strong>」。<code>=&gt;</code> の左が<strong>受け取る値</strong>、右の <code>{ }</code> が<strong>やること</strong>。名前のない関数をその場で書ける</li>
+          <li><code>socket.id</code> は、接続ごとに自動で振られる<strong>ID（背番号のようなもの）</strong>。例：<code>aB3xK9_pQ2vLmN0AAAB</code>。「誰の動きか」を見分けるのに使う</li>
+        </ul>
+      </div>
+
       <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.2rem 0 0.3rem">ファイル2: <code>public/index.html</code></p>
       <pre><span class="code-label">HTML ── public/index.html</span><span class="kw">&lt;!DOCTYPE html&gt;</span>
 <span class="kw">&lt;html</span> lang=<span class="str">"ja"</span><span class="kw">&gt;</span>
@@ -810,17 +912,6 @@ node server.js</pre>
           <li><span class="blk">③</span> ＝ <code>&lt;a-camera&gt;</code> に付けた <code>id</code> の名前</li>
         </ul>
       </div>
-      <details>
-        <summary>答え合わせ（std4-1）</summary>
-        <div class="answer-content">
-          <ul class="point-list" style="margin-bottom:0">
-            <li><span class="blk">①</span> = <code>public</code></li>
-            <li><span class="blk">②</span> = <code>io</code>（<code>const socket = io();</code>）</li>
-            <li><span class="blk">③</span> = <code>cam</code></li>
-          </ul>
-        </div>
-      </details>
-
       <div class="notion-submit"><span>Notion に、<strong>ブラウザで空間を歩けている様子</strong>と<strong>ターミナルの「接続しました」ログ</strong>のキャプチャを貼る（std4-1）。</span></div>
     </div>
   </div>
@@ -846,31 +937,46 @@ node server.js</pre>
       <!-- flow diagram -->
       <div style="margin:1rem 0">
         <svg viewBox="0 0 720 210" width="720" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333;max-width:100%">
-          <text x="360" y="26" text-anchor="middle" fill="#4FC3F7" font-weight="700" font-size="14">位置が同期するまでの流れ</text>
+          <text x="360" y="26" text-anchor="middle" fill="#4FC3F7" font-weight="700" font-size="14">位置が同期するまでの流れ（データが左から右へ流れます）</text>
 
+          <!-- static arrows -->
+          <line x1="200" y1="105" x2="268" y2="105" stroke="#3a5a72" stroke-width="2" marker-end="url(#a1)"/>
+          <text x="234" y="96" text-anchor="middle" fill="#8fb7d4" font-size="9">emit('move')</text>
+          <line x1="450" y1="105" x2="518" y2="105" stroke="#3a5a72" stroke-width="2" marker-end="url(#a1)"/>
+          <text x="484" y="96" text-anchor="middle" fill="#8fb7d4" font-size="9">broadcast</text>
+
+          <!-- boxes -->
           <rect x="20" y="60" width="180" height="90" rx="10" fill="#141414" stroke="#4FC3F7" stroke-width="2"/>
           <text x="110" y="88" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700">自分のブラウザ</text>
           <text x="110" y="112" text-anchor="middle" fill="#e0e0e0" font-size="10">① emit('move')</text>
           <text x="110" y="130" text-anchor="middle" fill="#999" font-size="9">100msごとに送信</text>
 
-          <line x1="200" y1="105" x2="268" y2="105" stroke="#93D500" stroke-width="2" marker-end="url(#a1)"/>
-
-          <rect x="270" y="60" width="180" height="90" rx="10" fill="#141414" stroke="#93D500" stroke-width="2"/>
-          <text x="360" y="88" text-anchor="middle" fill="#93D500" font-size="12" font-weight="700">サーバ</text>
+          <rect x="270" y="60" width="180" height="90" rx="10" fill="#141414" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="360" y="88" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700">サーバ</text>
           <text x="360" y="112" text-anchor="middle" fill="#e0e0e0" font-size="10">② on('move')</text>
           <text x="360" y="130" text-anchor="middle" fill="#e0e0e0" font-size="10">broadcast.emit('moved')</text>
 
-          <line x1="450" y1="105" x2="518" y2="105" stroke="#FFB800" stroke-width="2" marker-end="url(#a2)"/>
-
-          <rect x="520" y="60" width="180" height="90" rx="10" fill="#141414" stroke="#FFB800" stroke-width="2"/>
-          <text x="610" y="88" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">相手のブラウザ</text>
+          <rect x="520" y="60" width="180" height="90" rx="10" fill="#141414" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="610" y="88" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700">相手のブラウザ</text>
           <text x="610" y="112" text-anchor="middle" fill="#e0e0e0" font-size="10">③ on('moved')</text>
           <text x="610" y="130" text-anchor="middle" fill="#999" font-size="9">アバターを生成・更新</text>
 
-          <text x="360" y="180" text-anchor="middle" fill="#93D500" font-size="11" font-weight="600">「送る」と「受け取る」を名札 'move' / 'moved' でつないでいる</text>
+          <!-- pulse at self (100msごとの送信) -->
+          <circle cx="110" cy="105" r="6" fill="none" stroke="#4FC3F7" stroke-width="2">
+            <animate attributeName="r" values="6;22;6" dur="2.8s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.9;0;0.9" dur="2.8s" repeatCount="indefinite"/>
+          </circle>
+
+          <!-- animated data packet: 自分→サーバ→相手 -->
+          <circle r="8" fill="#4FC3F7">
+            <animate attributeName="cx" values="110;360;360;610" keyTimes="0;0.42;0.55;1" dur="2.8s" repeatCount="indefinite"/>
+            <animate attributeName="cy" values="105;105;105;105" dur="2.8s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;1;1;1;1;0" keyTimes="0;0.04;0.42;0.55;0.96;1" dur="2.8s" repeatCount="indefinite"/>
+          </circle>
+
+          <text x="360" y="182" text-anchor="middle" fill="#8fb7d4" font-size="11" font-weight="600">「送る(emit)」と「受け取る(on)」を、名札 'move' / 'moved' でつないでいる</text>
           <defs>
-            <marker id="a1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#93D500"/></marker>
-            <marker id="a2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#FFB800"/></marker>
+            <marker id="a1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#3a5a72"/></marker>
           </defs>
         </svg>
       </div>
@@ -907,6 +1013,28 @@ node server.js</pre>
     color: myColor
   });
 }, <span class="num">100</span>);</pre>
+
+      <div class="concept-box">
+        <h4>文法：<code>setInterval</code> と「アロー関数」の書き方</h4>
+        <p style="font-size:0.9rem;margin-bottom:0.4rem"><strong>アロー関数</strong>とは、<strong>名前のない関数（＝やることのまとまり）をその場で作る</strong>書き方。<code>() =&gt; { … }</code> の <code>{ }</code> の中に処理を書く。</p>
+        <pre style="margin:0.3rem 0"><span class="code-label">JavaScript</span><span class="cmt">// これがアロー関数（名前なしの関数）</span>
+() <span class="op">=&gt;</span> {
+  <span class="cmt">// ここに、やりたい処理を書く</span>
+}</pre>
+        <p style="font-size:0.9rem;margin:0.5rem 0 0.4rem"><code>setInterval</code> は<strong>「一定の間隔で、処理をくり返す」</strong>命令。引数を<strong>2つ</strong>わたす。</p>
+        <pre style="margin:0.3rem 0"><span class="code-label">JavaScript ── setInterval の形</span><span class="fn">setInterval</span>( <span class="op">くり返したい処理（関数）</span> , <span class="op">間隔（ミリ秒）</span> );
+
+<span class="cmt">// 例：1000ミリ秒（＝1秒）ごとに「こんにちは」を表示</span>
+<span class="fn">setInterval</span>(() <span class="op">=&gt;</span> {
+  console.<span class="fn">log</span>(<span class="str">'こんにちは'</span>);
+}, <span class="num">1000</span>);</pre>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><strong>第1引数</strong>＝くり返したい処理を<strong>アロー関数</strong>で渡す（<code>() =&gt; { … }</code>）</li>
+          <li><strong>第2引数</strong>＝くり返す<strong>間隔（ミリ秒）</strong>。<code>1000</code>＝1秒、<code>100</code>＝0.1秒</li>
+          <li>今回は <code>100</code> なので、<strong>0.1秒ごと（＝毎秒10回）</strong>に「自分の位置を <code>emit</code> で送る」をくり返している</li>
+        </ul>
+      </div>
+
       <p style="font-size:0.85rem;color:#999;margin-bottom:0.5rem">※ 自分の色を決める1行も、<code>&lt;script&gt;</code> の最初のほう（部品をつかむ行の下）に足しておく：</p>
       <pre><span class="code-label">JavaScript ── index.html（色を決める）</span><span class="cmt">// 自分の色を、5色の中からランダムに選ぶ</span>
 <span class="kw">const</span> palette = [<span class="str">'#4FC3F7'</span>, <span class="str">'#FF8A3D'</span>, <span class="str">'#93D500'</span>, <span class="str">'#E040FB'</span>, <span class="str">'#FFD54F'</span>];
@@ -934,18 +1062,6 @@ socket.<span class="fn">on</span>(<span class="str">'move'</span>, (data) <span 
           <li><span class="blk">④</span> ＝ 送られてきたデータの色（<code>data.___</code>）</li>
         </ul>
       </div>
-      <details>
-        <summary>答え合わせ（std4-2）</summary>
-        <div class="answer-content">
-          <ul class="point-list" style="margin-bottom:0">
-            <li><span class="blk">①</span> = <code>emit</code></li>
-            <li><span class="blk">②</span> = <code>broadcast</code>（<code>socket.broadcast.emit(...)</code>）</li>
-            <li><span class="blk">③</span> = <code>id</code>（<code>socket.id</code>）</li>
-            <li><span class="blk">④</span> = <code>color</code></li>
-          </ul>
-        </div>
-      </details>
-
       <div class="notion-submit"><span>Notion に、<strong>ここまでの <code>index.html</code> と <code>server.js</code> のコード</strong>（穴を埋めたもの）を貼る（std4-2）。</span></div>
     </div>
   </div>
@@ -1027,18 +1143,6 @@ socket.<span class="fn">on</span>(<span class="str">'disconnect'</span>, () <spa
           <li><span class="blk">④</span> ＝ 子要素を取り除く命令（<code>removeChild</code>）</li>
         </ul>
       </div>
-      <details>
-        <summary>答え合わせ（std4-3）</summary>
-        <div class="answer-content">
-          <ul class="point-list" style="margin-bottom:0">
-            <li><span class="blk">①</span> = <code>appendChild</code></li>
-            <li><span class="blk">②</span> = <code>position</code></li>
-            <li><span class="blk">③</span> = <code>userLeft</code></li>
-            <li><span class="blk">④</span> = <code>removeChild</code></li>
-          </ul>
-        </div>
-      </details>
-
       <div class="callout-warning" style="margin-top:0.7rem">
         <h4>うまく動かないときのチェック</h4>
         <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
@@ -1057,23 +1161,23 @@ socket.<span class="fn">on</span>(<span class="str">'disconnect'</span>, () <spa
 <section id="sec-advance">
   <div class="container">
     <div class="section-header">
-      <div class="section-num" style="background:#FFB800">7</div>
+      <div class="section-num" style="background:#4FC3F7">7</div>
       <h2>発展課題 ― 魅力的なマルチプレイ空間に仕上げる（任意）</h2>
     </div>
 
     <div id="adv4-1" class="card advanced">
       <div class="card-header"><h3><span class="tag tag-advanced" style="font-size:0.7rem">発展課題</span> adv4-1：アバターと空間を作り込み、思わず入りたくなるワールドにする</h3></div>
-      <p style="margin-bottom:0.6rem">標準ゴール（2人が同期する空間）ができたら、そこを<strong style="color:#FFB800">「友達と過ごしたくなる、魅力的なマルチプレイ空間」</strong>に仕上げよう。<strong>A. アバターを個性的にする</strong>、<strong>B. 空間そのものを作り込む</strong>の2方向から、<strong>合わせて2つ以上</strong>に挑戦する（丸ごとコピペ＋改造でよい）。世界観（街・カフェ・美術館・宇宙ステーションなど）を1つ決めると作りやすい。</p>
+      <p style="margin-bottom:0.6rem">標準ゴール（2人が同期する空間）ができたら、そこを<strong style="color:#4FC3F7">「友達と過ごしたくなる、魅力的なマルチプレイ空間」</strong>に仕上げよう。<strong style="color:#4FC3F7">A. アバターを個性的にする</strong>、<strong style="color:#4FC3F7">B. 空間そのものを作り込む</strong>の2方向から、<strong>合わせて2つ以上</strong>に挑戦する（丸ごとコピペ＋改造でよい）。世界観（街・カフェ・美術館・宇宙ステーションなど）を1つ決めると作りやすい。</p>
 
       <figure class="exec-shot">
         <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">http://localhost:3000/advanced.html — 実装例</span></div>
-        <img src="img/md2w4_adv.png" alt="発展版の実行結果。VRMキャラクター（AliciaSolid）が、glTFの街灯（構造物）が並ぶ夕暮れの空間に立っている。VRMとglTFモデルの両方がブラウザに表示されている">
-        <figcaption class="exec-cap"><strong>実装例（実際の実行結果）:</strong> <strong>VRMキャラクター</strong>（<a href="https://3d.nicovideo.jp/works/td32797" style="color:#4FC3F7">AliciaSolid ©Alicia Solid</a>）と、<strong>glTFの街灯（構造物）</strong>4基を配置した夕暮れの空間。<code>&lt;a-entity vrm="…"&gt;</code> と <code>&lt;a-gltf-model&gt;</code> を並べるだけで、こうした世界が作れる。下のアイデアを組み合わせて、自分だけのワールドを目指そう。</figcaption>
+        <img src="img/md2w4_adv.png" alt="発展版の実行結果。VRMの男子キャラクターが、glTFの街灯（構造物）が並ぶ夕暮れの空間に立っている。VRMとglTFモデルの両方がブラウザに表示されている">
+        <figcaption class="exec-cap"><strong>実装例（実際の実行結果）:</strong> <strong>VRMキャラクター</strong>（<a href="https://vroid.com/" style="color:#4FC3F7">Sakurada Fumiriya ／ VRoidサンプルモデル</a>）と、<strong>glTFの街灯（構造物）</strong>4基を配置した夕暮れの空間。<code>&lt;a-entity vrm="…"&gt;</code> と <code>&lt;a-gltf-model&gt;</code> を並べるだけで、こうした世界が作れる。下のアイデアを組み合わせて、自分だけのワールドを目指そう。</figcaption>
       </figure>
 
-      <div style="background:#241a05;border:1px solid #6b5410;border-left:4px solid #FFB800;border-radius:10px;padding:0.7rem 1rem;margin:0.8rem 0;font-weight:700;color:#FFD54F;font-size:0.95rem">A. アバターを個性的にする</div>
+      <div style="background:#0a1e2e;border:1px solid #24506b;border-left:4px solid #4FC3F7;border-radius:10px;padding:0.7rem 1rem;margin:0.8rem 0;font-weight:700;color:#4FC3F7;font-size:0.95rem">A. アバターを個性的にする</div>
 
-      <h4 style="color:#FFB800;font-size:0.95rem;margin:0.8rem 0 0.3rem">アイデア①：頭の上に名前ラベルを出す</h4>
+      <h4 style="color:#4FC3F7;font-size:0.95rem;margin:0.8rem 0 0.3rem">アイデア①：頭の上に名前ラベルを出す</h4>
       <p style="font-size:0.9rem;margin-bottom:0.4rem">入室時に名前を入力し、<code>move</code> に名前も乗せて送る。<code>createAvatar</code> の中で <code>a-text</code> を子要素に足す。</p>
       <pre><span class="code-label">JavaScript ── createAvatar に足すヒント</span><span class="cmt">// 名前は接続時に prompt で入力しておく</span>
 <span class="kw">const</span> myName = <span class="fn">prompt</span>(<span class="str">'名前を入れてください'</span>) || <span class="str">'ゲスト'</span>;
@@ -1085,24 +1189,24 @@ label.<span class="fn">setAttribute</span>(<span class="str">'align'</span>, <sp
 label.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, <span class="str">'white'</span>);
 avatar.<span class="fn">appendChild</span>(label);</pre>
 
-      <h4 style="color:#FFB800;font-size:0.95rem;margin:1rem 0 0.3rem">アイデア②：アバターの形・大きさを変える</h4>
+      <h4 style="color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">アイデア②：アバターの形・大きさを変える</h4>
       <p style="font-size:0.9rem;margin-bottom:0">胴体 <code>a-box</code> の <code>height</code>／<code>width</code> や、頭 <code>a-sphere</code> の <code>radius</code> を変える。帽子（小さな <code>a-cone</code>）を足すのもよい。</p>
 
-      <h4 style="color:#FFB800;font-size:0.95rem;margin:1rem 0 0.3rem">アイデア③：Sketchfab の3Dモデル（glTF/glb）をアバターにする</h4>
+      <h4 style="color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">アイデア③：Sketchfab の3Dモデル（glTF/glb）をアバターにする</h4>
       <p style="font-size:0.9rem;margin-bottom:0">第3回で学んだ <code>&lt;a-gltf-model&gt;</code> を使い、四角柱＋スフィアの代わりに<strong>好きな3Dモデル</strong>をアバターにする。<a href="https://sketchfab.com/" style="color:#4FC3F7">Sketchfab</a> でロボット・動物・キャラクターなどの <code>glb</code> をダウンロードして <code>public</code> に置き、<code>createAvatar</code> の <code>innerHTML</code> を差しかえる。<span style="color:#999">（ライセンス・作者表示に注意）</span></p>
       <pre><span class="code-label">JavaScript ── createAvatar の innerHTML を差しかえ</span>avatar.innerHTML =
   <span class="str">'&lt;a-gltf-model src="robot.glb" scale="1 1 1"&gt;&lt;/a-gltf-model&gt;'</span>;</pre>
 
-      <h4 style="color:#FFB800;font-size:0.95rem;margin:1rem 0 0.3rem">アイデア④：VRM（3Dキャラクター）をアバターにする</h4>
+      <h4 style="color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">アイデア④：VRM（3Dキャラクター）をアバターにする</h4>
       <p style="font-size:0.9rem;margin-bottom:0.4rem"><strong>VRM</strong> は「人型3Dアバター」の標準フォーマット。<a href="https://hub.vroid.com/" style="color:#4FC3F7">VRoid Hub</a> や、無料アプリ <strong>VRoid Studio</strong> で作った自分のキャラを <code>.vrm</code> で置ける。A-Frame では <a href="https://github.com/binzume/aframe-vrm" style="color:#4FC3F7">aframe-vrm コンポーネント</a>を読み込むと <code>vrm</code> 属性で表示できる。</p>
       <pre><span class="code-label">HTML ── &lt;head&gt; に1行足す（VRMを使うとき）</span><span class="kw">&lt;script</span> src=<span class="str">"https://cdn.jsdelivr.net/npm/@binzume/aframe-vrm/dist/aframe-vrm.min.js"</span><span class="kw">&gt;&lt;/script&gt;</span></pre>
       <pre><span class="code-label">JavaScript ── createAvatar の innerHTML を差しかえ</span>avatar.innerHTML =
   <span class="str">'&lt;a-entity vrm="src:avatar.vrm" rotation="0 180 0"&gt;&lt;/a-entity&gt;'</span>;</pre>
       <p style="font-size:0.85rem;color:#999;margin-bottom:0">※ <code>.vrm</code> ファイルは <code>public</code> に置く。向きが逆なら <code>rotation="0 180 0"</code> で調整する。</p>
 
-      <div style="background:#052414;border:1px solid #1f6b3f;border-left:4px solid #93D500;border-radius:10px;padding:0.7rem 1rem;margin:1.2rem 0 0.8rem;font-weight:700;color:#93D500;font-size:0.95rem">B. 空間そのものを作り込む</div>
+      <div style="background:#0a1e2e;border:1px solid #24506b;border-left:4px solid #4FC3F7;border-radius:10px;padding:0.7rem 1rem;margin:1.2rem 0 0.8rem;font-weight:700;color:#4FC3F7;font-size:0.95rem">B. 空間そのものを作り込む</div>
 
-      <h4 style="color:#93D500;font-size:0.95rem;margin:0.8rem 0 0.3rem">アイデア⑤：Sketchfab の建物・構造物を配置してワールドを作る</h4>
+      <h4 style="color:#4FC3F7;font-size:0.95rem;margin:0.8rem 0 0.3rem">アイデア⑤：Sketchfab の建物・構造物を配置してワールドを作る</h4>
       <p style="font-size:0.9rem;margin-bottom:0.4rem">目印の白い箱を、<strong>本物の建物・家具・街灯・木・アーチ</strong>などに置きかえると、一気に「行きたくなる場所」になる。<a href="https://sketchfab.com/" style="color:#4FC3F7">Sketchfab</a> で <code>building</code>／<code>street</code>／<code>cafe</code>／<code>park</code> などを検索して <code>glb</code> をダウンロードし、<code>public</code> に置いて <code>&lt;a-scene&gt;</code> の中に並べる。</p>
       <pre><span class="code-label">HTML ── a-scene の中に建物・構造物を並べる</span><span class="cmt">&lt;!-- ダウンロードした glb を配置（位置・大きさ・向きは自由に調整） --&gt;</span>
 <span class="kw">&lt;a-gltf-model</span> src=<span class="str">"building.glb"</span> position=<span class="str">"-8 0 -10"</span> scale=<span class="str">"2 2 2"</span><span class="kw">&gt;&lt;/a-gltf-model&gt;</span>
@@ -1133,7 +1237,7 @@ avatar.<span class="fn">appendChild</span>(label);</pre>
 <section id="sec-notion">
   <div class="container">
     <div class="section-header">
-      <div class="section-num" style="background:#93D500">📝</div>
+      <div class="section-num" style="background:#4FC3F7">📝</div>
       <h2>提出物のまとめ</h2>
     </div>
     <div class="card">
