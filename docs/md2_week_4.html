@@ -875,8 +875,8 @@ io.<span class="fn">on</span>(<span class="str">'connection'</span>, (socket) <s
   <span class="kw">&lt;/a-scene&gt;</span>
 
   <span class="kw">&lt;script&gt;</span>
-    <span class="cmt">// サーバに接続する（これだけで通話状態になる）</span>
-    <span class="kw">const</span> socket = <span class="blk">②</span>();
+    <span class="cmt">// サーバに<span class="blk">②</span>する（この1行だけで通話状態になる）</span>
+    <span class="kw">const</span> socket = <span class="fn">io</span>();
 
     <span class="cmt">// あとで使う部品をつかんでおく</span>
     <span class="kw">const</span> scene = document.<span class="fn">getElementById</span>(<span class="str">'scene'</span>);
@@ -908,7 +908,7 @@ node server.js</pre>
         <p style="color:#4FC3F7;font-weight:700;font-size:0.9rem;margin-bottom:0.4rem">空欄のヒント</p>
         <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
           <li><span class="blk">①</span> ＝ 配りたいフォルダの名前（<code>index.html</code> が入っている方）</li>
-          <li><span class="blk">②</span> ＝ サーバに接続する関数（<code>socket.io.js</code> を読み込むと使える。2文字）</li>
+          <li><span class="blk">②</span> ＝ <code>io()</code> が何をする1行かを表すコメント（漢字2文字。ヒント：サーバに◯◯する）</li>
           <li><span class="blk">③</span> ＝ <code>&lt;a-camera&gt;</code> に付けた <code>id</code> の名前</li>
         </ul>
       </div>
