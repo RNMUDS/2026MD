@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第4回: マルチプレイ空間をつくる ― Node.js + Socket.IO で、みんなで動けるバーチャル空間へ | MD2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET & BASE ============ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: clamp(13px, 1.6vw, 28px); }
+html, body { overflow-x: hidden; max-width: 100%; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #111111;
+  color: #e0e0e0;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+img, video, iframe, svg, canvas { max-width: 100%; height: auto; }
+
+/* ============ LAYOUT ============ */
+.container { max-width: 1600px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+
+/* ============ HEADER ============ */
+.hero {
+  background: linear-gradient(135deg, #111111, #0a1e2e, #0a0a1a);
+  color: white;
+  padding: clamp(3rem, 8vw, 6rem) 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(79,195,247,0.3), transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(118,185,0,0.2), transparent 50%);
+}
+.hero .container { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 100px;
+  padding: 0.35rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+}
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+
+/* ============ SUBMISSION BOX ============ */
+.submission-box {
+  background: linear-gradient(135deg, #1A1A1A, #0a1e2e);
+  border: 2px solid #4FC3F7;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin: 2rem 0;
+}
+.submission-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #4FC3F7;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.submission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.5rem;
+}
+.sub-item {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  gap: 0.3rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.4rem;
+  padding: 0.6rem 0.4rem;
+  font-size: 0.55rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.sub-item .sub-count { margin-bottom: 0.1rem; }
+.sub-item .tag { margin-bottom: 0.15rem; }
+.sub-count {
+  background: #4FC3F7;
+  color: white;
+  border-radius: 0.2rem;
+  min-width: 1.5rem; height: 1.5rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700;
+}
+
+/* ============ TAGS ============ */
+.tag {
+  display: inline-flex; align-items: center; gap: 0.2rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 100px;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.tag-note      { background: #1a2e0a; color: #76B900; }
+.tag-standard  { background: #0a1a2e; color: #4FC3F7; }
+.tag-advanced  { background: #2e1a0a; color: #FFB800; }
+.tag-group     { background: #1a2e0a; color: #76B900; }
+
+/* ============ BLANK (穴埋め) ============ */
+.blk {
+  display: inline-block;
+  min-width: 2.2em;
+  padding: 0 0.5em;
+  margin: 0 0.1em;
+  background: rgba(255,184,0,0.12);
+  border: 1px dashed #FFB800;
+  border-radius: 5px;
+  color: #FFB800;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ============ SECTION HEADERS ============ */
+.section-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.section-num {
+  width: 2.5rem; height: 2.5rem;
+  border-radius: 0.4rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 900; color: white;
+  flex-shrink: 0;
+}
+.section-header h2 {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+/* ============ CARDS ============ */
+.card {
+  background: #141414;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  border: 1px solid #2a2a2a;
+}
+.card-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #222;
+}
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.standard  { border-left: 4px solid #4FC3F7; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.card.group     { border-left: 4px solid #93D500; }
+
+/* ============ NOTION CALLOUT ============ */
+.notion-submit {
+  background: #0a1e2e;
+  border: 1px solid #4FC3F7;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  display: flex; align-items: flex-start; gap: 0.5rem;
+}
+.notion-submit::before { content: '\1F4DD'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+
+/* ============ TABLES ============ */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem;
+  margin: 1rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+th {
+  background: rgba(79, 195, 247, 0.15);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  color: #4FC3F7;
+  letter-spacing: 0.02em;
+}
+td { padding: 0.55rem 0.8rem; border-top: 1px solid #222; }
+tr:nth-child(even) td { background: #111; }
+
+/* ============ CODE ============ */
+pre {
+  background: #0A0A0A;
+  color: #E0E0E0;
+  border-radius: 12px;
+  padding: clamp(0.8rem, 2vw, 1.4rem);
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
+  font-size: clamp(0.75rem, 1.3vw, 0.88rem);
+  line-height: 1.7;
+  margin: 1rem 0;
+  position: relative;
+}
+pre .kw { color: #4FC3F7; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #FFB800; }
+pre .op { color: #93D500; }
+.code-label {
+  position: absolute; top: 0; right: 0;
+  background: rgba(255,255,255,0.08);
+  color: #999999;
+  padding: 0.2rem 0.8rem;
+  border-radius: 0 12px 0 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+:not(pre) > code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(79,195,247,0.15);
+  padding: 0.15em 0.45em;
+  border-radius: 5px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+:not(pre) > code:hover { background: rgba(79,195,247,0.3); }
+:not(pre) > code.copied { background: rgba(79,195,247,0.5); }
+
+/* ============ EXPLANATION BLOCKS ============ */
+.concept-box {
+  background: rgba(79, 195, 247, 0.12);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  border: 1px solid #2a3a3a;
+}
+.concept-box h4 { font-size: 0.95rem; font-weight: 700; color: #4FC3F7; margin-bottom: 0.5rem; }
+.analogy {
+  background: #1a1a0a;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 0.75rem 0;
+  border-left: 3px solid #FFB800;
+  font-size: 0.95rem;
+}
+.analogy::before {
+  content: '\1F4A1 日常の例';
+  display: block;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #FFB800;
+  margin-bottom: 0.3rem;
+}
+.point-list { list-style: none; padding: 0; }
+.point-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+}
+.point-list li::before {
+  content: '\25B8';
+  position: absolute; left: 0;
+  color: #4FC3F7;
+  font-weight: 700;
+}
+
+/* ============ EXEC SHOT (実行結果キャプチャ) ============ */
+.exec-shot {
+  margin: 1rem 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #333;
+  background: #0d0d0d;
+}
+.exec-bar {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.5rem 0.8rem;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+}
+.exec-bar .d { width: 0.7rem; height: 0.7rem; border-radius: 50%; }
+.exec-bar .d.r { background: #ff5f57; }
+.exec-bar .d.y { background: #febc2e; }
+.exec-bar .d.g { background: #28c840; }
+.exec-bar .u { margin-left: 0.5rem; font-size: 0.72rem; color: #999; font-family: 'JetBrains Mono', monospace; }
+.exec-shot img { display: block; width: 100%; }
+.exec-cap { padding: 0.6rem 0.9rem; font-size: 0.82rem; color: #aaa; background: #0d0d0d; }
+.exec-cap strong { color: #4FC3F7; }
+.exec-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 720px) { .exec-pair { grid-template-columns: 1fr; } }
+
+/* ============ ANSWERS (COLLAPSIBLE) ============ */
+details {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+details summary {
+  padding: 0.8rem 1.2rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 0.5rem;
+  background: #1a1a1a;
+  user-select: none;
+}
+details summary::marker { content: ''; }
+details summary::before {
+  content: '\25B6';
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+  color: #666;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
+
+/* ============ CALLOUTS ============ */
+.callout-danger {
+  background: rgba(255, 82, 82, 0.08);
+  border: 1px solid rgba(255, 82, 82, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-danger h4 { color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
+.callout-warning {
+  background: rgba(255, 184, 0, 0.08);
+  border: 1px solid rgba(255, 184, 0, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-warning h4 { color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
+.callout-info {
+  background: rgba(79, 195, 247, 0.08);
+  border: 1px solid rgba(79, 195, 247, 0.3);
+  border-left: 4px solid #4FC3F7;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-info h4 { color: #4FC3F7; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
+.callout-tip {
+  background: rgba(147, 213, 0, 0.08);
+  border: 1px solid rgba(147, 213, 0, 0.3);
+  border-left: 4px solid #93D500;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-tip h4 { color: #93D500; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
+
+/* ============ FOOTER ============ */
+footer {
+  background: #0A0A0A;
+  color: #999999;
+  padding: 2rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 640px) {
+  .submission-items { grid-template-columns: 1fr; }
+  .section-num { width: 2rem; height: 2rem; font-size: 0.85rem; }
+  table { max-width: 100%; font-size: 0.78rem; }
+  th, td { padding: 0.4rem 0.5rem; white-space: normal; }
+  th { font-size: 0.72rem; }
+  .callout-danger, .callout-warning, .callout-info, .callout-tip,
+  .concept-box, .analogy, .notion-submit { padding: 0.8rem 0.9rem; border-radius: 10px; font-size: 0.88rem; overflow-x: hidden; }
+  details summary { padding: 0.7rem 0.9rem; font-size: 0.9rem; }
+  details .answer-content { padding: 0.8rem 0.9rem; overflow-x: auto; }
+  p, li, td, th, summary, .card, div { overflow-wrap: anywhere; }
+  :not(pre) > code { white-space: normal; overflow-wrap: anywhere; word-break: break-all; }
+  [id] { scroll-margin-top: 2.5rem; }
+}
+@media (max-width: 420px) {
+  .container { padding: 0 0.6rem; }
+  .hero { padding: 1.3rem 0; }
+  .hero h1 { font-size: 1rem !important; }
+  .hero p { font-size: 0.78rem !important; }
+  .section-header h2 { font-size: 0.95rem; }
+  .section-num { width: 1.7rem; height: 1.7rem; font-size: 0.78rem; }
+  .card { padding: 0.75rem; }
+  .card-header h3 { font-size: 0.92rem; }
+  th, td { padding: 0.3rem 0.35rem; font-size: 0.7rem; }
+  pre { font-size: 0.65rem; padding: 0.55rem; }
+  .section-nav a { font-size: 0.6rem !important; padding: 0.2rem 0.4rem !important; }
+  .submission-box { padding: 0.8rem; }
+}
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #4FC3F7; color: white; border-color: #4FC3F7; }
+.copy-btn.copied { background: #4FC3F7; color: white; border-color: #4FC3F7; }
+
+a.sub-item { transition: transform 0.15s, box-shadow 0.15s; text-decoration: none; color: inherit; }
+a.sub-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79,195,247,0.3);
+  border-color: #4FC3F7;
+}
+
+/* ============ SECTION NAV ============ */
+.section-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.2rem 0;
+  display: flex; justify-content: center; gap: 0.3rem; flex-wrap: wrap;
+}
+body { padding-top: 2.2rem; }
+.section-nav a {
+  color: #999; text-decoration: none;
+  font-size: 0.45rem; font-weight: 500;
+  padding: 0.15rem 0.4rem; border-radius: 6px;
+  transition: all 0.2s; white-space: nowrap;
+}
+.section-nav a:hover { color: #4FC3F7; background: rgba(79,195,247,0.1); }
+.section-nav a.nav-assignment { color: #4FC3F7; }
+.section-nav a.nav-exam { color: #FFB800; }
+[id] { scroll-margin-top: 3.5rem; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  details summary::before { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SECTION NAV ============ -->
+<nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_1.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_2.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_3.html">3</a> <a style="color:#4FC3F7;background:rgba(79,195,247,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="md2_week_4.html">4</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_5.html">5</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_6.html">6</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_7.html">7</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_8.html">8</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_9.html">9</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_10.html">10</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_11.html">11</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_12.html">12</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_13.html">13</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_14.html">14</a> </div>
+  <a href="#sec-purpose">第4回の位置づけ</a>
+  <a href="#sec-flow">本日の流れ</a>
+  <a href="#sec-why">1. なぜサーバが要る</a>
+  <a href="#sec-setup">2. セットアップ</a>
+  <a href="#sec-single" class="nav-assignment">3. 接続＋自分</a>
+  <a href="#sec-mech">4. 同期の仕組み</a>
+  <a href="#sec-emit" class="nav-assignment">5. 位置を送る</a>
+  <a href="#sec-sync" class="nav-assignment">6. 同期して完成</a>
+  <a href="#sec-advance" class="nav-exam">7. 発展課題</a>
+  <a href="#sec-notion">ノート</a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">Media creation Data design 2（MD2）─ 2026年度</div>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.1rem">武蔵野大学データサイエンス学部</p>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.3rem">武蔵野大学国際データサイエンス学部（通信教育部）</p>
+    <p style="font-size:0.95rem;opacity:0.85;margin-bottom:1rem">中村 亮太</p>
+    <h1>MD2 第4回: マルチプレイ空間をつくる ― Node.js + Socket.IO で、みんなで動けるバーチャル空間へ</h1>
+    <div style="display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap;margin-top:0.3rem">
+      <p style="overflow-wrap:normal;word-break:normal;flex:1 1 20rem;min-width:16rem;max-width:640px;margin:0">第3回は「与えられたデータ（サッカーCSV）」を空間で可視化した。第4回は逆に、<strong>自分たちが同じ空間に入って動き、その行動データが生まれる"装置"</strong>を作る。カギは<strong>サーバ（Node.js）</strong>と<strong>Socket.IO</strong>。ブラウザ同士をつなぎ、<strong>お互いのアバターが動いて見える</strong>マルチプレイ空間を、手を動かして完成させる。<span style="opacity:0.75">（集めたデータの"分析"は次回のテーマ。今日はまず「みんなで動ける」を実現する。）</span></p>
+      <img src="img/md2w4_hero.png" alt="Node.jsとSocket.IOで作ったマルチプレイ空間。青と橙、2人分のアバター（四角柱＋スフィア）が同じ3D空間に立っている" style="flex:0 1 460px;width:460px;max-width:100%;border-radius:12px;border:1px solid rgba(255,255,255,0.18);box-shadow:0 8px 28px rgba(0,0,0,0.45)">
+    </div>
+    <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:0.3rem;padding:0.4rem 0.8rem;margin-top:1rem;font-size:0.7rem;display:inline-block;max-width:100%;overflow-wrap:anywhere">
+      <strong>第4回のメイン:</strong> ① なぜサーバが要る → ② セットアップ（Node.js/npm） → ③ 接続＋自分の空間 → ④ 同期の仕組み → ⑤ 自分の位置を送る → ⑥ 相手のアバターを同期して完成 → ⑦ 発展（名前・色・3Dモデル）
+    </div>
+  </div>
+</header>
+
+<!-- ============ COURSE PURPOSE ============ -->
+<section id="sec-purpose" style="padding-top:2.5rem;padding-bottom:0">
+  <div class="container">
+    <div class="card" style="border-left:4px solid #4FC3F7;background:linear-gradient(135deg,#141414,#111a20)">
+      <div class="card-header"><h3>📌 第4回の位置づけ：なぜ「マルチプレイ空間」を作るのか（はじめに読もう）</h3></div>
+
+      <p style="font-size:1.05rem;margin-bottom:0.7rem">テーマは引き続き <strong style="color:#4FC3F7">「バーチャル空間で、データサイエンスを実践する」</strong>。第3回までは<strong>ブラウザ1台の中だけ</strong>で完結していた。第4回では初めて<strong style="color:#4FC3F7">自分でサーバを立て、複数のブラウザをつなぐ</strong>。これは、後の回で<strong>人の行動データを集めて分析する</strong>ための土台になる。</p>
+
+      <div class="callout-info" style="margin-top:0.5rem">
+        <h4>今日の合言葉：「データを"生む装置"を作る」</h4>
+        <ul class="point-list" style="margin-bottom:0">
+          <li><strong>第3回</strong>＝すでにある表（サッカーCSV）を<strong>読み込んで可視化</strong>した ＝ <em>データを消費する</em></li>
+          <li><strong>第4回</strong>＝みんなが同じ空間で動くと、その<strong>位置・向きが刻々と生まれる</strong> ＝ <em>データを生産する装置を作る</em></li>
+          <li>1人分の<strong>位置 <code>{x, y, z}</code> と向き</strong>＝ある瞬間の行動データ1件（第2回のオブジェクト＝レコードと同じ形）</li>
+          <li>それを<strong>毎秒何回も送り合う</strong>＝行動の時系列データが空間の中で流れている、ということ</li>
+        </ul>
+      </div>
+
+      <div class="callout-tip" style="margin-top:0.7rem">
+        <h4>今日は「分析」はしない。まず「みんなで動ける」を実現する</h4>
+        <p style="font-size:0.9rem;margin-bottom:0">集めたデータをグラフや統計で分析するのは<strong>次回以降</strong>のテーマ。今日は、その前提となる<strong>マルチプレイの仕組み</strong>を、1つずつ動かしながら完成させることに集中する。今日作る空間が、そのまま次回の「実験の舞台」になる。</p>
+      </div>
+
+      <p style="font-size:0.9rem;color:#999;margin:1.2rem 0 0.5rem">本科目全体の流れ（再確認）。第4回は <strong style="color:#4FC3F7">STEP 2（データを取る・扱う）</strong>の中でも、<strong style="color:#4FC3F7">「データを自分たちで取りにいく」</strong>ための仕組みづくりの回。</p>
+
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin:0.5rem 0 1rem">
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #76B900;border-radius:0.5rem;padding:0.9rem">
+          <div style="color:#76B900;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 1 ─ 舞台をつくる</div>
+          <div style="font-size:0.88rem"><strong>3D空間を自分で作る</strong>。<span style="color:#999">（第1〜2回）</span></div>
+        </div>
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #4FC3F7;border-radius:0.5rem;padding:0.9rem">
+          <div style="color:#4FC3F7;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 2 ─ データを扱う <span style="font-size:0.7rem;background:#0a1a2e;border:1px solid #4FC3F7;border-radius:100px;padding:0.05rem 0.5rem">今ここ</span></div>
+          <div style="font-size:0.88rem">CSVを可視化（第3回）→ <strong>みんなで動いてデータを生む装置を作る（第4回）</strong>。<span style="color:#999">（第3〜4回）</span></div>
+        </div>
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #FFB800;border-radius:0.5rem;padding:0.9rem">
+          <div style="color:#FFB800;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 3 ─ データを分析する</div>
+          <div style="font-size:0.88rem">集めたデータを<strong>統計で分析</strong>。<span style="color:#999">（第5〜6回）</span></div>
+        </div>
+      </div>
+
+      <h4 style="color:#4FC3F7;font-weight:700;font-size:1.05rem;margin:1.5rem 0 0.3rem">🎯 第4回のゴール</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li><strong>なぜサーバが必要か</strong>（HTTPとリアルタイム通信の違い）を説明できる</li>
+        <li><strong>Node.js / npm</strong> でプロジェクトを準備し、<code>express</code>・<code>socket.io</code> を導入できる</li>
+        <li><code>socket.emit</code>（送る）と <code>socket.on</code>（受け取る）の対で通信を組み立てられる</li>
+        <li><strong>標準ゴール：</strong>2つのブラウザで入室すると、<strong>お互いのアバターが動いて見える</strong>マルチプレイ空間を完成できる</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FLOW + SUBMISSION ============ -->
+<section id="sec-flow" style="padding-top:1rem;padding-bottom:0">
+  <div class="container">
+    <div class="card">
+      <div class="card-header"><h3>本日の授業の流れ（ステップ・バイ・ステップ）</h3></div>
+      <table>
+        <tr><th style="width:12%">節</th><th>やること</th><th style="width:22%">課題</th></tr>
+        <tr><td>1</td><td>なぜサーバが要るのか（HTTP と リアルタイム通信）</td><td>説明</td></tr>
+        <tr><td>2</td><td>セットアップ（Node.js / npm init / npm install）</td><td>説明・手順</td></tr>
+        <tr><td>3</td><td>接続確認＋自分だけの空間を歩く</td><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std4-1</td></tr>
+        <tr><td>4</td><td>マルチプレイの仕組み（送る→転送→受け取る）</td><td>説明</td></tr>
+        <tr><td>5</td><td>自分の位置・向きを送る（<code>emit</code>）</td><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std4-2</td></tr>
+        <tr><td>6</td><td>相手のアバターを同期して完成（<strong>標準ゴール</strong>）</td><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std4-3</td></tr>
+        <tr><td>7</td><td>名前ラベル・個別カラー・3Dモデル（自由創作）</td><td><span class="tag tag-advanced" style="font-size:0.65rem">発展課題</span> adv4-1</td></tr>
+      </table>
+    </div>
+
+    <div class="submission-box">
+      <h3>📤 提出ガイド（1つのファイルにまとめ、PDF 1枚を提出）</h3>
+      <div class="submission-items">
+        <a href="#std4-1" class="sub-item"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std4-1 接続＋自分の空間</a>
+        <a href="#std4-2" class="sub-item"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std4-2 位置を送る</a>
+        <a href="#std4-3" class="sub-item"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std4-3 同期して完成</a>
+        <a href="#adv4-1" class="sub-item"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv4-1 自由創作</a>
+      </div>
+      <p style="font-size:0.75rem;color:#999;margin-top:0.8rem">※ 発展課題（adv4-1）は任意。ほかは実行結果のキャプチャ（ブラウザ・ターミナル）を記録します。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1. WHY SERVER ============ -->
+<section id="sec-why">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">1</div>
+      <h2>なぜ「サーバ」が要るのか ― HTTP と リアルタイム通信</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>これまでとの違い：1台で完結 → 複数をつなぐ</h3></div>
+      <p style="margin-bottom:0.6rem">第3回まではブラウザ1台の中だけで動いていた（<code>python -m http.server</code> はファイルを配るだけ）。でも「<strong>お互いのアバターが見える</strong>」には、<strong>誰かの動きを別の人に届ける中継役</strong>が要る。それが<strong>サーバ</strong>。</p>
+
+      <div class="analogy">
+        HTTP は「<strong>手紙</strong>」。ほしいページを1回リクエストして、返事が来たら終わり（つなぎっぱなしではない）。一方リアルタイム通信は「<strong>通話</strong>」。回線をつないだままにして、どちらからでも好きなときに話しかけられる。マルチプレイには「通話」が向いている。
+      </div>
+
+      <table>
+        <tr><th style="width:22%"></th><th>HTTP（これまで）</th><th>リアルタイム通信（今回）</th></tr>
+        <tr><td><strong>たとえ</strong></td><td>手紙（1往復で終わり）</td><td>通話（つなぎっぱなし）</td></tr>
+        <tr><td><strong>きっかけ</strong></td><td>ブラウザが要求したときだけ</td><td>どちら側からでも、いつでも</td></tr>
+        <tr><td><strong>用途</strong></td><td>ページや画像を取りにいく</td><td>位置の同期・チャット・通知</td></tr>
+      </table>
+
+      <div class="concept-box">
+        <h4>今日の道具：Node.js・Express・Socket.IO</h4>
+        <ul class="point-list" style="margin-bottom:0">
+          <li><strong>Node.js</strong>：ブラウザの外で <strong>JavaScript を動かす</strong>しくみ。これで「サーバ側のJavaScript」が書ける</li>
+          <li><strong>Express</strong>：<code>index.html</code> などのファイルをブラウザに配る、軽量な土台</li>
+          <li><strong>Socket.IO</strong>：ブラウザとサーバを<strong>通話状態でつなぎ</strong>、メッセージを送り合うためのライブラリ</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>通信の基本形：<code>emit</code>（送る）と <code>on</code>（受け取る）</h3></div>
+      <p style="margin-bottom:0.6rem">Socket.IO の通信は、たった2つの命令の<strong>ペア</strong>でできている。片方が <code>emit</code> で送り、もう片方が同じ名前の <code>on</code> で受け取る。</p>
+      <pre><span class="code-label">考え方</span><span class="cmt">// 送る側</span>
+socket.<span class="fn">emit</span>(<span class="str">'move'</span>, { x: <span class="num">1</span>, z: <span class="num">2</span> });   <span class="cmt">// 'move' という名札をつけてデータを送る</span>
+
+<span class="cmt">// 受け取る側（別のプログラム）</span>
+socket.<span class="fn">on</span>(<span class="str">'move'</span>, (data) <span class="op">=&gt;</span> {      <span class="cmt">// 同じ名札 'move' が届いたら…</span>
+  console.<span class="fn">log</span>(data.x, data.z);        <span class="cmt">// 中身を使う</span>
+});</pre>
+
+      <table>
+        <tr><th style="width:34%">命令</th><th>意味</th></tr>
+        <tr><td><code>socket.emit('名前', データ)</code></td><td>その相手だけに送る</td></tr>
+        <tr><td><code>io.emit('名前', データ)</code></td><td><strong>自分も含めた全員</strong>に送る</td></tr>
+        <tr><td><code>socket.broadcast.emit('名前', データ)</code></td><td><strong>自分以外の全員</strong>に送る（アバター同期はこれ）</td></tr>
+        <tr><td><code>socket.on('名前', (データ) =&gt; {…})</code></td><td>その名前が届いたら処理する（受信）</td></tr>
+      </table>
+      <div class="callout-info" style="margin-top:0.5rem">
+        <h4>なぜ「自分以外の全員」に送るのか</h4>
+        <p style="font-size:0.9rem;margin-bottom:0">自分の動きを自分に送り返す必要はない（自分のカメラはもう自分で動かしている）。だからアバター同期では <code>socket.broadcast.emit</code> を使って<strong>他の人にだけ</strong>「私はここに動いたよ」と伝える。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. SETUP ============ -->
+<section id="sec-setup">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">2</div>
+      <h2>セットアップ ― Node.js を入れて、プロジェクトを準備する</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>準備①：Homebrew で Node.js を入れる（最初の1回だけ）</h3></div>
+      <p style="margin-bottom:0.5rem">全員 Mac なので、<strong>Homebrew</strong>（Macの定番インストーラ）で Node.js を入れる。すでに入っている人は飛ばしてよい。ターミナル（<code>ターミナル.app</code>）を開いて、次を実行する。</p>
+      <pre><span class="code-label">Terminal</span><span class="cmt"># Node.js を入れる（数分かかる）</span>
+brew install node
+
+<span class="cmt"># ちゃんと入ったか確認（バージョンが表示されればOK）</span>
+node -v
+npm -v</pre>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">ターミナル — node をインストール</span></div>
+        <img src="img/md2w4_term_node.png" alt="brew install node を実行し、node -v で v20.12.2、npm -v で 10.5.0 が表示されたターミナル">
+        <figcaption class="exec-cap"><strong>実行結果:</strong> <code>node -v</code> と <code>npm -v</code> でバージョンが表示されれば成功。数字は環境によって違ってよい（表示されること自体が「入った」の証拠）。</figcaption>
+      </figure>
+      <div class="callout-tip" style="margin-top:0.5rem">
+        <h4>Homebrew がまだ無い人へ</h4>
+        <p style="font-size:0.88rem;margin-bottom:0">まず <a href="https://brew.sh/ja/" style="color:#4FC3F7">brew.sh</a> の手順で Homebrew を入れてから <code>brew install node</code> を実行する。<code>npm</code> は Node.js に付いてくるので、別途入れる必要はない。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>準備②：作業フォルダを作って、部品を入れる</h3></div>
+      <p style="margin-bottom:0.5rem">第4回の作業フォルダ <code>md2_no4</code> を作り、その中で VS Code を開き、必要な部品（<code>express</code>・<code>socket.io</code>）を入れる。ターミナルで順番に実行する。</p>
+      <pre><span class="code-label">Terminal</span><span class="cmt"># 1. 授業用フォルダへ移動する</span>
+cd ~/Documents/Lecture/MD2
+
+<span class="cmt"># 2. 第4回の作業フォルダを作って、その中へ入る</span>
+mkdir md2_no4
+cd md2_no4
+
+<span class="cmt"># 3. VS Code をこのフォルダで開く</span>
+code .
+
+<span class="cmt"># 4. package.json を作る（-y で質問を全部スキップ）</span>
+npm init -y
+
+<span class="cmt"># 5. サーバに必要な2つの部品を入れる</span>
+npm install express socket.io</pre>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">ターミナル — 作業フォルダを作って準備する</span></div>
+        <img src="img/md2w4_term_setup.png" alt="cd ~/Documents/Lecture/MD2、mkdir md2_no4、cd md2_no4、code .、npm init -y、npm install express socket.io を順に実行したターミナル。added 89 packages と表示されている">
+        <figcaption class="exec-cap"><strong>実行結果:</strong> 最後に <code>added 89 packages</code> ／ <code>found 0 vulnerabilities</code> が出れば成功。フォルダに <code>node_modules</code> と <code>package-lock.json</code> が増える。</figcaption>
+      </figure>
+
+      <div class="callout-warning" style="margin-top:0.5rem">
+        <h4>フォルダ構成に注意</h4>
+        <p style="font-size:0.9rem;margin-bottom:0.4rem"><code>server.js</code> は <code>md2_no4</code> の<strong>直下</strong>、<code>index.html</code> は <code>public</code> フォルダの<strong>中</strong>に置く。この形が今回の決まり。</p>
+        <pre style="margin:0"><span class="code-label">フォルダ構成</span>md2_no4/
+├── server.js          <span class="cmt">← サーバ側（Node.js）</span>
+├── package.json
+├── node_modules/      <span class="cmt">← 部品置き場（自動生成）</span>
+└── public/
+    └── index.html     <span class="cmt">← ブラウザ側（A-Frame）</span></pre>
+      </div>
+
+      <p style="margin-top:0.8rem;margin-bottom:0.4rem;font-size:0.92rem"><code>code .</code> を実行すると、VS Code がこのフォルダを開く。ここに <code>server.js</code> と <code>public/index.html</code> を作っていく。</p>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">md2_no4 — Visual Studio Code</span></div>
+        <img src="img/md2w4_vscode.png" alt="VS Codeでmd2_no4フォルダを開いた画面。左のエクスプローラーにnode_modules・public/index.html・server.js・package.jsonが並び、右にserver.jsのコードが表示されている">
+        <figcaption class="exec-cap"><strong>VS Code の画面:</strong> 左のエクスプローラーでファイルを作り、右のエディタでコードを書く。この <code>server.js</code> は次の std4-1 で作る。</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. std4-1 ============ -->
+<section id="sec-single">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">3</div>
+      <h2>接続確認＋自分だけの空間を歩く</h2>
+    </div>
+
+    <div id="std4-1" class="card standard">
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std4-1：サーバを立てて、3D空間に入る</h3></div>
+      <p style="margin-bottom:0.5rem">まず<strong>2つのファイル</strong>を作る。<code>server.js</code>（サーバ）と <code>public/index.html</code>（ブラウザ）。ほとんど<strong>そのままコピペ</strong>でよい。<span class="blk">①</span>〜<span class="blk">③</span>の<strong>穴だけ自分で埋める</strong>。</p>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">ファイル1: <code>server.js</code>（md2_no4 直下）</p>
+      <pre><span class="code-label">JavaScript ── server.js</span><span class="kw">const</span> express = <span class="fn">require</span>(<span class="str">'express'</span>);
+<span class="kw">const</span> app = <span class="fn">express</span>();
+
+<span class="cmt">// public フォルダの中身をブラウザに配る</span>
+app.<span class="fn">use</span>(express.<span class="fn">static</span>(<span class="str">'</span><span class="blk">①</span><span class="str">'</span>));
+
+<span class="cmt">// ポート3000番でサーバを起動する</span>
+<span class="kw">const</span> server = app.<span class="fn">listen</span>(<span class="num">3000</span>, () <span class="op">=&gt;</span> {
+  console.<span class="fn">log</span>(<span class="str">'サーバ起動: http://localhost:3000'</span>);
+});
+
+<span class="cmt">// Socket.IO を、このサーバに取り付ける</span>
+<span class="kw">const</span> io = <span class="fn">require</span>(<span class="str">'socket.io'</span>)(server);
+
+<span class="cmt">// 誰かが接続するたびに1回呼ばれる</span>
+io.<span class="fn">on</span>(<span class="str">'connection'</span>, (socket) <span class="op">=&gt;</span> {
+  console.<span class="fn">log</span>(<span class="str">'接続しました:'</span>, socket.id);   <span class="cmt">// ← 入室ログ</span>
+});</pre>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.2rem 0 0.3rem">ファイル2: <code>public/index.html</code></p>
+      <pre><span class="code-label">HTML ── public/index.html</span><span class="kw">&lt;!DOCTYPE html&gt;</span>
+<span class="kw">&lt;html</span> lang=<span class="str">"ja"</span><span class="kw">&gt;</span>
+<span class="kw">&lt;head&gt;</span>
+  <span class="kw">&lt;meta</span> charset=<span class="str">"UTF-8"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;title&gt;</span>マルチプレイ空間<span class="kw">&lt;/title&gt;</span>
+  <span class="kw">&lt;script</span> src=<span class="str">"https://aframe.io/releases/1.7.1/aframe.min.js"</span><span class="kw">&gt;&lt;/script&gt;</span>
+  <span class="kw">&lt;script</span> src=<span class="str">"/socket.io/socket.io.js"</span><span class="kw">&gt;&lt;/script&gt;</span>
+<span class="kw">&lt;/head&gt;</span>
+<span class="kw">&lt;body&gt;</span>
+  <span class="kw">&lt;a-scene</span> id=<span class="str">"scene"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;a-plane</span> rotation=<span class="str">"-90 0 0"</span> width=<span class="str">"30"</span> height=<span class="str">"30"</span> color=<span class="str">"#4a7a3a"</span><span class="kw">&gt;&lt;/a-plane&gt;</span>
+    <span class="kw">&lt;a-sky</span> color=<span class="str">"#87CEEB"</span><span class="kw">&gt;&lt;/a-sky&gt;</span>
+
+    <span class="cmt">&lt;!-- 空間の目印（好きに置いてよい） --&gt;</span>
+    <span class="kw">&lt;a-box</span> position=<span class="str">"-6 0.75 -6"</span> width=<span class="str">"1.5"</span> height=<span class="str">"1.5"</span> depth=<span class="str">"1.5"</span> color=<span class="str">"#B0BEC5"</span><span class="kw">&gt;&lt;/a-box&gt;</span>
+    <span class="kw">&lt;a-box</span> position=<span class="str">"6 0.75 -6"</span> width=<span class="str">"1.5"</span> height=<span class="str">"1.5"</span> depth=<span class="str">"1.5"</span> color=<span class="str">"#B0BEC5"</span><span class="kw">&gt;&lt;/a-box&gt;</span>
+    <span class="kw">&lt;a-cylinder</span> position=<span class="str">"0 1 -9"</span> radius=<span class="str">"0.6"</span> height=<span class="str">"2"</span> color=<span class="str">"#8D6E63"</span><span class="kw">&gt;&lt;/a-cylinder&gt;</span>
+
+    <span class="cmt">&lt;!-- 自分＝カメラ。WASDキーと矢印で動ける --&gt;</span>
+    <span class="kw">&lt;a-camera</span> id=<span class="str">"cam"</span> position=<span class="str">"0 1.6 4"</span><span class="kw">&gt;&lt;/a-camera&gt;</span>
+  <span class="kw">&lt;/a-scene&gt;</span>
+
+  <span class="kw">&lt;script&gt;</span>
+    <span class="cmt">// サーバに接続する（これだけで通話状態になる）</span>
+    <span class="kw">const</span> socket = <span class="blk">②</span>();
+
+    <span class="cmt">// あとで使う部品をつかんでおく</span>
+    <span class="kw">const</span> scene = document.<span class="fn">getElementById</span>(<span class="str">'scene'</span>);
+    <span class="kw">const</span> cam = document.<span class="fn">getElementById</span>(<span class="str">'</span><span class="blk">③</span><span class="str">'</span>);
+
+    console.<span class="fn">log</span>(<span class="str">'サーバに接続しました'</span>);
+  <span class="kw">&lt;/script&gt;</span>
+<span class="kw">&lt;/body&gt;&lt;/html&gt;</span></pre>
+
+      <p style="margin:1rem 0 0.4rem;font-weight:700;color:#4FC3F7;font-size:0.95rem">起動して開く</p>
+      <pre><span class="code-label">Terminal</span><span class="cmt"># md2_no4 の中で実行（このターミナルは開いたまま）</span>
+node server.js</pre>
+      <p style="font-size:0.9rem;margin-bottom:0.5rem">起動したら、ブラウザで <code>http://localhost:3000</code> を開く。<strong>WASDキー</strong>で前後左右に動け、<strong>マウスドラッグ</strong>で見回せる。ターミナルには「接続しました」が出る。</p>
+
+      <div class="exec-pair">
+        <figure class="exec-shot">
+          <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">http://localhost:3000</span></div>
+          <img src="img/md2w4_single.png" alt="ブラウザで開いた3D空間。緑の地面・水色の空・目印の白い箱と茶色の円柱が見える。自分はカメラなので画面には映らない">
+          <figcaption class="exec-cap"><strong>ブラウザ:</strong> 自分の空間を歩ける（自分はカメラなので画面には映らない）。</figcaption>
+        </figure>
+        <figure class="exec-shot">
+          <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">ターミナル — サーバ起動</span></div>
+          <img src="img/md2w4_term_run.png" alt="node server.js を実行し、サーバ起動: http://localhost:3000 と、接続しました: というログが表示されたターミナル">
+          <figcaption class="exec-cap"><strong>ターミナル:</strong> ブラウザで開くたびに「接続しました」が出る（＝入室した合図）。</figcaption>
+        </figure>
+      </div>
+
+      <div style="background:#1A1A1A;border:2px solid #4FC3F7;border-radius:10px;padding:1rem 1.2rem;margin:1rem 0">
+        <p style="color:#4FC3F7;font-weight:700;font-size:0.9rem;margin-bottom:0.4rem">空欄のヒント</p>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><span class="blk">①</span> ＝ 配りたいフォルダの名前（<code>index.html</code> が入っている方）</li>
+          <li><span class="blk">②</span> ＝ サーバに接続する関数（<code>socket.io.js</code> を読み込むと使える。2文字）</li>
+          <li><span class="blk">③</span> ＝ <code>&lt;a-camera&gt;</code> に付けた <code>id</code> の名前</li>
+        </ul>
+      </div>
+      <details>
+        <summary>答え合わせ（std4-1）</summary>
+        <div class="answer-content">
+          <ul class="point-list" style="margin-bottom:0">
+            <li><span class="blk">①</span> = <code>public</code></li>
+            <li><span class="blk">②</span> = <code>io</code>（<code>const socket = io();</code>）</li>
+            <li><span class="blk">③</span> = <code>cam</code></li>
+          </ul>
+        </div>
+      </details>
+
+      <div class="notion-submit"><span>Notion に、<strong>ブラウザで空間を歩けている様子</strong>と<strong>ターミナルの「接続しました」ログ</strong>のキャプチャを貼る（std4-1）。</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. MECHANISM ============ -->
+<section id="sec-mech">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">4</div>
+      <h2>マルチプレイの仕組み ― 送る → 転送 → 受け取る</h2>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>3ステップで「相手が見える」ようになる</h3></div>
+      <p style="margin-bottom:0.6rem">お互いのアバターが見えるまでの流れは、次の3ステップだけ。std4-2 で①、std4-3 で②③を作る。</p>
+      <table>
+        <tr><th style="width:8%">#</th><th style="width:28%">どこで</th><th>すること</th></tr>
+        <tr><td>①</td><td>自分のブラウザ</td><td><code>setInterval</code> で <strong>100ミリ秒ごと</strong>に、自分の位置・向きを <code>socket.emit('move', …)</code> で送る</td></tr>
+        <tr><td>②</td><td>サーバ</td><td><code>socket.on('move')</code> で受け取り、<code>socket.broadcast.emit('moved', …)</code> で<strong>自分以外の全員</strong>へ転送する</td></tr>
+        <tr><td>③</td><td>相手のブラウザ</td><td><code>socket.on('moved')</code> で受け取り、送り主のアバターを<strong>作る／位置を更新する</strong></td></tr>
+      </table>
+
+      <!-- flow diagram -->
+      <div style="margin:1rem 0">
+        <svg viewBox="0 0 720 210" width="720" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333;max-width:100%">
+          <text x="360" y="26" text-anchor="middle" fill="#4FC3F7" font-weight="700" font-size="14">位置が同期するまでの流れ</text>
+
+          <rect x="20" y="60" width="180" height="90" rx="10" fill="#141414" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="110" y="88" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700">自分のブラウザ</text>
+          <text x="110" y="112" text-anchor="middle" fill="#e0e0e0" font-size="10">① emit('move')</text>
+          <text x="110" y="130" text-anchor="middle" fill="#999" font-size="9">100msごとに送信</text>
+
+          <line x1="200" y1="105" x2="268" y2="105" stroke="#93D500" stroke-width="2" marker-end="url(#a1)"/>
+
+          <rect x="270" y="60" width="180" height="90" rx="10" fill="#141414" stroke="#93D500" stroke-width="2"/>
+          <text x="360" y="88" text-anchor="middle" fill="#93D500" font-size="12" font-weight="700">サーバ</text>
+          <text x="360" y="112" text-anchor="middle" fill="#e0e0e0" font-size="10">② on('move')</text>
+          <text x="360" y="130" text-anchor="middle" fill="#e0e0e0" font-size="10">broadcast.emit('moved')</text>
+
+          <line x1="450" y1="105" x2="518" y2="105" stroke="#FFB800" stroke-width="2" marker-end="url(#a2)"/>
+
+          <rect x="520" y="60" width="180" height="90" rx="10" fill="#141414" stroke="#FFB800" stroke-width="2"/>
+          <text x="610" y="88" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">相手のブラウザ</text>
+          <text x="610" y="112" text-anchor="middle" fill="#e0e0e0" font-size="10">③ on('moved')</text>
+          <text x="610" y="130" text-anchor="middle" fill="#999" font-size="9">アバターを生成・更新</text>
+
+          <text x="360" y="180" text-anchor="middle" fill="#93D500" font-size="11" font-weight="600">「送る」と「受け取る」を名札 'move' / 'moved' でつないでいる</text>
+          <defs>
+            <marker id="a1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#93D500"/></marker>
+            <marker id="a2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#FFB800"/></marker>
+          </defs>
+        </svg>
+      </div>
+
+      <div class="callout-info">
+        <h4>なぜ100ミリ秒ごとに「間引く」のか</h4>
+        <p style="font-size:0.9rem;margin-bottom:0">位置は毎フレーム（毎秒60回）変わるが、全部送るとサーバに負荷がかかる。<code>setInterval</code> で<strong>100ミリ秒ごと（毎秒10回）</strong>に間引くと、なめらかさと通信量のバランスが取れる。この「送る間隔」も、次回<strong>どれくらい細かくデータを取るか（サンプリング）</strong>の話につながる。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. std4-2 ============ -->
+<section id="sec-emit">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">5</div>
+      <h2>自分の位置・向きを「送る」</h2>
+    </div>
+
+    <div id="std4-2" class="card standard">
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std4-2：位置・向きを emit で送る（①）</h3></div>
+      <p style="margin-bottom:0.5rem">std4-1 の2ファイルに<strong>追記</strong>する。まず <code>index.html</code> の <code>&lt;script&gt;</code> に「100msごとに送る」処理を、次に <code>server.js</code> に「受けて転送する」処理を足す。<span class="blk">①</span>〜<span class="blk">④</span>を埋める。</p>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">追記1: <code>public/index.html</code> の <code>&lt;script&gt;</code> の中（<code>console.log</code> の下）</p>
+      <pre><span class="code-label">JavaScript ── index.html に追記</span><span class="cmt">// 100ミリ秒ごとに、自分の位置と向きをサーバへ送る</span>
+<span class="fn">setInterval</span>(() <span class="op">=&gt;</span> {
+  <span class="kw">const</span> pos = cam.object3D.position;                          <span class="cmt">// 自分の位置</span>
+  <span class="kw">const</span> rotY = THREE.MathUtils.<span class="fn">radToDeg</span>(cam.object3D.rotation.y); <span class="cmt">// 向き（左右）</span>
+
+  socket.<span class="blk">①</span>(<span class="str">'move'</span>, {
+    position: { x: pos.x, y: <span class="num">0</span>, z: pos.z },
+    rotation: { x: <span class="num">0</span>, y: rotY, z: <span class="num">0</span> },
+    color: myColor
+  });
+}, <span class="num">100</span>);</pre>
+      <p style="font-size:0.85rem;color:#999;margin-bottom:0.5rem">※ 自分の色を決める1行も、<code>&lt;script&gt;</code> の最初のほう（部品をつかむ行の下）に足しておく：</p>
+      <pre><span class="code-label">JavaScript ── index.html（色を決める）</span><span class="cmt">// 自分の色を、5色の中からランダムに選ぶ</span>
+<span class="kw">const</span> palette = [<span class="str">'#4FC3F7'</span>, <span class="str">'#FF8A3D'</span>, <span class="str">'#93D500'</span>, <span class="str">'#E040FB'</span>, <span class="str">'#FFD54F'</span>];
+<span class="kw">const</span> myColor = palette[Math.<span class="fn">floor</span>(Math.<span class="fn">random</span>() * palette.length)];</pre>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.2rem 0 0.3rem">追記2: <code>server.js</code> の <code>io.on('connection', …)</code> の中</p>
+      <pre><span class="code-label">JavaScript ── server.js に追記</span><span class="cmt">// 誰かが動いたら、その位置を「本人以外の全員」に転送する</span>
+socket.<span class="fn">on</span>(<span class="str">'move'</span>, (data) <span class="op">=&gt;</span> {
+  socket.<span class="blk">②</span>.<span class="fn">emit</span>(<span class="str">'moved'</span>, {
+    id: socket.<span class="blk">③</span>,          <span class="cmt">// 送り主を見分けるための番号</span>
+    position: data.position,
+    rotation: data.rotation,
+    color: data.<span class="blk">④</span>
+  });
+});</pre>
+
+      <p style="font-size:0.9rem;margin-top:0.6rem">この時点では、まだ相手の姿は見えない（「送る」だけ作ったので）。<strong>ターミナルや、ブラウザの開発者ツール（Console）</strong>で、<code>move</code> が飛んでいることを確認できればOK。姿が見えるのは次の std4-3。</p>
+
+      <div style="background:#1A1A1A;border:2px solid #4FC3F7;border-radius:10px;padding:1rem 1.2rem;margin:1rem 0">
+        <p style="color:#4FC3F7;font-weight:700;font-size:0.9rem;margin-bottom:0.4rem">空欄のヒント</p>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><span class="blk">①</span> ＝ データを送る命令（節1で学んだ「送る」）</li>
+          <li><span class="blk">②</span> ＝ 「自分以外の全員」に送るための言葉（<code>socket.___.emit</code>）</li>
+          <li><span class="blk">③</span> ＝ 接続ごとに割り当てられる番号（<code>socket.___</code>。std4-1のログにも出ていた）</li>
+          <li><span class="blk">④</span> ＝ 送られてきたデータの色（<code>data.___</code>）</li>
+        </ul>
+      </div>
+      <details>
+        <summary>答え合わせ（std4-2）</summary>
+        <div class="answer-content">
+          <ul class="point-list" style="margin-bottom:0">
+            <li><span class="blk">①</span> = <code>emit</code></li>
+            <li><span class="blk">②</span> = <code>broadcast</code>（<code>socket.broadcast.emit(...)</code>）</li>
+            <li><span class="blk">③</span> = <code>id</code>（<code>socket.id</code>）</li>
+            <li><span class="blk">④</span> = <code>color</code></li>
+          </ul>
+        </div>
+      </details>
+
+      <div class="notion-submit"><span>Notion に、<strong>ここまでの <code>index.html</code> と <code>server.js</code> のコード</strong>（穴を埋めたもの）を貼る（std4-2）。</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. std4-3 ============ -->
+<section id="sec-sync">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">6</div>
+      <h2>相手のアバターを同期して完成（標準ゴール）</h2>
+    </div>
+
+    <div id="std4-3" class="card standard">
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std4-3：受け取ってアバターを作る（②③）</h3></div>
+      <p style="margin-bottom:0.5rem">最後に <code>index.html</code> の <code>&lt;script&gt;</code> に、<strong>受け取る処理</strong>を足す。届いた <code>moved</code> の位置に、相手のアバター（四角柱の胴体＋スフィアの頭）を作る／動かす。<span class="blk">①</span>〜<span class="blk">④</span>を埋めれば完成。</p>
+
+      <pre><span class="code-label">JavaScript ── index.html に追記（setInterval の下）</span><span class="cmt">// 他ユーザのアバターを作る（四角柱の胴体＋スフィアの頭）</span>
+<span class="kw">function</span> <span class="fn">createAvatar</span>(id, color) {
+  <span class="kw">const</span> avatar = document.<span class="fn">createElement</span>(<span class="str">'a-entity'</span>);
+  avatar.<span class="fn">setAttribute</span>(<span class="str">'id'</span>, id);
+  avatar.innerHTML =
+    <span class="str">'&lt;a-box height="1.2" width="0.6" depth="0.6" color="'</span> + color + <span class="str">'" position="0 0.6 0"&gt;&lt;/a-box&gt;'</span> +
+    <span class="str">'&lt;a-sphere radius="0.35" color="'</span> + color + <span class="str">'" position="0 1.5 0"&gt;&lt;/a-sphere&gt;'</span>;
+  scene.<span class="blk">①</span>(avatar);        <span class="cmt">// シーンに追加する</span>
+  <span class="kw">return</span> avatar;
+}
+
+<span class="cmt">// 他ユーザが動いたら、そのアバターを作る／位置を更新する</span>
+socket.<span class="fn">on</span>(<span class="str">'moved'</span>, (data) <span class="op">=&gt;</span> {
+  <span class="kw">let</span> avatar = document.<span class="fn">getElementById</span>(data.id);
+  <span class="kw">if</span> (!avatar) {
+    avatar = <span class="fn">createAvatar</span>(data.id, data.color);   <span class="cmt">// 初めて見るIDなら作る</span>
+  }
+  avatar.<span class="fn">setAttribute</span>(<span class="str">'</span><span class="blk">②</span><span class="str">'</span>, data.position);            <span class="cmt">// 位置を更新</span>
+  avatar.<span class="fn">setAttribute</span>(<span class="str">'rotation'</span>, <span class="str">'0 '</span> + data.rotation.y + <span class="str">' 0'</span>); <span class="cmt">// 向きを更新</span>
+});
+
+<span class="cmt">// 他ユーザが退出したら、そのアバターを消す</span>
+socket.<span class="fn">on</span>(<span class="str">'</span><span class="blk">③</span><span class="str">'</span>, (id) <span class="op">=&gt;</span> {
+  <span class="kw">const</span> avatar = document.<span class="fn">getElementById</span>(id);
+  <span class="kw">if</span> (avatar) avatar.parentNode.<span class="blk">④</span>(avatar);   <span class="cmt">// 画面から取り除く</span>
+});</pre>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.2rem 0 0.3rem">仕上げ: <code>server.js</code> に「退出」を伝える処理を足す</p>
+      <pre><span class="code-label">JavaScript ── server.js の io.on('connection', …) の中に追記</span><span class="cmt">// 退出したら、全員にそのIDを伝えてアバターを消してもらう</span>
+socket.<span class="fn">on</span>(<span class="str">'disconnect'</span>, () <span class="op">=&gt;</span> {
+  console.<span class="fn">log</span>(<span class="str">'切断しました:'</span>, socket.id);
+  io.<span class="fn">emit</span>(<span class="str">'userLeft'</span>, socket.id);   <span class="cmt">// 全員に伝える</span>
+});</pre>
+
+      <p style="margin:1rem 0 0.4rem;font-weight:700;color:#4FC3F7;font-size:0.95rem">2人で試す</p>
+      <p style="font-size:0.9rem;margin-bottom:0.5rem">サーバを起動し（<code>node server.js</code>）、<strong>2つのブラウザウィンドウ</strong>で <code>http://localhost:3000</code> を開く（普通の窓＋シークレット窓、または2台の端末）。片方を動かすと、<strong>もう片方の画面に相手のアバターが現れて動く</strong>。これが標準ゴール。</p>
+
+      <div class="exec-pair">
+        <figure class="exec-shot">
+          <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">① 1人目の画面</span></div>
+          <img src="img/md2w4_view1.png" alt="1人目の視点。前方に橙色の相手アバター（四角柱＋スフィア）が同期して表示されている">
+          <figcaption class="exec-cap"><strong>1人目の視点:</strong> 前方に<strong>相手（橙）</strong>が見える。</figcaption>
+        </figure>
+        <figure class="exec-shot">
+          <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">② 2人目の画面</span></div>
+          <img src="img/md2w4_view2.png" alt="2人目の視点。前方に別の色の相手アバターが同期して表示されている">
+          <figcaption class="exec-cap"><strong>2人目の視点:</strong> 同じ空間で<strong>相手</strong>が見える。視点は違っても状態は一致。</figcaption>
+        </figure>
+      </div>
+      <figure class="exec-shot" style="margin-top:1rem">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">俯瞰（2人が同じ空間にいる）</span></div>
+        <img src="img/md2w4_hero.png" alt="2人分のアバター（青と橙）が同じ3D空間に立っている俯瞰ショット" style="max-width:720px">
+        <figcaption class="exec-cap"><strong>標準ゴール達成:</strong> 2人（青・橙）が同じ空間にいる。片方が動けば、もう片方の画面でもリアルタイムに動く。</figcaption>
+      </figure>
+
+      <div style="background:#1A1A1A;border:2px solid #4FC3F7;border-radius:10px;padding:1rem 1.2rem;margin:1rem 0">
+        <p style="color:#4FC3F7;font-weight:700;font-size:0.9rem;margin-bottom:0.4rem">空欄のヒント</p>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><span class="blk">①</span> ＝ 子要素を追加する命令（第1〜3回の <code>appendChild</code>）</li>
+          <li><span class="blk">②</span> ＝ 位置を表す属性名（A-Frameの <code>position</code>）</li>
+          <li><span class="blk">③</span> ＝ 退出を知らせる名札（<code>server.js</code> で <code>io.emit('___', …)</code> と送っている名前）</li>
+          <li><span class="blk">④</span> ＝ 子要素を取り除く命令（<code>removeChild</code>）</li>
+        </ul>
+      </div>
+      <details>
+        <summary>答え合わせ（std4-3）</summary>
+        <div class="answer-content">
+          <ul class="point-list" style="margin-bottom:0">
+            <li><span class="blk">①</span> = <code>appendChild</code></li>
+            <li><span class="blk">②</span> = <code>position</code></li>
+            <li><span class="blk">③</span> = <code>userLeft</code></li>
+            <li><span class="blk">④</span> = <code>removeChild</code></li>
+          </ul>
+        </div>
+      </details>
+
+      <div class="callout-warning" style="margin-top:0.7rem">
+        <h4>うまく動かないときのチェック</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><strong>ダブルクリックで開いていない？</strong> 必ず <code>node server.js</code> を起動し、<code>http://localhost:3000</code> で開く（<code>file://</code> では動かない）</li>
+          <li><strong>相手が見えない：</strong> 2つ目の窓も同じ <code>http://localhost:3000</code> を開いているか確認。ブラウザの Console にエラーが無いか見る</li>
+          <li><strong>アバターが重なる：</strong> 自分のアバターは自分の画面には出ない（<code>broadcast</code> で自分には送っていないため）。これは正常</li>
+        </ul>
+      </div>
+
+      <div class="notion-submit"><span>Notion に、<strong>2つの画面で相手のアバターが同期している様子</strong>のキャプチャを貼る（std4-3・標準ゴール）。</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. adv4-1 ============ -->
+<section id="sec-advance">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">7</div>
+      <h2>発展課題 ― 魅力的なマルチプレイ空間に仕上げる（任意）</h2>
+    </div>
+
+    <div id="adv4-1" class="card advanced">
+      <div class="card-header"><h3><span class="tag tag-advanced" style="font-size:0.7rem">発展課題</span> adv4-1：アバターと空間を作り込み、思わず入りたくなるワールドにする</h3></div>
+      <p style="margin-bottom:0.6rem">標準ゴール（2人が同期する空間）ができたら、そこを<strong style="color:#FFB800">「友達と過ごしたくなる、魅力的なマルチプレイ空間」</strong>に仕上げよう。<strong>A. アバターを個性的にする</strong>、<strong>B. 空間そのものを作り込む</strong>の2方向から、<strong>合わせて2つ以上</strong>に挑戦する（丸ごとコピペ＋改造でよい）。世界観（街・カフェ・美術館・宇宙ステーションなど）を1つ決めると作りやすい。</p>
+
+      <div style="background:#241a05;border:1px solid #6b5410;border-left:4px solid #FFB800;border-radius:10px;padding:0.7rem 1rem;margin:0.8rem 0;font-weight:700;color:#FFD54F;font-size:0.95rem">A. アバターを個性的にする</div>
+
+      <h4 style="color:#FFB800;font-size:0.95rem;margin:0.8rem 0 0.3rem">アイデア①：頭の上に名前ラベルを出す</h4>
+      <p style="font-size:0.9rem;margin-bottom:0.4rem">入室時に名前を入力し、<code>move</code> に名前も乗せて送る。<code>createAvatar</code> の中で <code>a-text</code> を子要素に足す。</p>
+      <pre><span class="code-label">JavaScript ── createAvatar に足すヒント</span><span class="cmt">// 名前は接続時に prompt で入力しておく</span>
+<span class="kw">const</span> myName = <span class="fn">prompt</span>(<span class="str">'名前を入れてください'</span>) || <span class="str">'ゲスト'</span>;
+<span class="cmt">// emit の中に name: myName も足す。createAvatar で↓を追加：</span>
+<span class="kw">const</span> label = document.<span class="fn">createElement</span>(<span class="str">'a-text'</span>);
+label.<span class="fn">setAttribute</span>(<span class="str">'value'</span>, name);
+label.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, <span class="str">'0 2.1 0'</span>);
+label.<span class="fn">setAttribute</span>(<span class="str">'align'</span>, <span class="str">'center'</span>);
+label.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, <span class="str">'white'</span>);
+avatar.<span class="fn">appendChild</span>(label);</pre>
+
+      <h4 style="color:#FFB800;font-size:0.95rem;margin:1rem 0 0.3rem">アイデア②：アバターの形・大きさを変える</h4>
+      <p style="font-size:0.9rem;margin-bottom:0">胴体 <code>a-box</code> の <code>height</code>／<code>width</code> や、頭 <code>a-sphere</code> の <code>radius</code> を変える。帽子（小さな <code>a-cone</code>）を足すのもよい。</p>
+
+      <h4 style="color:#FFB800;font-size:0.95rem;margin:1rem 0 0.3rem">アイデア③：Sketchfab の3Dモデル（glTF/glb）をアバターにする</h4>
+      <p style="font-size:0.9rem;margin-bottom:0">第3回で学んだ <code>&lt;a-gltf-model&gt;</code> を使い、四角柱＋スフィアの代わりに<strong>好きな3Dモデル</strong>をアバターにする。<a href="https://sketchfab.com/" style="color:#4FC3F7">Sketchfab</a> でロボット・動物・キャラクターなどの <code>glb</code> をダウンロードして <code>public</code> に置き、<code>createAvatar</code> の <code>innerHTML</code> を差しかえる。<span style="color:#999">（ライセンス・作者表示に注意）</span></p>
+      <pre><span class="code-label">JavaScript ── createAvatar の innerHTML を差しかえ</span>avatar.innerHTML =
+  <span class="str">'&lt;a-gltf-model src="robot.glb" scale="1 1 1"&gt;&lt;/a-gltf-model&gt;'</span>;</pre>
+
+      <h4 style="color:#FFB800;font-size:0.95rem;margin:1rem 0 0.3rem">アイデア④：VRM（3Dキャラクター）をアバターにする</h4>
+      <p style="font-size:0.9rem;margin-bottom:0.4rem"><strong>VRM</strong> は「人型3Dアバター」の標準フォーマット。<a href="https://hub.vroid.com/" style="color:#4FC3F7">VRoid Hub</a> や、無料アプリ <strong>VRoid Studio</strong> で作った自分のキャラを <code>.vrm</code> で置ける。A-Frame では <a href="https://github.com/binzume/aframe-vrm" style="color:#4FC3F7">aframe-vrm コンポーネント</a>を読み込むと <code>vrm</code> 属性で表示できる。</p>
+      <pre><span class="code-label">HTML ── &lt;head&gt; に1行足す（VRMを使うとき）</span><span class="kw">&lt;script</span> src=<span class="str">"https://cdn.jsdelivr.net/npm/@binzume/aframe-vrm/dist/aframe-vrm.min.js"</span><span class="kw">&gt;&lt;/script&gt;</span></pre>
+      <pre><span class="code-label">JavaScript ── createAvatar の innerHTML を差しかえ</span>avatar.innerHTML =
+  <span class="str">'&lt;a-entity vrm="src:avatar.vrm" rotation="0 180 0"&gt;&lt;/a-entity&gt;'</span>;</pre>
+      <p style="font-size:0.85rem;color:#999;margin-bottom:0">※ <code>.vrm</code> ファイルは <code>public</code> に置く。向きが逆なら <code>rotation="0 180 0"</code> で調整する。</p>
+
+      <div style="background:#052414;border:1px solid #1f6b3f;border-left:4px solid #93D500;border-radius:10px;padding:0.7rem 1rem;margin:1.2rem 0 0.8rem;font-weight:700;color:#93D500;font-size:0.95rem">B. 空間そのものを作り込む</div>
+
+      <h4 style="color:#93D500;font-size:0.95rem;margin:0.8rem 0 0.3rem">アイデア⑤：Sketchfab の建物・構造物を配置してワールドを作る</h4>
+      <p style="font-size:0.9rem;margin-bottom:0.4rem">目印の白い箱を、<strong>本物の建物・家具・街灯・木・アーチ</strong>などに置きかえると、一気に「行きたくなる場所」になる。<a href="https://sketchfab.com/" style="color:#4FC3F7">Sketchfab</a> で <code>building</code>／<code>street</code>／<code>cafe</code>／<code>park</code> などを検索して <code>glb</code> をダウンロードし、<code>public</code> に置いて <code>&lt;a-scene&gt;</code> の中に並べる。</p>
+      <pre><span class="code-label">HTML ── a-scene の中に建物・構造物を並べる</span><span class="cmt">&lt;!-- ダウンロードした glb を配置（位置・大きさ・向きは自由に調整） --&gt;</span>
+<span class="kw">&lt;a-gltf-model</span> src=<span class="str">"building.glb"</span> position=<span class="str">"-8 0 -10"</span> scale=<span class="str">"2 2 2"</span><span class="kw">&gt;&lt;/a-gltf-model&gt;</span>
+<span class="kw">&lt;a-gltf-model</span> src=<span class="str">"streetlamp.glb"</span> position=<span class="str">"3 0 -4"</span><span class="kw">&gt;&lt;/a-gltf-model&gt;</span>
+<span class="kw">&lt;a-gltf-model</span> src=<span class="str">"tree.glb"</span> position=<span class="str">"6 0 -8"</span> scale=<span class="str">"1.5 1.5 1.5"</span><span class="kw">&gt;&lt;/a-gltf-model&gt;</span></pre>
+      <p style="font-size:0.9rem;margin-bottom:0">さらに <code>&lt;a-sky&gt;</code> の色を夕焼けや夜空にしたり、<code>a-light</code>（ライト）を足したりすると雰囲気が出る。<strong>「どんな世界に友達を招きたいか」</strong>を考えて作り込もう。</p>
+
+      <div class="callout-warning" style="margin-top:0.8rem">
+        <h4>3Dモデルを使うときの注意</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><strong>ライセンス・作者表示</strong>を必ず確認する。授業の課題で使う範囲にとどめ、<strong>作者名（クレジット）</strong>が必要なものは Notion に明記する</li>
+          <li>モデルは <code>node server.js</code> ＋ <code>http://localhost:3000</code> で開かないと読み込めない（<code>file://</code> では動かない）</li>
+          <li>重い（ポリゴン数の多い）モデルを大量に置くと動作が重くなる。まず1〜2個から試す</li>
+        </ul>
+      </div>
+
+      <div class="callout-tip" style="margin-top:0.8rem">
+        <h4>次回への予告：この空間が「実験の舞台」になる</h4>
+        <p style="font-size:0.9rem;margin-bottom:0">今日つくった「みんなで動ける空間」に、<strong>行動データを記録するしくみ</strong>を足すと、人の動き方を集めて<strong>分析</strong>できるようになる。次回はこの続きとして、<strong>集めたデータをどう扱い・可視化するか</strong>に進む。</p>
+      </div>
+
+      <div class="notion-submit"><span>Notion に、<strong>作り込んだアバターとワールドの様子</strong>のキャプチャ（できれば2人以上で入った状態）と、<strong>決めた世界観・工夫した点・使ったモデルの作者/ライセンス</strong>のメモを貼る（adv4-1・任意）。</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NOTION / SUBMIT ============ -->
+<section id="sec-notion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#93D500">📝</div>
+      <h2>提出物のまとめ</h2>
+    </div>
+    <div class="card">
+      <p style="margin-bottom:0.6rem">下の項目を1つのファイル（Notion など）にまとめ、<strong>PDF 1枚</strong>にして提出する。</p>
+      <table>
+        <tr><th style="width:22%">項目</th><th>内容</th></tr>
+        <tr><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std4-1</td><td>3D空間を歩けている<strong>ブラウザ</strong>と、<strong>ターミナルの接続ログ</strong>のキャプチャ</td></tr>
+        <tr><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std4-2</td><td>穴を埋めた <code>index.html</code>／<code>server.js</code> のコード</td></tr>
+        <tr><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std4-3</td><td><strong>2画面で相手のアバターが同期している</strong>キャプチャ（標準ゴール）</td></tr>
+        <tr><td><span class="tag tag-advanced" style="font-size:0.65rem">発展課題</span> adv4-1</td><td>改造したアバターのキャプチャ＋工夫メモ（任意）</td></tr>
+      </table>
+      <p style="font-size:0.8rem;color:#999;margin-top:0.5rem">※ std4-1〜3 はすべて記録が必要。adv4-1 は任意です。</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>MD2 第4回 ― マルチプレイ空間をつくる（Node.js + Socket.IO）</p>
+    <div style="margin-top:0.5rem;font-size:0.8rem;color:#666">&copy;2026 Ryota Nakamura.</div>
+  </div>
+</footer>
+
+<!-- ============ SCRIPTS ============ -->
+<script>
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var code = pre.textContent.replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|フォルダ構成|考え方)( ── [^\n]+)?\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() { btn.textContent = 'コピー'; btn.classList.remove('copied'); }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+document.querySelectorAll(':not(pre) > code').forEach(function(code) {
+  code.title = 'クリックでコピー';
+  code.addEventListener('click', function() {
+    navigator.clipboard.writeText(code.textContent).then(function() {
+      code.classList.add('copied');
+      setTimeout(function() { code.classList.remove('copied'); }, 1500);
+    });
+  });
+});
+</script>
+</body>
+</html>
