@@ -1581,7 +1581,10 @@ document.querySelectorAll('pre').forEach(function(pre) {
   btn.className = 'copy-btn';
   btn.textContent = 'コピー';
   btn.addEventListener('click', function() {
-    var code = pre.textContent.replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|フォルダ構成|考え方)( ── [^\n]+)?\n/, '');
+    // ラベル(.code-label)とコピーボタンを取り除いた複製から、純粋なコードだけを取り出す
+    var clone = pre.cloneNode(true);
+    clone.querySelectorAll('.code-label, .copy-btn').forEach(function(el) { el.remove(); });
+    var code = clone.textContent.replace(/^\n+/, '');
     navigator.clipboard.writeText(code).then(function() {
       btn.textContent = 'コピーしました';
       btn.classList.add('copied');
