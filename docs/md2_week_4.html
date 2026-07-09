@@ -496,7 +496,7 @@ body { padding-top: 2.2rem; }
     <h1>MD2 第4回: マルチプレイ空間をつくる ― Node.js + Socket.IO で、みんなで動けるバーチャル空間へ</h1>
     <div style="display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap;margin-top:0.3rem">
       <p style="overflow-wrap:normal;word-break:normal;flex:1 1 20rem;min-width:16rem;max-width:640px;margin:0">第3回は「与えられたデータ（サッカーCSV）」を空間で可視化した。第4回は逆に、<strong>自分たちが同じ空間に入って動き、その行動データが生まれる"装置"</strong>を作る。カギは<strong>サーバ（Node.js）</strong>と<strong>Socket.IO</strong>。ブラウザ同士をつなぎ、<strong>お互いのアバターが動いて見える</strong>マルチプレイ空間を、手を動かして完成させる。<span style="opacity:0.75">（集めたデータの"分析"は次回のテーマ。今日はまず「みんなで動ける」を実現する。）</span></p>
-      <img src="img/md2w4_hero.png" alt="Node.jsとSocket.IOで作ったマルチプレイ空間。青と橙、2人分のアバター（四角柱＋スフィア）が同じ3D空間に立っている" style="flex:0 1 460px;width:460px;max-width:100%;border-radius:12px;border:1px solid rgba(255,255,255,0.18);box-shadow:0 8px 28px rgba(0,0,0,0.45)">
+      <img src="img/md2w4_hero.png" alt="Node.jsとSocket.IOで作ったマルチプレイ空間。青と橙、2人分のアバター（色つきのスフィア）が床と空だけの空間に浮かんでいる" style="flex:0 1 460px;width:460px;max-width:100%;border-radius:12px;border:1px solid rgba(255,255,255,0.18);box-shadow:0 8px 28px rgba(0,0,0,0.45)">
     </div>
     <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:0.3rem;padding:0.4rem 0.8rem;margin-top:1rem;font-size:0.7rem;display:inline-block;max-width:100%;overflow-wrap:anywhere">
       <strong>第4回のメイン:</strong> ① なぜサーバが要る → ② セットアップ（Node.js/npm） → ③ 接続＋自分の空間 → ④ 同期の仕組み → ⑤ 自分の位置を送る → ⑥ 相手のアバターを同期して完成 → ⑦ 発展（名前・色・3Dモデル）
@@ -516,7 +516,7 @@ body { padding-top: 2.2rem; }
         <h4>今日の合言葉：「データを"生む装置"を作る」</h4>
         <ul class="point-list" style="margin-bottom:0">
           <li><strong>第3回</strong>＝すでにある表（サッカーCSV）を<strong>読み込んで可視化</strong>した ＝ <em>データを消費する</em></li>
-          <li><strong>第4回</strong>＝みんなが同じ空間で動くと、その<strong>位置・向きが刻々と生まれる</strong> ＝ <em>データを生産する装置を作る</em></li>
+          <li><strong>第4回</strong>＝みんなが同じ空間で動くと、その<strong>位置が刻々と生まれる</strong> ＝ <em>データを生産する装置を作る</em></li>
           <li>1人分の<strong>位置 <code>{x, y, z}</code> と向き</strong>＝ある瞬間の行動データ1件（第2回のオブジェクト＝レコードと同じ形）</li>
           <li>それを<strong>毎秒何回も送り合う</strong>＝行動の時系列データが空間の中で流れている、ということ</li>
         </ul>
@@ -566,7 +566,7 @@ body { padding-top: 2.2rem; }
         <tr><td>2</td><td>セットアップ（Node.js / npm init / npm install）</td><td>説明・手順</td></tr>
         <tr><td>3</td><td>接続確認＋自分だけの空間を歩く</td><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std4-1</td></tr>
         <tr><td>4</td><td>マルチプレイの仕組み（送る→転送→受け取る）</td><td>説明</td></tr>
-        <tr><td>5</td><td>自分の位置・向きを送る（<code>emit</code>）</td><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std4-2</td></tr>
+        <tr><td>5</td><td>自分の位置を送る（<code>emit</code>）</td><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std4-2</td></tr>
         <tr><td>6</td><td>相手のアバターを同期して完成（<strong>標準ゴール</strong>）</td><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std4-3</td></tr>
         <tr><td>7</td><td>名前ラベル・個別カラー・3Dモデル（自由創作）</td><td><span class="tag tag-advanced" style="font-size:0.65rem">発展課題</span> adv4-1</td></tr>
       </table>
@@ -862,13 +862,9 @@ io.<span class="fn">on</span>(<span class="str">'connection'</span>, (socket) <s
 <span class="kw">&lt;/head&gt;</span>
 <span class="kw">&lt;body&gt;</span>
   <span class="kw">&lt;a-scene</span> id=<span class="str">"scene"</span><span class="kw">&gt;</span>
+    <span class="cmt">&lt;!-- 空間は床と空だけ --&gt;</span>
     <span class="kw">&lt;a-plane</span> rotation=<span class="str">"-90 0 0"</span> width=<span class="str">"30"</span> height=<span class="str">"30"</span> color=<span class="str">"#4a7a3a"</span><span class="kw">&gt;&lt;/a-plane&gt;</span>
     <span class="kw">&lt;a-sky</span> color=<span class="str">"#87CEEB"</span><span class="kw">&gt;&lt;/a-sky&gt;</span>
-
-    <span class="cmt">&lt;!-- 空間の目印（好きに置いてよい） --&gt;</span>
-    <span class="kw">&lt;a-box</span> position=<span class="str">"-6 0.75 -6"</span> width=<span class="str">"1.5"</span> height=<span class="str">"1.5"</span> depth=<span class="str">"1.5"</span> color=<span class="str">"#B0BEC5"</span><span class="kw">&gt;&lt;/a-box&gt;</span>
-    <span class="kw">&lt;a-box</span> position=<span class="str">"6 0.75 -6"</span> width=<span class="str">"1.5"</span> height=<span class="str">"1.5"</span> depth=<span class="str">"1.5"</span> color=<span class="str">"#B0BEC5"</span><span class="kw">&gt;&lt;/a-box&gt;</span>
-    <span class="kw">&lt;a-cylinder</span> position=<span class="str">"0 1 -9"</span> radius=<span class="str">"0.6"</span> height=<span class="str">"2"</span> color=<span class="str">"#8D6E63"</span><span class="kw">&gt;&lt;/a-cylinder&gt;</span>
 
     <span class="cmt">&lt;!-- 自分＝カメラ。WASDキーと矢印で動ける --&gt;</span>
     <span class="kw">&lt;a-camera</span> id=<span class="str">"cam"</span> position=<span class="str">"0 1.6 4"</span><span class="kw">&gt;&lt;/a-camera&gt;</span>
@@ -894,7 +890,7 @@ node server.js</pre>
       <div class="exec-pair">
         <figure class="exec-shot">
           <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">http://localhost:3000</span></div>
-          <img src="img/md2w4_single.png" alt="ブラウザで開いた3D空間。緑の地面・水色の空・目印の白い箱と茶色の円柱が見える。自分はカメラなので画面には映らない">
+          <img src="img/md2w4_single.png" alt="ブラウザで開いた3D空間。緑の地面と水色の空だけのシンプルな空間。自分はカメラなので画面には映らない">
           <figcaption class="exec-cap"><strong>ブラウザ:</strong> 自分の空間を歩ける（自分はカメラなので画面には映らない）。</figcaption>
         </figure>
         <figure class="exec-shot">
@@ -929,7 +925,7 @@ node server.js</pre>
       <p style="margin-bottom:0.6rem">お互いのアバターが見えるまでの流れは、次の3ステップだけ。std4-2 で①、std4-3 で②③を作る。</p>
       <table>
         <tr><th style="width:8%">#</th><th style="width:28%">どこで</th><th>すること</th></tr>
-        <tr><td>①</td><td>自分のブラウザ</td><td><code>setInterval</code> で <strong>100ミリ秒ごと</strong>に、自分の位置・向きを <code>socket.emit('move', …)</code> で送る</td></tr>
+        <tr><td>①</td><td>自分のブラウザ</td><td><code>setInterval</code> で <strong>100ミリ秒ごと</strong>に、自分の位置を <code>socket.emit('move', …)</code> で送る</td></tr>
         <tr><td>②</td><td>サーバ</td><td><code>socket.on('move')</code> で受け取り、<code>socket.broadcast.emit('moved', …)</code> で<strong>自分以外の全員</strong>へ転送する</td></tr>
         <tr><td>③</td><td>相手のブラウザ</td><td><code>socket.on('moved')</code> で受け取り、送り主のアバターを<strong>作る／位置を更新する</strong></td></tr>
       </table>
@@ -994,22 +990,20 @@ node server.js</pre>
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#4FC3F7">5</div>
-      <h2>自分の位置・向きを「送る」</h2>
+      <h2>自分の位置を「送る」</h2>
     </div>
 
     <div id="std4-2" class="card standard">
-      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std4-2：位置・向きを emit で送る（①）</h3></div>
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std4-2：位置を emit で送る（①）</h3></div>
       <p style="margin-bottom:0.5rem">std4-1 の2ファイルに<strong>追記</strong>する。まず <code>index.html</code> の <code>&lt;script&gt;</code> に「100msごとに送る」処理を、次に <code>server.js</code> に「受けて転送する」処理を足す。<span class="blk">①</span>〜<span class="blk">④</span>を埋める。</p>
 
       <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">追記1: <code>public/index.html</code> の <code>&lt;script&gt;</code> の中（<code>console.log</code> の下）</p>
-      <pre><span class="code-label">JavaScript ── index.html に追記</span><span class="cmt">// 100ミリ秒ごとに、自分の位置と向きをサーバへ送る</span>
+      <pre><span class="code-label">JavaScript ── index.html に追記</span><span class="cmt">// 100ミリ秒ごとに、自分の位置をサーバへ送る</span>
 <span class="fn">setInterval</span>(() <span class="op">=&gt;</span> {
-  <span class="kw">const</span> pos = cam.object3D.position;                          <span class="cmt">// 自分の位置</span>
-  <span class="kw">const</span> rotY = THREE.MathUtils.<span class="fn">radToDeg</span>(cam.object3D.rotation.y); <span class="cmt">// 向き（左右）</span>
+  <span class="kw">const</span> pos = cam.object3D.position;   <span class="cmt">// 自分の位置</span>
 
   socket.<span class="blk">①</span>(<span class="str">'move'</span>, {
-    position: { x: pos.x, y: <span class="num">0</span>, z: pos.z },
-    rotation: { x: <span class="num">0</span>, y: rotY, z: <span class="num">0</span> },
+    position: { x: pos.x, y: pos.y, z: pos.z },
     color: myColor
   });
 }, <span class="num">100</span>);</pre>
@@ -1046,7 +1040,6 @@ socket.<span class="fn">on</span>(<span class="str">'move'</span>, (data) <span 
   socket.<span class="blk">②</span>.<span class="fn">emit</span>(<span class="str">'moved'</span>, {
     id: socket.<span class="blk">③</span>,          <span class="cmt">// 送り主を見分けるための番号</span>
     position: data.position,
-    rotation: data.rotation,
     color: data.<span class="blk">④</span>
   });
 });</pre>
@@ -1077,15 +1070,14 @@ socket.<span class="fn">on</span>(<span class="str">'move'</span>, (data) <span 
 
     <div id="std4-3" class="card standard">
       <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std4-3：受け取ってアバターを作る（②③）</h3></div>
-      <p style="margin-bottom:0.5rem">最後に <code>index.html</code> の <code>&lt;script&gt;</code> に、<strong>受け取る処理</strong>を足す。届いた <code>moved</code> の位置に、相手のアバター（四角柱の胴体＋スフィアの頭）を作る／動かす。<span class="blk">①</span>〜<span class="blk">④</span>を埋めれば完成。</p>
+      <p style="margin-bottom:0.5rem">最後に <code>index.html</code> の <code>&lt;script&gt;</code> に、<strong>受け取る処理</strong>を足す。届いた <code>moved</code> の位置に、相手のアバター（<strong>スフィア1つ</strong>）を作る／動かす。<span class="blk">①</span>〜<span class="blk">④</span>を埋めれば完成。</p>
 
-      <pre><span class="code-label">JavaScript ── index.html に追記（setInterval の下）</span><span class="cmt">// 他ユーザのアバターを作る（四角柱の胴体＋スフィアの頭）</span>
+      <pre><span class="code-label">JavaScript ── index.html に追記（setInterval の下）</span><span class="cmt">// 他ユーザのアバター（スフィア1つ）を作る</span>
 <span class="kw">function</span> <span class="fn">createAvatar</span>(id, color) {
-  <span class="kw">const</span> avatar = document.<span class="fn">createElement</span>(<span class="str">'a-entity'</span>);
+  <span class="kw">const</span> avatar = document.<span class="fn">createElement</span>(<span class="str">'a-sphere'</span>);
   avatar.<span class="fn">setAttribute</span>(<span class="str">'id'</span>, id);
-  avatar.innerHTML =
-    <span class="str">'&lt;a-box height="1.2" width="0.6" depth="0.6" color="'</span> + color + <span class="str">'" position="0 0.6 0"&gt;&lt;/a-box&gt;'</span> +
-    <span class="str">'&lt;a-sphere radius="0.35" color="'</span> + color + <span class="str">'" position="0 1.5 0"&gt;&lt;/a-sphere&gt;'</span>;
+  avatar.<span class="fn">setAttribute</span>(<span class="str">'radius'</span>, <span class="str">'0.5'</span>);
+  avatar.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, color);
   scene.<span class="blk">①</span>(avatar);        <span class="cmt">// シーンに追加する</span>
   <span class="kw">return</span> avatar;
 }
@@ -1097,7 +1089,6 @@ socket.<span class="fn">on</span>(<span class="str">'moved'</span>, (data) <span
     avatar = <span class="fn">createAvatar</span>(data.id, data.color);   <span class="cmt">// 初めて見るIDなら作る</span>
   }
   avatar.<span class="fn">setAttribute</span>(<span class="str">'</span><span class="blk">②</span><span class="str">'</span>, data.position);            <span class="cmt">// 位置を更新</span>
-  avatar.<span class="fn">setAttribute</span>(<span class="str">'rotation'</span>, <span class="str">'0 '</span> + data.rotation.y + <span class="str">' 0'</span>); <span class="cmt">// 向きを更新</span>
 });
 
 <span class="cmt">// 他ユーザが退出したら、そのアバターを消す</span>
@@ -1119,18 +1110,18 @@ socket.<span class="fn">on</span>(<span class="str">'disconnect'</span>, () <spa
       <div class="exec-pair">
         <figure class="exec-shot">
           <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">① 1人目の画面</span></div>
-          <img src="img/md2w4_view1.png" alt="1人目の視点。前方に橙色の相手アバター（四角柱＋スフィア）が同期して表示されている">
-          <figcaption class="exec-cap"><strong>1人目の視点:</strong> 前方に<strong>相手（橙）</strong>が見える。</figcaption>
+          <img src="img/md2w4_view1.png" alt="1人目の視点。前方に相手のスフィアが同期して表示されている">
+          <figcaption class="exec-cap"><strong>1人目の視点:</strong> 前方に<strong>相手のスフィア</strong>が見える。</figcaption>
         </figure>
         <figure class="exec-shot">
           <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">② 2人目の画面</span></div>
-          <img src="img/md2w4_view2.png" alt="2人目の視点。前方に別の色の相手アバターが同期して表示されている">
-          <figcaption class="exec-cap"><strong>2人目の視点:</strong> 同じ空間で<strong>相手</strong>が見える。視点は違っても状態は一致。</figcaption>
+          <img src="img/md2w4_view2.png" alt="2人目の視点。前方に相手のスフィアが同期して表示されている">
+          <figcaption class="exec-cap"><strong>2人目の視点:</strong> 同じ空間で<strong>相手のスフィア</strong>が見える。視点は違っても状態は一致。</figcaption>
         </figure>
       </div>
       <figure class="exec-shot" style="margin-top:1rem">
         <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">俯瞰（2人が同じ空間にいる）</span></div>
-        <img src="img/md2w4_hero.png" alt="2人分のアバター（青と橙）が同じ3D空間に立っている俯瞰ショット" style="max-width:720px">
+        <img src="img/md2w4_hero.png" alt="2人分のアバター（青と橙のスフィア）が床と空だけの空間に浮かんでいる俯瞰ショット" style="max-width:720px">
         <figcaption class="exec-cap"><strong>標準ゴール達成:</strong> 2人（青・橙）が同じ空間にいる。片方が動けば、もう片方の画面でもリアルタイムに動く。</figcaption>
       </figure>
 
@@ -1193,16 +1184,27 @@ avatar.<span class="fn">appendChild</span>(label);</pre>
       <p style="font-size:0.9rem;margin-bottom:0">胴体 <code>a-box</code> の <code>height</code>／<code>width</code> や、頭 <code>a-sphere</code> の <code>radius</code> を変える。帽子（小さな <code>a-cone</code>）を足すのもよい。</p>
 
       <h4 style="color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">アイデア③：Sketchfab の3Dモデル（glTF/glb）をアバターにする</h4>
-      <p style="font-size:0.9rem;margin-bottom:0">第3回で学んだ <code>&lt;a-gltf-model&gt;</code> を使い、四角柱＋スフィアの代わりに<strong>好きな3Dモデル</strong>をアバターにする。<a href="https://sketchfab.com/" style="color:#4FC3F7">Sketchfab</a> でロボット・動物・キャラクターなどの <code>glb</code> をダウンロードして <code>public</code> に置き、<code>createAvatar</code> の <code>innerHTML</code> を差しかえる。<span style="color:#999">（ライセンス・作者表示に注意）</span></p>
-      <pre><span class="code-label">JavaScript ── createAvatar の innerHTML を差しかえ</span>avatar.innerHTML =
-  <span class="str">'&lt;a-gltf-model src="robot.glb" scale="1 1 1"&gt;&lt;/a-gltf-model&gt;'</span>;</pre>
+      <p style="font-size:0.9rem;margin-bottom:0">第3回で学んだ <code>&lt;a-gltf-model&gt;</code> を使い、スフィアの代わりに<strong>好きな3Dモデル</strong>をアバターにする。<a href="https://sketchfab.com/" style="color:#4FC3F7">Sketchfab</a> でロボット・動物・キャラクターなどの <code>glb</code> をダウンロードして <code>public</code> に置き、<code>createAvatar</code> を「スフィアの代わりにモデルを作る」ように変える。<span style="color:#999">（ライセンス・作者表示に注意）</span></p>
+      <pre><span class="code-label">JavaScript ── createAvatar を差しかえ</span><span class="kw">function</span> <span class="fn">createAvatar</span>(id, color) {
+  <span class="kw">const</span> avatar = document.<span class="fn">createElement</span>(<span class="str">'a-entity'</span>);
+  avatar.<span class="fn">setAttribute</span>(<span class="str">'id'</span>, id);
+  avatar.<span class="fn">setAttribute</span>(<span class="str">'gltf-model'</span>, <span class="str">'robot.glb'</span>);   <span class="cmt">// スフィアの代わりにモデル</span>
+  scene.<span class="fn">appendChild</span>(avatar);
+  <span class="kw">return</span> avatar;
+}</pre>
 
       <h4 style="color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">アイデア④：VRM（3Dキャラクター）をアバターにする</h4>
       <p style="font-size:0.9rem;margin-bottom:0.4rem"><strong>VRM</strong> は「人型3Dアバター」の標準フォーマット。<a href="https://hub.vroid.com/" style="color:#4FC3F7">VRoid Hub</a> や、無料アプリ <strong>VRoid Studio</strong> で作った自分のキャラを <code>.vrm</code> で置ける。A-Frame では <a href="https://github.com/binzume/aframe-vrm" style="color:#4FC3F7">aframe-vrm コンポーネント</a>を読み込むと <code>vrm</code> 属性で表示できる。</p>
       <pre><span class="code-label">HTML ── &lt;head&gt; に1行足す（VRMを使うとき）</span><span class="kw">&lt;script</span> src=<span class="str">"https://cdn.jsdelivr.net/npm/@binzume/aframe-vrm/dist/aframe-vrm.min.js"</span><span class="kw">&gt;&lt;/script&gt;</span></pre>
-      <pre><span class="code-label">JavaScript ── createAvatar の innerHTML を差しかえ</span>avatar.innerHTML =
-  <span class="str">'&lt;a-entity vrm="src:avatar.vrm" rotation="0 180 0"&gt;&lt;/a-entity&gt;'</span>;</pre>
-      <p style="font-size:0.85rem;color:#999;margin-bottom:0">※ <code>.vrm</code> ファイルは <code>public</code> に置く。向きが逆なら <code>rotation="0 180 0"</code> で調整する。</p>
+      <pre><span class="code-label">JavaScript ── createAvatar を差しかえ</span><span class="kw">function</span> <span class="fn">createAvatar</span>(id, color) {
+  <span class="kw">const</span> avatar = document.<span class="fn">createElement</span>(<span class="str">'a-entity'</span>);
+  avatar.<span class="fn">setAttribute</span>(<span class="str">'id'</span>, id);
+  avatar.<span class="fn">setAttribute</span>(<span class="str">'vrm'</span>, <span class="str">'src:avatar.vrm'</span>);   <span class="cmt">// VRMを表示</span>
+  avatar.<span class="fn">setAttribute</span>(<span class="str">'rotation'</span>, <span class="str">'0 180 0'</span>);
+  scene.<span class="fn">appendChild</span>(avatar);
+  <span class="kw">return</span> avatar;
+}</pre>
+      <p style="font-size:0.85rem;color:#999;margin-bottom:0">※ <code>.vrm</code> ファイルは <code>public</code> に置く。向きが逆なら <code>rotation</code> の値を変える。</p>
 
       <div style="background:#0a1e2e;border:1px solid #24506b;border-left:4px solid #4FC3F7;border-radius:10px;padding:0.7rem 1rem;margin:1.2rem 0 0.8rem;font-weight:700;color:#4FC3F7;font-size:0.95rem">B. 空間そのものを作り込む</div>
 
