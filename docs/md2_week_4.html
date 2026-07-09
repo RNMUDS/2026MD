@@ -488,6 +488,7 @@ body { padding-top: 2.2rem; }
   <a href="#sec-flow">本日の流れ</a>
   <a href="#sec-why">1. なぜサーバが要る</a>
   <a href="#sec-setup">2. セットアップ</a>
+  <a href="#sec-plan" class="nav-assignment">手順を確認(GW)</a>
   <a href="#sec-single" class="nav-assignment">3. 接続＋自分</a>
   <a href="#sec-mech">4. 同期の仕組み</a>
   <a href="#sec-emit" class="nav-assignment">5. 位置を送る</a>
@@ -574,6 +575,7 @@ body { padding-top: 2.2rem; }
         <tr><th style="width:12%">節</th><th>やること</th><th style="width:22%">課題</th></tr>
         <tr><td>1</td><td>なぜサーバが要るのか（HTTP と リアルタイム通信）</td><td>説明</td></tr>
         <tr><td>2</td><td>セットアップ（Node.js / npm init / npm install）</td><td>説明・手順</td></tr>
+        <tr><td>👥</td><td>全体の構築手順を口頭で確認する（コードは書かない）</td><td><span class="tag tag-group" style="font-size:0.65rem">グループワーク</span> gw4</td></tr>
         <tr><td>3</td><td>接続確認＋自分だけの空間を歩く</td><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std4-1</td></tr>
         <tr><td>4</td><td>マルチプレイの仕組み（送る→転送→受け取る）</td><td>説明</td></tr>
         <tr><td>5</td><td>自分の位置を送る（<code>emit</code>）</td><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std4-2</td></tr>
@@ -585,6 +587,7 @@ body { padding-top: 2.2rem; }
     <div class="submission-box">
       <h3>📤 提出ガイド（1つのファイルにまとめ、PDF 1枚を提出）</h3>
       <div class="submission-items">
+        <a href="#gw4" class="sub-item"><span class="sub-count">1</span><span class="tag tag-group">グループワーク</span>gw4 手順を口頭で確認</a>
         <a href="#std4-1" class="sub-item"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std4-1 接続＋自分の空間</a>
         <a href="#std4-2" class="sub-item"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std4-2 位置を送る</a>
         <a href="#std4-3" class="sub-item"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std4-3 同期して完成</a>
@@ -810,6 +813,49 @@ npm install express socket.io</pre>
         <img src="img/md2w4_vscode.png" alt="VS Codeでmd2_no4フォルダを開いた画面。左のエクスプローラーにnode_modules・public/index.html・server.js・package.jsonが並び、右にserver.jsのコードが表示されている">
         <figcaption class="exec-cap"><strong>VS Code の画面:</strong> 左のエクスプローラーでファイルを作り、右のエディタでコードを書く。この <code>server.js</code> は次の std4-1 で作る。</figcaption>
       </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GROUP WORK: 構築手順を口頭で確認 ============ -->
+<section id="sec-plan">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">👥</div>
+      <h2>グループワーク：全体の構築手順を口頭で確認する</h2>
+    </div>
+
+    <div id="gw4" class="card group">
+      <div class="card-header"><h3><span class="tag tag-group" style="font-size:0.7rem">グループワーク</span> gw4：「どのファイルに・何を・どこに置く／書くか」を説明ラリーで確認する</h3></div>
+      <p style="margin-bottom:0.5rem"><strong>コードは書かない。</strong>これから作るアプリの<strong>全体の組み立て方</strong>を、<strong>声に出して</strong>お互いに説明し合うワーク。人に説明できれば、実装で迷わなくなる。2〜3人組で行う。</p>
+
+      <div class="callout-info" style="margin-top:0.4rem">
+        <h4>進め方（説明ラリー）</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li>下の<strong>確認項目</strong>を、1人1つずつ<strong>順番に声に出して</strong>説明する（1人 → 次の人 → …とラリー）</li>
+          <li>詰まったら「<a href="#sec-flow" style="color:#4FC3F7">本日の流れ</a>」や「<a href="#sec-why" style="color:#4FC3F7">節1</a>」を見てOK。見ずに言えたら◎</li>
+          <li>チーム全員が最後まで言えたらクリア</li>
+        </ul>
+      </div>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">確認する項目（この内容を口頭で説明できるか）</p>
+      <table style="font-size:0.9rem">
+        <tr><th style="width:8%">#</th><th>口頭で確認すること（例）</th></tr>
+        <tr><td>1</td><td><strong>クライアントファイル</strong>として <code>index.html</code> を用意し、<strong><code>public</code> フォルダの中</strong>に置く</td></tr>
+        <tr><td>2</td><td><strong>サーバファイル</strong>として <code>server.js</code> を用意し、<strong><code>md2_no4</code> の直下</strong>に置く</td></tr>
+        <tr><td>3</td><td>まず<strong>サーバ（<code>server.js</code>）を立てて</strong>、ブラウザ同士をつなぐ（<code>node server.js</code> → <code>localhost:3000</code>）</td></tr>
+        <tr><td>4</td><td><strong>自分の位置をサーバに送る</strong>コードは、<strong>クライアントファイル（<code>index.html</code>）</strong>に書く</td></tr>
+        <tr><td>5</td><td>受け取った位置を<strong>「本人以外の全員」に転送する</strong>コードは、<strong>サーバファイル（<code>server.js</code>）</strong>に書く</td></tr>
+        <tr><td>6</td><td>送られてきた位置に<strong>相手のアバター（スフィア）を作る／動かす</strong>コードは、<strong>クライアントファイル（<code>index.html</code>）</strong>に書く</td></tr>
+        <tr><td>7</td><td>データは<strong>「送る（<code>emit</code>）」と「受け取る（<code>on</code>）」のペア</strong>で、名札（<code>'move'</code> / <code>'moved'</code>）でつなぐ</td></tr>
+      </table>
+
+      <div class="callout-tip" style="margin-top:0.6rem">
+        <h4>言えたらもう一歩：役割で整理してみよう</h4>
+        <p style="font-size:0.9rem;margin-bottom:0"><strong>クライアント（index.html）＝「自分の位置を送る」「相手を表示する」</strong>／<strong>サーバ（server.js）＝「受け取って全員に配る」</strong>。この役割分担を自分の言葉で言えれば、標準課題はスムーズに進む。</p>
+      </div>
+
+      <div class="notion-submit"><span>Notion に、<strong>自分が説明を担当した項目</strong>と、<strong>詰まった点／すっきり分かった点</strong>を1〜2行メモする（gw4）。</span></div>
     </div>
   </div>
 </section>
@@ -1343,6 +1389,7 @@ avatar.<span class="fn">appendChild</span>(label);</pre>
       <p style="margin-bottom:0.6rem">下の項目を1つのファイル（Notion など）にまとめ、<strong>PDF 1枚</strong>にして提出する。</p>
       <table>
         <tr><th style="width:22%">項目</th><th>内容</th></tr>
+        <tr><td><span class="tag tag-group" style="font-size:0.65rem">グループワーク</span> gw4</td><td>担当した確認項目と、詰まった点／分かった点の1〜2行メモ（コードは書かない）</td></tr>
         <tr><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std4-1</td><td>3D空間を歩けている<strong>ブラウザ</strong>と、<strong>ターミナルの接続ログ</strong>のキャプチャ</td></tr>
         <tr><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std4-2</td><td>穴を埋めた <code>index.html</code>／<code>server.js</code> のコード</td></tr>
         <tr><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std4-3</td><td><strong>2画面で相手のアバターが同期している</strong>キャプチャ（標準ゴール）</td></tr>
