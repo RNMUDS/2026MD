@@ -488,9 +488,10 @@ body { padding-top: 2.2rem; }
   <a href="#sec-flow">本日の流れ</a>
   <a href="#sec-why">1. なぜサーバが要る</a>
   <a href="#sec-setup">2. セットアップ</a>
-  <a href="#sec-plan" class="nav-assignment">手順を確認(GW)</a>
-  <a href="#sec-single" class="nav-assignment">3. 接続＋自分</a>
-  <a href="#sec-mech">4. 同期の仕組み</a>
+  <a href="#sec-run" class="nav-assignment">🎮 まず動かす</a>
+  <a href="#sec-plan" class="nav-assignment">👥 口頭で確認</a>
+  <a href="#sec-single" class="nav-assignment">3. 骨格を組み直す</a>
+  <a href="#sec-mech">4. 分解して理解</a>
   <a href="#sec-emit" class="nav-assignment">5. 位置を送る</a>
   <a href="#sec-sync" class="nav-assignment">6. 同期して完成</a>
   <a href="#sec-advance" class="nav-exam">7. 発展課題</a>
@@ -510,7 +511,7 @@ body { padding-top: 2.2rem; }
       <img src="img/md2w4_hero.png" alt="Node.jsとSocket.IOで作ったマルチプレイ空間。青と橙、2人分のアバター（色つきのスフィア）が床と空だけの空間に浮かんでいる" style="flex:0 1 460px;width:460px;max-width:100%;border-radius:12px;border:1px solid rgba(255,255,255,0.18);box-shadow:0 8px 28px rgba(0,0,0,0.45)">
     </div>
     <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:0.3rem;padding:0.4rem 0.8rem;margin-top:1rem;font-size:0.7rem;display:inline-block;max-width:100%;overflow-wrap:anywhere">
-      <strong>第4回のメイン:</strong> ① なぜサーバが要る → ② セットアップ（Node.js/npm） → ③ 接続＋自分の空間 → ④ 同期の仕組み → ⑤ 自分の位置を送る → ⑥ 相手のアバターを同期して完成 → ⑦ 発展（名前・色・3Dモデル）
+      <strong>第4回のメイン:</strong> なぜサーバが要る → セットアップ（Node.js/npm） → 🎮 <strong>まず完成版を丸ごと動かして感動</strong> → 👥 構成を口頭で確認 → 接続の骨格を組み立て直す → 🔍 分解して理解 → 送る（emit）→ 受け取って同期して完成 → 発展（名前・色・3Dモデル）
     </div>
   </div>
 </header>
@@ -575,9 +576,10 @@ body { padding-top: 2.2rem; }
         <tr><th style="width:12%">節</th><th>やること</th><th style="width:22%">課題</th></tr>
         <tr><td>1</td><td>なぜサーバが要るのか（HTTP と リアルタイム通信）</td><td>説明</td></tr>
         <tr><td>2</td><td>セットアップ（Node.js / npm init / npm install）</td><td>説明・手順</td></tr>
-        <tr><td>👥</td><td>全体の構築手順を口頭で確認する（コードは書かない）</td><td><span class="tag tag-group" style="font-size:0.65rem">グループワーク</span> gw4</td></tr>
-        <tr><td>3</td><td>接続確認＋自分だけの空間を歩く</td><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std4-1</td></tr>
-        <tr><td>4</td><td>マルチプレイの仕組み（送る→転送→受け取る）</td><td>説明</td></tr>
+        <tr><td>🎮</td><td><strong>まず完成版を丸ごと動かして感動する</strong>（2画面で相手が動く）</td><td>体験</td></tr>
+        <tr><td>👥</td><td>いま動かした構成を口頭で確認する（コードは書かない）</td><td><span class="tag tag-group" style="font-size:0.65rem">グループワーク</span> gw4</td></tr>
+        <tr><td>3</td><td>接続の骨格を自分の手で組み立て直す</td><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std4-1</td></tr>
+        <tr><td>4</td><td>分解：なぜ「相手が見える」のか（送る→転送→受け取る）</td><td>説明</td></tr>
         <tr><td>5</td><td>自分の位置を送る（<code>emit</code>）</td><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std4-2</td></tr>
         <tr><td>6</td><td>相手のアバターを同期して完成（<strong>標準ゴール</strong>）</td><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std4-3</td></tr>
         <tr><td>7</td><td>名前ラベル・個別カラー・3Dモデル（自由創作）</td><td><span class="tag tag-advanced" style="font-size:0.65rem">発展課題</span> adv4-1</td></tr>
@@ -587,8 +589,8 @@ body { padding-top: 2.2rem; }
     <div class="submission-box">
       <h3>📤 提出ガイド（1つのファイルにまとめ、PDF 1枚を提出）</h3>
       <div class="submission-items">
-        <a href="#gw4" class="sub-item"><span class="sub-count">1</span><span class="tag tag-group">グループワーク</span>gw4 手順を口頭で確認</a>
-        <a href="#std4-1" class="sub-item"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std4-1 接続＋自分の空間</a>
+        <a href="#gw4" class="sub-item"><span class="sub-count">1</span><span class="tag tag-group">グループワーク</span>gw4 構成を口頭で確認</a>
+        <a href="#std4-1" class="sub-item"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std4-1 接続の骨格</a>
         <a href="#std4-2" class="sub-item"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std4-2 位置を送る</a>
         <a href="#std4-3" class="sub-item"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std4-3 同期して完成</a>
         <a href="#adv4-1" class="sub-item"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv4-1 自由創作</a>
@@ -672,75 +674,6 @@ body { padding-top: 2.2rem; }
         </ul>
       </div>
     </div>
-
-    <div class="card">
-      <div class="card-header"><h3>通信の基本形：<code>emit</code>（送る）と <code>on</code>（受け取る）</h3></div>
-      <p style="margin-bottom:0.6rem">Socket.IO の通信は、たった2つの命令の<strong>ペア</strong>でできている。片方が <code>emit</code> で送り、もう片方が同じ名前の <code>on</code> で受け取る。</p>
-      <pre><span class="code-label">考え方</span><span class="cmt">// 送る側</span>
-socket.<span class="fn">emit</span>(<span class="str">'move'</span>, { x: <span class="num">1</span>, z: <span class="num">2</span> });   <span class="cmt">// 'move' という名札をつけてデータを送る</span>
-
-<span class="cmt">// 受け取る側（別のプログラム）</span>
-socket.<span class="fn">on</span>(<span class="str">'move'</span>, (data) <span class="op">=&gt;</span> {      <span class="cmt">// 同じ名札 'move' が届いたら…</span>
-  console.<span class="fn">log</span>(data.x, data.z);        <span class="cmt">// 中身を使う</span>
-});</pre>
-
-      <table>
-        <tr><th style="width:34%">命令</th><th>意味</th></tr>
-        <tr><td><code>socket.emit('名前', データ)</code></td><td>その相手だけに送る</td></tr>
-        <tr><td><code>io.emit('名前', データ)</code></td><td><strong>自分も含めた全員</strong>に送る</td></tr>
-        <tr><td><code>socket.broadcast.emit('名前', データ)</code></td><td><strong>自分以外の全員</strong>に送る（アバター同期はこれ）</td></tr>
-        <tr><td><code>socket.on('名前', (データ) =&gt; {…})</code></td><td>その名前が届いたら処理する（受信）</td></tr>
-      </table>
-      <div class="callout-info" style="margin-top:0.5rem">
-        <h4>なぜ「自分以外の全員」に送るのか（<code>broadcast</code>）</h4>
-        <p style="font-size:0.9rem;margin-bottom:0.5rem">自分の動きを自分に送り返す必要はない（自分のカメラはもう自分で動かしている）。だからアバター同期では <code>socket.broadcast.emit</code> を使って<strong>他の人にだけ</strong>「私はここに動いたよ」と伝える。下の図で、自分の <code>emit</code> がサーバから<strong>他の人にだけ</strong>配られ、<strong>自分には戻らない</strong>様子が流れる。</p>
-        <div style="margin:0.4rem 0 0">
-          <svg viewBox="0 0 720 220" width="720" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333;max-width:100%">
-            <!-- links -->
-            <line x1="190" y1="120" x2="285" y2="120" stroke="#3a5a72" stroke-width="2"/>
-            <line x1="435" y1="112" x2="540" y2="60" stroke="#3a5a72" stroke-width="2"/>
-            <line x1="435" y1="128" x2="540" y2="172" stroke="#3a5a72" stroke-width="2"/>
-            <!-- return path (blocked) -->
-            <line x1="285" y1="132" x2="192" y2="150" stroke="#555" stroke-width="2" stroke-dasharray="5 4"/>
-            <text x="238" y="168" text-anchor="middle" fill="#e57373" font-size="16" font-weight="700">✕</text>
-            <text x="232" y="185" text-anchor="middle" fill="#b0b0b0" font-size="9">自分には戻さない</text>
-
-            <!-- me -->
-            <rect x="40" y="94" width="150" height="52" rx="10" fill="#141414" stroke="#4FC3F7" stroke-width="2"/>
-            <text x="115" y="118" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700">自分</text>
-            <text x="115" y="135" text-anchor="middle" fill="#999" font-size="9">emit('move')</text>
-            <!-- server -->
-            <rect x="285" y="94" width="150" height="52" rx="10" fill="#141414" stroke="#4FC3F7" stroke-width="2"/>
-            <text x="360" y="118" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700">サーバ</text>
-            <text x="360" y="135" text-anchor="middle" fill="#999" font-size="9">broadcast.emit</text>
-            <!-- others -->
-            <rect x="540" y="34" width="150" height="50" rx="10" fill="#141414" stroke="#4FC3F7" stroke-width="2"/>
-            <text x="615" y="63" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700">他の人 1</text>
-            <rect x="540" y="150" width="150" height="50" rx="10" fill="#141414" stroke="#4FC3F7" stroke-width="2"/>
-            <text x="615" y="179" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700">他の人 2</text>
-
-            <!-- packet me->server -->
-            <circle r="7" fill="#4FC3F7">
-              <animate attributeName="cx" values="115;360" keyTimes="0;1" dur="3s" repeatCount="indefinite"/>
-              <animate attributeName="cy" values="120;120" dur="3s" repeatCount="indefinite"/>
-              <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.4;0.42;1" dur="3s" repeatCount="indefinite"/>
-            </circle>
-            <!-- packet server->other1 -->
-            <circle r="7" fill="#4FC3F7">
-              <animate attributeName="cx" values="360;360;540" keyTimes="0;0.45;1" dur="3s" repeatCount="indefinite"/>
-              <animate attributeName="cy" values="120;120;58" keyTimes="0;0.45;1" dur="3s" repeatCount="indefinite"/>
-              <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.45;0.5;0.95;1" dur="3s" repeatCount="indefinite"/>
-            </circle>
-            <!-- packet server->other2 -->
-            <circle r="7" fill="#4FC3F7">
-              <animate attributeName="cx" values="360;360;540" keyTimes="0;0.45;1" dur="3s" repeatCount="indefinite"/>
-              <animate attributeName="cy" values="120;120;172" keyTimes="0;0.45;1" dur="3s" repeatCount="indefinite"/>
-              <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.45;0.5;0.95;1" dur="3s" repeatCount="indefinite"/>
-            </circle>
-          </svg>
-        </div>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -817,6 +750,151 @@ npm install express socket.io</pre>
   </div>
 </section>
 
+<!-- ============ RUN FIRST (まず丸ごと動かす) ============ -->
+<section id="sec-run">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800;color:#111">🎮</div>
+      <h2>まず丸ごと動かして、感動する ― 理屈はあとで</h2>
+    </div>
+
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header"><h3>先に「動く」を体験しよう。なぜ動くかは、動かしたあとで分解する</h3></div>
+      <p style="margin-bottom:0.6rem">この回のゴールは <strong style="color:#4FC3F7">「相手のアバターが、目の前で動いて見える」</strong>こと。いきなり仕組みから入ると、いちばんの見どころ（＝隣の人と一緒に動く瞬間）が最後になってしまう。だから今日は順番を変える。<strong>まずは中身を気にせず、下の2ファイルをそのままコピペして動かし、感動を先に味わう。</strong>「なぜ動くのか」は、このあと節4以降で<strong>今動かしたコードを分解して</strong>理解していく。</p>
+
+      <div class="callout-tip" style="margin-top:0.4rem">
+        <h4>やること（3ステップ）</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.92rem">
+          <li>下の <code>server.js</code> と <code>public/index.html</code> を<strong>そのままコピペ</strong>して保存する（穴埋めなし・完成版）</li>
+          <li>ターミナルで <code>node server.js</code> を実行する</li>
+          <li>ブラウザで <code>http://localhost:3000</code> を<strong>2つの窓</strong>で開き、片方を動かす → もう片方に<strong>相手が現れて動く</strong> 🎉</li>
+        </ul>
+      </div>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.9rem;margin:1rem 0 0.2rem">📁 どこに作るか（節2の構成のとおり）</p>
+      <div class="dirtree"><span class="dir">md2_no4/</span>
+├── <span class="target">server.js</span>          <span class="arrow">← ①これを作る（md2_no4 の直下）</span>
+├── package.json       <span class="mut">（作成ずみ）</span>
+├── node_modules/      <span class="mut">（作成ずみ）</span>
+└── <span class="dir">public/</span>
+    └── <span class="target">index.html</span>      <span class="arrow">← ②これを作る（public フォルダの中）</span></div>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.1rem 0 0.3rem">ファイル1: <code>server.js</code>（md2_no4 の直下）── 完成版・そのままコピペ</p>
+      <pre><span class="code-label">JavaScript ── server.js</span><span class="kw">const</span> express = <span class="fn">require</span>(<span class="str">'express'</span>);
+<span class="kw">const</span> app = <span class="fn">express</span>();
+app.<span class="fn">use</span>(express.<span class="fn">static</span>(<span class="str">'public'</span>));
+
+<span class="kw">const</span> server = app.<span class="fn">listen</span>(<span class="num">3000</span>, () <span class="op">=&gt;</span> {
+  console.<span class="fn">log</span>(<span class="str">'サーバ起動: http://localhost:3000'</span>);
+});
+
+<span class="kw">const</span> io = <span class="fn">require</span>(<span class="str">'socket.io'</span>)(server);
+
+io.<span class="fn">on</span>(<span class="str">'connection'</span>, (socket) <span class="op">=&gt;</span> {
+  console.<span class="fn">log</span>(<span class="str">'接続しました:'</span>, socket.id);
+
+  <span class="cmt">// 誰かが動いたら、その位置を「本人以外の全員」に転送する</span>
+  socket.<span class="fn">on</span>(<span class="str">'move'</span>, (data) <span class="op">=&gt;</span> {
+    socket.broadcast.<span class="fn">emit</span>(<span class="str">'moved'</span>, {
+      id: socket.id, position: data.position, color: data.color
+    });
+  });
+
+  <span class="cmt">// 退出したら、全員にそのIDを伝えてアバターを消してもらう</span>
+  socket.<span class="fn">on</span>(<span class="str">'disconnect'</span>, () <span class="op">=&gt;</span> {
+    console.<span class="fn">log</span>(<span class="str">'切断しました:'</span>, socket.id);
+    io.<span class="fn">emit</span>(<span class="str">'userLeft'</span>, socket.id);
+  });
+});</pre>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.1rem 0 0.3rem">ファイル2: <code>public/index.html</code>（public の中）── 完成版・そのままコピペ</p>
+      <pre><span class="code-label">HTML ── public/index.html</span><span class="kw">&lt;!DOCTYPE html&gt;</span>
+<span class="kw">&lt;html</span> lang=<span class="str">"ja"</span><span class="kw">&gt;&lt;head&gt;</span>
+  <span class="kw">&lt;meta</span> charset=<span class="str">"UTF-8"</span><span class="kw">&gt;&lt;title&gt;</span>マルチプレイ空間<span class="kw">&lt;/title&gt;</span>
+  <span class="kw">&lt;script</span> src=<span class="str">"https://aframe.io/releases/1.7.1/aframe.min.js"</span><span class="kw">&gt;&lt;/script&gt;</span>
+  <span class="kw">&lt;script</span> src=<span class="str">"/socket.io/socket.io.js"</span><span class="kw">&gt;&lt;/script&gt;</span>
+<span class="kw">&lt;/head&gt;&lt;body&gt;</span>
+  <span class="kw">&lt;a-scene</span> id=<span class="str">"scene"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;a-plane</span> rotation=<span class="str">"-90 0 0"</span> width=<span class="str">"30"</span> height=<span class="str">"30"</span> color=<span class="str">"#4a7a3a"</span><span class="kw">&gt;&lt;/a-plane&gt;</span>
+    <span class="kw">&lt;a-sky</span> color=<span class="str">"#87CEEB"</span><span class="kw">&gt;&lt;/a-sky&gt;</span>
+    <span class="kw">&lt;a-camera</span> id=<span class="str">"cam"</span> position=<span class="str">"0 1.6 4"</span><span class="kw">&gt;&lt;/a-camera&gt;</span>
+  <span class="kw">&lt;/a-scene&gt;</span>
+
+  <span class="kw">&lt;script&gt;</span>
+    <span class="kw">const</span> socket = <span class="fn">io</span>();
+    <span class="kw">const</span> scene = document.<span class="fn">getElementById</span>(<span class="str">'scene'</span>);
+    <span class="kw">const</span> cam = document.<span class="fn">getElementById</span>(<span class="str">'cam'</span>);
+
+    <span class="cmt">// 自分の色を、5色からランダムに選ぶ</span>
+    <span class="kw">const</span> palette = [<span class="str">'#4FC3F7'</span>, <span class="str">'#FF8A3D'</span>, <span class="str">'#93D500'</span>, <span class="str">'#E040FB'</span>, <span class="str">'#FFD54F'</span>];
+    <span class="kw">const</span> myColor = palette[Math.<span class="fn">floor</span>(Math.<span class="fn">random</span>() * palette.length)];
+
+    <span class="cmt">// 100ミリ秒ごとに、自分の位置をサーバへ送る</span>
+    <span class="fn">setInterval</span>(() <span class="op">=&gt;</span> {
+      <span class="kw">const</span> pos = cam.object3D.position;
+      socket.<span class="fn">emit</span>(<span class="str">'move'</span>, { position: { x: pos.x, y: pos.y, z: pos.z }, color: myColor });
+    }, <span class="num">100</span>);
+
+    <span class="cmt">// 他ユーザのアバター（スフィア1つ）を作る</span>
+    <span class="kw">function</span> <span class="fn">createAvatar</span>(id, color) {
+      <span class="kw">const</span> avatar = document.<span class="fn">createElement</span>(<span class="str">'a-sphere'</span>);
+      avatar.<span class="fn">setAttribute</span>(<span class="str">'id'</span>, id);
+      avatar.<span class="fn">setAttribute</span>(<span class="str">'radius'</span>, <span class="str">'0.5'</span>);
+      avatar.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, color);
+      scene.<span class="fn">appendChild</span>(avatar);
+      <span class="kw">return</span> avatar;
+    }
+    <span class="cmt">// 他ユーザが動いたら、アバターを作る／位置を更新する</span>
+    socket.<span class="fn">on</span>(<span class="str">'moved'</span>, (data) <span class="op">=&gt;</span> {
+      <span class="kw">let</span> avatar = document.<span class="fn">getElementById</span>(data.id);
+      <span class="kw">if</span> (!avatar) avatar = <span class="fn">createAvatar</span>(data.id, data.color);
+      avatar.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, data.position);
+    });
+    <span class="cmt">// 他ユーザが退出したら、アバターを消す</span>
+    socket.<span class="fn">on</span>(<span class="str">'userLeft'</span>, (id) <span class="op">=&gt;</span> {
+      <span class="kw">const</span> avatar = document.<span class="fn">getElementById</span>(id);
+      <span class="kw">if</span> (avatar) avatar.parentNode.<span class="fn">removeChild</span>(avatar);
+    });
+  <span class="kw">&lt;/script&gt;</span>
+<span class="kw">&lt;/body&gt;&lt;/html&gt;</span></pre>
+
+      <p style="margin:1rem 0 0.4rem;font-weight:700;color:#4FC3F7;font-size:0.95rem">動かす</p>
+      <pre><span class="code-label">Terminal</span><span class="cmt"># md2_no4 の中で実行（このターミナルは開いたまま）</span>
+node server.js</pre>
+      <p style="font-size:0.9rem;margin-bottom:0.5rem">起動したら、ブラウザで <code>http://localhost:3000</code> を<strong>2つの窓</strong>で開く（普通の窓＋シークレット窓、または隣の人と2台で）。片方で <strong>WASDキー</strong>を押して動くと、<strong>もう片方の画面に相手のスフィアが現れて動く</strong>。これが今日のゴールの完成形。</p>
+
+      <div class="exec-pair">
+        <figure class="exec-shot">
+          <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">① 1人目の画面</span></div>
+          <img src="img/md2w4_view1.png" alt="1人目の視点。前方に相手のスフィアが同期して表示されている">
+          <figcaption class="exec-cap"><strong>1人目の視点:</strong> 前方に<strong>相手のスフィア</strong>が見える。</figcaption>
+        </figure>
+        <figure class="exec-shot">
+          <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">② 2人目の画面</span></div>
+          <img src="img/md2w4_view2.png" alt="2人目の視点。前方に相手のスフィアが同期して表示されている">
+          <figcaption class="exec-cap"><strong>2人目の視点:</strong> 同じ空間で<strong>相手のスフィア</strong>が見える。視点は違っても状態は一致。</figcaption>
+        </figure>
+      </div>
+
+      <div class="callout-warning" style="margin-top:0.7rem">
+        <h4>動かないときのチェック</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><strong>ダブルクリックで開いていない？</strong> 必ず <code>node server.js</code> を起動し、<code>http://localhost:3000</code> で開く（<code>file://</code> では動かない）</li>
+          <li><strong>相手が見えない：</strong> 2つ目の窓も同じ <code>http://localhost:3000</code> を開いているか確認。ブラウザの Console にエラーが無いか見る</li>
+          <li><strong>自分のスフィアが見えない：</strong> 自分のアバターは自分の画面には出ない（自分はカメラ）。これは正常</li>
+        </ul>
+      </div>
+
+      <div class="callout-info" style="margin-top:0.7rem">
+        <h4>👏 動いた？　では、ここからが本番</h4>
+        <p style="font-size:0.92rem;margin-bottom:0">たった今、あなたは「みんなで動ける空間」を動かした。でも<strong>コピペしただけ</strong>では自分のものにならない。ここからは <strong>①いま動かした構成を声に出して確認（gw4）→ ②接続の骨格から自分の手で組み立て直す（std4-1）→ ③「なぜ相手が見えるのか」を分解して理解（節4）→ ④送る・受け取るを自分で組み立てて再現・改造する（std4-2・std4-3）</strong>と進む。<strong>「動く実物」を分解する</strong>から、理解が速くて深い。</p>
+      </div>
+
+      <div class="notion-submit"><span>Notion に、<strong>2つの画面で相手のアバターが同期している様子</strong>のキャプチャを貼る（std4-3・標準ゴールの記録はこの体験でとってもよい）。</span></div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ GROUP WORK: 構築手順を口頭で確認 ============ -->
 <section id="sec-plan">
   <div class="container">
@@ -827,7 +905,7 @@ npm install express socket.io</pre>
 
     <div id="gw4" class="card group">
       <div class="card-header"><h3><span class="tag tag-group" style="font-size:0.7rem">グループワーク</span> gw4：「どのファイルに・何を・どこに置く／書くか」を説明ラリーで確認する</h3></div>
-      <p style="margin-bottom:0.5rem"><strong>コードは書かない。</strong>これから作るアプリの<strong>全体の組み立て方</strong>を、<strong>声に出して</strong>お互いに説明し合うワーク。人に説明できれば、実装で迷わなくなる。2〜3人組で行う。</p>
+      <p style="margin-bottom:0.5rem"><strong>コードは書かない。</strong>さっき丸ごと動かしたアプリが、<strong>どんな組み立てでできているのか</strong>を、<strong>声に出して</strong>お互いに説明し合うワーク。動かした実物を言葉にできれば、このあと自分の手で組み立て直すとき（std4-1〜3）に迷わなくなる。2〜3人組で行う。</p>
 
       <div class="callout-info" style="margin-top:0.4rem">
         <h4>進め方（説明ラリー）</h4>
@@ -865,12 +943,12 @@ npm install express socket.io</pre>
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#4FC3F7">3</div>
-      <h2>接続確認＋自分だけの空間を歩く</h2>
+      <h2>接続の骨格を、自分の手で組み立て直す</h2>
     </div>
 
     <div id="std4-1" class="card standard">
       <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std4-1：サーバを立てて、3D空間に入る</h3></div>
-      <p style="margin-bottom:0.5rem">まず<strong>2つのファイル</strong>を作る。<code>server.js</code>（サーバ）と <code>public/index.html</code>（ブラウザ）。下の場所に作ること。コードはほとんど<strong>そのままコピペ</strong>でよく、<span class="blk">①</span>〜<span class="blk">③</span>の<strong>穴だけ自分で埋める</strong>。</p>
+      <p style="margin-bottom:0.5rem">ここからは、さっき動かした完成版を<strong>部品ごとに自分の手で組み立て直して</strong>、なぜ動くのかを体で覚える。まずは<strong>接続の骨格</strong>から。<strong>2つのファイル</strong>を作る ── <code>server.js</code>（サーバ）と <code>public/index.html</code>（ブラウザ）。下の場所に作ること。コードはほとんど<strong>そのままコピペ</strong>でよく、<span class="blk">①</span>〜<span class="blk">③</span>の<strong>穴だけ自分で埋める</strong>。</p>
 
       <p style="font-weight:700;color:#4FC3F7;font-size:0.9rem;margin:0.8rem 0 0.2rem">📁 どのファイルを・どこに作るか</p>
       <div class="dirtree"><span class="dir">md2_no4/</span>
@@ -982,11 +1060,83 @@ node server.js</pre>
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#4FC3F7">4</div>
-      <h2>マルチプレイの仕組み ― 送る → 転送 → 受け取る</h2>
+      <h2>動かしたコードを分解する ― なぜ「相手が見える」のか</h2>
     </div>
+
+    <p style="margin-bottom:0.8rem;font-size:0.95rem">さっき丸ごと動かしたコードは、じつは<strong>たった2つの命令のペア</strong>と<strong>3ステップの流れ</strong>でできている。ここでその中身を分解して、「なぜ相手が動いて見えるのか」を理解しよう。理解できれば、このあと<strong>自分の手で組み立て直す（std4-1〜3）</strong>のは一気にラクになる。</p>
+
     <div class="card">
-      <div class="card-header"><h3>3ステップで「相手が見える」ようになる</h3></div>
-      <p style="margin-bottom:0.6rem">お互いのアバターが見えるまでの流れは、次の3ステップだけ。std4-2 で①、std4-3 で②③を作る。</p>
+      <div class="card-header"><h3>① 通信の基本形：<code>emit</code>（送る）と <code>on</code>（受け取る）</h3></div>
+      <p style="margin-bottom:0.6rem">動かしたコードには <code>socket.emit</code> と <code>socket.on</code> が何度も出てきた。Socket.IO の通信は、この2つの命令の<strong>ペア</strong>でできている。片方が <code>emit</code> で送り、もう片方が同じ名前の <code>on</code> で受け取る。</p>
+      <pre><span class="code-label">考え方</span><span class="cmt">// 送る側</span>
+socket.<span class="fn">emit</span>(<span class="str">'move'</span>, { x: <span class="num">1</span>, z: <span class="num">2</span> });   <span class="cmt">// 'move' という名札をつけてデータを送る</span>
+
+<span class="cmt">// 受け取る側（別のプログラム）</span>
+socket.<span class="fn">on</span>(<span class="str">'move'</span>, (data) <span class="op">=&gt;</span> {      <span class="cmt">// 同じ名札 'move' が届いたら…</span>
+  console.<span class="fn">log</span>(data.x, data.z);        <span class="cmt">// 中身を使う</span>
+});</pre>
+
+      <table>
+        <tr><th style="width:34%">命令</th><th>意味</th></tr>
+        <tr><td><code>socket.emit('名前', データ)</code></td><td>その相手だけに送る</td></tr>
+        <tr><td><code>io.emit('名前', データ)</code></td><td><strong>自分も含めた全員</strong>に送る</td></tr>
+        <tr><td><code>socket.broadcast.emit('名前', データ)</code></td><td><strong>自分以外の全員</strong>に送る（アバター同期はこれ）</td></tr>
+        <tr><td><code>socket.on('名前', (データ) =&gt; {…})</code></td><td>その名前が届いたら処理する（受信）</td></tr>
+      </table>
+      <div class="callout-info" style="margin-top:0.5rem">
+        <h4>なぜ「自分以外の全員」に送るのか（<code>broadcast</code>）</h4>
+        <p style="font-size:0.9rem;margin-bottom:0.5rem">自分の動きを自分に送り返す必要はない（自分のカメラはもう自分で動かしている）。だからアバター同期では <code>socket.broadcast.emit</code> を使って<strong>他の人にだけ</strong>「私はここに動いたよ」と伝える。下の図で、自分の <code>emit</code> がサーバから<strong>他の人にだけ</strong>配られ、<strong>自分には戻らない</strong>様子が流れる。</p>
+        <div style="margin:0.4rem 0 0">
+          <svg viewBox="0 0 720 220" width="720" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333;max-width:100%">
+            <!-- links -->
+            <line x1="190" y1="120" x2="285" y2="120" stroke="#3a5a72" stroke-width="2"/>
+            <line x1="435" y1="112" x2="540" y2="60" stroke="#3a5a72" stroke-width="2"/>
+            <line x1="435" y1="128" x2="540" y2="172" stroke="#3a5a72" stroke-width="2"/>
+            <!-- return path (blocked) -->
+            <line x1="285" y1="132" x2="192" y2="150" stroke="#555" stroke-width="2" stroke-dasharray="5 4"/>
+            <text x="238" y="168" text-anchor="middle" fill="#e57373" font-size="16" font-weight="700">✕</text>
+            <text x="232" y="185" text-anchor="middle" fill="#b0b0b0" font-size="9">自分には戻さない</text>
+
+            <!-- me -->
+            <rect x="40" y="94" width="150" height="52" rx="10" fill="#141414" stroke="#4FC3F7" stroke-width="2"/>
+            <text x="115" y="118" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700">自分</text>
+            <text x="115" y="135" text-anchor="middle" fill="#999" font-size="9">emit('move')</text>
+            <!-- server -->
+            <rect x="285" y="94" width="150" height="52" rx="10" fill="#141414" stroke="#4FC3F7" stroke-width="2"/>
+            <text x="360" y="118" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700">サーバ</text>
+            <text x="360" y="135" text-anchor="middle" fill="#999" font-size="9">broadcast.emit</text>
+            <!-- others -->
+            <rect x="540" y="34" width="150" height="50" rx="10" fill="#141414" stroke="#4FC3F7" stroke-width="2"/>
+            <text x="615" y="63" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700">他の人 1</text>
+            <rect x="540" y="150" width="150" height="50" rx="10" fill="#141414" stroke="#4FC3F7" stroke-width="2"/>
+            <text x="615" y="179" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700">他の人 2</text>
+
+            <!-- packet me->server -->
+            <circle r="7" fill="#4FC3F7">
+              <animate attributeName="cx" values="115;360" keyTimes="0;1" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="cy" values="120;120" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.4;0.42;1" dur="3s" repeatCount="indefinite"/>
+            </circle>
+            <!-- packet server->other1 -->
+            <circle r="7" fill="#4FC3F7">
+              <animate attributeName="cx" values="360;360;540" keyTimes="0;0.45;1" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="cy" values="120;120;58" keyTimes="0;0.45;1" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.45;0.5;0.95;1" dur="3s" repeatCount="indefinite"/>
+            </circle>
+            <!-- packet server->other2 -->
+            <circle r="7" fill="#4FC3F7">
+              <animate attributeName="cx" values="360;360;540" keyTimes="0;0.45;1" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="cy" values="120;120;172" keyTimes="0;0.45;1" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.45;0.5;0.95;1" dur="3s" repeatCount="indefinite"/>
+            </circle>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>② 3ステップで「相手が見える」ようになる</h3></div>
+      <p style="margin-bottom:0.6rem">お互いのアバターが見えるまでの流れは、次の3ステップだけ。さっき動かしたコードの中で、この3つが<strong>毎秒くり返し</strong>起きていた。このあと std4-2 で①、std4-3 で②③を自分の手で組み立てる。</p>
       <table>
         <tr><th style="width:8%">#</th><th style="width:28%">どこで</th><th>すること</th></tr>
         <tr><td>①</td><td>自分のブラウザ</td><td><code>setInterval</code> で <strong>100ミリ秒ごと</strong>に、自分の位置を <code>socket.emit('move', …)</code> で送る</td></tr>
