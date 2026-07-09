@@ -180,6 +180,35 @@ ol.steps code {
   padding: 0.1em 0.4em; border-radius: 5px; font-size: 0.9em;
 }
 
+/* ============ ANSWER CODE ============ */
+.answer-wrap { margin-top: 1.6rem; }
+.answer-title {
+  font-size: 0.9rem; font-weight: 800; color:#999;
+  letter-spacing: 0.05em; margin-bottom: 0.6rem;
+  display:flex; align-items:center; gap:0.4rem;
+}
+.answer-file {
+  display:inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem; color:#93D500; font-weight:700;
+  background:#0a0a0a; border:1px solid #2a2a2a;
+  border-radius:8px 8px 0 0; border-bottom:none;
+  padding:0.35rem 0.9rem;
+}
+pre.code {
+  background:#0a0a0a; border:1px solid #2a2a2a;
+  border-radius:0 8px 8px 8px;
+  padding:1rem 1.1rem; overflow-x:auto; margin:0;
+}
+pre.code code {
+  font-family:'JetBrains Mono', monospace;
+  font-size:0.85rem; line-height:1.7; color:#e0e0e0;
+  white-space:pre; display:block;
+}
+.answer-note { font-size:0.78rem; color:#777; margin-top:0.5rem; }
+.task-card.cat-B-top .answer-file { color:#4FC3F7; }
+.task-card.cat-C-top .answer-file { color:#FFB800; }
+
 /* ============ CONTROLS ============ */
 .controls {
   display: flex; gap: 0.8rem; flex-wrap: wrap;
@@ -236,6 +265,13 @@ footer {
       </div>
       <div class="steps-title">▸ 実演する手順</div>
       <ol id="taskSteps" class="steps"></ol>
+
+      <div id="taskAnswerWrap" class="answer-wrap" hidden>
+        <div class="answer-title">▸ コピペ用コード（このまま貼り付けて実行）</div>
+        <div id="taskAnswerFile" class="answer-file"></div>
+        <pre class="code"><code id="taskAnswer"></code></pre>
+        <p id="taskAnswerNote" class="answer-note"></p>
+      </div>
     </div>
 
     <div class="controls">
@@ -269,7 +305,62 @@ const PYFILES = ["main.py","app.py","analysis.py","script.py","run.py","practice
 const LOGVALS =['1 + 2 の計算結果', '"Hello World" という文字列', '変数に入れた自分の名前',
                  '10 × 5 の計算結果', '今日の日付', '好きな数字を2倍した値'];
 
-/* ---------- 3種類の課題定義（答えは載せない：実演で確認） ---------- */
+/* ---------- ライブラリ別 main.py コード ---------- */
+const LIB_CODE = {
+  pandas:
+`import pandas as pd
+
+df = pd.DataFrame({"名前": ["田中", "佐藤"], "点数": [80, 95]})
+print(df)
+print("pandas は動いています！ バージョン:", pd.__version__)`,
+  numpy:
+`import numpy as np
+
+a = np.array([1, 2, 3, 4, 5])
+print("配列:", a)
+print("合計:", a.sum(), " 平均:", a.mean())
+print("numpy は動いています！ バージョン:", np.__version__)`,
+  matplotlib:
+`import matplotlib.pyplot as plt
+
+x = [1, 2, 3, 4, 5]
+y = [1, 4, 9, 16, 25]
+plt.plot(x, y)
+plt.title("test graph")
+plt.show()   # グラフのウィンドウが開けば成功`,
+  requests:
+`import requests
+
+r = requests.get("https://httpbin.org/get")
+print("ステータスコード:", r.status_code)   # 200 なら成功
+print("requests は動いています！ バージョン:", requests.__version__)`,
+  seaborn:
+`import seaborn as sns
+import matplotlib.pyplot as plt
+
+df = sns.load_dataset("tips")   # 付属のサンプルデータ
+print(df.head())
+sns.histplot(df["total_bill"])
+plt.show()   # グラフが開けば成功`,
+  pillow:
+`from PIL import Image
+
+img = Image.new("RGB", (200, 100), color="skyblue")
+img.save("test.png")
+img.show()   # 画像が開けば成功`
+};
+
+/* ---------- console.log する値ごとの JS 行 ---------- */
+const LOG_CODE = {
+  '1 + 2 の計算結果': 'console.log(1 + 2);',
+  '"Hello World" という文字列': 'console.log("Hello World");',
+  '変数に入れた自分の名前': 'let namae = "田中太郎";\n    console.log(namae);',
+  '10 × 5 の計算結果': 'console.log(10 * 5);',
+  '今日の日付': 'console.log(new Date());',
+  '好きな数字を2倍した値': 'let suki = 7;\n    console.log(suki * 2);'
+};
+
+/* ---------- 3種類の課題定義（コピペ用コードを常時表示） ---------- */
 const TASKS = {
   A: () => {
     const folder = pick(FOLDERS), lib = pick(LIBS), py = pick(PYFILES);
@@ -287,7 +378,12 @@ const TASKS = {
         `ライブラリ <code>${lib}</code> をインストールする`,
         `ターミナルから VSCode を開く`,
         `<code>${py}</code> を作り、<code>${lib}</code> を import して実行し、結果を見せる`
-      ]
+      ],
+      answer: {
+        file: py,
+        code: LIB_CODE[lib],
+        note: `ターミナル: mkdir ${folder} → cd ${folder} → python3 -m venv venv → source venv/bin/activate → pip install ${lib} → code .`
+      }
     };
   },
   B: () => {
@@ -308,7 +404,26 @@ const TASKS = {
         `<code>&lt;script&gt;</code> の中で <code>console.log</code> を使い ${val} を出力する`,
         `ブラウザの開発者ツール → コンソールで、出力した値を確認する`,
         `わざとエラー（例：存在しない変数）を書き、コンソールの赤いエラー表示を確認・説明する`
-      ]
+      ],
+      answer: {
+        file: "index.html",
+        code:
+`<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>コンソール確認</title>
+</head>
+<body>
+  <h1>コンソールの練習ページ</h1>
+  <script>
+    ${LOG_CODE[val]}
+    console.log(dareka);   // わざとエラー：未定義の変数（赤いエラーになる）
+  <\/script>
+</body>
+</html>`,
+        note: `dareka はどこにも定義していない変数なので "Uncaught ReferenceError: dareka is not defined" が赤く表示される、と説明する。`
+      }
     };
   },
   C: () => {
@@ -327,7 +442,27 @@ const TASKS = {
         `各列の<code>データの種類（型）</code>を表示する`,
         `各列の<code>欠損値の数</code>を表示する`,
         `数値列の<code>統計量</code>（平均・標準偏差・最大・最小など）を表示する`
-      ]
+      ],
+      answer: {
+        file: "main.py",
+        code:
+`import pandas as pd
+
+df = pd.read_csv("${csv}")
+
+print("■ 先頭5行")
+print(df.head())
+
+print("\\n■ 各列の型")
+print(df.dtypes)
+
+print("\\n■ 欠損値の数")
+print(df.isnull().sum())
+
+print("\\n■ 統計量")
+print(df.describe())`,
+        note: `${csv} を main.py と同じフォルダに置いてから python main.py を実行する。`
+      }
     };
   }
 };
@@ -373,6 +508,17 @@ function render() {
     li.innerHTML = s;
     ol.appendChild(li);
   });
+
+  // コピペ用コード（HTML/py）を表示
+  const ansWrap = document.getElementById("taskAnswerWrap");
+  if (t.answer) {
+    document.getElementById("taskAnswerFile").textContent = t.answer.file;
+    document.getElementById("taskAnswer").textContent = t.answer.code;
+    document.getElementById("taskAnswerNote").textContent = t.answer.note || "";
+    ansWrap.hidden = false;
+  } else {
+    ansWrap.hidden = true;
+  }
 
   // アニメーション再生
   card.style.animation = "none";
