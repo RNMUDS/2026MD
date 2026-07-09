@@ -229,6 +229,16 @@ pre .str { color: #FFB800; }
 pre .cmt { color: #616161; font-style: italic; }
 pre .num { color: #FFB800; }
 pre .op { color: #9AA6B2; }
+/* ハイライト行（この手順で書き足す部分） */
+pre .hl { display: block; background: rgba(79,195,247,0.14); box-shadow: inset 3px 0 0 #4FC3F7; }
+/* ディレクトリツリー */
+.dirtree { background:#0A0A0A; border:1px solid #333; border-radius:12px; padding:0.9rem 1.1rem; font-family:'JetBrains Mono',monospace; font-size:0.82rem; line-height:1.7; color:#c3ceda; overflow-x:auto; white-space:pre; margin:0.6rem 0; }
+.dirtree .dir { color:#4FC3F7; font-weight:700; }
+.dirtree .target { background:rgba(79,195,247,0.18); color:#fff; font-weight:700; border-radius:4px; padding:0 0.25rem; }
+.dirtree .arrow { color:#8fb7d4; }
+.dirtree .mut { color:#666; }
+.hl-legend { font-size:0.82rem; color:#8fb7d4; margin:0.3rem 0 0.2rem; }
+.hl-legend b { color:#4FC3F7; }
 .code-label {
   position: absolute; top: 0; right: 0;
   background: rgba(255,255,255,0.08);
@@ -814,9 +824,17 @@ npm install express socket.io</pre>
 
     <div id="std4-1" class="card standard">
       <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std4-1：サーバを立てて、3D空間に入る</h3></div>
-      <p style="margin-bottom:0.5rem">まず<strong>2つのファイル</strong>を作る。<code>server.js</code>（サーバ）と <code>public/index.html</code>（ブラウザ）。ほとんど<strong>そのままコピペ</strong>でよい。<span class="blk">①</span>〜<span class="blk">③</span>の<strong>穴だけ自分で埋める</strong>。</p>
+      <p style="margin-bottom:0.5rem">まず<strong>2つのファイル</strong>を作る。<code>server.js</code>（サーバ）と <code>public/index.html</code>（ブラウザ）。下の場所に作ること。コードはほとんど<strong>そのままコピペ</strong>でよく、<span class="blk">①</span>〜<span class="blk">③</span>の<strong>穴だけ自分で埋める</strong>。</p>
 
-      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">ファイル1: <code>server.js</code>（md2_no4 直下）</p>
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.9rem;margin:0.8rem 0 0.2rem">📁 どのファイルを・どこに作るか</p>
+      <div class="dirtree"><span class="dir">md2_no4/</span>
+├── <span class="target">server.js</span>          <span class="arrow">← ①これを作る（md2_no4 の直下）</span>
+├── package.json       <span class="mut">（npm init -y で作成ずみ）</span>
+├── node_modules/      <span class="mut">（npm install で作成ずみ）</span>
+└── <span class="dir">public/</span>
+    └── <span class="target">index.html</span>      <span class="arrow">← ②これを作る（public フォルダの中）</span></div>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">ファイル1: <code>server.js</code>（md2_no4 の直下）── 全体コード</p>
       <pre><span class="code-label">JavaScript ── server.js</span><span class="kw">const</span> express = <span class="fn">require</span>(<span class="str">'express'</span>);
 <span class="kw">const</span> app = <span class="fn">express</span>();
 
@@ -851,7 +869,7 @@ io.<span class="fn">on</span>(<span class="str">'connection'</span>, (socket) <s
         </ul>
       </div>
 
-      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.2rem 0 0.3rem">ファイル2: <code>public/index.html</code></p>
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.2rem 0 0.3rem">ファイル2: <code>public/index.html</code>（public の中）── 全体コード</p>
       <pre><span class="code-label">HTML ── public/index.html</span><span class="kw">&lt;!DOCTYPE html&gt;</span>
 <span class="kw">&lt;html</span> lang=<span class="str">"ja"</span><span class="kw">&gt;</span>
 <span class="kw">&lt;head&gt;</span>
@@ -995,18 +1013,42 @@ node server.js</pre>
 
     <div id="std4-2" class="card standard">
       <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std4-2：位置を emit で送る（①）</h3></div>
-      <p style="margin-bottom:0.5rem">std4-1 の2ファイルに<strong>追記</strong>する。まず <code>index.html</code> の <code>&lt;script&gt;</code> に「100msごとに送る」処理を、次に <code>server.js</code> に「受けて転送する」処理を足す。<span class="blk">①</span>〜<span class="blk">④</span>を埋める。</p>
+      <p style="margin-bottom:0.5rem">std4-1 の2ファイルに<strong>書き足して</strong>いく。下は<strong>それぞれの全体コード</strong>。<strong style="color:#4FC3F7">背景色の部分が、今回あなたが書き足すところ</strong>（それ以外は std4-1 のまま）。<span class="blk">①</span>〜<span class="blk">④</span>を埋める。</p>
 
-      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">追記1: <code>public/index.html</code> の <code>&lt;script&gt;</code> の中（<code>console.log</code> の下）</p>
-      <pre><span class="code-label">JavaScript ── index.html に追記</span><span class="cmt">// 100ミリ秒ごとに、自分の位置をサーバへ送る</span>
-<span class="fn">setInterval</span>(() <span class="op">=&gt;</span> {
-  <span class="kw">const</span> pos = cam.object3D.position;   <span class="cmt">// 自分の位置</span>
+      <p class="hl-legend">📁 編集する2ファイル：<code>public/index.html</code> と <code>server.js</code>。　🟦 <b>背景色の行</b>＝この手順で書き足すところ</p>
 
-  socket.<span class="blk">①</span>(<span class="str">'move'</span>, {
-    position: { x: pos.x, y: pos.y, z: pos.z },
-    color: myColor
-  });
-}, <span class="num">100</span>);</pre>
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">① <code>public/index.html</code> ── 全体コード（<span style="color:#8fb7d4">背景色が追記部分</span>）</p>
+      <pre><span class="code-label">HTML ── public/index.html</span><span class="kw">&lt;!DOCTYPE html&gt;</span>
+<span class="kw">&lt;html</span> lang=<span class="str">"ja"</span><span class="kw">&gt;&lt;head&gt;</span>
+  <span class="kw">&lt;meta</span> charset=<span class="str">"UTF-8"</span><span class="kw">&gt;&lt;title&gt;</span>マルチプレイ空間<span class="kw">&lt;/title&gt;</span>
+  <span class="kw">&lt;script</span> src=<span class="str">"https://aframe.io/releases/1.7.1/aframe.min.js"</span><span class="kw">&gt;&lt;/script&gt;</span>
+  <span class="kw">&lt;script</span> src=<span class="str">"/socket.io/socket.io.js"</span><span class="kw">&gt;&lt;/script&gt;</span>
+<span class="kw">&lt;/head&gt;&lt;body&gt;</span>
+  <span class="kw">&lt;a-scene</span> id=<span class="str">"scene"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;a-plane</span> rotation=<span class="str">"-90 0 0"</span> width=<span class="str">"30"</span> height=<span class="str">"30"</span> color=<span class="str">"#4a7a3a"</span><span class="kw">&gt;&lt;/a-plane&gt;</span>
+    <span class="kw">&lt;a-sky</span> color=<span class="str">"#87CEEB"</span><span class="kw">&gt;&lt;/a-sky&gt;</span>
+    <span class="kw">&lt;a-camera</span> id=<span class="str">"cam"</span> position=<span class="str">"0 1.6 4"</span><span class="kw">&gt;&lt;/a-camera&gt;</span>
+  <span class="kw">&lt;/a-scene&gt;</span>
+
+  <span class="kw">&lt;script&gt;</span>
+    <span class="kw">const</span> socket = <span class="fn">io</span>();
+    <span class="kw">const</span> scene = document.<span class="fn">getElementById</span>(<span class="str">'scene'</span>);
+    <span class="kw">const</span> cam = document.<span class="fn">getElementById</span>(<span class="str">'cam'</span>);
+<span class="hl">
+    <span class="cmt">// 自分の色を、5色の中からランダムに選ぶ</span>
+    <span class="kw">const</span> palette = [<span class="str">'#4FC3F7'</span>, <span class="str">'#FF8A3D'</span>, <span class="str">'#93D500'</span>, <span class="str">'#E040FB'</span>, <span class="str">'#FFD54F'</span>];
+    <span class="kw">const</span> myColor = palette[Math.<span class="fn">floor</span>(Math.<span class="fn">random</span>() * palette.length)];
+
+    <span class="cmt">// 100ミリ秒ごとに、自分の位置をサーバへ送る</span>
+    <span class="fn">setInterval</span>(() <span class="op">=&gt;</span> {
+      <span class="kw">const</span> pos = cam.object3D.position;
+      socket.<span class="blk">①</span>(<span class="str">'move'</span>, {
+        position: { x: pos.x, y: pos.y, z: pos.z },
+        color: myColor
+      });
+    }, <span class="num">100</span>);
+</span>  <span class="kw">&lt;/script&gt;</span>
+<span class="kw">&lt;/body&gt;&lt;/html&gt;</span></pre>
 
       <div class="concept-box">
         <h4>文法：<code>setInterval</code> と「アロー関数」の書き方</h4>
@@ -1029,20 +1071,29 @@ node server.js</pre>
         </ul>
       </div>
 
-      <p style="font-size:0.85rem;color:#999;margin-bottom:0.5rem">※ 自分の色を決める1行も、<code>&lt;script&gt;</code> の最初のほう（部品をつかむ行の下）に足しておく：</p>
-      <pre><span class="code-label">JavaScript ── index.html（色を決める）</span><span class="cmt">// 自分の色を、5色の中からランダムに選ぶ</span>
-<span class="kw">const</span> palette = [<span class="str">'#4FC3F7'</span>, <span class="str">'#FF8A3D'</span>, <span class="str">'#93D500'</span>, <span class="str">'#E040FB'</span>, <span class="str">'#FFD54F'</span>];
-<span class="kw">const</span> myColor = palette[Math.<span class="fn">floor</span>(Math.<span class="fn">random</span>() * palette.length)];</pre>
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.2rem 0 0.3rem">② <code>server.js</code> ── 全体コード（<span style="color:#8fb7d4">背景色が追記部分</span>）</p>
+      <pre><span class="code-label">JavaScript ── server.js</span><span class="kw">const</span> express = <span class="fn">require</span>(<span class="str">'express'</span>);
+<span class="kw">const</span> app = <span class="fn">express</span>();
+app.<span class="fn">use</span>(express.<span class="fn">static</span>(<span class="str">'public'</span>));
 
-      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.2rem 0 0.3rem">追記2: <code>server.js</code> の <code>io.on('connection', …)</code> の中</p>
-      <pre><span class="code-label">JavaScript ── server.js に追記</span><span class="cmt">// 誰かが動いたら、その位置を「本人以外の全員」に転送する</span>
-socket.<span class="fn">on</span>(<span class="str">'move'</span>, (data) <span class="op">=&gt;</span> {
-  socket.<span class="blk">②</span>.<span class="fn">emit</span>(<span class="str">'moved'</span>, {
-    id: socket.<span class="blk">③</span>,          <span class="cmt">// 送り主を見分けるための番号</span>
-    position: data.position,
-    color: data.<span class="blk">④</span>
+<span class="kw">const</span> server = app.<span class="fn">listen</span>(<span class="num">3000</span>, () <span class="op">=&gt;</span> {
+  console.<span class="fn">log</span>(<span class="str">'サーバ起動: http://localhost:3000'</span>);
+});
+
+<span class="kw">const</span> io = <span class="fn">require</span>(<span class="str">'socket.io'</span>)(server);
+
+io.<span class="fn">on</span>(<span class="str">'connection'</span>, (socket) <span class="op">=&gt;</span> {
+  console.<span class="fn">log</span>(<span class="str">'接続しました:'</span>, socket.id);
+<span class="hl">
+  <span class="cmt">// 誰かが動いたら、その位置を「本人以外の全員」に転送する</span>
+  socket.<span class="fn">on</span>(<span class="str">'move'</span>, (data) <span class="op">=&gt;</span> {
+    socket.<span class="blk">②</span>.<span class="fn">emit</span>(<span class="str">'moved'</span>, {
+      id: socket.<span class="blk">③</span>,          <span class="cmt">// 送り主を見分けるための番号</span>
+      position: data.position,
+      color: data.<span class="blk">④</span>
+    });
   });
-});</pre>
+</span>});</pre>
 
       <p style="font-size:0.9rem;margin-top:0.6rem">この時点では、まだ相手の姿は見えない（「送る」だけ作ったので）。<strong>ターミナルや、ブラウザの開発者ツール（Console）</strong>で、<code>move</code> が飛んでいることを確認できればOK。姿が見えるのは次の std4-3。</p>
 
@@ -1069,40 +1120,86 @@ socket.<span class="fn">on</span>(<span class="str">'move'</span>, (data) <span 
     </div>
 
     <div id="std4-3" class="card standard">
-      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std4-3：受け取ってアバターを作る（②③）</h3></div>
-      <p style="margin-bottom:0.5rem">最後に <code>index.html</code> の <code>&lt;script&gt;</code> に、<strong>受け取る処理</strong>を足す。届いた <code>moved</code> の位置に、相手のアバター（<strong>スフィア1つ</strong>）を作る／動かす。<span class="blk">①</span>〜<span class="blk">④</span>を埋めれば完成。</p>
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std4-3：受け取ってアバターを作る</h3></div>
+      <p style="margin-bottom:0.5rem">最後に、届いた <code>moved</code> の位置に相手のアバター（<strong>スフィア1つ</strong>）を作る／動かす処理を足して<strong>完成</strong>。下は<strong>2ファイルの全体コード</strong>で、<strong style="color:#4FC3F7">背景色が今回の追記部分</strong>。<span class="blk">①</span>〜<span class="blk">④</span>を埋める。</p>
 
-      <pre><span class="code-label">JavaScript ── index.html に追記（setInterval の下）</span><span class="cmt">// 他ユーザのアバター（スフィア1つ）を作る</span>
-<span class="kw">function</span> <span class="fn">createAvatar</span>(id, color) {
-  <span class="kw">const</span> avatar = document.<span class="fn">createElement</span>(<span class="str">'a-sphere'</span>);
-  avatar.<span class="fn">setAttribute</span>(<span class="str">'id'</span>, id);
-  avatar.<span class="fn">setAttribute</span>(<span class="str">'radius'</span>, <span class="str">'0.5'</span>);
-  avatar.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, color);
-  scene.<span class="blk">①</span>(avatar);        <span class="cmt">// シーンに追加する</span>
-  <span class="kw">return</span> avatar;
-}
+      <p class="hl-legend">📁 編集する2ファイル：<code>public/index.html</code> と <code>server.js</code>。　🟦 <b>背景色の行</b>＝この手順で書き足すところ</p>
 
-<span class="cmt">// 他ユーザが動いたら、そのアバターを作る／位置を更新する</span>
-socket.<span class="fn">on</span>(<span class="str">'moved'</span>, (data) <span class="op">=&gt;</span> {
-  <span class="kw">let</span> avatar = document.<span class="fn">getElementById</span>(data.id);
-  <span class="kw">if</span> (!avatar) {
-    avatar = <span class="fn">createAvatar</span>(data.id, data.color);   <span class="cmt">// 初めて見るIDなら作る</span>
-  }
-  avatar.<span class="fn">setAttribute</span>(<span class="str">'</span><span class="blk">②</span><span class="str">'</span>, data.position);            <span class="cmt">// 位置を更新</span>
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">① <code>public/index.html</code> ── 全体コード（完成形）</p>
+      <pre><span class="code-label">HTML ── public/index.html</span><span class="kw">&lt;!DOCTYPE html&gt;</span>
+<span class="kw">&lt;html</span> lang=<span class="str">"ja"</span><span class="kw">&gt;&lt;head&gt;</span>
+  <span class="kw">&lt;meta</span> charset=<span class="str">"UTF-8"</span><span class="kw">&gt;&lt;title&gt;</span>マルチプレイ空間<span class="kw">&lt;/title&gt;</span>
+  <span class="kw">&lt;script</span> src=<span class="str">"https://aframe.io/releases/1.7.1/aframe.min.js"</span><span class="kw">&gt;&lt;/script&gt;</span>
+  <span class="kw">&lt;script</span> src=<span class="str">"/socket.io/socket.io.js"</span><span class="kw">&gt;&lt;/script&gt;</span>
+<span class="kw">&lt;/head&gt;&lt;body&gt;</span>
+  <span class="kw">&lt;a-scene</span> id=<span class="str">"scene"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;a-plane</span> rotation=<span class="str">"-90 0 0"</span> width=<span class="str">"30"</span> height=<span class="str">"30"</span> color=<span class="str">"#4a7a3a"</span><span class="kw">&gt;&lt;/a-plane&gt;</span>
+    <span class="kw">&lt;a-sky</span> color=<span class="str">"#87CEEB"</span><span class="kw">&gt;&lt;/a-sky&gt;</span>
+    <span class="kw">&lt;a-camera</span> id=<span class="str">"cam"</span> position=<span class="str">"0 1.6 4"</span><span class="kw">&gt;&lt;/a-camera&gt;</span>
+  <span class="kw">&lt;/a-scene&gt;</span>
+
+  <span class="kw">&lt;script&gt;</span>
+    <span class="kw">const</span> socket = <span class="fn">io</span>();
+    <span class="kw">const</span> scene = document.<span class="fn">getElementById</span>(<span class="str">'scene'</span>);
+    <span class="kw">const</span> cam = document.<span class="fn">getElementById</span>(<span class="str">'cam'</span>);
+
+    <span class="kw">const</span> palette = [<span class="str">'#4FC3F7'</span>, <span class="str">'#FF8A3D'</span>, <span class="str">'#93D500'</span>, <span class="str">'#E040FB'</span>, <span class="str">'#FFD54F'</span>];
+    <span class="kw">const</span> myColor = palette[Math.<span class="fn">floor</span>(Math.<span class="fn">random</span>() * palette.length)];
+
+    <span class="fn">setInterval</span>(() <span class="op">=&gt;</span> {
+      <span class="kw">const</span> pos = cam.object3D.position;
+      socket.<span class="fn">emit</span>(<span class="str">'move'</span>, { position: { x: pos.x, y: pos.y, z: pos.z }, color: myColor });
+    }, <span class="num">100</span>);
+<span class="hl">
+    <span class="cmt">// 他ユーザのアバター（スフィア1つ）を作る</span>
+    <span class="kw">function</span> <span class="fn">createAvatar</span>(id, color) {
+      <span class="kw">const</span> avatar = document.<span class="fn">createElement</span>(<span class="str">'a-sphere'</span>);
+      avatar.<span class="fn">setAttribute</span>(<span class="str">'id'</span>, id);
+      avatar.<span class="fn">setAttribute</span>(<span class="str">'radius'</span>, <span class="str">'0.5'</span>);
+      avatar.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, color);
+      scene.<span class="blk">①</span>(avatar);        <span class="cmt">// シーンに追加</span>
+      <span class="kw">return</span> avatar;
+    }
+    <span class="cmt">// 他ユーザが動いたら、アバターを作る／位置を更新する</span>
+    socket.<span class="fn">on</span>(<span class="str">'moved'</span>, (data) <span class="op">=&gt;</span> {
+      <span class="kw">let</span> avatar = document.<span class="fn">getElementById</span>(data.id);
+      <span class="kw">if</span> (!avatar) avatar = <span class="fn">createAvatar</span>(data.id, data.color);
+      avatar.<span class="fn">setAttribute</span>(<span class="str">'</span><span class="blk">②</span><span class="str">'</span>, data.position);   <span class="cmt">// 位置を更新</span>
+    });
+    <span class="cmt">// 他ユーザが退出したら、アバターを消す</span>
+    socket.<span class="fn">on</span>(<span class="str">'</span><span class="blk">③</span><span class="str">'</span>, (id) <span class="op">=&gt;</span> {
+      <span class="kw">const</span> avatar = document.<span class="fn">getElementById</span>(id);
+      <span class="kw">if</span> (avatar) avatar.parentNode.<span class="blk">④</span>(avatar);   <span class="cmt">// 取り除く</span>
+    });
+</span>  <span class="kw">&lt;/script&gt;</span>
+<span class="kw">&lt;/body&gt;&lt;/html&gt;</span></pre>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.2rem 0 0.3rem">② <code>server.js</code> ── 全体コード（完成形）</p>
+      <pre><span class="code-label">JavaScript ── server.js</span><span class="kw">const</span> express = <span class="fn">require</span>(<span class="str">'express'</span>);
+<span class="kw">const</span> app = <span class="fn">express</span>();
+app.<span class="fn">use</span>(express.<span class="fn">static</span>(<span class="str">'public'</span>));
+
+<span class="kw">const</span> server = app.<span class="fn">listen</span>(<span class="num">3000</span>, () <span class="op">=&gt;</span> {
+  console.<span class="fn">log</span>(<span class="str">'サーバ起動: http://localhost:3000'</span>);
 });
 
-<span class="cmt">// 他ユーザが退出したら、そのアバターを消す</span>
-socket.<span class="fn">on</span>(<span class="str">'</span><span class="blk">③</span><span class="str">'</span>, (id) <span class="op">=&gt;</span> {
-  <span class="kw">const</span> avatar = document.<span class="fn">getElementById</span>(id);
-  <span class="kw">if</span> (avatar) avatar.parentNode.<span class="blk">④</span>(avatar);   <span class="cmt">// 画面から取り除く</span>
-});</pre>
+<span class="kw">const</span> io = <span class="fn">require</span>(<span class="str">'socket.io'</span>)(server);
 
-      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.2rem 0 0.3rem">仕上げ: <code>server.js</code> に「退出」を伝える処理を足す</p>
-      <pre><span class="code-label">JavaScript ── server.js の io.on('connection', …) の中に追記</span><span class="cmt">// 退出したら、全員にそのIDを伝えてアバターを消してもらう</span>
-socket.<span class="fn">on</span>(<span class="str">'disconnect'</span>, () <span class="op">=&gt;</span> {
-  console.<span class="fn">log</span>(<span class="str">'切断しました:'</span>, socket.id);
-  io.<span class="fn">emit</span>(<span class="str">'userLeft'</span>, socket.id);   <span class="cmt">// 全員に伝える</span>
-});</pre>
+io.<span class="fn">on</span>(<span class="str">'connection'</span>, (socket) <span class="op">=&gt;</span> {
+  console.<span class="fn">log</span>(<span class="str">'接続しました:'</span>, socket.id);
+
+  socket.<span class="fn">on</span>(<span class="str">'move'</span>, (data) <span class="op">=&gt;</span> {
+    socket.broadcast.<span class="fn">emit</span>(<span class="str">'moved'</span>, {
+      id: socket.id, position: data.position, color: data.color
+    });
+  });
+<span class="hl">
+  <span class="cmt">// 退出したら、全員にそのIDを伝えてアバターを消してもらう</span>
+  socket.<span class="fn">on</span>(<span class="str">'disconnect'</span>, () <span class="op">=&gt;</span> {
+    console.<span class="fn">log</span>(<span class="str">'切断しました:'</span>, socket.id);
+    io.<span class="fn">emit</span>(<span class="str">'userLeft'</span>, socket.id);
+  });
+</span>});</pre>
 
       <p style="margin:1rem 0 0.4rem;font-weight:700;color:#4FC3F7;font-size:0.95rem">2人で試す</p>
       <p style="font-size:0.9rem;margin-bottom:0.5rem">サーバを起動し（<code>node server.js</code>）、<strong>2つのブラウザウィンドウ</strong>で <code>http://localhost:3000</code> を開く（普通の窓＋シークレット窓、または2台の端末）。片方を動かすと、<strong>もう片方の画面に相手のアバターが現れて動く</strong>。これが標準ゴール。</p>
