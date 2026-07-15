@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第5回: 行動ログを記録する ― データベースとCSVで、空間を「実験装置」にする | MD2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET & BASE ============ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: clamp(13px, 1.6vw, 28px); }
+html, body { overflow-x: hidden; max-width: 100%; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #111111;
+  color: #e0e0e0;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+img, video, iframe, svg, canvas { max-width: 100%; height: auto; }
+
+/* ============ LAYOUT ============ */
+.container { max-width: 1600px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+
+/* ============ HEADER ============ */
+.hero {
+  background: linear-gradient(135deg, #111111, #0a1e2e, #0a0a1a);
+  color: white;
+  padding: clamp(3rem, 8vw, 6rem) 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(79,195,247,0.28), transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(79,195,247,0.12), transparent 50%);
+}
+.hero .container { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 100px;
+  padding: 0.35rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+}
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+
+/* ============ SUBMISSION BOX ============ */
+.submission-box {
+  background: linear-gradient(135deg, #1A1A1A, #0a1e2e);
+  border: 2px solid #4FC3F7;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin: 2rem 0;
+}
+.submission-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #4FC3F7;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.submission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.5rem;
+}
+.sub-item {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  gap: 0.3rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.4rem;
+  padding: 0.6rem 0.4rem;
+  font-size: 0.55rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.sub-item .sub-count { margin-bottom: 0.1rem; }
+.sub-item .tag { margin-bottom: 0.15rem; }
+.sub-count {
+  background: #4FC3F7;
+  color: white;
+  border-radius: 0.2rem;
+  min-width: 1.5rem; height: 1.5rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700;
+}
+
+/* ============ TAGS ============ */
+.tag {
+  display: inline-flex; align-items: center; gap: 0.2rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 100px;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.tag-note      { background: #0a1a2e; color: #4FC3F7; }
+.tag-standard  { background: #0a1a2e; color: #4FC3F7; }
+.tag-advanced  { background: #2e2410; color: #FFB800; }
+.tag-group     { background: #0a1a2e; color: #4FC3F7; }
+
+/* ============ BLANK (穴埋め) ============ */
+.blk {
+  display: inline-block;
+  min-width: 2.2em;
+  padding: 0 0.5em;
+  margin: 0 0.1em;
+  background: rgba(79,195,247,0.14);
+  border: 1px dashed #4FC3F7;
+  border-radius: 5px;
+  color: #4FC3F7;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ============ SECTION HEADERS ============ */
+.section-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.section-num {
+  width: 2.5rem; height: 2.5rem;
+  border-radius: 0.4rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 900; color: white;
+  flex-shrink: 0;
+}
+.section-header h2 {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+/* ============ CARDS ============ */
+.card {
+  background: #141414;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  border: 1px solid #2a2a2a;
+}
+.card-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #222;
+}
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.standard  { border-left: 4px solid #4FC3F7; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.card.group     { border-left: 4px solid #4FC3F7; }
+
+/* ============ NOTION CALLOUT ============ */
+.notion-submit {
+  background: #0a1e2e;
+  border: 1px solid #4FC3F7;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  display: flex; align-items: flex-start; gap: 0.5rem;
+}
+.notion-submit::before { content: '\1F4DD'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+
+/* ============ TABLES ============ */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem;
+  margin: 1rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+th {
+  background: rgba(79, 195, 247, 0.15);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  color: #4FC3F7;
+  letter-spacing: 0.02em;
+}
+td { padding: 0.55rem 0.8rem; border-top: 1px solid #222; }
+tr:nth-child(even) td { background: #111; }
+
+/* ============ CODE ============ */
+pre {
+  background: #0A0A0A;
+  color: #E0E0E0;
+  border-radius: 12px;
+  padding: clamp(0.8rem, 2vw, 1.4rem);
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
+  font-size: clamp(0.75rem, 1.3vw, 0.88rem);
+  line-height: 1.7;
+  margin: 1rem 0;
+  position: relative;
+}
+pre .kw { color: #4FC3F7; }
+pre .fn { color: #C3CEDA; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #FFB800; }
+pre .op { color: #9AA6B2; }
+/* ハイライト行（この手順で書き足す部分） */
+pre .hl { display: block; background: rgba(79,195,247,0.14); box-shadow: inset 3px 0 0 #4FC3F7; }
+/* ディレクトリツリー */
+.dirtree { background:#0A0A0A; border:1px solid #333; border-radius:12px; padding:0.9rem 1.1rem; font-family:'JetBrains Mono',monospace; font-size:0.82rem; line-height:1.7; color:#c3ceda; overflow-x:auto; white-space:pre; margin:0.6rem 0; }
+.dirtree .dir { color:#4FC3F7; font-weight:700; }
+.dirtree .target { background:rgba(79,195,247,0.18); color:#fff; font-weight:700; border-radius:4px; padding:0 0.25rem; }
+.dirtree .arrow { color:#8fb7d4; }
+.dirtree .mut { color:#666; }
+.hl-legend { font-size:0.82rem; color:#8fb7d4; margin:0.3rem 0 0.2rem; }
+.hl-legend b { color:#4FC3F7; }
+.code-label {
+  position: absolute; top: 0; right: 0;
+  background: rgba(255,255,255,0.08);
+  color: #999999;
+  padding: 0.2rem 0.8rem;
+  border-radius: 0 12px 0 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+:not(pre) > code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(79,195,247,0.15);
+  padding: 0.15em 0.45em;
+  border-radius: 5px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+:not(pre) > code:hover { background: rgba(79,195,247,0.3); }
+:not(pre) > code.copied { background: rgba(79,195,247,0.5); }
+
+/* ============ EXPLANATION BLOCKS ============ */
+.concept-box {
+  background: rgba(79, 195, 247, 0.12);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  border: 1px solid #2a3a3a;
+}
+.concept-box h4 { font-size: 0.95rem; font-weight: 700; color: #4FC3F7; margin-bottom: 0.5rem; }
+.analogy {
+  background: #1a1a0a;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 0.75rem 0;
+  border-left: 3px solid #FFB800;
+  font-size: 0.95rem;
+}
+.analogy::before {
+  content: '\1F4A1 日常の例';
+  display: block;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #FFB800;
+  margin-bottom: 0.3rem;
+}
+.point-list { list-style: none; padding: 0; }
+.point-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+}
+.point-list li::before {
+  content: '\25B8';
+  position: absolute; left: 0;
+  color: #4FC3F7;
+  font-weight: 700;
+}
+
+/* ============ EXEC SHOT (実行結果キャプチャ) ============ */
+.exec-shot {
+  margin: 1rem 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #333;
+  background: #0d0d0d;
+}
+.exec-bar {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.5rem 0.8rem;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+}
+.exec-bar .d { width: 0.7rem; height: 0.7rem; border-radius: 50%; }
+.exec-bar .d.r { background: #ff5f57; }
+.exec-bar .d.y { background: #febc2e; }
+.exec-bar .d.g { background: #28c840; }
+.exec-bar .u { margin-left: 0.5rem; font-size: 0.72rem; color: #999; font-family: 'JetBrains Mono', monospace; }
+.exec-shot img { display: block; width: 100%; }
+.exec-cap { padding: 0.6rem 0.9rem; font-size: 0.82rem; color: #aaa; background: #0d0d0d; }
+.exec-cap strong { color: #4FC3F7; }
+.exec-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 720px) { .exec-pair { grid-template-columns: 1fr; } }
+
+/* ============ ANSWERS (COLLAPSIBLE) ============ */
+details {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+details summary {
+  padding: 0.8rem 1.2rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 0.5rem;
+  background: #1a1a1a;
+  user-select: none;
+}
+details summary::marker { content: ''; }
+details summary::before {
+  content: '\25B6';
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+  color: #666;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
+
+/* ============ CALLOUTS ============ */
+.callout-danger {
+  background: rgba(255, 82, 82, 0.08);
+  border: 1px solid rgba(255, 82, 82, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-danger h4 { color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
+.callout-warning {
+  background: rgba(255, 184, 0, 0.08);
+  border: 1px solid rgba(255, 184, 0, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-warning h4 { color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
+.callout-info {
+  background: rgba(79, 195, 247, 0.08);
+  border: 1px solid rgba(79, 195, 247, 0.3);
+  border-left: 4px solid #4FC3F7;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-info h4 { color: #4FC3F7; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
+.callout-tip {
+  background: rgba(79, 195, 247, 0.08);
+  border: 1px solid rgba(79, 195, 247, 0.3);
+  border-left: 4px solid #4FC3F7;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-tip h4 { color: #4FC3F7; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
+
+/* ============ FOOTER ============ */
+footer {
+  background: #0A0A0A;
+  color: #999999;
+  padding: 2rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 640px) {
+  .submission-items { grid-template-columns: 1fr; }
+  .section-num { width: 2rem; height: 2rem; font-size: 0.85rem; }
+  table { max-width: 100%; font-size: 0.78rem; }
+  th, td { padding: 0.4rem 0.5rem; white-space: normal; }
+  th { font-size: 0.72rem; }
+  .callout-danger, .callout-warning, .callout-info, .callout-tip,
+  .concept-box, .analogy, .notion-submit { padding: 0.8rem 0.9rem; border-radius: 10px; font-size: 0.88rem; overflow-x: hidden; }
+  details summary { padding: 0.7rem 0.9rem; font-size: 0.9rem; }
+  details .answer-content { padding: 0.8rem 0.9rem; overflow-x: auto; }
+  p, li, td, th, summary, .card, div { overflow-wrap: anywhere; }
+  :not(pre) > code { white-space: normal; overflow-wrap: anywhere; word-break: break-all; }
+  [id] { scroll-margin-top: 2.5rem; }
+}
+@media (max-width: 420px) {
+  .container { padding: 0 0.6rem; }
+  .hero { padding: 1.3rem 0; }
+  .hero h1 { font-size: 1rem !important; }
+  .hero p { font-size: 0.78rem !important; }
+  .section-header h2 { font-size: 0.95rem; }
+  .section-num { width: 1.7rem; height: 1.7rem; font-size: 0.78rem; }
+  .card { padding: 0.75rem; }
+  .card-header h3 { font-size: 0.92rem; }
+  th, td { padding: 0.3rem 0.35rem; font-size: 0.7rem; }
+  pre { font-size: 0.65rem; padding: 0.55rem; }
+  .section-nav a { font-size: 0.6rem !important; padding: 0.2rem 0.4rem !important; }
+  .submission-box { padding: 0.8rem; }
+}
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #4FC3F7; color: white; border-color: #4FC3F7; }
+.copy-btn.copied { background: #4FC3F7; color: white; border-color: #4FC3F7; }
+
+a.sub-item { transition: transform 0.15s, box-shadow 0.15s; text-decoration: none; color: inherit; }
+a.sub-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79,195,247,0.3);
+  border-color: #4FC3F7;
+}
+
+/* ============ SECTION NAV ============ */
+.section-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.2rem 0;
+  display: flex; justify-content: center; gap: 0.3rem; flex-wrap: wrap;
+}
+body { padding-top: 2.2rem; }
+.section-nav a {
+  color: #999; text-decoration: none;
+  font-size: 0.45rem; font-weight: 500;
+  padding: 0.15rem 0.4rem; border-radius: 6px;
+  transition: all 0.2s; white-space: nowrap;
+}
+.section-nav a:hover { color: #4FC3F7; background: rgba(79,195,247,0.1); }
+.section-nav a.nav-assignment { color: #4FC3F7; }
+.section-nav a.nav-exam { color: #FFB800; }
+[id] { scroll-margin-top: 3.5rem; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  details summary::before { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SECTION NAV ============ -->
+<nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_1.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_2.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_3.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_4.html">4</a> <a style="color:#4FC3F7;background:rgba(79,195,247,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="md2_week_5.html">5</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_6.html">6</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_7.html">7</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_8.html">8</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_9.html">9</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_10.html">10</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_11.html">11</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_12.html">12</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_13.html">13</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_14.html">14</a> </div>
+  <a href="#sec-purpose">第5回の位置づけ</a>
+  <a href="#sec-why">1. なぜ記録が要る</a>
+  <a href="#sec-setup">2. セットアップ</a>
+  <a href="#sec-run" class="nav-assignment">🎮 まず動かす</a>
+  <a href="#sec-plan" class="nav-assignment">👥 口頭で確認</a>
+  <a href="#sec-design" class="nav-assignment">3. ログ1行の設計</a>
+  <a href="#sec-sql">4. 分解：SQL</a>
+  <a href="#sec-record" class="nav-assignment">5. 記録する</a>
+  <a href="#sec-csv" class="nav-assignment">6. CSVで取り出す</a>
+  <a href="#sec-pandas" class="nav-assignment">7. pandasで分析</a>
+  <a href="#sec-advance" class="nav-exam">8. 発展課題</a>
+  <a href="#sec-notion">ノート</a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">Media creation Data design 2（MD2）─ 2026年度</div>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.1rem">武蔵野大学データサイエンス学部</p>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.3rem">武蔵野大学国際データサイエンス学部（通信教育部）</p>
+    <p style="font-size:0.95rem;opacity:0.85;margin-bottom:1rem">中村 亮太</p>
+    <h1>MD2 第5回: 行動ログを記録する ― データベースとCSVで、空間を「実験装置」にする</h1>
+    <div style="display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap;margin-top:0.3rem">
+      <p style="overflow-wrap:normal;word-break:normal;flex:1 1 20rem;min-width:16rem;max-width:640px;margin:0">第4回で「みんなで動ける空間」＝<strong>データを生む装置</strong>を作った。でもあの空間、<strong>データはどこにも残っていなかった</strong>。動いた瞬間に相手へ転送して、それきり。第5回は、その動きを<strong>データベース（SQLite）に1行ずつ記録</strong>し、<strong>CSVで取り出して pandas で分析</strong>する。第3回で他人のCSV（サッカー）を可視化した手つきを、今度は<strong>自分たちが生んだCSV</strong>に向ける。</p>
+      <img src="img/md2w5_hero.png" alt="ログを記録する3D空間。緑の地面と青空、3つのクリック対象の箱（1つは白く変わっている）、そして同期している他ユーザのオレンジ色のアバターが見える" style="flex:0 1 460px;width:460px;max-width:100%;border-radius:12px;border:1px solid rgba(255,255,255,0.18);box-shadow:0 8px 28px rgba(0,0,0,0.45)">
+    </div>
+    <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:0.3rem;padding:0.4rem 0.8rem;margin-top:1rem;font-size:0.7rem;display:inline-block;max-width:100%;overflow-wrap:anywhere">
+      <strong>第5回のメイン:</strong> なぜ記録が要るか → セットアップ（better-sqlite3） → 🎮 <strong>まず動かして、サーバを再起動してもデータが残ることに感動</strong> → 👥 構成を口頭で確認 → ログ1行を設計して表を作る → 🔍 SQLを分解して理解 → 動き・クリックを記録 → CSVで取り出す → <strong>pandas で前処理して軌跡を可視化</strong> → 発展（ダッシュボード・ログ再生）
+    </div>
+  </div>
+</header>
+
+<!-- ============ COURSE PURPOSE ============ -->
+<section id="sec-purpose" style="padding-top:2.5rem;padding-bottom:0">
+  <div class="container">
+    <div class="card" style="border-left:4px solid #4FC3F7;background:linear-gradient(135deg,#141414,#111a20)">
+      <div class="card-header"><h3>📌 第5回の位置づけ：なぜ「記録」するのか（はじめに読もう）</h3></div>
+
+      <p style="font-size:1.05rem;margin-bottom:0.7rem">テーマは引き続き <strong style="color:#4FC3F7">「バーチャル空間で、データサイエンスを実践する」</strong>。第4回で作った空間は、たしかに<strong>データを生んで</strong>いた。でも、そのデータは<strong>流れて消えていた</strong>。第5回では、それを<strong style="color:#4FC3F7">残して・取り出して・分析できる形に整える</strong>。ここを越えると、ようやく「実験」ができる。</p>
+
+      <div class="callout-info" style="margin-top:0.5rem">
+        <h4>今日の合言葉：「記録されなかったデータは、無かったことになる」</h4>
+        <ul class="point-list" style="margin-bottom:0">
+          <li><strong>第4回</strong>＝動きを相手に<strong>転送</strong>した。届いたら役目は終わり ＝ <em>データは流れて消える</em></li>
+          <li><strong>第5回</strong>＝動きが起きた瞬間に<strong>1行ずつ書き留める</strong> ＝ <em>あとから何度でも見返せる</em></li>
+          <li>ログ1行＝<strong>「誰が・いつ・何を・どこで」</strong>＝ある瞬間の行動データ1件（第2回のオブジェクト＝レコードと同じ形）</li>
+          <li>その1行が積み重なると<strong>表（テーブル）</strong>になる ＝ 第3回で読み込んだサッカーCSVと、まったく同じ形</li>
+        </ul>
+      </div>
+
+      <div class="callout-tip" style="margin-top:0.7rem">
+        <h4>今日のゴールは「自分たちのCSV」を手にすること</h4>
+        <p style="font-size:0.9rem;margin-bottom:0">第3回では、<strong>誰かが用意したCSV</strong>（サッカーの位置データ）を pandas で読んで可視化した。今日は同じことを、<strong>自分たちが空間を歩いて生んだCSV</strong>に対して行う。データが「降ってくるもの」から「<strong>自分で取りにいくもの</strong>」に変わる回。</p>
+      </div>
+
+      <p style="font-size:0.9rem;color:#999;margin:1.2rem 0 0.5rem">本科目全体の流れ（再確認）。第5回は <strong style="color:#4FC3F7">STEP 2（データを取る・扱う）</strong>の<strong style="color:#4FC3F7">仕上げ</strong>であり、STEP 3（分析）への<strong style="color:#4FC3F7">橋渡し</strong>の回。</p>
+
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin:0.5rem 0 1rem">
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #4FC3F7;border-radius:0.5rem;padding:0.9rem">
+          <div style="color:#4FC3F7;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 1 ─ 舞台をつくる</div>
+          <div style="font-size:0.88rem"><strong>3D空間を自分で作る</strong>。<span style="color:#999">（第1〜2回）</span></div>
+        </div>
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #4FC3F7;border-radius:0.5rem;padding:0.9rem">
+          <div style="color:#4FC3F7;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 2 ─ データを扱う <span style="font-size:0.7rem;background:#0a1a2e;border:1px solid #4FC3F7;border-radius:100px;padding:0.05rem 0.5rem">今ここ</span></div>
+          <div style="font-size:0.88rem">CSVを可視化（第3回）→ 装置を作る（第4回）→ <strong>記録してCSVで取り出す（第5回）</strong>。<span style="color:#999">（第3〜5回）</span></div>
+        </div>
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #4FC3F7;border-radius:0.5rem;padding:0.9rem">
+          <div style="color:#4FC3F7;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 3 ─ データを分析する</div>
+          <div style="font-size:0.88rem">実験を計画し、<strong>統計で差を判断</strong>する（第6回）→ <strong>総合演習</strong>（第7回）。<span style="color:#999">（第6〜7回）</span></div>
+        </div>
+      </div>
+
+      <h4 style="color:#4FC3F7;font-weight:700;font-size:1.05rem;margin:1.5rem 0 0.3rem">🎯 第5回のゴール</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li><strong>なぜメモリだけではダメか</strong>（サーバを止めると消える）を説明できる</li>
+        <li><strong>ログ1行の設計</strong>（誰が・いつ・何を・どこで）を自分の言葉で説明できる</li>
+        <li><strong>SQLite</strong> で <code>CREATE TABLE</code>・<code>INSERT</code>・<code>SELECT</code> を使い、行動ログを溜められる</li>
+        <li><strong>標準ゴール：</strong>自分たちが歩いたログを <strong>CSV で取り出し</strong>、<strong>pandas で前処理</strong>して、<strong>移動距離・滞在時間の集計と軌跡の可視化</strong>ができる</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FLOW + SUBMISSION ============ -->
+<section id="sec-flow" style="padding-top:1rem;padding-bottom:0">
+  <div class="container">
+    <div class="card">
+      <div class="card-header"><h3>本日の授業の流れ（ステップ・バイ・ステップ）</h3></div>
+      <table>
+        <tr><th style="width:12%">節</th><th>やること</th><th style="width:22%">課題</th></tr>
+        <tr><td>1</td><td>なぜ記録が要るのか（メモリ・ファイル・データベース）</td><td>説明</td></tr>
+        <tr><td>2</td><td>セットアップ（md2_no5 / better-sqlite3 / DB Viewer）</td><td>説明・手順</td></tr>
+        <tr><td>🎮</td><td><strong>まず完成版を動かし、サーバを再起動してもデータが残るのを見る</strong></td><td>体験</td></tr>
+        <tr><td>👥</td><td>いま動かした構成を口頭で確認する（コードは書かない）</td><td><span class="tag tag-group" style="font-size:0.65rem">グループワーク</span> gw5</td></tr>
+        <tr><td>3</td><td>ログ1行を設計して、表（テーブル）を作る</td><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std5-1</td></tr>
+        <tr><td>4</td><td>分解：SQL（CREATE / INSERT / SELECT）を読み解く</td><td>説明</td></tr>
+        <tr><td>5</td><td>動きとクリックを記録する</td><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std5-2</td></tr>
+        <tr><td>6</td><td>CSV で取り出す・ダッシュボードで眺める</td><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std5-3</td></tr>
+        <tr><td>7</td><td>pandas で前処理し、軌跡を可視化する（<strong>標準ゴール</strong>）</td><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std5-4</td></tr>
+        <tr><td>8</td><td>ダッシュボード拡張・ログ再生（自由創作）</td><td><span class="tag tag-advanced" style="font-size:0.65rem">発展課題</span> adv5-1</td></tr>
+      </table>
+    </div>
+
+    <div class="submission-box">
+      <h3>📤 提出ガイド（1つのファイルにまとめ、PDF 1枚を提出）</h3>
+      <div class="submission-items">
+        <a href="#gw5" class="sub-item"><span class="sub-count">1</span><span class="tag tag-group">グループワーク</span>gw5 構成を口頭で確認</a>
+        <a href="#std5-1" class="sub-item"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std5-1 表を作る</a>
+        <a href="#std5-2" class="sub-item"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std5-2 記録する</a>
+        <a href="#std5-3" class="sub-item"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std5-3 CSVで取り出す</a>
+        <a href="#std5-4" class="sub-item"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>std5-4 pandasで分析</a>
+        <a href="#adv5-1" class="sub-item"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>adv5-1 自由創作</a>
+      </div>
+      <p style="font-size:0.75rem;color:#999;margin-top:0.8rem">※ 発展課題（adv5-1）は任意。ほかは実行結果のキャプチャ（ブラウザ・ターミナル・グラフ）を記録します。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1. WHY RECORD ============ -->
+<section id="sec-why">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">1</div>
+      <h2>なぜ「記録」が要るのか ― 消えるデータと、残るデータ</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>第4回のコードを思い出す：データはどこにも残っていない</h3></div>
+      <p style="margin-bottom:0.6rem">第4回の <code>server.js</code> は、こう書いてあった。<strong>受け取って、転送して、おしまい</strong>。どこにも「書き留める」処理がない。</p>
+
+      <pre><span class="code-label">JavaScript ── 第4回の server.js（一部）</span>socket.<span class="fn">on</span>(<span class="str">'move'</span>, (data) <span class="op">=&gt;</span> {
+  <span class="cmt">// 受け取った位置を、そのまま他の人へ転送するだけ</span>
+  socket.broadcast.<span class="fn">emit</span>(<span class="str">'moved'</span>, { id: socket.id, position: data.position });
+  <span class="cmt">// ← ここで data は用済み。次の move が来たら上書きされて消える</span>
+});</pre>
+
+      <p style="margin-bottom:0.6rem">つまり第4回の空間は、<strong>「今この瞬間」しか存在しない空間</strong>だった。授業が終わってサーバを止めた瞬間、誰がどこを歩いたかは<strong>すべて消える</strong>。これでは「あの人はどう動いたか」を<strong>あとから調べられない</strong>＝分析ができない。</p>
+
+      <div class="analogy">
+        メモリ（変数）は「<strong>机の上</strong>」。作業中はすぐ手が届いて速いけれど、<strong>帰るときに全部片付けられてしまう</strong>。ファイルやデータベースは「<strong>棚</strong>」。しまうのに一手間かかるが、<strong>明日も来週も、そこに残っている</strong>。今日は、机の上の作業を棚にしまう方法を学ぶ。
+      </div>
+
+      <h4 style="color:#4FC3F7;font-weight:700;font-size:0.98rem;margin:1.2rem 0 0.3rem">データを残す3つの方法と、その使い分け</h4>
+      <table>
+        <tr><th style="width:18%"></th><th>メモリ（変数）</th><th>JSONファイル</th><th>データベース（今回）</th></tr>
+        <tr><td><strong>たとえ</strong></td><td>机の上</td><td>棚に置いた紙束</td><td>整理された検索できる棚</td></tr>
+        <tr><td><strong>再起動すると</strong></td><td>消える</td><td>残る</td><td>残る</td></tr>
+        <tr><td><strong>同時に書くと</strong></td><td>―</td><td>壊れやすい</td><td>安全に処理される</td></tr>
+        <tr><td><strong>絞り込み・集計</strong></td><td>自分で書く</td><td>自分で書く</td><td><strong>SQL で一発</strong></td></tr>
+      </table>
+
+      <div class="concept-box">
+        <h4>今日の道具：SQLite（better-sqlite3）</h4>
+        <ul class="point-list" style="margin-bottom:0">
+          <li><strong>SQLite</strong>：<strong>ファイル1つ</strong>（例 <code>logs.db</code>）がまるごとデータベースになる、軽量なしくみ。別途サーバを立てる必要がない</li>
+          <li><strong>better-sqlite3</strong>：その SQLite を <strong>Node.js から使う</strong>ための部品。<code>npm install</code> で入る</li>
+          <li><strong>SQL</strong>：データベースに「表を作れ」「1行足せ」「全部出せ」と伝えるための言葉。今日は3つだけ覚える</li>
+        </ul>
+      </div>
+
+      <h4 style="color:#4FC3F7;font-weight:700;font-size:0.98rem;margin:1.2rem 0 0.3rem">図で見る：今日つくる「データの旅」</h4>
+      <p style="font-size:0.92rem;margin-bottom:0.4rem">今日は、<strong>空間 → サーバ → データベース → CSV → pandas</strong> という一本の道を通す。第4回で作ったのは左半分。今日はその右側、<strong>データが手元に届くまで</strong>を作る。</p>
+      <div style="margin:0.6rem 0">
+        <svg viewBox="0 0 760 200" width="760" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333;max-width:100%">
+          <defs>
+            <marker id="ar" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 9 3.5, 0 7" fill="#3a5a72"/></marker>
+          </defs>
+
+          <line x1="128" y1="80" x2="192" y2="80" stroke="#3a5a72" stroke-width="2" marker-end="url(#ar)"/>
+          <line x1="288" y1="80" x2="352" y2="80" stroke="#3a5a72" stroke-width="2" marker-end="url(#ar)"/>
+          <line x1="448" y1="80" x2="512" y2="80" stroke="#3a5a72" stroke-width="2" marker-end="url(#ar)"/>
+          <line x1="608" y1="80" x2="672" y2="80" stroke="#3a5a72" stroke-width="2" marker-end="url(#ar)"/>
+
+          <rect x="18" y="52" width="110" height="56" rx="10" fill="#141414" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="73" y="76" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700">3D空間</text>
+          <text x="73" y="94" text-anchor="middle" fill="#999" font-size="9">歩く・クリック</text>
+
+          <rect x="192" y="52" width="96" height="56" rx="10" fill="#141414" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="240" y="76" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700">サーバ</text>
+          <text x="240" y="94" text-anchor="middle" fill="#999" font-size="9">server.js</text>
+
+          <rect x="352" y="52" width="96" height="56" rx="10" fill="#141414" stroke="#FFB800" stroke-width="2"/>
+          <text x="400" y="76" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">logs.db</text>
+          <text x="400" y="94" text-anchor="middle" fill="#999" font-size="9">1行ずつ記録</text>
+
+          <rect x="512" y="52" width="96" height="56" rx="10" fill="#141414" stroke="#FFB800" stroke-width="2"/>
+          <text x="560" y="76" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">log.csv</text>
+          <text x="560" y="94" text-anchor="middle" fill="#999" font-size="9">取り出す</text>
+
+          <rect x="672" y="52" width="76" height="56" rx="10" fill="#141414" stroke="#4FC3F7" stroke-width="2"/>
+          <text x="710" y="76" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700">pandas</text>
+          <text x="710" y="94" text-anchor="middle" fill="#999" font-size="9">分析</text>
+
+          <text x="155" y="40" text-anchor="middle" fill="#666" font-size="9">emit</text>
+          <text x="320" y="40" text-anchor="middle" fill="#666" font-size="9">INSERT</text>
+          <text x="480" y="40" text-anchor="middle" fill="#666" font-size="9">SELECT</text>
+          <text x="640" y="40" text-anchor="middle" fill="#666" font-size="9">read_csv</text>
+
+          <rect x="18" y="130" width="270" height="26" rx="6" fill="rgba(79,195,247,0.10)" stroke="#24506b"/>
+          <text x="153" y="147" text-anchor="middle" fill="#8fb7d4" font-size="10">第4回でここまで作った</text>
+          <rect x="352" y="130" width="396" height="26" rx="6" fill="rgba(255,184,0,0.10)" stroke="#5b4a1a"/>
+          <text x="550" y="147" text-anchor="middle" fill="#FFB800" font-size="10" font-weight="700">今日つくるのはここ</text>
+
+          <circle r="7" fill="#4FC3F7">
+            <animate attributeName="cx" values="73;240;400;560;710" dur="4s" repeatCount="indefinite"/>
+            <animate attributeName="cy" values="80;80;80;80;80" dur="4s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;1;1;1;1;0" keyTimes="0;0.05;0.4;0.7;0.95;1" dur="4s" repeatCount="indefinite"/>
+          </circle>
+        </svg>
+      </div>
+      <div class="callout-info" style="margin-top:0.3rem">
+        <h4>補足：なぜ「サーバ側」に記録するのか</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li>ブラウザ（クライアント）に記録しても、<strong>その人の分しか集まらない</strong>。全員分をまとめて持っているのは<strong>サーバだけ</strong></li>
+          <li>サーバは全員の <code>move</code> を受け取る場所。<strong>受け取った、まさにその瞬間に書けばよい</strong></li>
+          <li>だから今日足すコードは、ほとんどが <code>server.js</code> の中。<strong>第4回のクライアントはほぼそのまま使える</strong></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. SETUP ============ -->
+<section id="sec-setup">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">2</div>
+      <h2>セットアップ ― 第5回の作業フォルダと、データベースの部品</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>準備①：作業フォルダ <code>md2_no5</code> を作って、部品を入れる</h3></div>
+      <p style="margin-bottom:0.5rem">第4回と同じ要領で、第5回の作業フォルダ <code>md2_no5</code> を作る。入れる部品は<strong>3つ</strong>：<code>express</code>・<code>socket.io</code>（第4回と同じ）に加えて、今回の主役 <strong><code>better-sqlite3</code></strong>。</p>
+      <pre><span class="code-label">Terminal</span><span class="cmt"># 1. 授業用フォルダへ移動する</span>
+cd ~/Documents/Lecture/MD2
+
+<span class="cmt"># 2. 第5回の作業フォルダを作って、その中へ入る</span>
+mkdir md2_no5
+cd md2_no5
+
+<span class="cmt"># 3. VS Code をこのフォルダで開く</span>
+code .
+
+<span class="cmt"># 4. package.json を作る</span>
+npm init -y
+
+<span class="cmt"># 5. 部品を3つ入れる（better-sqlite3 が今日の主役）</span>
+npm install express socket.io better-sqlite3</pre>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">ターミナル — md2_no5 を作って部品を入れる</span></div>
+        <img src="img/md2w5_term_setup.png" alt="mkdir md2_no5、cd md2_no5、npm init -y、npm install express socket.io better-sqlite3 を順に実行したターミナル。added 126 packages と表示されている">
+        <figcaption class="exec-cap"><strong>実行結果:</strong> <code>added 126 packages</code> ／ <code>found 0 vulnerabilities</code> が出れば成功。<code>better-sqlite3</code> は少し時間がかかることがある（Macに合わせた部品を用意している）。</figcaption>
+      </figure>
+
+      <div class="callout-warning" style="margin-top:0.5rem">
+        <h4>フォルダ構成（第4回＋α）</h4>
+        <p style="font-size:0.9rem;margin-bottom:0.4rem">基本は第4回と同じ。<strong>増えるのは <code>logs.db</code>（自動で作られる）と <code>analyze.py</code>（自分で作る）</strong>の2つ。</p>
+        <pre style="margin:0"><span class="code-label">フォルダ構成</span>md2_no5/
+├── server.js          <span class="cmt">← サーバ側（Node.js）</span>
+├── logs.db            <span class="cmt">← データベース（自動で作られる）</span>
+├── analyze.py         <span class="cmt">← 分析（Python / pandas）</span>
+├── package.json
+├── node_modules/      <span class="cmt">← 部品置き場（自動生成）</span>
+└── public/
+    ├── index.html     <span class="cmt">← ブラウザ側（A-Frame）</span>
+    └── dashboard.html <span class="cmt">← ログを眺める画面</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>準備②：VS Code に「SQLite Viewer」を入れる（中身を目で見るため）</h3></div>
+      <p style="margin-bottom:0.5rem"><code>logs.db</code> は<strong>そのまま開いても文字化けして読めない</strong>（人間用のテキストではないため）。VS Code の拡張機能を入れると、<strong>Excelのような表</strong>で中身を確認できる。毎回コードを書かずに「ちゃんと溜まっているか」を目で見られるので、必ず入れておく。</p>
+      <ul class="point-list" style="margin-bottom:0.5rem">
+        <li>VS Code 左の<strong>拡張機能</strong>（四角が4つのアイコン）を開く</li>
+        <li><strong><code>SQLite Viewer</code></strong> を検索して<strong>インストール</strong></li>
+        <li>あとで <code>logs.db</code> をクリックすると、表形式で中身が開くようになる</li>
+      </ul>
+      <div class="callout-tip">
+        <h4>今日いちばん大事な確認方法</h4>
+        <p style="font-size:0.9rem;margin-bottom:0">「コードは動いた気がするけど、データは溜まってる？」という不安は、<strong><code>logs.db</code> を開いて行が増えているか見る</strong>だけで解決する。困ったらまずここを見る。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RUN FIRST ============ -->
+<section id="sec-run">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800;color:#111">🎮</div>
+      <h2>まず丸ごと動かして、感動する ― 理屈はあとで</h2>
+    </div>
+
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header"><h3>先に「動く」を体験しよう。今日の感動ポイントは<strong>サーバを止めても消えない</strong>こと</h3></div>
+      <p style="margin-bottom:0.6rem">この回のゴールは <strong style="color:#4FC3F7">「自分たちが歩いたデータが、手元のCSVになる」</strong>こと。第4回と同じく、まずは中身を気にせず<strong>そのままコピペして動かし、感動を先に味わう</strong>。「なぜ動くのか」は、このあと節3以降で<strong>今動かしたコードを分解して</strong>理解していく。</p>
+
+      <div class="callout-tip" style="margin-top:0.4rem">
+        <h4>やること（4ステップ）</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.92rem">
+          <li>下の3ファイルを<strong>そのままコピペ</strong>して保存する（穴埋めなし・完成版）</li>
+          <li><code>node server.js</code> → <code>http://localhost:3000</code> を<strong>2つの窓</strong>で開き、<strong>歩いて・箱をクリック</strong>する</li>
+          <li><code>http://localhost:3000/dashboard.html</code> を開く → <strong>ログの行数が どんどん増えていく</strong></li>
+          <li>🔥 <strong>ターミナルで <code>Ctrl + C</code> → もう一度 <code>node server.js</code></strong> → ダッシュボードの数字が<strong>消えていない</strong>！</li>
+        </ul>
+      </div>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.9rem;margin:1rem 0 0.2rem">📁 どこに作るか</p>
+      <div class="dirtree"><span class="dir">md2_no5/</span>
+├── <span class="target">server.js</span>          <span class="arrow">← ①これを作る（md2_no5 の直下）</span>
+├── package.json       <span class="mut">（作成ずみ）</span>
+├── node_modules/      <span class="mut">（作成ずみ）</span>
+└── <span class="dir">public/</span>
+    ├── <span class="target">index.html</span>      <span class="arrow">← ②これを作る（public の中）</span>
+    └── <span class="target">dashboard.html</span>  <span class="arrow">← ③これを作る（public の中）</span></div>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.1rem 0 0.3rem">ファイル1: <code>server.js</code>（md2_no5 の直下）── 完成版・そのままコピペ</p>
+      <pre><span class="code-label">JavaScript ── server.js</span><span class="kw">const</span> express = <span class="fn">require</span>(<span class="str">'express'</span>);
+<span class="kw">const</span> socketIo = <span class="fn">require</span>(<span class="str">'socket.io'</span>);
+<span class="kw">const</span> Database = <span class="fn">require</span>(<span class="str">'better-sqlite3'</span>);
+
+<span class="kw">const</span> app = <span class="fn">express</span>();
+app.<span class="fn">use</span>(express.<span class="fn">static</span>(<span class="str">'public'</span>));
+
+<span class="kw">const</span> server = app.<span class="fn">listen</span>(<span class="num">3000</span>, () <span class="op">=&gt;</span> {
+  console.<span class="fn">log</span>(<span class="str">'サーバ起動: http://localhost:3000'</span>);
+});
+
+<span class="kw">const</span> io = <span class="fn">socketIo</span>(server);
+
+<span class="cmt">// データベースを開く（無ければ logs.db が作られる）</span>
+<span class="kw">const</span> db = <span class="kw">new</span> <span class="fn">Database</span>(<span class="str">'logs.db'</span>);
+
+<span class="cmt">// ログを溜める表を作る（1行 = 行動データ1件）</span>
+db.<span class="fn">exec</span>(<span class="str">`
+  CREATE TABLE IF NOT EXISTS logs (
+    id      INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id TEXT,
+    t       INTEGER,
+    event   TEXT,
+    x       REAL,
+    y       REAL,
+    z       REAL
+  )
+`</span>);
+
+<span class="cmt">// 1行を書き込む命令を、あらかじめ用意しておく</span>
+<span class="kw">const</span> insertLog = db.<span class="fn">prepare</span>(
+  <span class="str">'INSERT INTO logs (user_id, t, event, x, y, z) VALUES (?, ?, ?, ?, ?, ?)'</span>
+);
+
+io.<span class="fn">on</span>(<span class="str">'connection'</span>, (socket) <span class="op">=&gt;</span> {
+  console.<span class="fn">log</span>(<span class="str">'接続しました:'</span>, socket.id);
+  insertLog.<span class="fn">run</span>(socket.id, Date.<span class="fn">now</span>(), <span class="str">'join'</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>);
+
+  socket.<span class="fn">on</span>(<span class="str">'move'</span>, (data) <span class="op">=&gt;</span> {
+    insertLog.<span class="fn">run</span>(socket.id, Date.<span class="fn">now</span>(), <span class="str">'move'</span>,
+      data.position.x, data.position.y, data.position.z);
+    socket.broadcast.<span class="fn">emit</span>(<span class="str">'moved'</span>, {
+      id: socket.id, position: data.position, color: data.color
+    });
+  });
+
+  socket.<span class="fn">on</span>(<span class="str">'click'</span>, (data) <span class="op">=&gt;</span> {
+    insertLog.<span class="fn">run</span>(socket.id, Date.<span class="fn">now</span>(), <span class="str">'click'</span>,
+      data.position.x, data.position.y, data.position.z);
+    console.<span class="fn">log</span>(<span class="str">'クリック:'</span>, socket.id);
+  });
+
+  socket.<span class="fn">on</span>(<span class="str">'disconnect'</span>, () <span class="op">=&gt;</span> {
+    console.<span class="fn">log</span>(<span class="str">'切断しました:'</span>, socket.id);
+    insertLog.<span class="fn">run</span>(socket.id, Date.<span class="fn">now</span>(), <span class="str">'leave'</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>);
+    io.<span class="fn">emit</span>(<span class="str">'userLeft'</span>, socket.id);
+  });
+});
+
+<span class="cmt">// ログを CSV にして返す</span>
+app.<span class="fn">get</span>(<span class="str">'/log.csv'</span>, (req, res) <span class="op">=&gt;</span> {
+  <span class="kw">const</span> rows = db.<span class="fn">prepare</span>(<span class="str">'SELECT * FROM logs ORDER BY id'</span>).<span class="fn">all</span>();
+  <span class="kw">let</span> csv = <span class="str">'id,user_id,t,event,x,y,z\n'</span>;
+  <span class="kw">for</span> (<span class="kw">const</span> r <span class="kw">of</span> rows) {
+    csv += <span class="str">`${r.id},${r.user_id},${r.t},${r.event},${r.x},${r.y},${r.z}\n`</span>;
+  }
+  res.<span class="fn">setHeader</span>(<span class="str">'Content-Type'</span>, <span class="str">'text/csv; charset=utf-8'</span>);
+  res.<span class="fn">setHeader</span>(<span class="str">'Content-Disposition'</span>, <span class="str">'attachment; filename="log.csv"'</span>);
+  res.<span class="fn">send</span>(csv);
+});
+
+<span class="cmt">// ダッシュボード用の集計を返す</span>
+app.<span class="fn">get</span>(<span class="str">'/api/stats'</span>, (req, res) <span class="op">=&gt;</span> {
+  <span class="kw">const</span> total = db.<span class="fn">prepare</span>(<span class="str">'SELECT COUNT(*) AS n FROM logs'</span>).<span class="fn">get</span>().n;
+  <span class="kw">const</span> users = db.<span class="fn">prepare</span>(<span class="str">'SELECT COUNT(DISTINCT user_id) AS n FROM logs'</span>).<span class="fn">get</span>().n;
+  <span class="kw">const</span> perUser = db.<span class="fn">prepare</span>(
+    <span class="str">'SELECT user_id, COUNT(*) AS n FROM logs GROUP BY user_id ORDER BY n DESC'</span>
+  ).<span class="fn">all</span>();
+  res.<span class="fn">json</span>({ total, users, perUser });
+});</pre>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.1rem 0 0.3rem">ファイル2: <code>public/index.html</code> ── 完成版・そのままコピペ</p>
+      <p style="font-size:0.88rem;color:#999;margin-bottom:0.3rem">第4回の <code>index.html</code> に、<strong>クリックできる箱3つ</strong>と<strong>クリックを送る処理</strong>を足しただけ。</p>
+      <pre><span class="code-label">HTML ── public/index.html</span><span class="kw">&lt;!DOCTYPE html&gt;</span>
+<span class="kw">&lt;html</span> lang=<span class="str">"ja"</span><span class="kw">&gt;&lt;head&gt;</span>
+  <span class="kw">&lt;meta</span> charset=<span class="str">"UTF-8"</span><span class="kw">&gt;&lt;title&gt;</span>ログを取る空間<span class="kw">&lt;/title&gt;</span>
+  <span class="kw">&lt;script</span> src=<span class="str">"https://aframe.io/releases/1.7.1/aframe.min.js"</span><span class="kw">&gt;&lt;/script&gt;</span>
+  <span class="kw">&lt;script</span> src=<span class="str">"/socket.io/socket.io.js"</span><span class="kw">&gt;&lt;/script&gt;</span>
+<span class="kw">&lt;/head&gt;&lt;body&gt;</span>
+  <span class="kw">&lt;a-scene</span> id=<span class="str">"scene"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;a-plane</span> rotation=<span class="str">"-90 0 0"</span> width=<span class="str">"30"</span> height=<span class="str">"30"</span> color=<span class="str">"#4a7a3a"</span><span class="kw">&gt;&lt;/a-plane&gt;</span>
+    <span class="kw">&lt;a-sky</span> color=<span class="str">"#87CEEB"</span><span class="kw">&gt;&lt;/a-sky&gt;</span>
+
+    <span class="cmt">&lt;!-- クリックの対象になる箱を3つ置く --&gt;</span>
+    <span class="kw">&lt;a-box</span> class=<span class="str">"target"</span> position=<span class="str">"-3 1 -5"</span> color=<span class="str">"#FF8A3D"</span><span class="kw">&gt;&lt;/a-box&gt;</span>
+    <span class="kw">&lt;a-box</span> class=<span class="str">"target"</span> position=<span class="str">"0 1 -7"</span> color=<span class="str">"#E040FB"</span><span class="kw">&gt;&lt;/a-box&gt;</span>
+    <span class="kw">&lt;a-box</span> class=<span class="str">"target"</span> position=<span class="str">"3 1 -5"</span> color=<span class="str">"#FFD54F"</span><span class="kw">&gt;&lt;/a-box&gt;</span>
+
+    <span class="kw">&lt;a-camera</span> id=<span class="str">"cam"</span> position=<span class="str">"0 1.6 4"</span><span class="kw">&gt;</span>
+      <span class="cmt">&lt;!-- 画面中央の照準。箱に合わせてクリックする --&gt;</span>
+      <span class="kw">&lt;a-cursor</span> color=<span class="str">"#FFFFFF"</span><span class="kw">&gt;&lt;/a-cursor&gt;</span>
+    <span class="kw">&lt;/a-camera&gt;</span>
+  <span class="kw">&lt;/a-scene&gt;</span>
+
+  <span class="kw">&lt;script&gt;</span>
+    <span class="kw">const</span> socket = <span class="fn">io</span>();
+    <span class="kw">const</span> scene = document.<span class="fn">getElementById</span>(<span class="str">'scene'</span>);
+    <span class="kw">const</span> cam = document.<span class="fn">getElementById</span>(<span class="str">'cam'</span>);
+
+    <span class="kw">const</span> palette = [<span class="str">'#4FC3F7'</span>, <span class="str">'#FF8A3D'</span>, <span class="str">'#93D500'</span>, <span class="str">'#E040FB'</span>, <span class="str">'#FFD54F'</span>];
+    <span class="kw">const</span> myColor = palette[Math.<span class="fn">floor</span>(Math.<span class="fn">random</span>() * palette.length)];
+
+    <span class="cmt">// 100ミリ秒ごとに、自分の位置をサーバへ送る</span>
+    <span class="fn">setInterval</span>(() <span class="op">=&gt;</span> {
+      <span class="kw">const</span> pos = cam.object3D.position;
+      socket.<span class="fn">emit</span>(<span class="str">'move'</span>, { position: { x: pos.x, y: pos.y, z: pos.z }, color: myColor });
+    }, <span class="num">100</span>);
+
+    <span class="cmt">// 箱をクリックしたら、そのときの自分の位置を送る</span>
+    document.<span class="fn">querySelectorAll</span>(<span class="str">'.target'</span>).<span class="fn">forEach</span>((box) <span class="op">=&gt;</span> {
+      box.<span class="fn">addEventListener</span>(<span class="str">'click'</span>, () <span class="op">=&gt;</span> {
+        <span class="kw">const</span> pos = cam.object3D.position;
+        socket.<span class="fn">emit</span>(<span class="str">'click'</span>, { position: { x: pos.x, y: pos.y, z: pos.z } });
+        box.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, <span class="str">'#FFFFFF'</span>);
+      });
+    });
+
+    <span class="kw">function</span> <span class="fn">createAvatar</span>(id, color) {
+      <span class="kw">const</span> avatar = document.<span class="fn">createElement</span>(<span class="str">'a-sphere'</span>);
+      avatar.<span class="fn">setAttribute</span>(<span class="str">'id'</span>, id);
+      avatar.<span class="fn">setAttribute</span>(<span class="str">'radius'</span>, <span class="str">'0.5'</span>);
+      avatar.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, color);
+      scene.<span class="fn">appendChild</span>(avatar);
+      <span class="kw">return</span> avatar;
+    }
+    socket.<span class="fn">on</span>(<span class="str">'moved'</span>, (data) <span class="op">=&gt;</span> {
+      <span class="kw">let</span> avatar = document.<span class="fn">getElementById</span>(data.id);
+      <span class="kw">if</span> (!avatar) avatar = <span class="fn">createAvatar</span>(data.id, data.color);
+      avatar.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, data.position);
+    });
+    socket.<span class="fn">on</span>(<span class="str">'userLeft'</span>, (id) <span class="op">=&gt;</span> {
+      <span class="kw">const</span> avatar = document.<span class="fn">getElementById</span>(id);
+      <span class="kw">if</span> (avatar) avatar.parentNode.<span class="fn">removeChild</span>(avatar);
+    });
+  <span class="kw">&lt;/script&gt;</span>
+<span class="kw">&lt;/body&gt;&lt;/html&gt;</span></pre>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.1rem 0 0.3rem">ファイル3: <code>public/dashboard.html</code> ── 完成版・そのままコピペ</p>
+      <pre><span class="code-label">HTML ── public/dashboard.html</span><span class="kw">&lt;!DOCTYPE html&gt;</span>
+<span class="kw">&lt;html</span> lang=<span class="str">"ja"</span><span class="kw">&gt;&lt;head&gt;</span>
+  <span class="kw">&lt;meta</span> charset=<span class="str">"UTF-8"</span><span class="kw">&gt;&lt;title&gt;</span>ログ ダッシュボード<span class="kw">&lt;/title&gt;</span>
+  <span class="kw">&lt;style&gt;</span>
+    body { font-family: sans-serif; background: #111; color: #eee; padding: 2rem; }
+    .cards { display: flex; gap: 1rem; margin: 1rem 0; }
+    .c { background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 1rem 1.5rem; }
+    .c .n { font-size: 2rem; font-weight: bold; color: #4FC3F7; }
+    table { border-collapse: collapse; margin-top: 1rem; }
+    th, td { border: 1px solid #333; padding: 0.4rem 1rem; text-align: left; }
+    th { background: #1a1a1a; color: #4FC3F7; }
+    a { color: #4FC3F7; }
+  <span class="kw">&lt;/style&gt;</span>
+<span class="kw">&lt;/head&gt;&lt;body&gt;</span>
+  <span class="kw">&lt;h1&gt;</span>ログ ダッシュボード<span class="kw">&lt;/h1&gt;</span>
+  <span class="kw">&lt;div</span> class=<span class="str">"cards"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;div</span> class=<span class="str">"c"</span><span class="kw">&gt;&lt;div</span> class=<span class="str">"n"</span> id=<span class="str">"total"</span><span class="kw">&gt;</span>-<span class="kw">&lt;/div&gt;</span>ログ行数<span class="kw">&lt;/div&gt;</span>
+    <span class="kw">&lt;div</span> class=<span class="str">"c"</span><span class="kw">&gt;&lt;div</span> class=<span class="str">"n"</span> id=<span class="str">"users"</span><span class="kw">&gt;</span>-<span class="kw">&lt;/div&gt;</span>参加人数<span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;</span>user_id<span class="kw">&lt;/th&gt;&lt;th&gt;</span>行数<span class="kw">&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody</span> id=<span class="str">"rows"</span><span class="kw">&gt;&lt;/tbody&gt;&lt;/table&gt;</span>
+  <span class="kw">&lt;p&gt;&lt;a</span> href=<span class="str">"/log.csv"</span><span class="kw">&gt;</span>log.csv をダウンロード<span class="kw">&lt;/a&gt;&lt;/p&gt;</span>
+
+  <span class="kw">&lt;script&gt;</span>
+    <span class="kw">async function</span> <span class="fn">update</span>() {
+      <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'/api/stats'</span>);
+      <span class="kw">const</span> stats = <span class="kw">await</span> res.<span class="fn">json</span>();
+      document.<span class="fn">getElementById</span>(<span class="str">'total'</span>).textContent = stats.total;
+      document.<span class="fn">getElementById</span>(<span class="str">'users'</span>).textContent = stats.users;
+      document.<span class="fn">getElementById</span>(<span class="str">'rows'</span>).innerHTML = stats.perUser
+        .<span class="fn">map</span>((u) <span class="op">=&gt;</span> <span class="str">`&lt;tr&gt;&lt;td&gt;${u.user_id}&lt;/td&gt;&lt;td&gt;${u.n}&lt;/td&gt;&lt;/tr&gt;`</span>).<span class="fn">join</span>(<span class="str">''</span>);
+    }
+    <span class="fn">update</span>();
+    <span class="fn">setInterval</span>(update, <span class="num">1000</span>);   <span class="cmt">// 1秒ごとに最新の集計に更新する</span>
+  <span class="kw">&lt;/script&gt;</span>
+<span class="kw">&lt;/body&gt;&lt;/html&gt;</span></pre>
+
+      <p style="margin:1rem 0 0.4rem;font-weight:700;color:#4FC3F7;font-size:0.95rem">動かす</p>
+      <pre><span class="code-label">Terminal</span><span class="cmt"># md2_no5 の中で実行（このターミナルは開いたまま）</span>
+node server.js</pre>
+      <p style="font-size:0.9rem;margin-bottom:0.5rem"><code>http://localhost:3000</code> を<strong>2つの窓</strong>で開き、<strong>WASDキー</strong>で歩いて、<strong>箱に照準を合わせてクリック</strong>する。クリックした箱は白くなる。ターミナルには接続・クリックのログが流れる。</p>
+
+      <div class="exec-pair">
+        <figure class="exec-shot">
+          <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">① 1人目の画面</span></div>
+          <img src="img/md2w5_view1.png" alt="1人目の視点。相手のオレンジ色のスフィアと、クリックして白くなった箱・まだ黄色い箱が見える">
+          <figcaption class="exec-cap"><strong>1人目の視点:</strong> <strong>相手のスフィア</strong>と、<strong>クリックして白くなった箱</strong>が見える。</figcaption>
+        </figure>
+        <figure class="exec-shot">
+          <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">② 2人目の画面</span></div>
+          <img src="img/md2w5_view2.png" alt="2人目の視点。振り返ると相手の黄緑色のスフィアが見える">
+          <figcaption class="exec-cap"><strong>2人目の視点:</strong> 同じ空間で<strong>相手のスフィア</strong>が見える。第4回と同じ仕組み。</figcaption>
+        </figure>
+      </div>
+
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">ターミナル — node server.js</span></div>
+        <img src="img/md2w5_term_server.png" alt="node server.js を実行したターミナル。サーバ起動、接続しました、クリック、切断しました のログが並んでいる">
+        <figcaption class="exec-cap"><strong>実行結果:</strong> <code>接続しました</code>／<code>クリック</code>／<code>切断しました</code> が流れる。これは<strong>画面に出しているだけ</strong>。同時に、裏で <code>logs.db</code> に1行ずつ書かれている。</figcaption>
+      </figure>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.2rem 0 0.3rem">ダッシュボードを開く</p>
+      <p style="font-size:0.9rem;margin-bottom:0.4rem">3つ目の窓で <code>http://localhost:3000/dashboard.html</code> を開く。<strong>歩いているだけで、ログ行数がどんどん増えていく</strong>のが見える（1人につき毎秒10行ずつ）。</p>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">ログ ダッシュボード — Chrome</span></div>
+        <img src="img/md2w5_dashboard.png" alt="ログダッシュボード。ログ行数205、参加人数2、user_idごとの行数の表、log.csvをダウンロードするリンクが表示されている">
+        <figcaption class="exec-cap"><strong>ダッシュボード:</strong> <strong>ログ行数</strong>と<strong>参加人数</strong>、<code>user_id</code> ごとの行数。これは <code>/api/stats</code> が SQL で集計した結果を表示している。</figcaption>
+      </figure>
+
+      <div class="callout-danger" style="margin-top:0.8rem">
+        <h4>🔥 今日の感動ポイント：サーバを止めて、もう一度立ち上げてみよう</h4>
+        <p style="font-size:0.92rem;margin-bottom:0.4rem">ターミナルで <code>Ctrl + C</code> を押してサーバを止める。そしてもう一度 <code>node server.js</code> で起動し、ダッシュボードを再読み込みする。</p>
+        <ul class="point-list" style="margin-bottom:0.4rem;font-size:0.92rem">
+          <li><strong>第4回まで：</strong>サーバを止めた瞬間、すべて消えていた（メモリ＝机の上）</li>
+          <li><strong>今日：</strong>ログ行数は<strong>そのまま残っている</strong>。さっき歩いた記録が、<code>logs.db</code> という<strong>ファイルに焼き付いている</strong>から</li>
+        </ul>
+        <p style="font-size:0.92rem;margin-bottom:0">これが「<strong>永続化</strong>」。データが<strong>プログラムの寿命より長生きする</strong>ようになった、ということ。ここが今日いちばんの分かれ目。</p>
+      </div>
+
+      <div class="callout-warning" style="margin-top:0.7rem">
+        <h4>動かないときのチェック</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><strong><code>Cannot find module 'better-sqlite3'</code>：</strong><code>npm install better-sqlite3</code> を <code>md2_no5</code> の中で実行したか確認する</li>
+          <li><strong>箱がクリックできない：</strong><code>&lt;a-cursor&gt;</code> を <code>&lt;a-camera&gt;</code> の<strong>中</strong>に書いたか確認する。画面中央の照準を箱に合わせてからクリックする</li>
+          <li><strong>ダッシュボードが <code>-</code> のまま：</strong><code>/api/stats</code> を直接ブラウザで開いてみる。JSONが表示されればサーバ側はOK</li>
+          <li><strong>行数が増えない：</strong>3D空間の窓を開いたままにしているか確認する（閉じると <code>move</code> の送信も止まる）</li>
+        </ul>
+      </div>
+
+      <div class="callout-info" style="margin-top:0.7rem">
+        <h4>👏 動いた？　では、ここからが本番</h4>
+        <p style="font-size:0.92rem;margin-bottom:0">たった今、あなたは<strong>「消えないデータ」</strong>を手に入れた。でも<strong>コピペしただけ</strong>では自分のものにならない。ここからは <strong>①いま動かした構成を声に出して確認（gw5）→ ②ログ1行を設計して表を作る（std5-1）→ ③SQLを分解して理解（節4）→ ④記録・CSV・分析を自分の手で組み立てる（std5-2〜4）</strong>と進む。</p>
+      </div>
+
+      <div class="notion-submit"><span>Notion に、<strong>ダッシュボードにログ行数が溜まっている様子</strong>と、<strong>サーバを再起動しても数字が消えていない</strong>ことのキャプチャを貼る（std5-1〜3の記録はこの体験でとってもよい）。</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GROUP WORK ============ -->
+<section id="sec-plan">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">👥</div>
+      <h2>グループワーク：データの通り道を口頭で確認する</h2>
+    </div>
+
+    <div id="gw5" class="card group">
+      <div class="card-header"><h3><span class="tag tag-group" style="font-size:0.7rem">グループワーク</span> gw5：「データはどこを通って、どこに残るか」を説明ラリーで確認する</h3></div>
+      <p style="margin-bottom:0.5rem"><strong>コードは書かない。</strong>さっき動かしたアプリで、<strong>データがどこを通って、最後にどこへ残るのか</strong>を、<strong>声に出して</strong>お互いに説明し合うワーク。2〜3人組で行う。</p>
+
+      <div class="callout-info" style="margin-top:0.4rem">
+        <h4>進め方（説明ラリー）</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li>下の<strong>確認項目</strong>を、1人1つずつ<strong>順番に声に出して</strong>説明する（1人 → 次の人 → …とラリー）</li>
+          <li>詰まったら「<a href="#sec-why" style="color:#4FC3F7">節1のデータの旅の図</a>」を見てOK。見ずに言えたら◎</li>
+          <li>チーム全員が最後まで言えたらクリア</li>
+        </ul>
+      </div>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">確認する項目（この内容を口頭で説明できるか）</p>
+      <table style="font-size:0.9rem">
+        <tr><th style="width:8%">#</th><th>口頭で確認すること（例）</th></tr>
+        <tr><td>1</td><td>ログが残るのは<strong>サーバ側の <code>logs.db</code></strong>。ブラウザ側には残らない（ブラウザは<strong>送る</strong>だけ）</td></tr>
+        <tr><td>2</td><td>表 <code>logs</code> の<strong>1行 ＝ 行動データ1件</strong>。列は <code>user_id</code>（誰が）・<code>t</code>（いつ）・<code>event</code>（何を）・<code>x,y,z</code>（どこで）</td></tr>
+        <tr><td>3</td><td><code>CREATE TABLE</code> は<strong>表の設計図</strong>。<code>IF NOT EXISTS</code> が付いているので、2回目以降の起動では作り直さない（＝前のデータが残る）</td></tr>
+        <tr><td>4</td><td><code>INSERT</code> は <strong><code>socket.on</code> の中</strong>で呼ぶ。<strong>イベントが起きた、まさにその瞬間</strong>に1行書く</td></tr>
+        <tr><td>5</td><td><code>move</code> は <strong>100ミリ秒ごと</strong>に送られる ＝ 1人あたり<strong>毎秒10行</strong>ずつ増えていく</td></tr>
+        <tr><td>6</td><td><code>/log.csv</code> は、<code>SELECT</code> で取り出した結果を<strong>カンマ区切りの文字に並べ直した</strong>もの</td></tr>
+        <tr><td>7</td><td><code>analyze.py</code>（pandas）は<strong>サーバとは別のプログラム</strong>。CSVを読むだけで、3D空間とは直接つながっていない</td></tr>
+      </table>
+
+      <div class="callout-tip" style="margin-top:0.6rem">
+        <h4>言えたらもう一歩：役割で整理してみよう</h4>
+        <p style="font-size:0.9rem;margin-bottom:0"><strong>ブラウザ＝「起きたことを送る」</strong>／<strong>サーバ＝「受け取って、その場で1行書く」</strong>／<strong>データベース＝「ためる」</strong>／<strong>CSV＝「持ち出す」</strong>／<strong>pandas＝「読んで数える」</strong>。この5つの役割を自分の言葉で言えれば、標準課題はスムーズに進む。</p>
+      </div>
+
+      <div class="notion-submit"><span>Notion に、<strong>自分が説明を担当した項目</strong>と、<strong>詰まった点／すっきり分かった点</strong>を1〜2行メモする（gw5）。</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. std5-1 DESIGN THE ROW ============ -->
+<section id="sec-design">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">3</div>
+      <h2>ログ1行を設計して、表（テーブル）を作る</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>いちばん大事な設計：1行に「何を」書くか</h3></div>
+      <p style="margin-bottom:0.6rem">データ分析でいちばん効くのは、実は<strong>最初の1行の設計</strong>。ここを間違えると、あとで何を計算しようとしても足りない。逆にここさえ押さえれば、分析は驚くほど楽になる。合言葉は<strong style="color:#4FC3F7">「誰が・いつ・何を・どこで」</strong>。</p>
+
+      <table>
+        <tr><th style="width:16%">問い</th><th style="width:18%">列（カラム）</th><th>意味・例</th></tr>
+        <tr><td><strong>誰が</strong></td><td><code>user_id</code></td><td>第4回で出てきた <code>socket.id</code>。接続ごとに自動で振られる背番号</td></tr>
+        <tr><td><strong>いつ</strong></td><td><code>t</code></td><td><code>Date.now()</code> の値。1970年から数えたミリ秒（例 <code>1784118015584</code>）</td></tr>
+        <tr><td><strong>何を</strong></td><td><code>event</code></td><td><code>join</code>（入室）／<code>move</code>（移動）／<code>click</code>（クリック）／<code>leave</code>（退室）</td></tr>
+        <tr><td><strong>どこで</strong></td><td><code>x</code> <code>y</code> <code>z</code></td><td>そのときのカメラ（＝その人）の位置</td></tr>
+      </table>
+
+      <div class="analogy">
+        防犯カメラの記録を思い浮かべよう。「<strong>誰が</strong>・<strong>何時何分に</strong>・<strong>何をして</strong>・<strong>どこにいたか</strong>」が揃っていれば、あとから何度でも再現・検証できる。1つでも欠けると「この動きは誰のもの？」「これは何時の話？」となって使えなくなる。ログ設計とは、未来の自分への申し送りである。
+      </div>
+
+      <div class="concept-box">
+        <h4>用語：データベースの言葉（第2回・第3回とつながっている）</h4>
+        <table style="font-size:0.85rem;margin:0.3rem 0">
+          <tr><th style="width:26%">言葉</th><th>意味</th><th style="width:30%">これまでの言い方</th></tr>
+          <tr><td><strong>データベース</strong></td><td>表をまとめて保管する入れもの（＝<code>logs.db</code> ファイル）</td><td>―</td></tr>
+          <tr><td><strong>テーブル（表）</strong></td><td>同じ形のデータを並べたもの（＝<code>logs</code>）</td><td>CSVファイル1枚（第3回）</td></tr>
+          <tr><td><strong>カラム（列）</strong></td><td>項目（＝<code>user_id</code>, <code>t</code>, …）</td><td>CSVの見出し行</td></tr>
+          <tr><td><strong>レコード（行）</strong></td><td>データ1件（＝行動データ1件）</td><td>オブジェクト <code>{x, y, z}</code>（第2回）</td></tr>
+          <tr><td><strong>主キー</strong></td><td>1行を見分けるための番号（＝<code>id</code>）</td><td>―</td></tr>
+        </table>
+        <p style="font-size:0.88rem;margin-bottom:0">つまり<strong>「テーブル」は、第3回で読んだCSVと同じもの</strong>。置き場所がファイルかデータベースかが違うだけ。だから最後に <code>SELECT</code> して並べれば、そのままCSVに戻せる。</p>
+      </div>
+    </div>
+
+    <div id="std5-1" class="card standard">
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std5-1：データベースを開いて、表を作る</h3></div>
+      <p style="margin-bottom:0.5rem">ここからは、さっき動かした完成版を<strong>部品ごとに自分の手で組み立て直す</strong>。まずは<strong>入れもの</strong>から。<code>server.js</code> は第4回のものをベースに、<strong>データベース関連を書き足す</strong>。<span class="blk">①</span>〜<span class="blk">③</span>の穴を自分で埋めること。</p>
+
+      <p class="hl-legend">📁 編集するファイル：<code>server.js</code>。　🟦 <b>背景色の行</b>＝この手順で書き足すところ</p>
+
+      <pre><span class="code-label">JavaScript ── server.js（全体・背景色が追記部分）</span><span class="kw">const</span> express = <span class="fn">require</span>(<span class="str">'express'</span>);
+<span class="kw">const</span> socketIo = <span class="fn">require</span>(<span class="str">'socket.io'</span>);
+<span class="hl"><span class="cmt">// データベースの部品を読み込む</span>
+<span class="kw">const</span> Database = <span class="fn">require</span>(<span class="str">'</span><span class="blk">①</span><span class="str">'</span>);
+</span>
+<span class="kw">const</span> app = <span class="fn">express</span>();
+app.<span class="fn">use</span>(express.<span class="fn">static</span>(<span class="str">'public'</span>));
+
+<span class="kw">const</span> server = app.<span class="fn">listen</span>(<span class="num">3000</span>, () <span class="op">=&gt;</span> {
+  console.<span class="fn">log</span>(<span class="str">'サーバ起動: http://localhost:3000'</span>);
+});
+
+<span class="kw">const</span> io = <span class="fn">socketIo</span>(server);
+<span class="hl">
+<span class="cmt">// データベースを開く（logs.db が無ければ、このとき作られる）</span>
+<span class="kw">const</span> db = <span class="kw">new</span> <span class="fn">Database</span>(<span class="str">'logs.db'</span>);
+
+<span class="cmt">// 表を作る。すでにあれば作らない（＝前回のデータが残る）</span>
+db.<span class="fn">exec</span>(<span class="str">`
+  CREATE TABLE </span><span class="blk">②</span><span class="str"> logs (
+    id      INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id TEXT,
+    t       INTEGER,
+    event   TEXT,
+    x       REAL,
+    y       REAL,
+    z       REAL
+  )
+`</span>);
+
+<span class="cmt">// 1行を書き込む命令を、あらかじめ用意しておく</span>
+<span class="kw">const</span> insertLog = db.<span class="fn">prepare</span>(
+  <span class="str">'INSERT INTO logs (user_id, t, event, x, y, z) VALUES (?, ?, ?, ?, ?, ?)'</span>
+);
+</span>
+io.<span class="fn">on</span>(<span class="str">'connection'</span>, (socket) <span class="op">=&gt;</span> {
+  console.<span class="fn">log</span>(<span class="str">'接続しました:'</span>, socket.id);
+<span class="hl">  <span class="cmt">// 入室した瞬間を1行記録する（位置はまだ分からないので 0,0,0）</span>
+  insertLog.<span class="fn">run</span>(socket.id, Date.<span class="fn">now</span>(), <span class="str">'</span><span class="blk">③</span><span class="str">'</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>);
+</span>});</pre>
+
+      <div class="callout-info" style="margin-top:0.5rem">
+        <h4>穴埋めのヒント</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><span class="blk">①</span>：<code>npm install</code> で入れた部品の名前（ハイフン入り）</li>
+          <li><span class="blk">②</span>：「<strong>もし無ければ</strong>」を意味する3語（英語）。これが無いと、2回目の起動でエラーになる</li>
+          <li><span class="blk">③</span>：入室を表すイベント名。<code>move</code>／<code>click</code>／<code>leave</code> と並ぶ4つ目</li>
+        </ul>
+      </div>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">確かめる</p>
+      <pre><span class="code-label">Terminal</span>node server.js</pre>
+      <p style="font-size:0.9rem;margin-bottom:0.5rem">ブラウザで <code>http://localhost:3000</code> を開いて、閉じる。これを2〜3回くり返してから、VS Code で <strong><code>logs.db</code> をクリック</strong>する（SQLite Viewer が表を開く）。<strong><code>event</code> が <code>join</code> の行が、開いた回数だけ増えていれば成功</strong>。</p>
+
+      <div class="callout-warning">
+        <h4>よくあるつまずき</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><strong><code>logs.db</code> が見当たらない：</strong>一度もサーバを起動していない。<code>node server.js</code> を実行した瞬間に作られる</li>
+          <li><strong><code>table logs already exists</code>：</strong><span class="blk">②</span>が入っていない。<code>IF NOT EXISTS</code> を忘れると2回目でエラーになる</li>
+          <li><strong>行が増えない：</strong><code>insertLog.run(...)</code> を <code>io.on('connection', ...)</code> の <strong>波かっこの中</strong>に書いたか確認する</li>
+        </ul>
+      </div>
+
+      <div class="notion-submit"><span>Notion に、<strong>SQLite Viewer で <code>logs.db</code> を開き、<code>join</code> の行が並んでいる</strong>キャプチャを貼る（std5-1）。</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. SQL EXPLAINED ============ -->
+<section id="sec-sql">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">4</div>
+      <h2>分解：いま書いた「SQL」を読み解く</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>SQL は「データベースへの命令文」。今日は3つだけ覚える</h3></div>
+      <p style="margin-bottom:0.6rem"><strong>SQL</strong> は、データベースに用事を伝えるための言葉。世界中のデータベースでほぼ共通で、<strong>データサイエンスの現場で最も使われる道具のひとつ</strong>。種類はたくさんあるが、今日使うのは<strong>3つだけ</strong>。</p>
+
+      <table>
+        <tr><th style="width:18%">SQL</th><th style="width:26%">意味</th><th>今日の使いどころ</th></tr>
+        <tr><td><code>CREATE TABLE</code></td><td>表を作る（設計図）</td><td>起動時に<strong>1回だけ</strong>。列の名前と型を決める</td></tr>
+        <tr><td><code>INSERT INTO</code></td><td>1行足す</td><td><code>socket.on</code> の中で、<strong>イベントが起きるたび</strong>に</td></tr>
+        <tr><td><code>SELECT</code></td><td>取り出す</td><td><code>/log.csv</code> と <code>/api/stats</code> で、<strong>溜めたものを読む</strong></td></tr>
+      </table>
+
+      <div class="concept-box">
+        <h4>読み解き①：<code>CREATE TABLE IF NOT EXISTS logs ( … )</code></h4>
+        <table style="font-size:0.85rem;margin:0.3rem 0">
+          <tr><th style="width:36%">部分</th><th>意味</th></tr>
+          <tr><td><code>CREATE TABLE</code></td><td>表を作れ</td></tr>
+          <tr><td><code>IF NOT EXISTS</code></td><td><strong>もし無ければ</strong>（すでにあれば何もしない）</td></tr>
+          <tr><td><code>logs</code></td><td>表の名前</td></tr>
+          <tr><td><code>user_id TEXT</code></td><td><code>user_id</code> という列を作る。中身は<strong>文字</strong></td></tr>
+          <tr><td><code>t INTEGER</code></td><td><code>t</code> 列。中身は<strong>整数</strong></td></tr>
+          <tr><td><code>x REAL</code></td><td><code>x</code> 列。中身は<strong>小数</strong>（位置は <code>1.6</code> のような小数になる）</td></tr>
+          <tr><td><code>id INTEGER PRIMARY KEY AUTOINCREMENT</code></td><td>1行ごとに<strong>1, 2, 3… と自動で番号を振る</strong>。主キー（行の見分け札）</td></tr>
+        </table>
+        <p style="font-size:0.9rem;margin-bottom:0"><strong>なぜ <code>IF NOT EXISTS</code> が要るのか：</strong>サーバは何度も起動する。毎回まっさらな表を作り直したら、<strong>前回のログが消えてしまう</strong>。「無ければ作る、あればそのまま使う」＝<strong>データが積み上がっていく</strong>。今日の「再起動しても消えない」は、この3語のおかげ。</p>
+      </div>
+
+      <div class="concept-box">
+        <h4>読み解き②：<code>prepare</code> と <code>run</code>、そして <code>?</code> の意味</h4>
+        <pre style="margin:0.4rem 0"><span class="code-label">JavaScript</span><span class="cmt">// ① 命令の「型」を1回だけ用意する（? は、あとで値を入れる場所）</span>
+<span class="kw">const</span> insertLog = db.<span class="fn">prepare</span>(
+  <span class="str">'INSERT INTO logs (user_id, t, event, x, y, z) VALUES (?, ?, ?, ?, ?, ?)'</span>
+);
+
+<span class="cmt">// ② 実際の値を入れて実行する（何度でも使い回せる）</span>
+insertLog.<span class="fn">run</span>(<span class="str">'aB3xK9'</span>, <span class="num">1784118015584</span>, <span class="str">'move'</span>, <span class="num">0</span>, <span class="num">1.6</span>, <span class="num">4</span>);</pre>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><code>prepare</code>＝<strong>命令の型を先に作っておく</strong>。<code>?</code> は「ここに値が入ります」という<strong>空欄</strong></li>
+          <li><code>run</code>＝<strong>空欄を埋めて実行する</strong>。<code>?</code> の<strong>並び順どおり</strong>に値を渡す</li>
+          <li><strong>速い：</strong>型は1回作るだけ。<code>move</code> は毎秒10回×人数ぶん来るので、この差が効く</li>
+          <li><strong>安全：</strong>値を文字列としてつなげて書くと、変な値が入ったとき命令文が壊れる（<strong>SQLインジェクション</strong>という有名な脆弱性）。<code>?</code> を使えば、値は<strong>あくまで値</strong>として扱われる</li>
+        </ul>
+      </div>
+
+      <div class="callout-danger">
+        <h4>やってはいけない書き方</h4>
+        <pre style="margin:0.4rem 0"><span class="code-label">JavaScript ── 悪い例（マネしない）</span><span class="cmt">// 値を直接つなげて命令文を組み立てる</span>
+db.<span class="fn">exec</span>(<span class="str">`INSERT INTO logs (user_id) VALUES ('${userName}')`</span>);
+<span class="cmt">// userName に変な文字が入ると、命令文そのものが書き換わってしまう</span></pre>
+        <p style="font-size:0.9rem;margin-bottom:0">必ず <code>prepare</code> ＋ <code>?</code> を使う。これは実務でも<strong>いちばん基本的で、いちばん重要な作法</strong>。</p>
+      </div>
+
+      <div class="callout-info">
+        <h4>読み解き③：<code>SELECT</code> の3つの形（<code>/api/stats</code> で使っている）</h4>
+        <table style="font-size:0.85rem;margin:0.3rem 0">
+          <tr><th style="width:52%">SQL</th><th>意味</th></tr>
+          <tr><td><code>SELECT * FROM logs ORDER BY id</code></td><td>全部の列（<code>*</code>）を、<code>id</code> の順に並べて取り出す</td></tr>
+          <tr><td><code>SELECT COUNT(*) AS n FROM logs</code></td><td>行数を数えて、<code>n</code> という名前で返す</td></tr>
+          <tr><td><code>SELECT user_id, COUNT(*) AS n FROM logs GROUP BY user_id</code></td><td><strong>user_id ごとにまとめて</strong>数える</td></tr>
+        </table>
+        <p style="font-size:0.9rem;margin-bottom:0"><code>GROUP BY</code>＝「<strong>〜ごとにまとめて集計する</strong>」。この考え方は、このあと pandas の <code>groupby</code> でそっくりそのまま出てくる。<strong>SQL と pandas は、同じことを別の言葉で書いている</strong>だけ。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. std5-2 RECORD ============ -->
+<section id="sec-record">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">5</div>
+      <h2>動きとクリックを記録する</h2>
+    </div>
+
+    <div id="std5-2" class="card standard">
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std5-2：<code>move</code> と <code>click</code> を1行ずつ書き留める</h3></div>
+      <p style="margin-bottom:0.5rem">表ができたので、いよいよ<strong>本命のデータ</strong>を溜める。ポイントは<strong>「イベントが起きた、まさにその瞬間に1行書く」</strong>こと。<span class="blk">①</span>〜<span class="blk">④</span>を埋める。</p>
+
+      <p class="hl-legend">📁 編集する2ファイル：<code>server.js</code> と <code>public/index.html</code>。　🟦 <b>背景色の行</b>＝この手順で書き足すところ</p>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">① <code>server.js</code> ── <code>io.on('connection', …)</code> の中（背景色が追記部分）</p>
+      <pre><span class="code-label">JavaScript ── server.js</span>io.<span class="fn">on</span>(<span class="str">'connection'</span>, (socket) <span class="op">=&gt;</span> {
+  console.<span class="fn">log</span>(<span class="str">'接続しました:'</span>, socket.id);
+  insertLog.<span class="fn">run</span>(socket.id, Date.<span class="fn">now</span>(), <span class="str">'join'</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>);
+<span class="hl">
+  <span class="cmt">// 誰かが動いたら「記録してから」転送する</span>
+  socket.<span class="fn">on</span>(<span class="str">'move'</span>, (data) <span class="op">=&gt;</span> {
+    insertLog.<span class="fn">run</span>(socket.id, Date.<span class="blk">①</span>(), <span class="str">'move'</span>,
+      data.position.x, data.position.y, data.position.z);
+    socket.broadcast.<span class="fn">emit</span>(<span class="str">'moved'</span>, {
+      id: socket.id, position: data.position, color: data.color
+    });
+  });
+
+  <span class="cmt">// 誰かが箱をクリックしたら、その瞬間の位置を記録する</span>
+  socket.<span class="fn">on</span>(<span class="str">'</span><span class="blk">②</span><span class="str">'</span>, (data) <span class="op">=&gt;</span> {
+    insertLog.<span class="fn">run</span>(socket.id, Date.<span class="fn">now</span>(), <span class="str">'click'</span>,
+      data.position.x, data.position.y, data.position.z);
+    console.<span class="fn">log</span>(<span class="str">'クリック:'</span>, socket.id);
+  });
+</span>
+  socket.<span class="fn">on</span>(<span class="str">'disconnect'</span>, () <span class="op">=&gt;</span> {
+    console.<span class="fn">log</span>(<span class="str">'切断しました:'</span>, socket.id);
+<span class="hl">    <span class="cmt">// 退室も記録する（滞在時間を出すのに使う）</span>
+    insertLog.<span class="fn">run</span>(socket.id, Date.<span class="fn">now</span>(), <span class="str">'</span><span class="blk">③</span><span class="str">'</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>);
+</span>    io.<span class="fn">emit</span>(<span class="str">'userLeft'</span>, socket.id);
+  });
+});</pre>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.2rem 0 0.3rem">② <code>public/index.html</code> ── 箱を置いて、クリックを送る（背景色が追記部分）</p>
+      <pre><span class="code-label">HTML ── public/index.html</span>  <span class="kw">&lt;a-scene</span> id=<span class="str">"scene"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;a-plane</span> rotation=<span class="str">"-90 0 0"</span> width=<span class="str">"30"</span> height=<span class="str">"30"</span> color=<span class="str">"#4a7a3a"</span><span class="kw">&gt;&lt;/a-plane&gt;</span>
+    <span class="kw">&lt;a-sky</span> color=<span class="str">"#87CEEB"</span><span class="kw">&gt;&lt;/a-sky&gt;</span>
+<span class="hl">
+    <span class="cmt">&lt;!-- クリックの対象になる箱を3つ置く --&gt;</span>
+    <span class="kw">&lt;a-box</span> class=<span class="str">"target"</span> position=<span class="str">"-3 1 -5"</span> color=<span class="str">"#FF8A3D"</span><span class="kw">&gt;&lt;/a-box&gt;</span>
+    <span class="kw">&lt;a-box</span> class=<span class="str">"target"</span> position=<span class="str">"0 1 -7"</span> color=<span class="str">"#E040FB"</span><span class="kw">&gt;&lt;/a-box&gt;</span>
+    <span class="kw">&lt;a-box</span> class=<span class="str">"target"</span> position=<span class="str">"3 1 -5"</span> color=<span class="str">"#FFD54F"</span><span class="kw">&gt;&lt;/a-box&gt;</span>
+</span>
+    <span class="kw">&lt;a-camera</span> id=<span class="str">"cam"</span> position=<span class="str">"0 1.6 4"</span><span class="kw">&gt;</span>
+<span class="hl">      <span class="cmt">&lt;!-- 画面中央の照準。これが無いと箱をクリックできない --&gt;</span>
+      <span class="kw">&lt;a-cursor</span> color=<span class="str">"#FFFFFF"</span><span class="kw">&gt;&lt;/a-cursor&gt;</span>
+</span>    <span class="kw">&lt;/a-camera&gt;</span>
+  <span class="kw">&lt;/a-scene&gt;</span></pre>
+
+      <pre><span class="code-label">JavaScript ── public/index.html の &lt;script&gt; の中</span><span class="hl">    <span class="cmt">// 箱をクリックしたら、そのときの自分の位置をサーバへ送る</span>
+    document.<span class="fn">querySelectorAll</span>(<span class="str">'.target'</span>).<span class="fn">forEach</span>((box) <span class="op">=&gt;</span> {
+      box.<span class="fn">addEventListener</span>(<span class="str">'click'</span>, () <span class="op">=&gt;</span> {
+        <span class="kw">const</span> pos = cam.object3D.position;
+        socket.<span class="blk">④</span>(<span class="str">'click'</span>, { position: { x: pos.x, y: pos.y, z: pos.z } });
+        box.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, <span class="str">'#FFFFFF'</span>);   <span class="cmt">// 押した手ごたえを出す</span>
+      });
+    });
+</span></pre>
+
+      <div class="callout-info" style="margin-top:0.5rem">
+        <h4>穴埋めのヒント</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><span class="blk">①</span>：現在時刻をミリ秒で返すもの。<code>Date.___()</code></li>
+          <li><span class="blk">②</span>：クライアントが <code>socket.emit('___', …)</code> で送っている名札。<strong>送る側と受け取る側で同じ名前</strong>にする（第4回の <code>move</code>／<code>moved</code> と同じ考え方）</li>
+          <li><span class="blk">③</span>：退室を表すイベント名（<code>join</code> の反対）</li>
+          <li><span class="blk">④</span>：第4回でさんざん使った「送る」メソッド</li>
+        </ul>
+      </div>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">確かめる</p>
+      <p style="font-size:0.9rem;margin-bottom:0.4rem"><code>node server.js</code> を起動し、2つの窓で入って<strong>歩き回り、箱をクリック</strong>する。ターミナルに <code>クリック:</code> が出て、<code>logs.db</code> に <code>move</code> と <code>click</code> の行が溜まっていれば成功。</p>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">ターミナル — 2人が入って、それぞれクリックした</span></div>
+        <img src="img/md2w5_term_server.png" alt="node server.js のターミナル。接続しました が2回、クリック が2回、切断しました が2回表示されている">
+        <figcaption class="exec-cap"><strong>実行結果:</strong> 2人が入室 → それぞれクリック → 退室、という流れがそのまま見える。<strong>同じ流れが <code>logs.db</code> にも記録されている</strong>。</figcaption>
+      </figure>
+
+      <div class="callout-warning">
+        <h4>考えてみよう：<code>move</code> の行だけ、やけに多いのはなぜ？</h4>
+        <p style="font-size:0.9rem;margin-bottom:0"><code>join</code>・<code>click</code>・<code>leave</code> は<strong>人が起こしたときだけ</strong>1行。でも <code>move</code> は <code>setInterval</code> で<strong>100ミリ秒ごとに自動で送られる</strong>ので、1人あたり<strong>毎秒10行</strong>増える。2人が10秒いるだけで約200行。<strong>この「取る細かさ」＝サンプリング間隔</strong>が、あとの分析の精度と重さを決める（節7でもう一度考える）。</p>
+      </div>
+
+      <div class="notion-submit"><span>Notion に、<strong>穴を埋めた <code>server.js</code>／<code>index.html</code> のコード</strong>と、<strong><code>move</code>・<code>click</code> が溜まった <code>logs.db</code></strong> のキャプチャを貼る（std5-2）。</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. std5-3 CSV ============ -->
+<section id="sec-csv">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">6</div>
+      <h2>CSV で取り出す ― データベースから、分析の世界へ</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>なぜ CSV に直すのか</h3></div>
+      <p style="margin-bottom:0.6rem">ログは <code>logs.db</code> に溜まった。でもこのファイルは <strong>Node.js（JavaScript）の世界の住人</strong>。一方、分析の主役 <strong>pandas は Python の世界</strong>にいる。この2つの世界をつなぐ<strong>共通語</strong>が <strong>CSV</strong>。</p>
+      <div class="analogy">
+        CSV は「<strong>翻訳された書類</strong>」。JavaScript も Python も Excel も R も、CSV なら読める。だからデータサイエンスの現場では、まず CSV に落として渡す場面がとても多い。第3回で読んだサッカーのデータも、誰かがどこかのデータベースから CSV に落としてくれたもの。
+      </div>
+      <div class="callout-info">
+        <h4>ここで一周する</h4>
+        <p style="font-size:0.9rem;margin-bottom:0"><strong>第3回：</strong>誰かが用意した <code>soccer.csv</code> を <code>pd.read_csv</code> で読んだ。<strong>今日：</strong>その「誰か」を<strong>自分たちがやる</strong>。CSVを<strong>作る側</strong>に回ると、データがどう生まれるのかが 体で分かる。</p>
+      </div>
+    </div>
+
+    <div id="std5-3" class="card standard">
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std5-3：<code>/log.csv</code> で取り出せるようにする</h3></div>
+      <p style="margin-bottom:0.5rem"><code>server.js</code> の<strong>いちばん下</strong>に書き足す。<code>SELECT</code> で全部の行を取り出し、<strong>カンマ区切りの文字に並べ直して</strong>返すだけ。<span class="blk">①</span>〜<span class="blk">③</span>を埋める。</p>
+
+      <p class="hl-legend">📁 編集するファイル：<code>server.js</code>（いちばん下に追加）</p>
+
+      <pre><span class="code-label">JavaScript ── server.js の末尾に追加</span><span class="hl"><span class="cmt">// ログを CSV にして返す</span>
+app.<span class="fn">get</span>(<span class="str">'/log.csv'</span>, (req, res) <span class="op">=&gt;</span> {
+  <span class="cmt">// ① 全部の行を id 順に取り出す</span>
+  <span class="kw">const</span> rows = db.<span class="fn">prepare</span>(<span class="str">'</span><span class="blk">①</span><span class="str"> * FROM logs ORDER BY id'</span>).<span class="fn">all</span>();
+
+  <span class="cmt">// ② 1行目は見出し（列の名前）</span>
+  <span class="kw">let</span> csv = <span class="str">'id,user_id,t,event,x,y,z\n'</span>;
+
+  <span class="cmt">// ③ 1行ずつ、カンマでつないで足していく</span>
+  <span class="kw">for</span> (<span class="kw">const</span> r <span class="kw">of</span> rows) {
+    csv += <span class="str">`${r.id},${r.user_id},${r.t},${r.</span><span class="blk">②</span><span class="str">},${r.x},${r.y},${r.z}\n`</span>;
+  }
+
+  res.<span class="fn">setHeader</span>(<span class="str">'Content-Type'</span>, <span class="str">'text/csv; charset=utf-8'</span>);
+  res.<span class="fn">setHeader</span>(<span class="str">'Content-Disposition'</span>, <span class="str">'attachment; filename="log.csv"'</span>);
+  res.<span class="fn">send</span>(csv);
+});
+
+<span class="cmt">// ダッシュボード用の集計を返す</span>
+app.<span class="fn">get</span>(<span class="str">'/api/stats'</span>, (req, res) <span class="op">=&gt;</span> {
+  <span class="kw">const</span> total = db.<span class="fn">prepare</span>(<span class="str">'SELECT COUNT(*) AS n FROM logs'</span>).<span class="fn">get</span>().n;
+  <span class="kw">const</span> users = db.<span class="fn">prepare</span>(<span class="str">'SELECT COUNT(DISTINCT user_id) AS n FROM logs'</span>).<span class="fn">get</span>().n;
+  <span class="cmt">// user_id ごとにまとめて数える</span>
+  <span class="kw">const</span> perUser = db.<span class="fn">prepare</span>(
+    <span class="str">'SELECT user_id, COUNT(*) AS n FROM logs </span><span class="blk">③</span><span class="str"> user_id ORDER BY n DESC'</span>
+  ).<span class="fn">all</span>();
+  res.<span class="fn">json</span>({ total, users, perUser });
+});</span></pre>
+
+      <div class="callout-info" style="margin-top:0.5rem">
+        <h4>穴埋めのヒント</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><span class="blk">①</span>：「取り出す」SQL（節4の3つのうちのひとつ）</li>
+          <li><span class="blk">②</span>：見出しの並び <code>id,user_id,t,event,x,y,z</code> と<strong>同じ順番</strong>になるように、4番目の列名を入れる</li>
+          <li><span class="blk">③</span>：「〜ごとにまとめる」＝2語（英語）</li>
+        </ul>
+      </div>
+
+      <div class="concept-box">
+        <h4>覚えておくと得：<code>\n</code> と「見出し行」</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><code>\n</code>＝<strong>改行</strong>。CSVは「1行＝1レコード」なので、1行足すごとに <code>\n</code> で改行する</li>
+          <li><strong>1行目の見出し</strong>が、そのまま pandas の列名になる。ここを揃えておくと <code>df['user_id']</code> のように書ける</li>
+          <li><code>Content-Disposition: attachment</code>＝ブラウザに「<strong>表示せずダウンロードして</strong>」と伝える指定</li>
+        </ul>
+      </div>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">確かめる</p>
+      <p style="font-size:0.9rem;margin-bottom:0.4rem">サーバを再起動して、ブラウザで <code>http://localhost:3000/log.csv</code> を開く（またはダッシュボードのリンクをクリック）。<strong><code>log.csv</code> がダウンロードされる</strong>。<strong>ダウンロードした <code>log.csv</code> を <code>md2_no5</code> フォルダに移動</strong>しておくこと（次の節で使う）。</p>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">ターミナル — log.csv の中身を見る</span></div>
+        <img src="img/md2w5_term_csv.png" alt="head -8 log.csv の実行結果。1行目に見出し id,user_id,t,event,x,y,z、続いて join や move の行が並んでいる">
+        <figcaption class="exec-cap"><strong>実行結果:</strong> 1行目が<strong>見出し</strong>、2行目以降が<strong>データ1件ずつ</strong>。<code>join</code> のあとに <code>move</code> が続いているのが読み取れる。これは<strong>第3回のサッカーCSVとまったく同じ形</strong>。</figcaption>
+      </figure>
+
+      <div class="callout-tip">
+        <h4>CSV は VS Code でも Excel でも開ける</h4>
+        <p style="font-size:0.9rem;margin-bottom:0">ただのテキストなので、VS Code でクリックすればそのまま中身が見える。<strong>行数がとんでもなく多い</strong>ことに驚くはず（数分歩いただけで数千行）。それが「行動データ」の実感。</p>
+      </div>
+
+      <div class="notion-submit"><span>Notion に、<strong>ダウンロードした <code>log.csv</code> の中身（最初の10行くらい）</strong>のキャプチャを貼る（std5-3）。</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. std5-4 PANDAS ============ -->
+<section id="sec-pandas">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">7</div>
+      <h2>pandas で前処理して、軌跡を可視化する（標準ゴール）</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>生のログは、そのままでは分析できない</h3></div>
+      <p style="margin-bottom:0.6rem">CSVは手に入った。でも中身を見ると、<strong>そのままでは使えない行</strong>がたくさん混ざっている。分析の前に整える作業を<strong style="color:#4FC3F7">前処理</strong>という。実務では、分析にかける時間の<strong>半分以上が前処理</strong>とも言われる。今日は代表的な3つをやる。</p>
+
+      <table>
+        <tr><th style="width:22%">前処理</th><th style="width:30%">やること</th><th>なぜ必要か</th></tr>
+        <tr><td><strong>単位をそろえる</strong></td><td>ミリ秒 → 経過秒</td><td><code>1784118015584</code> のままでは人間が読めない。<strong>0秒から数え直す</strong>と扱いやすい</td></tr>
+        <tr><td><strong>いらない行を落とす</strong></td><td><code>event == 'move'</code> だけ残す</td><td><code>join</code>／<code>leave</code> の行は位置が <code>0,0,0</code>。<strong>混ぜると軌跡が原点に飛ぶ</strong></td></tr>
+        <tr><td><strong>重複を落とす</strong></td><td>同じ場所の連続を1件に</td><td>止まっていても100msごとに記録される。<strong>移動距離の計算では邪魔</strong></td></tr>
+      </table>
+
+      <div class="callout-danger">
+        <h4>「いらない行を落とす」を忘れると、どうなるか</h4>
+        <p style="font-size:0.9rem;margin-bottom:0"><code>join</code> と <code>leave</code> の行は、位置を <code>0, 0, 0</code> で記録している（入室した瞬間は、まだどこにいるか分からないため）。これを混ぜたまま軌跡を描くと、<strong>線が毎回わざわざ原点(0,0)に飛んで戻る</strong>という、実際には起きていない動きが描かれてしまう。<strong>「そのデータは何を意味する行なのか」を考えずに全部使うと、平気で嘘のグラフができる</strong>。これは前処理を学ぶ最大の理由。</p>
+      </div>
+    </div>
+
+    <div id="std5-4" class="card standard">
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std5-4：<code>analyze.py</code> で集計して、軌跡を描く（<strong>標準ゴール</strong>）</h3></div>
+      <p style="margin-bottom:0.5rem"><code>md2_no5</code> の直下に <code>analyze.py</code> を作る（<code>log.csv</code> と同じ場所）。<span class="blk">①</span>〜<span class="blk">④</span>を埋める。第3回で使った <code>pandas</code>・<code>matplotlib</code> がそのまま登場する。</p>
+
+      <div class="dirtree"><span class="dir">md2_no5/</span>
+├── server.js
+├── logs.db
+├── <span class="target">log.csv</span>          <span class="arrow">← ダウンロードしたCSVをここに置く</span>
+├── <span class="target">analyze.py</span>       <span class="arrow">← これを作る</span>
+└── <span class="dir">public/</span></div>
+
+      <pre><span class="code-label">Python ── analyze.py</span><span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+
+<span class="cmt"># --- 1. 読み込む ---</span>
+df = pd.<span class="fn">read_csv</span>(<span class="str">'log.csv'</span>)
+<span class="fn">print</span>(<span class="str">'=== 生データ ==='</span>)
+<span class="fn">print</span>(df.<span class="fn">head</span>())
+<span class="fn">print</span>(<span class="str">'行数:'</span>, <span class="fn">len</span>(df))
+
+<span class="cmt"># --- 2. 前処理 ---</span>
+<span class="cmt"># 時刻をミリ秒 → 秒（0からの経過秒）に直す</span>
+df[<span class="str">'sec'</span>] = (df[<span class="str">'t'</span>] - df[<span class="str">'t'</span>].<span class="fn">min</span>()) / <span class="num">1000</span>
+
+<span class="cmt"># 移動ログだけを取り出す（join / leave / click を除く）</span>
+move = df[df[<span class="str">'event'</span>] == <span class="str">'</span><span class="blk">①</span><span class="str">'</span>].<span class="fn">copy</span>()
+
+<span class="cmt"># 同じ場所に止まっている重複行を除く</span>
+move = move.<span class="fn">drop_duplicates</span>(subset=[<span class="str">'user_id'</span>, <span class="str">'x'</span>, <span class="str">'z'</span>])
+
+<span class="fn">print</span>(<span class="str">'\n=== 前処理後 ==='</span>)
+<span class="fn">print</span>(<span class="str">'move の行数:'</span>, <span class="fn">len</span>(move))
+
+<span class="cmt"># --- 3. ユーザごとに集計する ---</span>
+rows = []
+<span class="kw">for</span> user_id, g <span class="kw">in</span> move.<span class="blk">②</span>(<span class="str">'user_id'</span>):
+    g = g.<span class="fn">sort_values</span>(<span class="str">'sec'</span>)
+    <span class="cmt"># 1歩ぶんの差を出して、三平方の定理で距離にする</span>
+    dx = g[<span class="str">'x'</span>].<span class="fn">diff</span>()
+    dz = g[<span class="str">'z'</span>].<span class="fn">diff</span>()
+    distance = np.<span class="fn">sqrt</span>(dx**<span class="num">2</span> + dz**<span class="num">2</span>).<span class="fn">sum</span>()
+    duration = g[<span class="str">'sec'</span>].<span class="fn">max</span>() - g[<span class="str">'sec'</span>].<span class="fn">min</span>()
+    clicks = <span class="fn">len</span>(df[(df[<span class="str">'user_id'</span>] == user_id) & (df[<span class="str">'event'</span>] == <span class="str">'click'</span>)])
+    rows.<span class="fn">append</span>({
+        <span class="str">'user_id'</span>: user_id[:<span class="num">8</span>],
+        <span class="str">'移動距離'</span>: <span class="fn">round</span>(distance, <span class="num">2</span>),
+        <span class="str">'滞在時間'</span>: <span class="fn">round</span>(duration, <span class="num">1</span>),
+        <span class="str">'クリック回数'</span>: clicks,
+    })
+
+summary = pd.<span class="fn">DataFrame</span>(rows)
+<span class="fn">print</span>(<span class="str">'\n=== ユーザごとの集計 ==='</span>)
+<span class="fn">print</span>(summary.<span class="fn">to_string</span>(index=<span class="kw">False</span>))
+
+<span class="cmt"># --- 4. 軌跡を描く ---</span>
+plt.<span class="fn">figure</span>(figsize=(<span class="num">6</span>, <span class="num">6</span>))
+<span class="kw">for</span> user_id, g <span class="kw">in</span> move.<span class="fn">groupby</span>(<span class="str">'user_id'</span>):
+    g = g.<span class="fn">sort_values</span>(<span class="str">'sec'</span>)
+    <span class="cmt"># 真上から見た図なので、横軸 x・縦軸 z（y は高さなので使わない）</span>
+    plt.<span class="fn">plot</span>(g[<span class="str">'x'</span>], g[<span class="blk">③</span>], marker=<span class="str">'o'</span>, markersize=<span class="num">3</span>, label=user_id[:<span class="num">8</span>])
+plt.<span class="fn">xlabel</span>(<span class="str">'x'</span>)
+plt.<span class="fn">ylabel</span>(<span class="str">'z'</span>)
+plt.<span class="fn">title</span>(<span class="str">'Movement trajectory'</span>)
+plt.<span class="fn">legend</span>()
+plt.<span class="fn">grid</span>(alpha=<span class="num">0.3</span>)
+plt.<span class="fn">axis</span>(<span class="str">'equal'</span>)
+plt.<span class="fn">savefig</span>(<span class="str">'</span><span class="blk">④</span><span class="str">'</span>, dpi=<span class="num">120</span>, bbox_inches=<span class="str">'tight'</span>)
+<span class="fn">print</span>(<span class="str">'\ntrajectory.png を保存しました'</span>)</pre>
+
+      <div class="callout-info" style="margin-top:0.5rem">
+        <h4>穴埋めのヒント</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><span class="blk">①</span>：移動を表すイベント名</li>
+          <li><span class="blk">②</span>：「〜ごとにまとめる」pandas のメソッド。<strong>SQL の <code>GROUP BY</code> と同じ働き</strong>（節4を思い出す）</li>
+          <li><span class="blk">③</span>：真上から見た地図なので、縦軸には<strong>奥行き</strong>の列を使う（<code>y</code> は高さなので違う）</li>
+          <li><span class="blk">④</span>：保存するファイル名。最後の <code>print</code> と揃える</li>
+        </ul>
+      </div>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">実行する</p>
+      <pre><span class="code-label">Terminal</span><span class="cmt"># 足りないものがあれば入れる</span>
+pip install pandas numpy matplotlib
+
+<span class="cmt"># log.csv と同じフォルダで実行する</span>
+python3 analyze.py</pre>
+
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">ターミナル — python3 analyze.py</span></div>
+        <img src="img/md2w5_term_pandas.png" alt="python3 analyze.py の実行結果。生データの先頭5行、行数275、前処理後のmove行数140、ユーザごとの移動距離・滞在時間・クリック回数の表が表示されている">
+        <figcaption class="exec-cap"><strong>実行結果:</strong> 生データ<strong>275行</strong> → 前処理で <code>move</code> だけに絞って重複を落とすと<strong>140行</strong>。そこから<strong>移動距離・滞在時間・クリック回数</strong>が出た。<span style="color:#999">（数値は歩き方によって変わる）</span></figcaption>
+      </figure>
+
+      <div class="callout-tip" style="margin-top:0.6rem">
+        <h4>注目：275行 → 140行。半分が「捨てられた」</h4>
+        <p style="font-size:0.9rem;margin-bottom:0">消えた分は <code>join</code>／<code>leave</code>／<code>click</code> の行と、<strong>止まっている間の重複</strong>。<strong>「たくさん取れた＝良いデータ」ではない</strong>。分析したい問いに対して、<strong>意味のある行がどれだけあるか</strong>が本当の中身。</p>
+      </div>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.2rem 0 0.3rem">🎉 標準ゴール：自分たちの軌跡が見える</p>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">trajectory.png</span></div>
+        <img src="img/md2w5_trajectory.png" alt="2人分の移動軌跡を真上から見た折れ線グラフ。青とオレンジの線がそれぞれ別の経路を通り、点で100ミリ秒ごとの位置が示されている">
+        <figcaption class="exec-cap"><strong>移動の軌跡:</strong> 真上から見た2人の歩いた道。<strong>点1つが100ミリ秒ごとの位置＝ログ1行</strong>。点の間隔が<strong>広い＝速く動いた</strong>、<strong>狭い＝ゆっくり／止まっていた</strong>。第3回のサッカー選手の動きと同じ見方ができる。</figcaption>
+      </figure>
+
+      <div class="callout-info" style="margin-top:0.7rem">
+        <h4>グラフから読み取ってみよう</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><strong>どこに長くいたか：</strong>点が密集しているところ＝滞在時間が長い場所</li>
+          <li><strong>どこへ向かったか：</strong>線が箱（<code>-3 1 -5</code>／<code>0 1 -7</code>／<code>3 1 -5</code>）の方へ伸びていないか</li>
+          <li><strong>2人の動きは似ているか：</strong>同じ空間でも、人によって通る道は違う ＝ <strong>これが「個人差」というデータ</strong></li>
+        </ul>
+      </div>
+
+      <div class="concept-box" style="margin-top:0.8rem">
+        <h4>次回への橋：この数字が「実験」の材料になる</h4>
+        <p style="font-size:0.9rem;margin-bottom:0.5rem">いま出した<strong>移動距離・滞在時間・クリック回数</strong>は、ただの数字ではない。<strong>人の行動を測る「ものさし」</strong>＝<strong style="color:#4FC3F7">評価指標</strong>になる。次回はこれを使って、こんな問いに答える。</p>
+        <ul class="point-list" style="margin-bottom:0.5rem;font-size:0.9rem">
+          <li>「<strong>明るい空間と暗い空間</strong>では、人の移動距離は変わるか？」</li>
+          <li>「<strong>目印がある空間とない空間</strong>では、目的地に着くまでの時間は変わるか？」</li>
+        </ul>
+        <p style="font-size:0.9rem;margin-bottom:0">空間のデザイン（＝<strong>条件</strong>）を変えて、指標がどう動くかを比べる。これが<strong>実験</strong>。今日つくった記録のしくみが、そのまま<strong>測定器</strong>になる。</p>
+      </div>
+
+      <div class="callout-warning" style="margin-top:0.7rem">
+        <h4>集計の単位を意識しよう（次回の下準備）</h4>
+        <p style="font-size:0.9rem;margin-bottom:0">同じログでも、<strong>何を1件と数えるか</strong>で結果は変わる。<strong>ログ1行ごと</strong>（275件）／<strong>ユーザごと</strong>（2件）／<strong>条件ごと</strong>（A・Bの2件）。今日は <code>groupby('user_id')</code> で<strong>ユーザ単位</strong>にまとめた。次回は<strong>条件（A/B）単位</strong>でまとめて比べることになる。<strong>「1行が何を表すか」を言えるかどうか</strong>が、分析の分かれ目。</p>
+      </div>
+
+      <div class="notion-submit"><span>Notion に、<strong><code>analyze.py</code> のコード</strong>・<strong>集計結果（ターミナル出力）</strong>・<strong><code>trajectory.png</code></strong> を貼り、<strong>軌跡から読み取れること</strong>を2〜3行で書く（std5-4・標準ゴール）。</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8. ADVANCED ============ -->
+<section id="sec-advance">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800;color:#111">8</div>
+      <h2>発展課題 ― 記録のしくみを、自分の興味に向ける</h2>
+    </div>
+
+    <div id="adv5-1" class="card advanced">
+      <div class="card-header"><h3><span class="tag tag-advanced" style="font-size:0.7rem">発展課題</span> adv5-1：アイデアを1つ以上選んで、自分の空間を「もっと語るデータ」にする（任意）</h3></div>
+      <p style="margin-bottom:0.6rem">標準ゴールまで来たら、<strong>「自分は何を知りたいか」</strong>を考えてみよう。知りたいことが決まると、<strong>取るべきデータも決まる</strong>。下から1つ以上選んで挑戦する（AIに聞きながらでOK。大事なのは<strong>作れるか</strong>ではなく<strong>説明できるか</strong>）。</p>
+
+      <div style="background:#0a1e2e;border:1px solid #24506b;border-left:4px solid #4FC3F7;border-radius:10px;padding:0.7rem 1rem;margin:1.2rem 0 0.8rem;font-weight:700;color:#4FC3F7;font-size:0.95rem">A. 取るデータを増やす</div>
+
+      <h4 style="color:#4FC3F7;font-size:0.95rem;margin:0.8rem 0 0.3rem">アイデア①：「どの箱を」クリックしたかを記録する</h4>
+      <p style="font-size:0.9rem;margin-bottom:0.4rem">いまは「クリックした」ことしか分からない。<strong>どの箱か</strong>が分かれば、<strong>人気の箱ランキング</strong>や<strong>選択率</strong>が出せる。表に <code>target</code> 列を足すところから始める。</p>
+      <pre><span class="code-label">JavaScript ── public/index.html（送る側）</span><span class="kw">&lt;a-box</span> class=<span class="str">"target"</span> id=<span class="str">"box-orange"</span> position=<span class="str">"-3 1 -5"</span> color=<span class="str">"#FF8A3D"</span><span class="kw">&gt;&lt;/a-box&gt;</span>
+
+<span class="cmt">// クリックされた箱の id もいっしょに送る</span>
+socket.<span class="fn">emit</span>(<span class="str">'click'</span>, {
+  position: { x: pos.x, y: pos.y, z: pos.z },
+  target: box.<span class="fn">getAttribute</span>(<span class="str">'id'</span>)   <span class="cmt">// ← 追加</span>
+});</pre>
+      <p style="font-size:0.85rem;color:#999;margin-bottom:0">※ <code>server.js</code> 側では <code>CREATE TABLE</code> に <code>target TEXT</code> を足し、<code>INSERT</code> の <code>?</code> を1つ増やす。<strong>すでに <code>logs.db</code> がある場合は、いったんファイルを削除</strong>してから起動すると新しい形の表が作られる（<code>IF NOT EXISTS</code> があるので、古い表のままだと列は増えない）。</p>
+
+      <h4 style="color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">アイデア②：向き（どこを見ていたか）を記録する</h4>
+      <p style="font-size:0.9rem;margin-bottom:0.4rem">位置だけでは「そこで<strong>何を見ていたか</strong>」は分からない。カメラの<strong>回転</strong>を足すと、視線の向きが分かる。<code>rx, ry, rz</code> の3列を足してみよう。</p>
+      <pre><span class="code-label">JavaScript ── public/index.html</span><span class="kw">const</span> rot = cam.object3D.rotation;
+socket.<span class="fn">emit</span>(<span class="str">'move'</span>, {
+  position: { x: pos.x, y: pos.y, z: pos.z },
+  rotation: { x: rot.x, y: rot.y, z: rot.z },   <span class="cmt">// ← 追加</span>
+  color: myColor
+});</pre>
+
+      <h4 style="color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">アイデア③：サンプリング間隔を変えて、データ量を比べる</h4>
+      <p style="font-size:0.9rem;margin-bottom:0.4rem"><code>setInterval</code> の <code>100</code> を <code>1000</code>（毎秒1回）や <code>33</code>（毎秒30回）に変えて、<strong>同じ1分間で行数がどう変わるか</strong>／<strong>軌跡の見た目がどう変わるか</strong>を比べる。<strong>粗いと動きがカクカクになり、細かいと行数が爆発する</strong>。この<strong>トレードオフ</strong>を自分の目で確かめるのは、とても良い実験。</p>
+
+      <div style="background:#0a1e2e;border:1px solid #24506b;border-left:4px solid #4FC3F7;border-radius:10px;padding:0.7rem 1rem;margin:1.2rem 0 0.8rem;font-weight:700;color:#4FC3F7;font-size:0.95rem">B. 見せ方・使い方を育てる</div>
+
+      <h4 style="color:#4FC3F7;font-size:0.95rem;margin:0.8rem 0 0.3rem">アイデア④：ダッシュボードを育てる</h4>
+      <p style="font-size:0.9rem;margin-bottom:0.4rem"><code>/api/stats</code> に <code>SELECT</code> を足すだけで、いろいろ分かる。<strong>SQL を1行足す → 画面に出す</strong>のくり返し。</p>
+      <pre><span class="code-label">JavaScript ── server.js の /api/stats に足す例</span><span class="cmt">// イベントの種類ごとの件数</span>
+<span class="kw">const</span> byEvent = db.<span class="fn">prepare</span>(
+  <span class="str">'SELECT event, COUNT(*) AS n FROM logs GROUP BY event'</span>
+).<span class="fn">all</span>();
+
+<span class="cmt">// クリックが多い人ランキング</span>
+<span class="kw">const</span> clickRank = db.<span class="fn">prepare</span>(
+  <span class="str">"SELECT user_id, COUNT(*) AS n FROM logs WHERE event = 'click' GROUP BY user_id ORDER BY n DESC"</span>
+).<span class="fn">all</span>();</pre>
+
+      <h4 style="color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">アイデア⑤：🔥 取ったログを、3D空間で「再生」する</h4>
+      <p style="font-size:0.9rem;margin-bottom:0.4rem"><strong>今日いちばんの目玉。</strong>第3回では、サッカーの座標CSVを読んでスフィアを動かした。<strong>まったく同じ手法</strong>で、<strong>自分たちの <code>log.csv</code></strong> を再生できる。つまり<strong>「さっきの自分の動きを、あとから空間の中で見る」</strong>ということ。第3回と第5回が、ここでつながる。</p>
+      <pre><span class="code-label">JavaScript ── 再生の考え方（第3回の setInterval と同じ形）</span><span class="cmt">// log.csv を読んで、user_id ごとの座標リストにしておく</span>
+<span class="cmt">// （fetch('/log.csv') で取ってきて、行ごとに split(',') で分ける）</span>
+
+<span class="kw">let</span> i = <span class="num">0</span>;
+<span class="fn">setInterval</span>(() <span class="op">=&gt;</span> {
+  <span class="cmt">// i 番目の位置にゴーストを動かす（100ms ごと ＝ 記録したときと同じ速さ）</span>
+  ghost.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, path[i]);
+  i++;
+  <span class="kw">if</span> (i &gt;= path.length) i = <span class="num">0</span>;   <span class="cmt">// 最後まで行ったら最初に戻る</span>
+}, <span class="num">100</span>);</pre>
+      <div class="callout-tip" style="margin-top:0.4rem">
+        <h4>なぜ 100ms ごとに動かすと、同じ速さで再生できるのか</h4>
+        <p style="font-size:0.9rem;margin-bottom:0">記録したとき <code>setInterval(…, 100)</code> で<strong>100msごとに1行</strong>書いた。だから<strong>1行 ＝ 100ms</strong>。再生も100msごとに1行ずつ進めれば、<strong>実際と同じ速さ</strong>になる。<code>50</code> にすれば2倍速、<code>200</code> にすればスローモーション。<strong>サンプリング間隔を知っていると、時間を操作できる</strong>。</p>
+      </div>
+
+      <h4 style="color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">アイデア⑥：Three.js をのぞいてみる</h4>
+      <p style="font-size:0.9rem;margin-bottom:0.4rem">今日ずっと書いていた <code>cam.object3D.position</code> の <code><strong>object3D</strong></code> は、実は <strong>Three.js</strong>（A-Frameの土台になっているライブラリ）のオブジェクト。A-Frame は Three.js を<strong>HTMLタグで書けるように包んだもの</strong>。<code>console.log(cam.object3D)</code> をブラウザの Console で実行して、中に何が入っているか（<code>position</code>・<code>rotation</code>・<code>matrix</code>…）をのぞいてみよう。<strong>位置データが最終的に「行列」として扱われている</strong>ことが見える。</p>
+
+      <div class="callout-warning" style="margin-top:0.8rem">
+        <h4>データを扱うときの注意</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><strong>個人が特定できる情報は記録しない。</strong><code>socket.id</code> のような<strong>その場限りのID</strong>にとどめる。名前を記録する場合は<strong>ニックネーム</strong>にする</li>
+          <li>他の人のログを扱うときは、<strong>本人に「記録している」と伝える</strong>。これは実験の基本的な礼儀であり、ルール（<strong>インフォームド・コンセント</strong>）</li>
+          <li><code>logs.db</code> や <code>log.csv</code> を<strong>そのままネットに公開しない</strong>（授業の提出はOK）</li>
+        </ul>
+      </div>
+
+      <div class="callout-tip" style="margin-top:0.8rem">
+        <h4>次回への予告：この記録装置で「実験」をする</h4>
+        <p style="font-size:0.9rem;margin-bottom:0">今日つくったのは<strong>測定器</strong>。次回はこれを使って<strong>実験</strong>をする。空間の条件を<strong>A / B</strong> の2種類つくり、<strong>どちらが使いやすいか</strong>を、行動データ（移動距離・時間）と主観評価（アンケート）の<strong>両方</strong>で比べる。そして「<strong>この差は、偶然ではないと言えるか？</strong>」を<strong>統計的検定</strong>で判断する。今日の <code>groupby</code> が、次回の主役になる。</p>
+      </div>
+
+      <div class="notion-submit"><span>Notion に、<strong>挑戦したアイデアの番号</strong>と<strong>結果のキャプチャ</strong>、そして<strong>「何を知りたくてそのデータを取ったのか」</strong>を2〜3行で書く（adv5-1・任意）。</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NOTION / SUBMIT ============ -->
+<section id="sec-notion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">📝</div>
+      <h2>提出物のまとめ</h2>
+    </div>
+    <div class="card">
+      <p style="margin-bottom:0.6rem">下の項目を1つのファイル（Notion など）にまとめ、<strong>PDF 1枚</strong>にして提出する。</p>
+      <table>
+        <tr><th style="width:22%">項目</th><th>内容</th></tr>
+        <tr><td><span class="tag tag-group" style="font-size:0.65rem">グループワーク</span> gw5</td><td>担当した確認項目と、詰まった点／分かった点の1〜2行メモ（コードは書かない）</td></tr>
+        <tr><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std5-1</td><td><code>logs.db</code> を SQLite Viewer で開き、<strong><code>join</code> の行が並んでいる</strong>キャプチャ</td></tr>
+        <tr><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std5-2</td><td>穴を埋めた <code>server.js</code>／<code>index.html</code> のコードと、<strong><code>move</code>・<code>click</code> が溜まった <code>logs.db</code></strong> のキャプチャ</td></tr>
+        <tr><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std5-3</td><td>ダウンロードした <strong><code>log.csv</code> の中身</strong>（最初の10行くらい）のキャプチャ</td></tr>
+        <tr><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std5-4</td><td><code>analyze.py</code> のコード＋<strong>集計結果</strong>＋<strong><code>trajectory.png</code></strong>＋軌跡から読み取れること2〜3行（<strong>標準ゴール</strong>）</td></tr>
+        <tr><td><span class="tag tag-advanced" style="font-size:0.65rem">発展課題</span> adv5-1</td><td>挑戦したアイデアのキャプチャ＋「何を知りたくて取ったか」のメモ（任意）</td></tr>
+      </table>
+      <p style="font-size:0.8rem;color:#999;margin-top:0.5rem">※ std5-1〜4 はすべて記録が必要。adv5-1 は任意です。</p>
+
+      <div class="callout-info" style="margin-top:1rem">
+        <h4>おまけ：今日いちばん大事だったこと</h4>
+        <p style="font-size:0.92rem;margin-bottom:0">技術としては <code>CREATE TABLE</code> と <code>INSERT</code> と <code>SELECT</code> の3つだけ。でも本当に持ち帰ってほしいのは、<strong style="color:#4FC3F7">「何を1行に残すかを決めた時点で、あとから何が分かるかが決まってしまう」</strong>ということ。<code>event</code> 列を作らなければ「クリック」は数えられなかった。<code>t</code> 列を作らなければ「滞在時間」は出せなかった。<strong>ログ設計は、未来の分析の設計</strong>である。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container" style="text-align:center">
+    <a href="md2_review.html" style="display:inline-flex;align-items:center;gap:0.6rem;background:linear-gradient(135deg,#1a2e0a,#0a1a2e);border:2px solid #4FC3F7;border-radius:16px;padding:1.2rem 2rem;text-decoration:none;color:#fff;font-weight:800;font-size:clamp(1rem,2.5vw,1.2rem);box-shadow:0 6px 24px rgba(79,195,247,0.25);max-width:100%">
+      🎲 実技 理解度チェック（ランダム出題）へ
+    </a>
+    <p style="font-size:0.85rem;color:#888;margin-top:0.8rem">アクセスするたびに課題が変わる復習ページ。ここに出た課題をその場で実演しよう。</p>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>MD2 第5回 ― 行動ログを記録する（SQLite + CSV + pandas）</p>
+    <div style="margin-top:0.5rem;font-size:0.8rem;color:#666">&copy;2026 Ryota Nakamura.</div>
+  </div>
+</footer>
+<!-- ============ SCRIPTS ============ -->
+<script>
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    // ラベル(.code-label)とコピーボタンを取り除いた複製から、純粋なコードだけを取り出す
+    var clone = pre.cloneNode(true);
+    clone.querySelectorAll('.code-label, .copy-btn').forEach(function(el) { el.remove(); });
+    var code = clone.textContent.replace(/^\n+/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() { btn.textContent = 'コピー'; btn.classList.remove('copied'); }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+document.querySelectorAll(':not(pre) > code').forEach(function(code) {
+  code.title = 'クリックでコピー';
+  code.addEventListener('click', function() {
+    navigator.clipboard.writeText(code.textContent).then(function() {
+      code.classList.add('copied');
+      setTimeout(function() { code.classList.remove('copied'); }, 1500);
+    });
+  });
+});
+</script>
+</body>
+</html>
