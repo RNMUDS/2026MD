@@ -1663,6 +1663,58 @@ plt.<span class="fn">savefig</span>(<span class="str">'distance_vs_coins.png'</s
 
       <div class="notion-submit"><span>Notion に、<strong><code>analyze.py</code> のコード</strong>・<strong>STEP5とSTEP6の出力</strong>・<strong><code>trajectory.png</code> と <code>distance_vs_coins.png</code></strong> を貼り、<strong>「歩いた人ほど取れたか」の答えと、グラフから読み取れること</strong>を2〜3行で書く（std5-2・標準ゴール）。</span></div>
   </div>
+
+    <div id="mindset" class="card">
+      <div class="card-header"><h3>おわりに：文法より、考え方 ― AI時代のデータ分析の心得</h3></div>
+      <p style="margin-bottom:0.6rem">今日書いた pandas の文法は、<strong>AI に聞けば数秒で出てくる</strong>。ではもう学ぶことは無いのか ― 逆である。<strong>「何を分析するべきか」と「その結果をどう解釈するか」だけは、AI 任せにできない</strong>。現場で価値を生むデータサイエンティストは、ライブラリに詳しい人ではなく、<strong style="color:#4FC3F7">「良い問いを立てられる人」</strong>。データ分析の標準プロセスとして広く使われる <strong>CRISP-DM</strong> も、コードではなく<strong>「課題を定義すること」</strong>を最初のステップに置いている。</p>
+
+      <div class="analogy">
+        <strong>AI は優秀な部下</strong>。「move の行だけに絞るコードを書いて」と頼めば一瞬で書いてくれる。でも<strong>「そもそも何を知りたいのか」だけは、部下からは出てこない</strong>。それを決めるのが、あなたの仕事。
+      </div>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.2rem 0 0.3rem">① 分析を始める前に ― 問いを立てる</p>
+      <ul class="point-list" style="font-size:0.92rem;margin-bottom:0">
+        <li><strong>目的を最初に決める：</strong>「何を知りたいのか」「何を改善したいのか」を明確にしてから、手を動かす</li>
+        <li><strong>データではなく課題を見る：</strong>手元のデータから考え始めない。<strong>解決したい課題</strong>から考える</li>
+        <li><strong>良い問いを立てる：</strong>「売上は？」ではなく<strong>「なぜ売上が下がったのか？」</strong> ― 問いを具体化する</li>
+        <li><strong>仮説を立ててから分析する：</strong>「○○が原因ではないか」という予想を持って、データに向かう</li>
+      </ul>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.2rem 0 0.3rem">② データに向き合うとき</p>
+      <ul class="point-list" style="font-size:0.92rem;margin-bottom:0">
+        <li><strong>まずデータを疑う：</strong>欠損値・外れ値・入力ミス・重複を確認する。今日の <code>join</code> の <code>0,0,0</code> が、まさにそれ</li>
+        <li><strong>平均だけを見ない：</strong>分布・ばらつき・中央値・割合も確認する</li>
+        <li><strong>必ず可視化する：</strong>グラフにすると、異常や傾向が一目で分かることが多い</li>
+        <li><strong>データの背景を理解する：</strong>誰が・いつ・どのように集めたデータなのか。今日のログは<strong>自分たちで集めた</strong>から、全部答えられる</li>
+        <li><strong>比較対象を用意する：</strong>前年・平均・他グループ ― <strong>比べて初めて</strong>数字は意味を持つ</li>
+      </ul>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.2rem 0 0.3rem">③ 結果を解釈するとき</p>
+      <ul class="point-list" style="font-size:0.92rem;margin-bottom:0">
+        <li><strong>相関と因果を混同しない：</strong>一緒に動くことと、原因・結果であることは別（さっきの相関 0.95 を思い出す）</li>
+        <li><strong>分析結果を鵜呑みにしない：</strong>他の説明がないか、常に考える</li>
+      </ul>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.2rem 0 0.3rem">④ 分析を届けるとき</p>
+      <ul class="point-list" style="font-size:0.92rem;margin-bottom:0">
+        <li><strong>小さく試して改善する：</strong>一度で完璧を目指さず、分析→改善を繰り返す。STEP を1つずつ足したのは、この練習</li>
+        <li><strong>再現できる分析を心掛ける：</strong>他の人が同じ結果を得られるようにする。<code>analyze.py</code> は、それ自体が<strong>再現できる手順書</strong></li>
+        <li><strong>結果を相手に伝える：</strong>「分かった」で終わらせない。<strong>意思決定につながる説明</strong>までが分析</li>
+        <li><strong>倫理を意識する：</strong>個人情報・バイアス・公平性。今日の <code>log.csv</code> も<strong>人の行動の記録</strong> ― 扱いには責任が伴う</li>
+        <li><strong>AI を部下として使う：</strong>コード生成は AI に任せ、人間は<strong>目的設定・評価・解釈</strong>を担当する</li>
+      </ul>
+
+      <div class="callout-tip" style="margin-top:0.8rem">
+        <h4>実は、今日の std5-2 はこの心得をなぞっていた</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><strong>問いを先に立てた</strong> ―「たくさん歩いた人ほど、コインを多く取れたのか？」から始めた</li>
+          <li><strong>データを疑った</strong> ― STEP1 でまず「見て」、STEP2 で <code>join</code>／<code>leave</code> の行と重複を落とした</li>
+          <li><strong>数字とグラフの両方で見た</strong> ― STEP6 の相関係数だけで終わらず、STEP7 で散布図も描いた</li>
+          <li><strong>相関と因果を分けた</strong> ― 相関 0.95 でも「歩いたから取れた」とは言わなかった</li>
+        </ul>
+        <p style="font-size:0.9rem;margin:0.5rem 0 0">この<strong>「見る → 問う → 確かめる → また見る」の繰り返し</strong>を<strong style="color:#4FC3F7">探索的データ分析（EDA）</strong>と呼ぶ。文法は忘れても、AI に聞けばよい。<strong>持ち帰ってほしいのは、この進め方</strong>。次回・第6回は、いよいよ「因果」を実験で確かめる。</p>
+      </div>
+    </div>
 </section>
 
 <!-- ============ 8. ADVANCED ============ -->
