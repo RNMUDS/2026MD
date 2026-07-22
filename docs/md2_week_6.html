@@ -1,0 +1,1995 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第6回: その差は本物か？ ― アンケートと有意差検定で「差」を科学する | MD2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET & BASE ============ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: clamp(13px, 1.6vw, 28px); }
+html, body { overflow-x: hidden; max-width: 100%; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #111111;
+  color: #e0e0e0;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+img, video, iframe, svg, canvas { max-width: 100%; height: auto; }
+
+/* ============ LAYOUT ============ */
+.container { max-width: 1600px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+
+/* ============ HEADER ============ */
+.hero {
+  background: linear-gradient(135deg, #111111, #0a1e2e, #0a0a1a);
+  color: white;
+  padding: clamp(3rem, 8vw, 6rem) 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(79,195,247,0.28), transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(79,195,247,0.12), transparent 50%);
+}
+.hero .container { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 100px;
+  padding: 0.35rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+}
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+
+/* ============ SUBMISSION BOX ============ */
+.submission-box {
+  background: linear-gradient(135deg, #1A1A1A, #0a1e2e);
+  border: 2px solid #4FC3F7;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin: 2rem 0;
+}
+.submission-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #4FC3F7;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.submission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.5rem;
+}
+.sub-item {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  gap: 0.3rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.4rem;
+  padding: 0.6rem 0.4rem;
+  font-size: 0.55rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.sub-item .sub-count { margin-bottom: 0.1rem; }
+.sub-item .tag { margin-bottom: 0.15rem; }
+.sub-count {
+  background: #4FC3F7;
+  color: white;
+  border-radius: 0.2rem;
+  min-width: 1.5rem; height: 1.5rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700;
+}
+
+/* ============ TAGS ============ */
+.tag {
+  display: inline-flex; align-items: center; gap: 0.2rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 100px;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.tag-note      { background: #0a1a2e; color: #4FC3F7; }
+.tag-standard  { background: #0a1a2e; color: #4FC3F7; }
+.tag-advanced  { background: #2e2410; color: #FFB800; }
+.tag-group     { background: #0a1a2e; color: #4FC3F7; }
+
+/* ============ BLANK (穴埋め) ============ */
+.blk {
+  display: inline-block;
+  min-width: 2.2em;
+  padding: 0 0.5em;
+  margin: 0 0.1em;
+  background: rgba(79,195,247,0.14);
+  border: 1px dashed #4FC3F7;
+  border-radius: 5px;
+  color: #4FC3F7;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ============ SECTION HEADERS ============ */
+.section-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.section-num {
+  width: 2.5rem; height: 2.5rem;
+  border-radius: 0.4rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 900; color: white;
+  flex-shrink: 0;
+}
+.section-header h2 {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+/* ============ SECTION TOGGLE ============ */
+.section-header.toggle-head {
+  cursor: pointer;
+  user-select: none;
+  margin-bottom: 0;
+  padding: 0.5rem 0;
+  border-radius: 0.5rem;
+  transition: background 0.15s;
+}
+.section-header.toggle-head:hover { background: rgba(255,255,255,0.04); }
+.section-header.toggle-head h2 { flex: 1; }
+.section-chevron {
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  color: #888;
+  transition: transform 0.2s;
+}
+.section-header.toggle-head.open .section-chevron { transform: rotate(90deg); }
+.section-body { display: none; }
+section[id], .card[id] { scroll-margin-top: 3.2rem; }
+.section-body.open { display: block; padding-top: 1.5rem; }
+
+.card-header.toggle-head {
+  cursor: pointer;
+  user-select: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+  transition: opacity 0.15s;
+}
+.card-header.toggle-head:hover { opacity: 0.75; }
+.card-header.toggle-head h3 { flex: 1; }
+.card-header.toggle-head.open {
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #222;
+}
+.card-header.toggle-head.open .section-chevron { transform: rotate(90deg); }
+.card > .section-body.open { padding-top: 0; }
+
+.section-close-wrap {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+.section-close {
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #999;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 100px;
+  padding: 0.45rem 1.1rem;
+  transition: color 0.15s, border-color 0.15s;
+}
+.section-close:hover { color: #4FC3F7; border-color: #4FC3F7; }
+
+/* ============ CARDS ============ */
+.card {
+  background: #141414;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  border: 1px solid #2a2a2a;
+}
+.card-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #222;
+}
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.standard  { border-left: 4px solid #4FC3F7; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.card.group     { border-left: 4px solid #4FC3F7; }
+
+/* ============ NOTION CALLOUT ============ */
+.notion-submit {
+  background: #0a1e2e;
+  border: 1px solid #4FC3F7;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  display: flex; align-items: flex-start; gap: 0.5rem;
+}
+.notion-submit::before { content: '\1F4DD'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+
+/* ============ TABLES ============ */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem;
+  margin: 1rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+th {
+  background: rgba(79, 195, 247, 0.15);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  color: #4FC3F7;
+  letter-spacing: 0.02em;
+}
+td { padding: 0.55rem 0.8rem; border-top: 1px solid #222; }
+tr:nth-child(even) td { background: #111; }
+
+/* ============ CODE ============ */
+pre {
+  background: #0A0A0A;
+  color: #E0E0E0;
+  border-radius: 12px;
+  padding: clamp(0.8rem, 2vw, 1.4rem);
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
+  font-size: clamp(0.75rem, 1.3vw, 0.88rem);
+  line-height: 1.7;
+  margin: 1rem 0;
+  position: relative;
+}
+pre .kw { color: #4FC3F7; }
+pre .fn { color: #C3CEDA; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #FFB800; }
+pre .op { color: #9AA6B2; }
+/* ハイライト行（この手順で書き足す部分） */
+pre .hl { display: block; background: rgba(79,195,247,0.14); box-shadow: inset 3px 0 0 #4FC3F7; }
+/* ディレクトリツリー */
+.dirtree { background:#0A0A0A; border:1px solid #333; border-radius:12px; padding:0.9rem 1.1rem; font-family:'JetBrains Mono',monospace; font-size:0.82rem; line-height:1.7; color:#c3ceda; overflow-x:auto; white-space:pre; margin:0.6rem 0; }
+.dirtree .dir { color:#4FC3F7; font-weight:700; }
+.dirtree .target { background:rgba(79,195,247,0.18); color:#fff; font-weight:700; border-radius:4px; padding:0 0.25rem; }
+.dirtree .arrow { color:#8fb7d4; }
+.dirtree .mut { color:#666; }
+.hl-legend { font-size:0.82rem; color:#8fb7d4; margin:0.3rem 0 0.2rem; }
+.hl-legend b { color:#4FC3F7; }
+.code-label {
+  position: absolute; top: 0; right: 0;
+  background: rgba(255,255,255,0.08);
+  color: #999999;
+  padding: 0.2rem 0.8rem;
+  border-radius: 0 12px 0 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+:not(pre) > code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(79,195,247,0.15);
+  padding: 0.15em 0.45em;
+  border-radius: 5px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+:not(pre) > code:hover { background: rgba(79,195,247,0.3); }
+:not(pre) > code.copied { background: rgba(79,195,247,0.5); }
+
+/* ============ EXPLANATION BLOCKS ============ */
+.concept-box {
+  background: rgba(79, 195, 247, 0.12);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  border: 1px solid #2a3a3a;
+}
+.concept-box h4 { font-size: 0.95rem; font-weight: 700; color: #4FC3F7; margin-bottom: 0.5rem; }
+.analogy {
+  background: #1a1a0a;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 0.75rem 0;
+  border-left: 3px solid #FFB800;
+  font-size: 0.95rem;
+}
+.analogy::before {
+  content: '\1F4A1 日常の例';
+  display: block;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #FFB800;
+  margin-bottom: 0.3rem;
+}
+.point-list { list-style: none; padding: 0; }
+.point-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+}
+.point-list li::before {
+  content: '\25B8';
+  position: absolute; left: 0;
+  color: #4FC3F7;
+  font-weight: 700;
+}
+
+/* ============ EXEC SHOT (実行結果キャプチャ) ============ */
+.exec-shot {
+  margin: 1rem 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #333;
+  background: #0d0d0d;
+}
+.exec-bar {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.5rem 0.8rem;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+}
+.exec-bar .d { width: 0.7rem; height: 0.7rem; border-radius: 50%; }
+.exec-bar .d.r { background: #ff5f57; }
+.exec-bar .d.y { background: #febc2e; }
+.exec-bar .d.g { background: #28c840; }
+.exec-bar .u { margin-left: 0.5rem; font-size: 0.72rem; color: #999; font-family: 'JetBrains Mono', monospace; }
+.exec-shot img { display: block; width: 100%; }
+.exec-cap { padding: 0.6rem 0.9rem; font-size: 0.82rem; color: #aaa; background: #0d0d0d; }
+.exec-cap strong { color: #4FC3F7; }
+.exec-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 720px) { .exec-pair { grid-template-columns: 1fr; } }
+
+/* ============ ANSWERS (COLLAPSIBLE) ============ */
+details {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+details summary {
+  padding: 0.8rem 1.2rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 0.5rem;
+  background: #1a1a1a;
+  user-select: none;
+}
+details summary::marker { content: ''; }
+details summary::before {
+  content: '\25B6';
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+  color: #666;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
+
+/* ============ CALLOUTS ============ */
+.callout-danger {
+  background: rgba(255, 82, 82, 0.08);
+  border: 1px solid rgba(255, 82, 82, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-danger h4 { color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
+.callout-warning {
+  background: rgba(255, 184, 0, 0.08);
+  border: 1px solid rgba(255, 184, 0, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-warning h4 { color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
+.callout-info {
+  background: rgba(79, 195, 247, 0.08);
+  border: 1px solid rgba(79, 195, 247, 0.3);
+  border-left: 4px solid #4FC3F7;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-info h4 { color: #4FC3F7; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
+.callout-tip {
+  background: rgba(79, 195, 247, 0.08);
+  border: 1px solid rgba(79, 195, 247, 0.3);
+  border-left: 4px solid #4FC3F7;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-tip h4 { color: #4FC3F7; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
+
+/* ============ FOOTER ============ */
+footer {
+  background: #0A0A0A;
+  color: #999999;
+  padding: 2rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 640px) {
+  .submission-items { grid-template-columns: 1fr; }
+  .section-num { width: 2rem; height: 2rem; font-size: 0.85rem; }
+  table { max-width: 100%; font-size: 0.78rem; }
+  th, td { padding: 0.4rem 0.5rem; white-space: normal; }
+  th { font-size: 0.72rem; }
+  .callout-danger, .callout-warning, .callout-info, .callout-tip,
+  .concept-box, .analogy, .notion-submit { padding: 0.8rem 0.9rem; border-radius: 10px; font-size: 0.88rem; overflow-x: hidden; }
+  details summary { padding: 0.7rem 0.9rem; font-size: 0.9rem; }
+  details .answer-content { padding: 0.8rem 0.9rem; overflow-x: auto; }
+  p, li, td, th, summary, .card, div { overflow-wrap: anywhere; }
+  :not(pre) > code { white-space: normal; overflow-wrap: anywhere; word-break: break-all; }
+  [id] { scroll-margin-top: 2.5rem; }
+}
+@media (max-width: 420px) {
+  .container { padding: 0 0.6rem; }
+  .hero { padding: 1.3rem 0; }
+  .hero h1 { font-size: 1rem !important; }
+  .hero p { font-size: 0.78rem !important; }
+  .section-header h2 { font-size: 0.95rem; }
+  .section-num { width: 1.7rem; height: 1.7rem; font-size: 0.78rem; }
+  .card { padding: 0.75rem; }
+  .card-header h3 { font-size: 0.92rem; }
+  th, td { padding: 0.3rem 0.35rem; font-size: 0.7rem; }
+  pre { font-size: 0.65rem; padding: 0.55rem; }
+  .section-nav a { font-size: 0.6rem !important; padding: 0.2rem 0.4rem !important; }
+  .submission-box { padding: 0.8rem; }
+}
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #4FC3F7; color: white; border-color: #4FC3F7; }
+.copy-btn.copied { background: #4FC3F7; color: white; border-color: #4FC3F7; }
+
+a.sub-item { transition: transform 0.15s, box-shadow 0.15s; text-decoration: none; color: inherit; }
+a.sub-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79,195,247,0.3);
+  border-color: #4FC3F7;
+}
+
+/* ============ SECTION NAV ============ */
+.section-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.2rem 0;
+  display: flex; justify-content: center; gap: 0.3rem; flex-wrap: wrap;
+}
+body { padding-top: 2.2rem; }
+.section-nav a {
+  color: #999; text-decoration: none;
+  font-size: 0.45rem; font-weight: 500;
+  padding: 0.15rem 0.4rem; border-radius: 6px;
+  transition: all 0.2s; white-space: nowrap;
+}
+.section-nav a:hover { color: #4FC3F7; background: rgba(79,195,247,0.1); }
+.section-nav a.nav-assignment { color: #4FC3F7; }
+.section-nav a.nav-exam { color: #FFB800; }
+[id] { scroll-margin-top: 3.5rem; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  details summary::before { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SECTION NAV ============ -->
+<nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_1.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_2.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_3.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_4.html">4</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_5.html">5</a> <a style="color:#4FC3F7;background:rgba(79,195,247,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="md2_week_6.html">6</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_7.html">7</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_8.html">8</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_9.html">9</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_10.html">10</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_11.html">11</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_12.html">12</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_13.html">13</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_14.html">14</a> </div>
+  <a href="#sec-purpose">第6回の位置づけ</a>
+  <a href="#sec-why">1. なぜ検定が要る</a>
+  <a href="#sec-setup">2. セットアップ</a>
+  <a href="#sec-run" class="nav-assignment">🎮 まず動かす</a>
+  <a href="#sec-paired" class="nav-assignment">3. 対応のある2群</a>
+  <a href="#sec-unpaired" class="nav-assignment">4. 対応のない2群</a>
+  <a href="#sec-plan" class="nav-assignment">5. アンケート実験</a>
+  <a href="#sec-advance" class="nav-exam">6. 発展課題</a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="container">
+    <span class="hero-badge">Media creation Data design 2（MD2）─ 2026年度</span>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.1rem">武蔵野大学データサイエンス学部</p>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.3rem">武蔵野大学国際データサイエンス学部（通信教育部）</p>
+    <p style="font-size:0.95rem;opacity:0.85;margin-bottom:1rem">中村 亮太</p>
+    <h1>MD2 第6回: その差は本物か？ ― アンケートと有意差検定で「差」を科学する</h1>
+    <div style="display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap;margin-top:0.3rem">
+      <p style="overflow-wrap:normal;word-break:normal;flex:1 1 20rem;min-width:16rem;max-width:640px;margin:0">2つのグループを比べると、平均値にはほぼ必ず差が出る。しかしその差は、<strong>偶然のばらつきでも出る差かもしれない</strong>。第6回は、アンケート調査で<strong>自分たちの実験データ</strong>を作り、<strong style="color:#4FC3F7">統計検定（有意差検定）</strong>を使って「その差は偶然か、意味のある差か」を<strong>確率にもとづいて判断する</strong>方法を学ぶ。</p>
+      <img src="img/md2w6_hero.png" alt="ダーク背景の統計グラフ2枚。左は広告AとBの平均クリック数の棒グラフにエラーバーとアスタリスクが付き、右は2群のヒストグラムが重なっている。下に「その差は、偶然でも起きる差か？」「p 値 = 0.0022 < 0.05 → 有意差あり」と書かれている" style="flex:0 1 460px;width:460px;max-width:100%;border-radius:12px;border:1px solid rgba(255,255,255,0.18);box-shadow:0 8px 28px rgba(0,0,0,0.45)">
+    </div>
+  </div>
+</header>
+
+<!-- ============ COURSE PURPOSE ============ -->
+<section id="sec-purpose" style="padding-top:2.5rem;padding-bottom:0">
+  <div class="container">
+    <div class="card" style="border-left:4px solid #4FC3F7;background:linear-gradient(135deg,#141414,#111a20)">
+      <div class="card-header"><h3>📌 第6回の位置づけ：なぜ「検定」するのか（はじめに読もう）</h3></div>
+
+      <p style="font-size:1.05rem;margin-bottom:0.7rem">テーマは引き続き <strong style="color:#4FC3F7">「バーチャル空間で、データサイエンスを実践する」</strong>。第5回までで、データを<strong>生む・記録する・集計する</strong>ところまで来た。第6回からは <strong style="color:#4FC3F7">STEP 3（データを分析する）</strong>。集計して出てきた「差」が<strong>偶然なのか、意味のある差なのか</strong>を判断する道具 ― <strong>統計検定</strong>を手に入れる。</p>
+
+      <div class="callout-info" style="margin-top:0.5rem">
+        <h4>今日の合言葉：「その差は、偶然でも起きる差か？」</h4>
+        <ul class="point-list" style="margin-bottom:0">
+          <li>コインを10回投げて<strong>表が6回</strong>。「このコインは表が出やすい！」と言えるか？ ― <strong>言えない</strong>。普通のコインでも6回くらいは<strong>偶然でよく起きる</strong></li>
+          <li>アンケートで<strong>科目Aの平均3.8、科目Bの平均3.3</strong>。「Aの方が満足度が高い！」と言えるか？ ― <strong>まだ言えない</strong>。データには<strong>ばらつき</strong>があり、40人程度なら偶然でも差は出る</li>
+          <li><strong>統計検定</strong>＝「もし本当は差がないとしたら、この差が偶然出る確率（<strong>p値</strong>）」を計算する道具</li>
+          <li>その確率が<strong>十分小さい（p &lt; 0.05）</strong>とき、はじめて<strong>「有意差あり」</strong>＝偶然にしては起こりにくい差、と言える</li>
+        </ul>
+      </div>
+
+      <div class="callout-tip" style="margin-top:0.7rem">
+        <h4>今日のゴールは「差があると言えるか」を自分で判断できること</h4>
+        <p style="font-size:0.9rem;margin-bottom:0">第5回では、相関係数 0.95 を見て「関係がありそう」までは言えた。今日はその先 ― <strong>2つのグループを比べて、差があると言えるかどうか</strong>を、<strong>勘ではなく確率</strong>で判断する。これは卒業研究でも実務のABテストでも、<strong>そのまま使う型</strong>である。</p>
+      </div>
+
+      <p style="font-size:0.9rem;color:#999;margin:1.2rem 0 0.5rem">本科目全体の流れ（再確認）。第6回から <strong style="color:#4FC3F7">STEP 3（データを分析する）</strong>に入る。</p>
+
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin:0.5rem 0 1rem">
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #4FC3F7;border-radius:0.5rem;padding:0.9rem">
+          <div style="color:#4FC3F7;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 1 ─ 舞台をつくる</div>
+          <div style="font-size:0.88rem"><strong>3D空間を自分で作る</strong>。<span style="color:#999">（第1〜2回）</span></div>
+        </div>
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #4FC3F7;border-radius:0.5rem;padding:0.9rem">
+          <div style="color:#4FC3F7;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 2 ─ データを扱う</div>
+          <div style="font-size:0.88rem">CSVを可視化（第3回）→ 装置を作る（第4回）→ 記録してCSVで取り出す（第5回）。<span style="color:#999">（第3〜5回）</span></div>
+        </div>
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #4FC3F7;border-radius:0.5rem;padding:0.9rem">
+          <div style="color:#4FC3F7;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 3 ─ データを分析する <span style="font-size:0.7rem;background:#0a1a2e;border:1px solid #4FC3F7;border-radius:100px;padding:0.05rem 0.5rem">今ここ</span></div>
+          <div style="font-size:0.88rem"><strong>実験を計画し、統計で差を判断する（第6回）</strong>→ 総合演習（第7回）。<span style="color:#999">（第6〜7回）</span></div>
+        </div>
+      </div>
+
+      <h4 style="color:#4FC3F7;font-weight:700;font-size:1.05rem;margin:1.5rem 0 0.3rem">🎯 第6回のゴール</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li><strong>p値と有意水準（0.05）</strong>の意味を自分の言葉で説明できる</li>
+        <li><strong>対応のあるデータ／対応のないデータ</strong>の違いを、例を挙げて説明できる</li>
+        <li><strong>正規性の確認（Shapiro-Wilk検定）</strong>をして、<strong>検定の選び方の表</strong>から適切な検定を選べる</li>
+        <li><strong>リッカート尺度のアンケート</strong>を設計し、Google Forms で配信できる（グループワーク）</li>
+        <li>2群のCSVを<strong>前処理（欠損値・カテゴリ→数値）</strong>し、<strong>対応のあるt検定／ウィルコクソン検定／マン・ホイットニーのU検定</strong>で有意差を判断し、<strong>エラーバーつき棒グラフ</strong>で示せる</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FLOW + SUBMISSION ============ -->
+<section id="sec-flow" style="padding-top:1rem;padding-bottom:0">
+  <div class="container">
+    <div class="card">
+      <div class="card-header"><h3>本日の授業の流れ（ステップ・バイ・ステップ）</h3></div>
+      <table>
+        <tr><th style="width:12%">節</th><th>やること</th><th style="width:22%">課題</th></tr>
+        <tr><td>1</td><td>なぜ統計検定が要るのか（p値・有意水準・検定の選び方）＋<strong>尺度水準ワーク</strong></td><td>説明・<span class="tag tag-group" style="font-size:0.65rem">グループワーク</span> gw6-1</td></tr>
+        <tr><td>2</td><td>セットアップ（md2_no6 / JupyterLab / 配布CSV）</td><td>説明・手順</td></tr>
+        <tr><td>🎮</td><td><strong>まず完成版を動かし、「有意差あり」と「有意差なし」を両方見る</strong></td><td>体験</td></tr>
+        <tr><td>3</td><td><strong>対応のある2群</strong>：満足度CSVをカテゴリ→数値化して検定する</td><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std6-1</td></tr>
+        <tr><td>4</td><td><strong>対応のない2群</strong>：ABテストのCSVをU検定にかける</td><td><span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std6-2</td></tr>
+        <tr><td>5</td><td>グループで「2つを比べるアンケート」を作り、授業中にクラスで答え合う → <strong>集めた回答を検定してミニレポート</strong>（<strong>最後の課題</strong>）</td><td><span class="tag tag-group" style="font-size:0.65rem">グループワーク</span> gw6-2 ＋ <span class="tag tag-standard" style="font-size:0.65rem">標準課題</span> std6-3</td></tr>
+        <tr><td>6</td><td><strong>先輩に</strong>アンケート調査をして、検定まで通す</td><td><span class="tag tag-advanced" style="font-size:0.65rem">発展課題</span> adv6-1</td></tr>
+      </table>
+    </div>
+
+    <div class="submission-box">
+      <h3>📤 提出ガイド（1つのファイルにまとめ、PDF 1枚を提出）</h3>
+      <div class="submission-items">
+        <a href="#gw6-1" class="sub-item"><span class="sub-count">1</span><span class="tag tag-group">グループワーク</span>gw6-1 尺度水準ワーク</a>
+        <a href="#std6-1" class="sub-item"><span class="sub-count">2</span><span class="tag tag-standard">標準課題</span>std6-1 対応のある2群の検定</a>
+        <a href="#std6-2" class="sub-item"><span class="sub-count">3</span><span class="tag tag-standard">標準課題</span>std6-2 対応のない2群の検定</a>
+        <a href="#gw6-2" class="sub-item"><span class="sub-count">4</span><span class="tag tag-group">グループワーク</span>gw6-2 クラスでアンケート</a>
+        <a href="#std6-3" class="sub-item"><span class="sub-count">5</span><span class="tag tag-standard">標準課題</span>std6-3 集めた回答を検定（最後の課題）</a>
+        <a href="#adv6-1" class="sub-item"><span class="sub-count">6</span><span class="tag tag-advanced">発展課題</span>adv6-1 先輩にアンケート調査</a>
+      </div>
+      <p style="font-size:0.75rem;color:#999;margin:0.6rem 0 0">※ 発展課題（adv6-1）は任意、ほかはすべて必須。標準課題（std6-1・std6-2）は実行結果のキャプチャ（Jupyter のセル出力・グラフ）、std6-3 はミニレポート、グループワーク（gw6-1・gw6-2）は議論の結論とアンケートの設計内容を記録します。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 1: WHY ============ -->
+<section id="sec-why">
+  <div class="container">
+    <div class="section-header toggle-head">
+      <div class="section-num" style="background:#4FC3F7">1</div>
+      <h2>なぜ統計検定が要るのか ― 「平均に差がある」だけでは言い切れない</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>差は、偶然でも出る</h3></div>
+      <p style="margin-bottom:0.6rem">2つのグループの平均を比べれば、<strong>差はほぼ必ず出る</strong>。まったく同じ授業を受けた2クラスでも、テストの平均点はピッタリ同じにはならない。問題は<strong>その差が「偶然のばらつき」の範囲か、それを超えているか</strong>である。</p>
+      <ul class="point-list" style="margin-bottom:0.6rem">
+        <li><strong>データにはばらつきがある</strong> ― 同じ人でも日によって答えは揺れるし、人によっても違う</li>
+        <li><strong>サンプル数が少ないほど、偶然の差は大きく出る</strong> ― 3人の平均は簡単に偏る。1万人の平均は偏りにくい</li>
+        <li>だから「平均が0.5違う」という<strong>事実</strong>だけでは、「差がある」という<strong>主張</strong>にはならない</li>
+      </ul>
+      <div class="concept-box">
+        <h4>統計検定（有意差検定）とは</h4>
+        <p style="font-size:0.9rem;margin-bottom:0"><strong>「もし本当は差がない（＝偶然だけ）としたら、目の前の差（かそれ以上）が出る確率はどれくらいか」</strong>を計算する道具。この確率を <strong style="color:#4FC3F7">p値</strong> と呼ぶ。p値が小さい＝「偶然にしては起こりにくい」＝<strong>偶然では説明しづらい、意味のある差（有意差）</strong>と判断する。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>p値と有意水準 0.05 ― 判断のルールを先に決めておく</h3></div>
+      <div class="callout-info">
+        <h4>判断のルール（今日から使う型）</h4>
+        <ul class="point-list" style="margin-bottom:0">
+          <li><strong>p &lt; 0.05</strong> → <strong style="color:#4FC3F7">有意差あり</strong>（偶然でこの差が出る確率は5%未満。偶然にしては起こりにくい）</li>
+          <li><strong>p ≥ 0.05</strong> → <strong>有意差なし</strong>（偶然でも十分起こる範囲。差があるとは<strong>言えない</strong>）</li>
+          <li>この <strong>0.05</strong> を<strong>有意水準</strong>と呼ぶ。科学の世界で広く使われる<strong>慣習的な基準</strong>（分野によっては 0.01 を使う）</li>
+        </ul>
+      </div>
+      <div class="callout-warning" style="margin-top:0.5rem">
+        <h4>ありがちな誤解に注意</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><strong>「p ≥ 0.05 ＝ 差がないことの証明」ではない</strong>。「差があるとは言えなかった」だけ。サンプル数を増やせば検出できるかもしれない</li>
+          <li><strong>「p値 ＝ 差の大きさ」ではない</strong>。p値は「偶然らしさ」の指標。差の大きさは<strong>平均値の差そのもの</strong>を見る</li>
+          <li>論文では記号で書く：<strong>μ（ミュー）＝平均値、σ（シグマ）＝標準偏差</strong>。例）「実験参加者1の満足度は μ = 3.83, σ = 0.87 であった」</li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="gw6-1" class="card group">
+      <div class="card-header"><h3><span class="tag tag-group" style="font-size:0.7rem">グループワーク</span> gw6-1：データには「尺度」がある ― 何を計算してよいかが変わる</h3></div>
+      <p style="margin-bottom:0.6rem">検定の前に、<strong>そのデータで平均を計算してよいのか</strong>を考える。第2回のオブジェクト＝レコードの話と同じで、<strong>データの種類</strong>が操作を決める。</p>
+      <table>
+        <tr><th style="width:20%">データの種類</th><th style="width:18%">尺度水準</th><th style="width:30%">尺度の意味</th><th>算術計算</th></tr>
+        <tr><td rowspan="2"><strong>質的データ</strong></td><td>名義尺度</td><td>区別できる</td><td>不可</td></tr>
+        <tr><td>順序尺度</td><td>順序・大小がある</td><td>不可</td></tr>
+        <tr><td rowspan="2"><strong>量的データ</strong></td><td>間隔尺度</td><td>間隔が等しい</td><td>加法、減法</td></tr>
+        <tr><td>比例尺度</td><td>0（ゼロ）に意味がある</td><td>加法、減法、乗法、除法</td></tr>
+      </table>
+      <div style="margin-top:0.8rem;background:linear-gradient(135deg,#12181d,#0f1a24);border:1px solid #4FC3F7;border-radius:10px;padding:1rem 1.2rem">
+        <h4 style="color:#4FC3F7;font-weight:800;font-size:0.98rem;margin-bottom:0.5rem"><span class="tag tag-group" style="font-size:0.7rem">グループで考える</span> 尺度水準ワーク（答えはまだ言わない）</h4>
+
+        <p style="font-weight:700;font-size:0.95rem;margin-bottom:0.4rem">タスク1 ― 次の12個のデータは、それぞれ<strong>どの尺度水準</strong>か？</p>
+        <p style="font-size:0.88rem;color:#ccc;margin-bottom:0.5rem">上の表と見比べながら、<strong>質的データ（名義尺度／順序尺度）</strong>・<strong>量的データ（間隔尺度／比例尺度）</strong>の4つに分類する（各3個ずつ）。まず<strong>質的か量的か</strong>で大きく分けてから、細かい尺度を考えると迷いにくい。</p>
+        <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.8rem">
+          <span style="background:#1e242b;border:1px solid #3a4450;border-radius:100px;padding:0.25rem 0.8rem;font-size:0.85rem">学籍番号</span>
+          <span style="background:#1e242b;border:1px solid #3a4450;border-radius:100px;padding:0.25rem 0.8rem;font-size:0.85rem">気温（℃）</span>
+          <span style="background:#1e242b;border:1px solid #3a4450;border-radius:100px;padding:0.25rem 0.8rem;font-size:0.85rem">マラソンの順位</span>
+          <span style="background:#1e242b;border:1px solid #3a4450;border-radius:100px;padding:0.25rem 0.8rem;font-size:0.85rem">身長</span>
+          <span style="background:#1e242b;border:1px solid #3a4450;border-radius:100px;padding:0.25rem 0.8rem;font-size:0.85rem">天気（晴れ／くもり／雨）</span>
+          <span style="background:#1e242b;border:1px solid #3a4450;border-radius:100px;padding:0.25rem 0.8rem;font-size:0.85rem">5段階の満足度</span>
+          <span style="background:#1e242b;border:1px solid #3a4450;border-radius:100px;padding:0.25rem 0.8rem;font-size:0.85rem">時刻</span>
+          <span style="background:#1e242b;border:1px solid #3a4450;border-radius:100px;padding:0.25rem 0.8rem;font-size:0.85rem">コインの取得数</span>
+          <span style="background:#1e242b;border:1px solid #3a4450;border-radius:100px;padding:0.25rem 0.8rem;font-size:0.85rem">ログの user_id</span>
+          <span style="background:#1e242b;border:1px solid #3a4450;border-radius:100px;padding:0.25rem 0.8rem;font-size:0.85rem">学年</span>
+          <span style="background:#1e242b;border:1px solid #3a4450;border-radius:100px;padding:0.25rem 0.8rem;font-size:0.85rem">西暦（年）</span>
+          <span style="background:#1e242b;border:1px solid #3a4450;border-radius:100px;padding:0.25rem 0.8rem;font-size:0.85rem">プレイの経過時間</span>
+        </div>
+
+        <p style="font-weight:700;font-size:0.95rem;margin-bottom:0.4rem">タスク2 ― 5段階アンケートで「平均 3.8」と言ってよいのか？</p>
+        <p style="font-size:0.92rem;margin-bottom:0.5rem">満足度アンケートは「非常に満足=5 … 非常に不満=1」と点数にして、<strong>平均を計算するのが当たり前</strong>のように行われている。しかしタスク1で分類したとおりなら、算術計算は<strong>「不可」</strong>のはずだ。<strong>矛盾していないか？</strong>　次の3つを議論して、<strong>自分たちの結論</strong>を出す：</p>
+        <ul class="point-list" style="margin-bottom:0.8rem;font-size:0.9rem">
+          <li><strong>①</strong> 「満足(4)と普通(3)の差」と「普通(3)と不満(2)の差」は、<strong>同じ大きさ</strong>と言えるか？</li>
+          <li><strong>②</strong> 平均のほかに、グループを代表する値の<strong>候補</strong>は何があるか。それぞれ<strong>どんなデータに強い／弱い</strong>か？</li>
+          <li><strong>③</strong> 結論：5段階アンケートの比較に平均を使うのは<strong>あり？なし？条件つきであり？</strong> ― 理由もセットで</li>
+        </ul>
+
+        <p style="font-weight:700;font-size:0.95rem;margin-bottom:0.4rem">タスク3 ― 次の3つの文は、<strong>どこがおかしい</strong>か？</p>
+        <p style="font-size:0.88rem;color:#ccc;margin-bottom:0.5rem">どれも計算そのものは<strong>できてしまう</strong>のがポイント。タスク1の分類を手がかりに、<strong>何がまずいのか</strong>をグループで説明できるようにする。</p>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.8rem">
+          <div style="background:#1e242b;border:1px solid #3a4450;border-radius:8px;padding:0.7rem 0.9rem">
+            <p style="font-size:0.9rem;margin-bottom:0"><strong>例文1：</strong>「このクラスの<strong>学籍番号の平均は 2213045.6</strong> でした」</p>
+          </div>
+          <div style="background:#1e242b;border:1px solid #3a4450;border-radius:8px;padding:0.7rem 0.9rem">
+            <p style="font-size:0.9rem;margin-bottom:0"><strong>例文2：</strong>「レビューが <strong>★5 と ★1 に真っ二つ</strong>のラーメン屋。平均★3なので<strong>『普通の店』</strong>です」</p>
+          </div>
+          <div style="background:#1e242b;border:1px solid #3a4450;border-radius:8px;padding:0.7rem 0.9rem">
+            <p style="font-size:0.9rem;margin-bottom:0"><strong>例文3：</strong>「昨日は10℃、今日は20℃。<strong>今日は昨日の2倍暑い</strong>」</p>
+          </div>
+        </div>
+        <p style="font-size:0.85rem;color:#999;margin-bottom:0">分類・結論・例文3つの説明を、グループで発表できるようにしておく。</p>
+
+        <div style="margin-top:0.9rem;border-top:1px solid #2a3540;padding-top:0.9rem">
+          <p style="font-size:0.9rem;margin-bottom:0.5rem">🔐 <strong>答え合わせ</strong> ― 議論と発表が終わったら、先生が伝える<strong>パスコード</strong>を入力して確認する。</p>
+          <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap">
+            <input type="password" id="scale-pass" placeholder="パスコード" autocomplete="off" style="background:#0a0a0a;color:#e0e0e0;border:1px solid #444;border-radius:6px;padding:0.45rem 0.8rem;font-size:0.88rem;width:11rem">
+            <button id="scale-pass-btn" type="button" style="background:#4FC3F7;color:#111;border:none;border-radius:6px;padding:0.45rem 1.1rem;font-size:0.88rem;font-weight:700;cursor:pointer">答えを見る</button>
+            <span id="scale-pass-error" style="color:#FF5252;font-size:0.82rem;display:none">パスコードが違います</span>
+          </div>
+          <div id="scale-answer" data-cipher="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"></div>
+        </div>
+      </div>
+
+      <div class="notion-submit"><span>Notion に、<strong>①タスク1の分類結果（12個）</strong>、<strong>②タスク2の結論（あり／なし／条件つき＋理由）</strong>、<strong>③タスク3の例文3つの「おかしいところ」（各1行）</strong>を貼る（gw6-1）。</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>検定の選び方 ― この表が今日の地図（保存版）</h3></div>
+      <p style="margin-bottom:0.6rem">検定はたくさんあるが、<strong>選び方は機械的</strong>。①<strong>対応があるか</strong> → ②<strong>正規性があるか</strong>（→ ③等分散か）の順に確かめて、表をたどるだけ。</p>
+
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin:0.5rem 0 0.8rem">
+        <div style="flex:1;min-width:15rem;background:#1a1a1a;border:1px solid #333;border-left:3px solid #4FC3F7;border-radius:0.5rem;padding:0.9rem">
+          <div style="color:#4FC3F7;font-weight:900;font-size:0.92rem;margin-bottom:0.3rem">対応のあるデータ</div>
+          <div style="font-size:0.85rem"><strong>同じ対象</strong>に対して2回以上測定したデータ。<br>例）ダイエット<strong>前後</strong>の体重、<strong>同じ回答者</strong>による科目Aと科目Bの評価</div>
+        </div>
+        <div style="flex:1;min-width:15rem;background:#1a1a1a;border:1px solid #333;border-left:3px solid #FFB800;border-radius:0.5rem;padding:0.9rem">
+          <div style="color:#FFB800;font-weight:900;font-size:0.92rem;margin-bottom:0.3rem">対応のないデータ</div>
+          <div style="font-size:0.85rem"><strong>異なる対象</strong>に対して1回ずつ測定したデータ。<br>例）クラスAとクラスBの平均点、<strong>別々のユーザ</strong>が見た広告Aと広告B（ABテスト）</div>
+        </div>
+      </div>
+
+      <table>
+        <tr><th style="width:14%">目的</th><th style="width:16%">データ間の対応</th><th style="width:20%">正規分布<br><span style="font-weight:400;color:#FFB800;font-size:0.75rem">シャピロ・ウィルク検定で確認</span></th><th style="width:18%">等分散性<br><span style="font-weight:400;color:#FFB800;font-size:0.75rem">F検定で確認</span></th><th>検定名</th></tr>
+        <tr><td rowspan="5"><strong>有意差を確認</strong><br><span style="color:#999;font-size:0.8rem">（統計的に意味のある差）</span></td><td rowspan="2">対応あり<br><span style="color:#999;font-size:0.8rem">（同じ対象）</span></td><td>あり</td><td>―</td><td><strong style="color:#4FC3F7">対応のあるT検定</strong></td></tr>
+        <tr><td>なし</td><td>―</td><td><strong style="color:#4FC3F7">ウィルコクソン符号順位検定</strong></td></tr>
+        <tr><td rowspan="3">対応なし<br><span style="color:#999;font-size:0.8rem">（異なる対象）</span></td><td rowspan="2">あり</td><td>あり</td><td>スチューデントのT検定</td></tr>
+        <tr><td>なし</td><td>ウェルチのT検定</td></tr>
+        <tr><td>なし</td><td>―</td><td><strong style="color:#FFB800">マン・ホイットニーのU検定</strong><br><span style="color:#999;font-size:0.8rem">（ウィルコクソン順位和検定）</span></td></tr>
+      </table>
+
+      <figure class="exec-shot" style="margin-top:0.7rem">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">検定の選び方マップ ── 今日はこの地図を3回たどる</span></div>
+        <div style="overflow-x:auto;background:#0f1114;padding:0.6rem 0">
+        <svg viewBox="0 0 700 348" role="img" aria-labelledby="tree-map-t" style="display:block;min-width:620px;width:100%">
+    <title id="tree-map-t">検定の選び方のフローチャート</title>
+    <path d="M 350 44 L 350 74" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="350,74 345.5,67 354.5,67" fill="#4a4f57"/>
+    <path d="M 350 104 L 350 120 L 175 120 L 175 148" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="175,148 170.5,141 179.5,141" fill="#4a4f57"/>
+    <text x="250" y="115" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">あり</text>
+    <path d="M 350 104 L 350 120 L 525 120 L 525 148" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="525,148 520.5,141 529.5,141" fill="#4a4f57"/>
+    <text x="450" y="115" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">なし</text>
+    <path d="M 175 178 L 175 198 L 85 198 L 85 232" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="85,232 80.5,225 89.5,225" fill="#4a4f57"/>
+    <text x="120" y="193" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">あり</text>
+    <path d="M 175 178 L 175 198 L 265 198 L 265 232" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="265,232 260.5,225 269.5,225" fill="#4a4f57"/>
+    <text x="232" y="193" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">なし</text>
+    <path d="M 525 178 L 525 198 L 450 198 L 450 232" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="450,232 445.5,225 454.5,225" fill="#4a4f57"/>
+    <text x="476" y="193" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">あり</text>
+    <path d="M 525 178 L 525 198 L 620 198 L 620 232" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="620,232 615.5,225 624.5,225" fill="#4a4f57"/>
+    <text x="585" y="193" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">なし</text>
+    <path d="M 450 262 L 450 280 L 390 280 L 390 302" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="390,302 385.5,295 394.5,295" fill="#4a4f57"/>
+    <text x="410" y="275" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">あり</text>
+    <path d="M 450 262 L 450 280 L 532 280 L 532 302" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="532,302 527.5,295 536.5,295" fill="#4a4f57"/>
+    <text x="500" y="275" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">なし</text>
+    <rect x="250.0" y="14" width="200" height="30" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="350" y="33.0" text-anchor="middle" font-size="11.5" fill="#999" font-family="'Noto Sans JP',sans-serif">2群の平均を比べたい</text>
+    <rect x="265.0" y="74" width="170" height="30" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="350" y="93.0" text-anchor="middle" font-size="11.5" fill="#999" font-family="'Noto Sans JP',sans-serif">データに対応は？</text>
+    <rect x="110.0" y="148" width="130" height="30" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="175" y="167.0" text-anchor="middle" font-size="11.5" fill="#999" font-family="'Noto Sans JP',sans-serif">正規性は？</text>
+    <rect x="460.0" y="148" width="130" height="30" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="525" y="167.0" text-anchor="middle" font-size="11.5" fill="#999" font-family="'Noto Sans JP',sans-serif">正規性は？</text>
+    <rect x="395.0" y="232" width="110" height="30" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="450" y="251.0" text-anchor="middle" font-size="11.5" fill="#999" font-family="'Noto Sans JP',sans-serif">等分散？</text>
+    <rect x="10.0" y="232" width="150" height="40" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="85" y="256.0" text-anchor="middle" font-size="11.5" fill="#c9c9c9" font-family="'Noto Sans JP',sans-serif">対応のあるT検定</text>
+    <rect x="185.0" y="232" width="160" height="40" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="265" y="249.0" text-anchor="middle" font-size="11.5" fill="#c9c9c9" font-family="'Noto Sans JP',sans-serif">ウィルコクソン</text>
+    <text x="265" y="263.0" text-anchor="middle" font-size="11.5" fill="#c9c9c9" font-family="'Noto Sans JP',sans-serif">符号順位検定</text>
+    <rect x="321.0" y="302" width="138" height="32" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="390" y="322.0" text-anchor="middle" font-size="11.5" fill="#c9c9c9" font-family="'Noto Sans JP',sans-serif">スチューデントのT検定</text>
+    <rect x="471.0" y="302" width="122" height="32" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="532" y="322.0" text-anchor="middle" font-size="11.5" fill="#c9c9c9" font-family="'Noto Sans JP',sans-serif">ウェルチのT検定</text>
+    <rect x="546.0" y="232" width="148" height="40" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="620" y="249.0" text-anchor="middle" font-size="11.5" fill="#c9c9c9" font-family="'Noto Sans JP',sans-serif">マン・ホイットニー</text>
+    <text x="620" y="263.0" text-anchor="middle" font-size="11.5" fill="#c9c9c9" font-family="'Noto Sans JP',sans-serif">のU検定</text>
+        </svg>
+        </div>
+        <figcaption class="exec-cap"><strong>地図の読み方:</strong> 上から<strong>2つの質問（対応は？→正規性は？）</strong>に答えるだけで、使う検定に必ずたどり着く。🎮・std6-1・std6-2 で<strong>3本の違う道</strong>を実際に歩く。</figcaption>
+      </figure>
+      <div class="callout-info" style="margin-top:0.6rem">
+        <h4>正規性の確認 ― シャピロ・ウィルク（Shapiro-Wilk）検定</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><strong>正規分布</strong>＝平均のまわりに左右対称に山ができる、いちばん「ありがち」な分布。t検定はデータが正規分布に従うことを前提にしている</li>
+          <li><code>stats.shapiro(データ)</code> で確認。ここでは <strong>p &gt; 0.05 なら「正規性あり」</strong>とみなす（有意差の検定とは<strong>判定の向きが逆</strong>になることに注意）</li>
+          <li>正規性がないときは、値そのものではなく<strong>順位（順番）</strong>を使う検定＝<strong>ノンパラメトリック検定</strong>（ウィルコクソン、マン・ホイットニー）を使う</li>
+        </ul>
+      </div>
+
+      <div class="concept-box">
+        <h4>対応のあるT検定とウィルコクソン符号順位検定 ― 計算の発想の違い</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><strong>対応のあるT検定：</strong>2つの測定値の「<strong>差</strong>」を計算し、その「<strong>差の平均</strong>」がどれくらい大きいかをみる</li>
+          <li><strong>ウィルコクソン符号順位検定：</strong>2つの測定値の「差」を計算し、その「<strong>差の大きさに順位</strong>」を付けて判断する（極端な値に引きずられない）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ============ SECTION 2: SETUP ============ -->
+<section id="sec-setup">
+  <div class="container">
+    <div class="section-header toggle-head">
+      <div class="section-num" style="background:#4FC3F7">2</div>
+      <h2>セットアップ ― <code>md2_no6</code> と JupyterNotebook</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>作業フォルダ <code>md2_no6</code> を作って、配布CSVを入れる</h3></div>
+      <p style="margin-bottom:0.6rem">今日は Node.js は使わない。<strong>Python だけ</strong>の回。作業フォルダ <code>md2_no6</code> を作り、下の<strong>配布CSVを4つダウンロード</strong>して入れる。</p>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:0.8rem 0 0.3rem">配布CSV（クリックでダウンロード）</p>
+      <table>
+        <tr><th style="width:38%">ファイル</th><th>中身</th></tr>
+        <tr><td><a href="data/md2w6_diet.csv" download style="color:#4FC3F7"><code>md2w6_diet.csv</code></a></td><td>ダイエットプログラム<strong>前後</strong>の体重（25人・対応あり）</td></tr>
+        <tr><td><a href="data/md2w6_diet_no_diff.csv" download style="color:#4FC3F7"><code>md2w6_diet_no_diff.csv</code></a></td><td>別のプログラムの前後の体重（25人・対応あり）</td></tr>
+        <tr><td><a href="data/md2w6_satisfaction.csv" download style="color:#4FC3F7"><code>md2w6_satisfaction.csv</code></a></td><td>科目Aと科目Bの<strong>満足度アンケート</strong>（40人・5段階の日本語ラベル）</td></tr>
+        <tr><td><a href="data/md2w6_ab_test.csv" download style="color:#4FC3F7"><code>md2w6_ab_test.csv</code></a></td><td>広告Aと広告Bの<strong>クリック数</strong>（ABテスト・<strong>欠損値入り</strong>）</td></tr>
+      </table>
+
+      <div class="dirtree" style="margin-top:0.6rem"><span class="dir">md2_no6/</span>
+├── md2w6_diet.csv
+├── md2w6_diet_no_diff.csv
+├── md2w6_satisfaction.csv
+├── md2w6_ab_test.csv
+├── .venv/                 <span class="mut">（これから作る）</span>
+└── <span class="target">analysis.ipynb</span>        <span class="arrow">← 今日つくるノートブック</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>仮想環境（<code>.venv</code>）を作って、今日の部品を入れる</h3></div>
+      <p style="margin-bottom:0.6rem">第1・3・5回とまったく同じ流れ。<code>uv</code> で仮想環境を作り、今日は <strong><code>jupyterlab</code></strong>（ノートブック）と <strong><code>scipy</code></strong>（統計検定）が新顔。</p>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">① 仮想環境を作る（<code>md2_no6</code> の中で1回だけ）</p>
+      <pre><span class="code-label">Terminal</span><span class="cmt"># md2_no6 の中にいることを確認してから実行する</span>
+uv venv</pre>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">② 仮想環境を有効化する（<strong>ターミナルを開くたびに毎回</strong>）</p>
+      <pre><span class="code-label">Terminal</span>source .venv/bin/activate      <span class="cmt"># Mac / Linux</span>
+<span class="cmt"># .venv\Scripts\activate       # Windows の場合</span></pre>
+      <p style="font-size:0.88rem;color:#999;margin-bottom:0.5rem">成功すると、行頭に <strong><code>(.venv)</code></strong> と出る。</p>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">③ 部品を入れる（<code>(.venv)</code> が出ている状態で1回だけ）</p>
+      <pre><span class="code-label">Terminal</span>uv pip install jupyterlab pandas matplotlib scipy</pre>
+      <table style="font-size:0.84rem;margin:0.5rem 0 0">
+        <tr><th style="width:24%">部品</th><th>役割</th></tr>
+        <tr><td><code>jupyterlab</code></td><td><strong>JupyterNotebook</strong>。コードを<strong>セル単位</strong>で実行できる開発環境（今日の主役の道具）</td></tr>
+        <tr><td><code>pandas</code></td><td>CSVを表（DataFrame）として読む・前処理する（第3・5回の続き）</td></tr>
+        <tr><td><code>matplotlib</code></td><td>グラフを描く（第5回の続き）</td></tr>
+        <tr><td><code>scipy</code></td><td><strong>統計検定の本体</strong>。<code>scipy.stats</code> に shapiro / ttest_rel / wilcoxon / mannwhitneyu が入っている</td></tr>
+      </table>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.2rem 0 0.3rem">④ JupyterLab を起動する</p>
+      <pre><span class="code-label">Terminal</span>jupyter lab</pre>
+      <p style="font-size:0.88rem;color:#999;margin-bottom:0">→ ブラウザが自動で開く（<code>http://localhost:8888</code>）。<strong>Notebook → Python 3</strong> を選ぶと新しいノートブックができる。名前を <code>analysis.ipynb</code> にしておく。止めるときはターミナルで <code>Ctrl+C</code>。</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>JupyterNotebook の操作 ― 「セル」に書いて、<kbd>Shift+Enter</kbd> で実行</h3></div>
+      <p style="margin-bottom:0.6rem">Notebook は<strong>セル（小さなコード箱）</strong>の集まり。<strong>1セル書いては実行し、出力をすぐ確かめる</strong> ― 第5回に <code>analyze.py</code> へ1行ずつ足していった流れを、もっと小刻みにやれる道具。<strong>コード・実行結果・グラフが1つのファイルに残る</strong>ので、分析の記録にも提出物にも向く。</p>
+      <table>
+        <tr><th style="width:26%">キー</th><th>はたらき</th></tr>
+        <tr><td><kbd>Shift</kbd>+<kbd>Enter</kbd></td><td><strong>セルを実行</strong>して下のセルに移動（いちばん使う）</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>編集モードに移行（セルに入力できる）</td></tr>
+        <tr><td><kbd>esc</kbd></td><td>コマンドモードに戻る（下のキーは esc を押してから）</td></tr>
+        <tr><td><kbd>a</kbd> / <kbd>b</kbd></td><td>上（above）／下（below）にセルを挿入</td></tr>
+        <tr><td><kbd>dd</kbd></td><td>セルを削除</td></tr>
+        <tr><td><kbd>z</kbd></td><td>操作を1つ前に戻す（消したセルを戻すなど）</td></tr>
+        <tr><td><kbd>c</kbd> / <kbd>v</kbd></td><td>セルをコピー／貼り付け</td></tr>
+        <tr><td><kbd>m</kbd> / <kbd>y</kbd></td><td>markdown（メモ）モード／code モードに切り替え</td></tr>
+        <tr><td><kbd>l</kbd></td><td>セルの行番号の表示を切り替え</td></tr>
+        <tr><td><kbd>command</kbd>+<kbd>s</kbd></td><td>保存</td></tr>
+      </table>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:1rem;margin:1.4rem 0 0.3rem">✍️ 操作練習ドリル（5分）― 表を見ながら、手で覚える</p>
+      <p style="font-size:0.9rem;margin-bottom:0.8rem">キーは<strong>読んでも覚えられない</strong>。下のドリルを<strong>スクショと同じ状態になるまで</strong>やる。今日の分析はぜんぶこの操作の上に乗る。</p>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">ドリル① ── ノートブックを作る</p>
+      <p style="font-size:0.9rem;margin-bottom:0.4rem"><code>jupyter lab</code> で開いた画面（Launcher）の <strong>Notebook → Python 3 (ipykernel)</strong> をクリック。</p>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">JupyterLab ── Launcher</span></div>
+        <img src="img/md2w6_jlab_launcher.png" alt="JupyterLabのLauncher画面。Notebookの見出しの下にPython 3 (ipykernel)のタイル、その下にConsoleとOtherの項目が並んでいる">
+        <figcaption class="exec-cap"><strong>この画面:</strong> <code>jupyter lab</code> を実行するとブラウザで開く。<strong>Notebook の下の Python 3</strong> が今日の入口。</figcaption>
+      </figure>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.3rem 0 0.3rem">ドリル② ── セルを実行する（<kbd>Shift</kbd>+<kbd>Enter</kbd>）</p>
+      <ol style="padding-left:1.4rem;font-size:0.92rem;line-height:2;margin-bottom:0.4rem">
+        <li>最初のセルに <code>print('こんにちは、Jupyter！')</code> と書いて <kbd>Shift</kbd>+<kbd>Enter</kbd></li>
+        <li>自動で下に移った新しいセルに <code>1 + 1</code> と書いて <kbd>Shift</kbd>+<kbd>Enter</kbd></li>
+      </ol>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">JupyterLab ── ドリル②が終わった状態</span></div>
+        <img src="img/md2w6_jlab_cells.png" alt="ノートブックに2つの実行済みセル。1つめはprint文でこんにちは、Jupyter！と出力され、2つめは1 + 1で2が出力されている。左端に実行番号の[1]と[2]が付いている">
+        <figcaption class="exec-cap"><strong>確認:</strong> セルの左に <code>[1]</code> <code>[2]</code> と<strong>実行した順番</strong>が付く。<code>1 + 1</code> は <code>print</code> を書かなくても<strong>最後の値が勝手に表示される</strong> ― Notebook の便利機能。</figcaption>
+      </figure>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.3rem 0 0.3rem">ドリル③ ── メモのセルを作る（<kbd>esc</kbd> → <kbd>m</kbd>）</p>
+      <ol style="padding-left:1.4rem;font-size:0.92rem;line-height:2;margin-bottom:0.4rem">
+        <li><kbd>esc</kbd> を押す（セルの枠の色が変わる＝<strong>コマンドモード</strong>）</li>
+        <li><kbd>m</kbd> を押して markdown モードに → <kbd>Enter</kbd> で編集に入り <code># 実験メモ</code> と書いて <kbd>Shift</kbd>+<kbd>Enter</kbd></li>
+      </ol>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">JupyterLab ── ドリル③が終わった状態</span></div>
+        <img src="img/md2w6_jlab_markdown.png" alt="実行済みの2つのコードセルの下に、「実験メモ」という大きな見出しのmarkdownセルが表示されている">
+        <figcaption class="exec-cap"><strong>確認:</strong> <code># 実験メモ</code> が<strong>大きな見出し</strong>に変わればOK。コードの合間に<strong>日本語のメモや考察</strong>を残せる ― これが「分析の記録」に向く理由。</figcaption>
+      </figure>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.3rem 0 0.3rem">ドリル④ ── 挿入・削除・復活（<kbd>a</kbd> / <kbd>dd</kbd> / <kbd>z</kbd>）</p>
+      <ol style="padding-left:1.4rem;font-size:0.92rem;line-height:2;margin-bottom:0.4rem">
+        <li><kbd>esc</kbd> → <kbd>a</kbd> で<strong>上に</strong>セルが増える（<kbd>b</kbd> なら下）</li>
+        <li>そのまま <kbd>d</kbd> を2回（<kbd>dd</kbd>）で削除 → <kbd>z</kbd> で<strong>復活</strong> → もう一度 <kbd>dd</kbd> で消す</li>
+      </ol>
+      <p style="font-size:0.88rem;color:#999;margin-bottom:0.8rem">→ 「消しても <kbd>z</kbd> で戻せる」と体で知っておくと、あとで怖くなくなる。</p>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.3rem 0 0.3rem">ドリル⑤ ── 保存して、名前を変える</p>
+      <ol style="padding-left:1.4rem;font-size:0.92rem;line-height:2;margin-bottom:0.4rem">
+        <li><kbd>command</kbd>+<kbd>s</kbd> で保存（タブの ● が消える）</li>
+        <li>左のファイル一覧の <code>Untitled.ipynb</code> を<strong>右クリック → Rename</strong> → <code>analysis.ipynb</code> に変える</li>
+      </ol>
+
+      <div class="callout-tip" style="margin-top:0.5rem">
+        <h4>ドリル完了チェック（隣の人と見せ合う）</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li>☑ コードセルを2つ実行して <code>[1]</code> <code>[2]</code> が付いている</li>
+          <li>☑ 「実験メモ」の<strong>見出し</strong>が表示されている</li>
+          <li>☑ セルを<strong>消して・戻して・また消した</strong></li>
+          <li>☑ <code>analysis.ipynb</code> という名前で保存されている</li>
+        </ul>
+      </div>
+
+      <div class="callout-warning" style="margin-top:0.6rem">
+        <h4>よくあるつまずき</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><strong>セルを実行しても反応しない：</strong><kbd>esc</kbd> → <kbd>m</kbd>（いったん markdown に）→ <kbd>y</kbd>（code に戻す）で直ることが多い</li>
+          <li><strong><code>ModuleNotFoundError: No module named 'scipy'</code>：</strong><code>(.venv)</code> を出してから <code>jupyter lab</code> を起動したか確認。ダメなら一度 <code>Ctrl+C</code> で止めて、②→④をやり直す</li>
+          <li><strong><code>FileNotFoundError</code>：</strong>CSVが <code>analysis.ipynb</code> と<strong>同じフォルダ</strong>にあるか確認（左のファイル一覧で見える）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RUN FIRST ============ -->
+<section id="sec-run">
+  <div class="container">
+    <div class="section-header toggle-head">
+      <div class="section-num" style="background:#4FC3F7">🎮</div>
+      <h2>まず動かす ― 「有意差あり」と「有意差なし」を両方見る</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>先に「動く」を確かめよう。今日の要点は<strong>判断が p値で出る</strong>こと</h3></div>
+      <p style="margin-bottom:0.6rem">お題：<strong>「ダイエットプログラムの前後で、体重の平均に差があるか」</strong>。同じ25人の<strong>前後</strong>の測定＝<strong>対応のあるデータ</strong>。下のコードを <code>analysis.ipynb</code> の<strong>セル1つに丸ごと貼って</strong> <kbd>Shift+Enter</kbd>。</p>
+
+      <pre><span class="code-label">Jupyter ── セルに丸ごと貼って実行</span><span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">from</span> scipy <span class="kw">import</span> stats
+
+<span class="cmt"># ① CSVを読み込んで、目で見る</span>
+df = pd.<span class="fn">read_csv</span>(<span class="str">'md2w6_diet.csv'</span>)
+<span class="fn">print</span>(df.<span class="fn">head</span>())
+<span class="fn">print</span>(<span class="str">f'サンプル数: {</span><span class="fn">len</span>(df)<span class="str">}'</span>)
+
+<span class="cmt"># ② 平均と標準偏差（μ と σ）</span>
+<span class="fn">print</span>(<span class="str">f'before の平均: {</span>df[<span class="str">"before"</span>].<span class="fn">mean</span>()<span class="str">:.2f} kg (SD: {</span>df[<span class="str">"before"</span>].<span class="fn">std</span>()<span class="str">:.2f})'</span>)
+<span class="fn">print</span>(<span class="str">f'after  の平均: {</span>df[<span class="str">"after"</span>].<span class="fn">mean</span>()<span class="str">:.2f} kg (SD: {</span>df[<span class="str">"after"</span>].<span class="fn">std</span>()<span class="str">:.2f})'</span>)
+
+<span class="cmt"># ③ 正規性の確認（Shapiro-Wilk検定。p &gt; 0.05 なら正規性あり）</span>
+stat_b, p_b = stats.<span class="fn">shapiro</span>(df[<span class="str">'before'</span>])
+stat_a, p_a = stats.<span class="fn">shapiro</span>(df[<span class="str">'after'</span>])
+<span class="fn">print</span>(<span class="str">f'正規性 before: p={</span>p_b<span class="str">:.4f}, after: p={</span>p_a<span class="str">:.4f}'</span>)
+
+<span class="cmt"># ④ 対応のあるt検定（対応あり × 正規性あり → 表のとおり）</span>
+t_stat, p_value = stats.<span class="fn">ttest_rel</span>(df[<span class="str">'before'</span>], df[<span class="str">'after'</span>])
+<span class="fn">print</span>(<span class="str">f't値: {</span>t_stat<span class="str">:.4f}'</span>)
+<span class="fn">print</span>(<span class="str">f'p値: {</span>p_value<span class="str">:.6f}'</span>)
+<span class="kw">if</span> p_value &lt; <span class="num">0.05</span>:
+    <span class="fn">print</span>(<span class="str">'→ before と after のあいだに有意差あり'</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">'→ before と after のあいだに有意差なし'</span>)</pre>
+
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">Jupyter ── セルの出力</span></div>
+        <div style="padding:0.8rem 1rem;font-family:'JetBrains Mono',monospace;font-size:0.78rem;line-height:1.65;color:#d0d0d0;white-space:pre-wrap">   user_id  before  after
+0        1    70.4   67.2
+1        2    77.8   74.6
+2        3    71.3   70.2
+3        4    73.6   70.1
+4        5    86.5   83.0
+サンプル数: 25
+before の平均: 78.84 kg (SD: 5.73)
+after  の平均: 76.42 kg (SD: 5.81)
+正規性 before: p=0.1976, after: p=0.5559
+t値: 7.7635
+p値: 0.000000
+→ before と after のあいだに有意差あり</div>
+        <figcaption class="exec-cap"><strong>読み方:</strong> 平均は 78.84 → 76.42 kg（約2.4kg減）。正規性は両方 p &gt; 0.05 で「あり」→ 対応のあるt検定。p値はほぼ 0 ― <strong>偶然ではまず出ない差</strong>。</figcaption>
+      </figure>
+
+      <figure class="exec-shot" style="margin-top:0.7rem">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">いまたどった道 ── 対応あり × 正規性あり</span></div>
+        <div style="overflow-x:auto;background:#0f1114;padding:0.6rem 0">
+        <svg viewBox="0 0 700 348" role="img" aria-labelledby="tree-run-t" style="display:block;min-width:620px;width:100%">
+    <title id="tree-run-t">検定の選び方のフローチャート</title>
+    <path d="M 350 44 L 350 74" fill="none" stroke="#4FC3F7" stroke-width="2.6"/>
+    <polygon points="350,74 345.5,67 354.5,67" fill="#4FC3F7"/>
+    <path d="M 350 104 L 350 120 L 175 120 L 175 148" fill="none" stroke="#4FC3F7" stroke-width="2.6"/>
+    <polygon points="175,148 170.5,141 179.5,141" fill="#4FC3F7"/>
+    <text x="250" y="115" text-anchor="middle" font-size="10.5" fill="#4FC3F7" font-weight="700" font-family="'Noto Sans JP',sans-serif">あり</text>
+    <path d="M 350 104 L 350 120 L 525 120 L 525 148" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="525,148 520.5,141 529.5,141" fill="#4a4f57"/>
+    <text x="450" y="115" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">なし</text>
+    <path d="M 175 178 L 175 198 L 85 198 L 85 232" fill="none" stroke="#4FC3F7" stroke-width="2.6"/>
+    <polygon points="85,232 80.5,225 89.5,225" fill="#4FC3F7"/>
+    <text x="120" y="193" text-anchor="middle" font-size="10.5" fill="#4FC3F7" font-weight="700" font-family="'Noto Sans JP',sans-serif">あり</text>
+    <path d="M 175 178 L 175 198 L 265 198 L 265 232" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="265,232 260.5,225 269.5,225" fill="#4a4f57"/>
+    <text x="232" y="193" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">なし</text>
+    <path d="M 525 178 L 525 198 L 450 198 L 450 232" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="450,232 445.5,225 454.5,225" fill="#4a4f57"/>
+    <text x="476" y="193" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">あり</text>
+    <path d="M 525 178 L 525 198 L 620 198 L 620 232" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="620,232 615.5,225 624.5,225" fill="#4a4f57"/>
+    <text x="585" y="193" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">なし</text>
+    <path d="M 450 262 L 450 280 L 390 280 L 390 302" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="390,302 385.5,295 394.5,295" fill="#4a4f57"/>
+    <text x="410" y="275" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">あり</text>
+    <path d="M 450 262 L 450 280 L 532 280 L 532 302" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="532,302 527.5,295 536.5,295" fill="#4a4f57"/>
+    <text x="500" y="275" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">なし</text>
+    <rect x="250.0" y="14" width="200" height="30" rx="8" fill="rgba(79,195,247,0.13)" stroke="#4FC3F7" stroke-width="2"/>
+    <text x="350" y="33.0" text-anchor="middle" font-size="11.5" fill="#4FC3F7" font-weight="700" font-family="'Noto Sans JP',sans-serif">2群の平均を比べたい</text>
+    <rect x="265.0" y="74" width="170" height="30" rx="8" fill="rgba(79,195,247,0.13)" stroke="#4FC3F7" stroke-width="2"/>
+    <text x="350" y="93.0" text-anchor="middle" font-size="11.5" fill="#4FC3F7" font-weight="700" font-family="'Noto Sans JP',sans-serif">データに対応は？</text>
+    <rect x="110.0" y="148" width="130" height="30" rx="8" fill="rgba(79,195,247,0.13)" stroke="#4FC3F7" stroke-width="2"/>
+    <text x="175" y="167.0" text-anchor="middle" font-size="11.5" fill="#4FC3F7" font-weight="700" font-family="'Noto Sans JP',sans-serif">正規性は？</text>
+    <rect x="460.0" y="148" width="130" height="30" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="525" y="167.0" text-anchor="middle" font-size="11.5" fill="#999" font-family="'Noto Sans JP',sans-serif">正規性は？</text>
+    <rect x="395.0" y="232" width="110" height="30" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="450" y="251.0" text-anchor="middle" font-size="11.5" fill="#999" font-family="'Noto Sans JP',sans-serif">等分散？</text>
+    <rect x="10.0" y="232" width="150" height="40" rx="8" fill="rgba(255,184,0,0.14)" stroke="#FFB800" stroke-width="2.2"/>
+    <text x="85" y="256.0" text-anchor="middle" font-size="11.5" fill="#FFB800" font-weight="800" font-family="'Noto Sans JP',sans-serif">対応のあるT検定</text>
+    <rect x="185.0" y="232" width="160" height="40" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="265" y="249.0" text-anchor="middle" font-size="11.5" fill="#c9c9c9" font-family="'Noto Sans JP',sans-serif">ウィルコクソン</text>
+    <text x="265" y="263.0" text-anchor="middle" font-size="11.5" fill="#c9c9c9" font-family="'Noto Sans JP',sans-serif">符号順位検定</text>
+    <rect x="321.0" y="302" width="138" height="32" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="390" y="322.0" text-anchor="middle" font-size="11.5" fill="#c9c9c9" font-family="'Noto Sans JP',sans-serif">スチューデントのT検定</text>
+    <rect x="471.0" y="302" width="122" height="32" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="532" y="322.0" text-anchor="middle" font-size="11.5" fill="#c9c9c9" font-family="'Noto Sans JP',sans-serif">ウェルチのT検定</text>
+    <rect x="546.0" y="232" width="148" height="40" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="620" y="249.0" text-anchor="middle" font-size="11.5" fill="#c9c9c9" font-family="'Noto Sans JP',sans-serif">マン・ホイットニー</text>
+    <text x="620" y="263.0" text-anchor="middle" font-size="11.5" fill="#c9c9c9" font-family="'Noto Sans JP',sans-serif">のU検定</text>
+        </svg>
+        </div>
+        <figcaption class="exec-cap"><strong>たどり方:</strong> 同じ25人の前後（<strong>対応あり</strong>）→ Shapiro で p &gt; 0.05（<strong>正規性あり</strong>）→ <strong>対応のあるT検定</strong>。コードの④は、この道をそのまま書いたもの。</figcaption>
+      </figure>
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.3rem 0 0.3rem">次に、ファイル名を1か所だけ変えて、もう一度実行</p>
+      <pre><span class="code-label">Jupyter ── ①の行だけ変える</span>df = pd.<span class="fn">read_csv</span>(<span class="str">'md2w6_diet_no_diff.csv'</span>)   <span class="cmt"># 別のプログラムのデータに差し替え</span></pre>
+
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">Jupyter ── 差し替え後の出力（抜粋）</span></div>
+        <div style="padding:0.8rem 1rem;font-family:'JetBrains Mono',monospace;font-size:0.78rem;line-height:1.65;color:#d0d0d0;white-space:pre-wrap">before の平均: 82.88 kg (SD: 6.20)
+after  の平均: 82.98 kg (SD: 6.04)
+正規性 before: p=0.4293, after: p=0.7619
+t値: -0.3916
+p値: 0.6988
+→ before と after のあいだに有意差なし</div>
+        <figcaption class="exec-cap"><strong>読み方:</strong> 今度は p = 0.6988 ― <strong>偶然でも十分出る差</strong>。「効果があった」とは言えない。</figcaption>
+      </figure>
+
+      <div class="callout-tip" style="margin-top:0.6rem">
+        <h4>いま体験したことが、今日のすべて</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li>同じコードなのに、データが変わると<strong>結論が変わった</strong>。判断したのは<strong>自分の勘ではなく p値</strong></li>
+          <li>1つめは平均差2.4kgで p ≈ 0.000001、2つめは平均差0.1kgで p ≈ 0.70。<strong>「差の大きさ」と「偶然らしさ」を分けて見る</strong>のが統計の視点</li>
+          <li>流れは毎回同じ：<strong>読む → 記述統計 → 正規性 → 検定 → 判断</strong>。この型を std6-1・std6-2 で自分の手で組む</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 3: PAIRED ============ -->
+<section id="sec-paired">
+  <div class="container">
+    <div class="section-header toggle-head">
+      <div class="section-num" style="background:#4FC3F7">3</div>
+      <h2>対応のある2群 ― 満足度アンケートを検定する</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>お題：「科目Aと科目Bで、満足度に差があるか」</h3></div>
+      <p style="margin-bottom:0.6rem"><code>md2w6_satisfaction.csv</code> は、<strong>同じ40人</strong>が科目Aと科目Bの両方を5段階で評価したアンケート結果 ― つまり<strong>対応のあるデータ</strong>。このあと gw6-2 で自分たちが集めるデータと<strong>同じ形</strong>である。ただし1つ問題がある：中身が<strong>「非常に満足」「普通」といった日本語ラベル（カテゴリデータ）</strong>で、<strong>このままでは平均も検定も計算できない</strong>。</p>
+      <div class="concept-box">
+        <h4>前処理の新顔：カテゴリ → 数値の変換（<code>map</code>）</h4>
+        <p style="font-size:0.9rem;margin-bottom:0">「非常に満足→5、満足→4、…、非常に不満→1」という<strong>対応表（辞書）</strong>を作り、<code>map</code> で列ごと変換する。第5回の <code>drop_duplicates</code>（重複を落とす）に続く、<strong>前処理の道具箱の2つめ</strong>。アンケート分析では毎回やる。</p>
+      </div>
+    </div>
+
+    <div id="std6-1" class="card standard">
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std6-1：満足度CSVを<strong>1セルずつ</strong>前処理して、検定まで通す</h3></div>
+      <p style="margin-bottom:0.5rem"><strong>先生と一緒に、1セルずつ実行して動作を確かめながら</strong>進める。それぞれのコードの<strong>意味はその場で説明する</strong>ので、聞きながら手を動かせばよい。そのかわり最後に、<strong>説明された意味を「自分の言葉」で書き直す</strong>のが課題（下の 📝）。</p>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.1rem 0 0.3rem">セル1 ── まず読んで、目で見る</p>
+      <pre><span class="code-label">Jupyter ── セル1</span><span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">from</span> scipy <span class="kw">import</span> stats
+
+df = pd.<span class="fn">read_csv</span>(<span class="str">'md2w6_satisfaction.csv'</span>)
+<span class="fn">print</span>(df.<span class="fn">head</span>())
+<span class="fn">print</span>(<span class="str">f'サンプル数: {</span><span class="fn">len</span>(df)<span class="str">}'</span>)</pre>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">Jupyter ── セル1の出力</span></div>
+        <div style="padding:0.8rem 1rem;font-family:'JetBrains Mono',monospace;font-size:0.78rem;line-height:1.65;color:#d0d0d0;white-space:pre-wrap">   回答者ID 科目A満足度 科目B満足度
+0      1  非常に満足     満足
+1      2     普通     満足
+2      3     満足  非常に満足
+3      4     普通     満足
+4      5     満足     不満
+サンプル数: 40</div>
+        <figcaption class="exec-cap"><strong>確認:</strong> 1行＝1人。<strong>数値の列が1つもない</strong> ― これが今日の前処理のスタート地点。</figcaption>
+      </figure>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.3rem 0 0.3rem">セル2 ── 欠損値を確認する</p>
+      <p style="font-size:0.88rem;color:#999;margin-bottom:0.3rem">分析の前に<strong>穴（未回答）</strong>がないか必ず見る。今回は0だが、<strong>自分たちのアンケートでは普通に起きる</strong>。</p>
+      <pre><span class="code-label">Jupyter ── セル2</span><span class="fn">print</span>(df.<span class="fn">isnull</span>().<span class="fn">sum</span>())</pre>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">Jupyter ── セル2の出力</span></div>
+        <div style="padding:0.8rem 1rem;font-family:'JetBrains Mono',monospace;font-size:0.78rem;line-height:1.65;color:#d0d0d0;white-space:pre-wrap">回答者ID      0
+科目A満足度    0
+科目B満足度    0
+dtype: int64</div>
+        <figcaption class="exec-cap"><strong>確認:</strong> 全列 0 ＝ 欠損なし。もしあったら <code>df = df.dropna()</code> で落とす（std6-2 で実際にやる）。</figcaption>
+      </figure>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.3rem 0 0.3rem">セル3 ── カテゴリ → 数値に変換する（今日の前処理の山場）</p>
+      <pre><span class="code-label">Jupyter ── セル3</span><span class="cmt"># 対応表（辞書）：ラベル → 点数</span>
+score_map = {<span class="str">'非常に満足'</span>: <span class="num">5</span>, <span class="str">'満足'</span>: <span class="num">4</span>, <span class="str">'普通'</span>: <span class="num">3</span>, <span class="str">'不満'</span>: <span class="num">2</span>, <span class="str">'非常に不満'</span>: <span class="num">1</span>}
+
+df[<span class="str">'A'</span>] = df[<span class="str">'科目A満足度'</span>].<span class="fn">map</span>(score_map)   <span class="cmt"># ラベルの列を、点数の列に変換</span>
+df[<span class="str">'B'</span>] = df[<span class="str">'科目B満足度'</span>].<span class="fn">map</span>(score_map)
+<span class="fn">print</span>(df.<span class="fn">head</span>())</pre>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">Jupyter ── セル3の出力</span></div>
+        <div style="padding:0.8rem 1rem;font-family:'JetBrains Mono',monospace;font-size:0.78rem;line-height:1.65;color:#d0d0d0;white-space:pre-wrap">   回答者ID 科目A満足度 科目B満足度  A  B
+0      1  非常に満足     満足  5  4
+1      2     普通     満足  3  4
+2      3     満足  非常に満足  4  5
+3      4     普通     満足  3  4
+4      5     満足     不満  4  2</div>
+        <figcaption class="exec-cap"><strong>確認:</strong> 右端に数値の <code>A</code>・<code>B</code> 列が増えた。<strong>これでようやく計算できる形</strong>になった（順序尺度 → 点数化）。</figcaption>
+      </figure>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.3rem 0 0.3rem">セル4 ── 記述統計（μ と σ）</p>
+      <pre><span class="code-label">Jupyter ── セル4</span><span class="fn">print</span>(<span class="str">f'科目A の平均: {</span>df[<span class="str">"A"</span>].<span class="fn">mean</span>()<span class="str">:.2f} (SD: {</span>df[<span class="str">"A"</span>].<span class="fn">std</span>()<span class="str">:.2f})'</span>)
+<span class="fn">print</span>(<span class="str">f'科目B の平均: {</span>df[<span class="str">"B"</span>].<span class="fn">mean</span>()<span class="str">:.2f} (SD: {</span>df[<span class="str">"B"</span>].<span class="fn">std</span>()<span class="str">:.2f})'</span>)</pre>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">Jupyter ── セル4の出力</span></div>
+        <div style="padding:0.8rem 1rem;font-family:'JetBrains Mono',monospace;font-size:0.78rem;line-height:1.65;color:#d0d0d0;white-space:pre-wrap">科目A の平均: 3.83 (SD: 0.87)
+科目B の平均: 3.30 (SD: 1.20)</div>
+        <figcaption class="exec-cap"><strong>読み方:</strong> 平均差は 0.53。<strong>ここで「Aの方が高い！」と言ってはいけない</strong> ― まだ偶然かもしれない。</figcaption>
+      </figure>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.3rem 0 0.3rem">セル5 ── 分布をヒストグラムで見る</p>
+      <pre><span class="code-label">Jupyter ── セル5</span>fig, axes = plt.<span class="fn">subplots</span>(<span class="num">1</span>, <span class="num">2</span>, figsize=(<span class="num">10</span>, <span class="num">4</span>))
+axes[<span class="num">0</span>].<span class="fn">hist</span>(df[<span class="str">'A'</span>], bins=[<span class="num">0.5</span>, <span class="num">1.5</span>, <span class="num">2.5</span>, <span class="num">3.5</span>, <span class="num">4.5</span>, <span class="num">5.5</span>], color=<span class="str">'#4FC3F7'</span>, edgecolor=<span class="str">'white'</span>)
+axes[<span class="num">0</span>].<span class="fn">set_title</span>(<span class="str">'Subject A'</span>)
+axes[<span class="num">0</span>].<span class="fn">set_xlabel</span>(<span class="str">'Score'</span>)
+axes[<span class="num">0</span>].<span class="fn">set_ylabel</span>(<span class="str">'Count'</span>)
+axes[<span class="num">1</span>].<span class="fn">hist</span>(df[<span class="str">'B'</span>], bins=[<span class="num">0.5</span>, <span class="num">1.5</span>, <span class="num">2.5</span>, <span class="num">3.5</span>, <span class="num">4.5</span>, <span class="num">5.5</span>], color=<span class="str">'#FFB800'</span>, edgecolor=<span class="str">'white'</span>)
+axes[<span class="num">1</span>].<span class="fn">set_title</span>(<span class="str">'Subject B'</span>)
+axes[<span class="num">1</span>].<span class="fn">set_xlabel</span>(<span class="str">'Score'</span>)
+plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">show</span>()</pre>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">Jupyter ── セル5の出力</span></div>
+        <img src="img/md2w6_hist_sample.png" alt="科目Aと科目Bの満足度ヒストグラム。Aは4点を中心に山があり、Bは3点前後に広く散らばっている">
+        <figcaption class="exec-cap"><strong>読み方:</strong> Aは4点に集中、Bは広くばらつく。<strong>左右対称の釣鐘型には見えない</strong> ― 正規性が怪しい、という予感を持ってセル6へ。</figcaption>
+      </figure>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.3rem 0 0.3rem">セル6 ── 正規性の確認（Shapiro-Wilk）</p>
+      <pre><span class="code-label">Jupyter ── セル6</span>stat_a, p_a = stats.<span class="fn">shapiro</span>(df[<span class="str">'A'</span>])
+stat_b, p_b = stats.<span class="fn">shapiro</span>(df[<span class="str">'B'</span>])
+<span class="fn">print</span>(<span class="str">f'科目A: W={</span>stat_a<span class="str">:.4f}, p={</span>p_a<span class="str">:.4f}'</span>)
+<span class="fn">print</span>(<span class="str">f'科目B: W={</span>stat_b<span class="str">:.4f}, p={</span>p_b<span class="str">:.4f}'</span>)</pre>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">Jupyter ── セル6の出力</span></div>
+        <div style="padding:0.8rem 1rem;font-family:'JetBrains Mono',monospace;font-size:0.78rem;line-height:1.65;color:#d0d0d0;white-space:pre-wrap">科目A: W=0.8637, p=0.0002
+科目B: W=0.9064, p=0.0029</div>
+        <figcaption class="exec-cap"><strong>読み方:</strong> 両方 p &lt; 0.05 → <strong>正規性なし</strong>。5段階の離散データは釣鐘型になりにくい。<strong>検定の選び方の表</strong>で行き先が変わる。</figcaption>
+      </figure>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.3rem 0 0.3rem">セル7 ── 表のとおりに検定を選んで実行する</p>
+      <p style="font-size:0.88rem;color:#999;margin-bottom:0.3rem">対応<strong>あり</strong> × 正規性<strong>なし</strong> → <strong>ウィルコクソン符号順位検定</strong>。正規性が<strong>あり</strong>なら対応のあるt検定。その分岐をコードにする。</p>
+      <figure class="exec-shot" style="margin-top:0.7rem">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">いまたどっている道 ── 対応あり × 正規性なし</span></div>
+        <div style="overflow-x:auto;background:#0f1114;padding:0.6rem 0">
+        <svg viewBox="0 0 700 348" role="img" aria-labelledby="tree-std61-t" style="display:block;min-width:620px;width:100%">
+    <title id="tree-std61-t">検定の選び方のフローチャート</title>
+    <path d="M 350 44 L 350 74" fill="none" stroke="#4FC3F7" stroke-width="2.6"/>
+    <polygon points="350,74 345.5,67 354.5,67" fill="#4FC3F7"/>
+    <path d="M 350 104 L 350 120 L 175 120 L 175 148" fill="none" stroke="#4FC3F7" stroke-width="2.6"/>
+    <polygon points="175,148 170.5,141 179.5,141" fill="#4FC3F7"/>
+    <text x="250" y="115" text-anchor="middle" font-size="10.5" fill="#4FC3F7" font-weight="700" font-family="'Noto Sans JP',sans-serif">あり</text>
+    <path d="M 350 104 L 350 120 L 525 120 L 525 148" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="525,148 520.5,141 529.5,141" fill="#4a4f57"/>
+    <text x="450" y="115" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">なし</text>
+    <path d="M 175 178 L 175 198 L 85 198 L 85 232" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="85,232 80.5,225 89.5,225" fill="#4a4f57"/>
+    <text x="120" y="193" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">あり</text>
+    <path d="M 175 178 L 175 198 L 265 198 L 265 232" fill="none" stroke="#4FC3F7" stroke-width="2.6"/>
+    <polygon points="265,232 260.5,225 269.5,225" fill="#4FC3F7"/>
+    <text x="232" y="193" text-anchor="middle" font-size="10.5" fill="#4FC3F7" font-weight="700" font-family="'Noto Sans JP',sans-serif">なし</text>
+    <path d="M 525 178 L 525 198 L 450 198 L 450 232" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="450,232 445.5,225 454.5,225" fill="#4a4f57"/>
+    <text x="476" y="193" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">あり</text>
+    <path d="M 525 178 L 525 198 L 620 198 L 620 232" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="620,232 615.5,225 624.5,225" fill="#4a4f57"/>
+    <text x="585" y="193" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">なし</text>
+    <path d="M 450 262 L 450 280 L 390 280 L 390 302" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="390,302 385.5,295 394.5,295" fill="#4a4f57"/>
+    <text x="410" y="275" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">あり</text>
+    <path d="M 450 262 L 450 280 L 532 280 L 532 302" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="532,302 527.5,295 536.5,295" fill="#4a4f57"/>
+    <text x="500" y="275" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">なし</text>
+    <rect x="250.0" y="14" width="200" height="30" rx="8" fill="rgba(79,195,247,0.13)" stroke="#4FC3F7" stroke-width="2"/>
+    <text x="350" y="33.0" text-anchor="middle" font-size="11.5" fill="#4FC3F7" font-weight="700" font-family="'Noto Sans JP',sans-serif">2群の平均を比べたい</text>
+    <rect x="265.0" y="74" width="170" height="30" rx="8" fill="rgba(79,195,247,0.13)" stroke="#4FC3F7" stroke-width="2"/>
+    <text x="350" y="93.0" text-anchor="middle" font-size="11.5" fill="#4FC3F7" font-weight="700" font-family="'Noto Sans JP',sans-serif">データに対応は？</text>
+    <rect x="110.0" y="148" width="130" height="30" rx="8" fill="rgba(79,195,247,0.13)" stroke="#4FC3F7" stroke-width="2"/>
+    <text x="175" y="167.0" text-anchor="middle" font-size="11.5" fill="#4FC3F7" font-weight="700" font-family="'Noto Sans JP',sans-serif">正規性は？</text>
+    <rect x="460.0" y="148" width="130" height="30" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="525" y="167.0" text-anchor="middle" font-size="11.5" fill="#999" font-family="'Noto Sans JP',sans-serif">正規性は？</text>
+    <rect x="395.0" y="232" width="110" height="30" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="450" y="251.0" text-anchor="middle" font-size="11.5" fill="#999" font-family="'Noto Sans JP',sans-serif">等分散？</text>
+    <rect x="10.0" y="232" width="150" height="40" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="85" y="256.0" text-anchor="middle" font-size="11.5" fill="#c9c9c9" font-family="'Noto Sans JP',sans-serif">対応のあるT検定</text>
+    <rect x="185.0" y="232" width="160" height="40" rx="8" fill="rgba(255,184,0,0.14)" stroke="#FFB800" stroke-width="2.2"/>
+    <text x="265" y="249.0" text-anchor="middle" font-size="11.5" fill="#FFB800" font-weight="800" font-family="'Noto Sans JP',sans-serif">ウィルコクソン</text>
+    <text x="265" y="263.0" text-anchor="middle" font-size="11.5" fill="#FFB800" font-weight="800" font-family="'Noto Sans JP',sans-serif">符号順位検定</text>
+    <rect x="321.0" y="302" width="138" height="32" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="390" y="322.0" text-anchor="middle" font-size="11.5" fill="#c9c9c9" font-family="'Noto Sans JP',sans-serif">スチューデントのT検定</text>
+    <rect x="471.0" y="302" width="122" height="32" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="532" y="322.0" text-anchor="middle" font-size="11.5" fill="#c9c9c9" font-family="'Noto Sans JP',sans-serif">ウェルチのT検定</text>
+    <rect x="546.0" y="232" width="148" height="40" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="620" y="249.0" text-anchor="middle" font-size="11.5" fill="#c9c9c9" font-family="'Noto Sans JP',sans-serif">マン・ホイットニー</text>
+    <text x="620" y="263.0" text-anchor="middle" font-size="11.5" fill="#c9c9c9" font-family="'Noto Sans JP',sans-serif">のU検定</text>
+        </svg>
+        </div>
+        <figcaption class="exec-cap"><strong>たどり方:</strong> 同じ40人がAとBを評価（<strong>対応あり</strong>）→ セル6で p &lt; 0.05（<strong>正規性なし</strong>）→ <strong>ウィルコクソン符号順位検定</strong>。🎮 と同じ「対応あり」でも、<strong>2つめの質問の答えで道が分かれた</strong>。</figcaption>
+      </figure>
+
+      <pre><span class="code-label">Jupyter ── セル7</span><span class="kw">if</span> p_a &gt; <span class="num">0.05</span> <span class="kw">and</span> p_b &gt; <span class="num">0.05</span>:
+    <span class="cmt"># 両方に正規性あり → 対応のあるt検定</span>
+    t_stat, p_value = stats.<span class="fn">ttest_rel</span>(df[<span class="str">'A'</span>], df[<span class="str">'B'</span>])
+    <span class="fn">print</span>(<span class="str">f'対応のあるt検定: t={</span>t_stat<span class="str">:.4f}, p={</span>p_value<span class="str">:.4f}'</span>)
+<span class="kw">else</span>:
+    <span class="cmt"># 正規性なし → ウィルコクソン符号順位検定</span>
+    w_stat, p_value = stats.<span class="fn">wilcoxon</span>(df[<span class="str">'A'</span>], df[<span class="str">'B'</span>])
+    <span class="fn">print</span>(<span class="str">f'ウィルコクソン符号順位検定: W={</span>w_stat<span class="str">:.1f}, p={</span>p_value<span class="str">:.4f}'</span>)
+
+<span class="kw">if</span> p_value &lt; <span class="num">0.05</span>:
+    <span class="fn">print</span>(<span class="str">'→ 科目Aと科目Bの満足度に有意差あり'</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">'→ 科目Aと科目Bの満足度に有意差なし'</span>)</pre>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">Jupyter ── セル7の出力</span></div>
+        <div style="padding:0.8rem 1rem;font-family:'JetBrains Mono',monospace;font-size:0.78rem;line-height:1.65;color:#d0d0d0;white-space:pre-wrap">ウィルコクソン符号順位検定: W=66.0, p=0.0017
+→ 科目Aと科目Bの満足度に有意差あり</div>
+        <figcaption class="exec-cap"><strong>結論:</strong> p = 0.0017 &lt; 0.05。平均差 0.53 は<strong>偶然にしては起こりにくい</strong> ― 「Aの満足度はBより有意に高い」と<strong>初めて言える</strong>。</figcaption>
+      </figure>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.3rem 0 0.3rem">セル8 ── 結果を1枚のグラフにする（エラーバー＋アスタリスク）</p>
+      <p style="font-size:0.88rem;color:#999;margin-bottom:0.3rem">論文の図の定番の形：<strong>細身の棒＝平均、ヒゲ（エラーバー）＝標準偏差、ブラケット（橋）＋「*」＝有意差あり</strong>。上と右の枠線を消すと一気に「論文の図」の顔になる。</p>
+      <pre><span class="code-label">Jupyter ── セル8</span>labels = [<span class="str">'Subject A'</span>, <span class="str">'Subject B'</span>]
+means = [df[<span class="str">'A'</span>].<span class="fn">mean</span>(), df[<span class="str">'B'</span>].<span class="fn">mean</span>()]
+sds = [df[<span class="str">'A'</span>].<span class="fn">std</span>(), df[<span class="str">'B'</span>].<span class="fn">std</span>()]
+
+fig, ax = plt.<span class="fn">subplots</span>(figsize=(<span class="num">4.2</span>, <span class="num">3.6</span>), dpi=<span class="num">120</span>)
+ax.<span class="fn">bar</span>(labels, means, width=<span class="num">0.45</span>, color=[<span class="str">'#4FC3F7'</span>, <span class="str">'#FFB800'</span>], zorder=<span class="num">3</span>)
+ax.<span class="fn">errorbar</span>(labels, means, yerr=sds, fmt=<span class="str">'none'</span>,
+            ecolor=<span class="str">'#555555'</span>, elinewidth=<span class="num">1.2</span>, capsize=<span class="num">4</span>, zorder=<span class="num">4</span>)
+ax.<span class="fn">set_ylabel</span>(<span class="str">'Mean Score'</span>)
+ax.<span class="fn">set_ylim</span>(<span class="num">0</span>, <span class="num">6</span>)
+ax.spines[[<span class="str">'top'</span>, <span class="str">'right'</span>]].<span class="fn">set_visible</span>(<span class="kw">False</span>)   <span class="cmt"># 上と右の枠線を消す</span>
+ax.<span class="fn">grid</span>(axis=<span class="str">'y'</span>, alpha=<span class="num">0.25</span>, zorder=<span class="num">0</span>)
+ax.<span class="fn">set_axisbelow</span>(<span class="kw">True</span>)
+<span class="kw">if</span> p_value &lt; <span class="num">0.05</span>:
+    <span class="cmt"># 有意差のブラケット（橋）と「*」</span>
+    y = <span class="fn">max</span>(m + s <span class="kw">for</span> m, s <span class="kw">in</span> <span class="fn">zip</span>(means, sds)) + <span class="num">0.25</span>
+    ax.<span class="fn">plot</span>([<span class="num">0</span>, <span class="num">0</span>, <span class="num">1</span>, <span class="num">1</span>], [y, y + <span class="num">0.15</span>, y + <span class="num">0.15</span>, y], color=<span class="str">'#555555'</span>, lw=<span class="num">1.2</span>)
+    ax.<span class="fn">text</span>(<span class="num">0.5</span>, y + <span class="num">0.22</span>, <span class="str">'*'</span>, ha=<span class="str">'center'</span>, fontsize=<span class="num">13</span>, color=<span class="str">'#555555'</span>)
+plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">show</span>()</pre>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">Jupyter ── セル8の出力</span></div>
+        <img src="img/md2w6_bar_sample.png" alt="科目AとBの平均満足度の棒グラフ。それぞれに標準偏差のエラーバーが付き、上部にアスタリスクが表示されている">
+        <figcaption class="exec-cap"><strong>完成:</strong> この1枚に<strong>平均・ばらつき・検定結果</strong>の3つが入っている。レポートの図はこの型で描く。</figcaption>
+      </figure>
+
+
+      <div style="margin-top:0.7rem;background:linear-gradient(135deg,#1c1710,#141414);border:1px solid #FFB800;border-radius:10px;padding:1rem 1.2rem">
+        <h4 style="color:#FFB800;font-weight:800;font-size:0.95rem;margin-bottom:0.5rem">📝 考えて言葉にする（ここが本体。各2〜3行）</h4>
+        <p style="font-size:0.88rem;color:#ccc;margin-bottom:0.5rem">授業中の説明を<strong>聞いたまま写すのではなく</strong>、<strong>自分の言葉で説明し直せるか</strong>が課題。次の3問に答える：</p>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.92rem">
+          <li><strong>Q1：</strong><code>map(score_map)</code> は何をしているか。なぜ検定の<strong>前に</strong>これが必要なのか ― <strong>尺度水準の言葉</strong>を使って説明せよ</li>
+          <li><strong>Q2：</strong>🎮 のダイエットデータは<strong>t検定</strong>に進んだのに、このアンケートは<strong>ウィルコクソン検定</strong>になった。セル6の何がそれを決めたのか、<strong>データの性質の違い</strong>とセットで説明せよ</li>
+          <li><strong>Q3：</strong><code>p = 0.0017</code> という数字は<strong>何の確率</strong>か。「Aの方が満足度が高い確率が99.83%」<strong>ではない</strong>ことに注意して、自分の言葉で説明せよ</li>
+        </ul>
+      </div>
+
+      <div class="notion-submit"><span>Notion に、<strong>①セル7の出力（検定名とp値が見える形）</strong>、<strong>②セル8のグラフ</strong>、<strong>③「考えて言葉にする」Q1〜Q3の答え（各2〜3行）</strong>を貼る（std6-1）。</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 4: UNPAIRED ============ -->
+<section id="sec-unpaired">
+  <div class="container">
+    <div class="section-header toggle-head">
+      <div class="section-num" style="background:#4FC3F7">4</div>
+      <h2>対応のない2群 ― ABテストを検定する</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>お題：「広告Aと広告Bで、クリック数に差があるか」（ABテスト）</h3></div>
+      <p style="margin-bottom:0.6rem">ある商品に対して<strong>2パターンのインターネット広告 A・B</strong> を作り、<strong>ランダムに選ばれた別々のユーザ</strong>にどちらか一方を見せて、クリック数を比べる ― マーケティングの定番<strong>「ABテスト」</strong>。同じ人が両方を見るわけではないので、これは<strong>対応のないデータ</strong>である。</p>
+      <p style="margin-bottom:0.6rem"><code>md2w6_ab_test.csv</code> は <code>Group</code>（A/B）と <code>Clicks</code>（クリック回数）の<strong>2列に全員分が縦に混在</strong>している。まず<strong>グループごとに取り出す</strong>必要がある。</p>
+
+      <div class="concept-box">
+        <h4>読めるようになる式：<code>df[df['Group'] == 'A']['Clicks']</code></h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><code>df['Group'] == 'A'</code> ― <code>Group</code> 列が <code>A</code> と一致するかを<strong>行ごとに判定</strong>（True/Falseの列になる）</li>
+          <li><code>df[df['Group'] == 'A']</code> ― Trueの行だけ、つまり<strong>グループAの行だけを選んだ表</strong></li>
+          <li><code>df[df['Group'] == 'A']['Clicks']</code> ― その表から <strong><code>Clicks</code> 列だけを抽出</strong></li>
+        </ul>
+      </div>
+      <figure class="exec-shot" style="margin-top:0.7rem">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">絵で見る ── df[df['Group'] == 'A']['Clicks']</span></div>
+        <div style="overflow-x:auto;background:#0f1114">
+        <svg viewBox="0 0 700 290" role="img" aria-labelledby="pdfilter-t pdfilter-d" style="display:block;min-width:640px;width:100%">
+    <title id="pdfilter-t">pandasの絞り込みを4段階で示した図</title>
+    <desc id="pdfilter-d">元の表 df から、Group列がAかどうかをTrue/Falseで判定し、Trueの行だけ残した表を作り、最後にClicks列だけを取り出す流れ。</desc>
+    <text x="74" y="42" text-anchor="middle" font-size="12" fill="#4FC3F7" font-family="'JetBrains Mono',monospace">df</text>
+    <text x="243" y="42" text-anchor="middle" font-size="11" fill="#4FC3F7" font-family="'JetBrains Mono',monospace">df['Group'] == 'A'</text>
+    <text x="428" y="42" text-anchor="middle" font-size="11" fill="#4FC3F7" font-family="'JetBrains Mono',monospace">df[df['Group'] == 'A']</text>
+    <text x="588" y="42" text-anchor="middle" font-size="11" fill="#FFB800" font-family="'JetBrains Mono',monospace">…['Clicks']</text>
+    <rect x="18" y="64" width="56" height="26" fill="#262b33" stroke="#3a4048"/>
+    <text x="46.0" y="81.5" text-anchor="middle" font-size="11.5" fill="#bbb" font-family="'JetBrains Mono',monospace">Group</text>
+    <rect x="18" y="90" width="56" height="26" fill="#1a1a1a" stroke="#3a4048"/>
+    <text x="46.0" y="107.5" text-anchor="middle" font-size="11.5" fill="#ddd" font-family="'JetBrains Mono',monospace">A</text>
+    <rect x="18" y="116" width="56" height="26" fill="#1a1a1a" stroke="#3a4048"/>
+    <text x="46.0" y="133.5" text-anchor="middle" font-size="11.5" fill="#ddd" font-family="'JetBrains Mono',monospace">B</text>
+    <rect x="18" y="142" width="56" height="26" fill="#1a1a1a" stroke="#3a4048"/>
+    <text x="46.0" y="159.5" text-anchor="middle" font-size="11.5" fill="#ddd" font-family="'JetBrains Mono',monospace">A</text>
+    <rect x="18" y="168" width="56" height="26" fill="#1a1a1a" stroke="#3a4048"/>
+    <text x="46.0" y="185.5" text-anchor="middle" font-size="11.5" fill="#ddd" font-family="'JetBrains Mono',monospace">B</text>
+    <rect x="18" y="194" width="56" height="26" fill="#1a1a1a" stroke="#3a4048"/>
+    <text x="46.0" y="211.5" text-anchor="middle" font-size="11.5" fill="#ddd" font-family="'JetBrains Mono',monospace">A</text>
+    <rect x="74" y="64" width="56" height="26" fill="#262b33" stroke="#3a4048"/>
+    <text x="102.0" y="81.5" text-anchor="middle" font-size="11.5" fill="#bbb" font-family="'JetBrains Mono',monospace">Clicks</text>
+    <rect x="74" y="90" width="56" height="26" fill="#1a1a1a" stroke="#3a4048"/>
+    <text x="102.0" y="107.5" text-anchor="middle" font-size="11.5" fill="#ddd" font-family="'JetBrains Mono',monospace">15</text>
+    <rect x="74" y="116" width="56" height="26" fill="#1a1a1a" stroke="#3a4048"/>
+    <text x="102.0" y="133.5" text-anchor="middle" font-size="11.5" fill="#ddd" font-family="'JetBrains Mono',monospace">18</text>
+    <rect x="74" y="142" width="56" height="26" fill="#1a1a1a" stroke="#3a4048"/>
+    <text x="102.0" y="159.5" text-anchor="middle" font-size="11.5" fill="#ddd" font-family="'JetBrains Mono',monospace">14</text>
+    <rect x="74" y="168" width="56" height="26" fill="#1a1a1a" stroke="#3a4048"/>
+    <text x="102.0" y="185.5" text-anchor="middle" font-size="11.5" fill="#ddd" font-family="'JetBrains Mono',monospace">9</text>
+    <rect x="74" y="194" width="56" height="26" fill="#1a1a1a" stroke="#3a4048"/>
+    <text x="102.0" y="211.5" text-anchor="middle" font-size="11.5" fill="#ddd" font-family="'JetBrains Mono',monospace">21</text>
+    <rect x="200" y="64" width="86" height="26" fill="#262b33" stroke="#3a4048"/>
+    <text x="243.0" y="81.5" text-anchor="middle" font-size="11.5" fill="#bbb" font-family="'JetBrains Mono',monospace">判定</text>
+    <rect x="200" y="90" width="86" height="26" fill="rgba(79,195,247,0.16)" stroke="#3a4048"/>
+    <text x="243.0" y="107.5" text-anchor="middle" font-size="11.5" fill="#4FC3F7" font-weight="700" font-family="'JetBrains Mono',monospace">True</text>
+    <rect x="200" y="116" width="86" height="26" fill="#1a1a1a" stroke="#3a4048"/>
+    <text x="243.0" y="133.5" text-anchor="middle" font-size="11.5" fill="#666" font-family="'JetBrains Mono',monospace">False</text>
+    <rect x="200" y="142" width="86" height="26" fill="rgba(79,195,247,0.16)" stroke="#3a4048"/>
+    <text x="243.0" y="159.5" text-anchor="middle" font-size="11.5" fill="#4FC3F7" font-weight="700" font-family="'JetBrains Mono',monospace">True</text>
+    <rect x="200" y="168" width="86" height="26" fill="#1a1a1a" stroke="#3a4048"/>
+    <text x="243.0" y="185.5" text-anchor="middle" font-size="11.5" fill="#666" font-family="'JetBrains Mono',monospace">False</text>
+    <rect x="200" y="194" width="86" height="26" fill="rgba(79,195,247,0.16)" stroke="#3a4048"/>
+    <text x="243.0" y="211.5" text-anchor="middle" font-size="11.5" fill="#4FC3F7" font-weight="700" font-family="'JetBrains Mono',monospace">True</text>
+    <rect x="372" y="64" width="56" height="26" fill="#262b33" stroke="#3a4048"/>
+    <text x="400.0" y="81.5" text-anchor="middle" font-size="11.5" fill="#bbb" font-family="'JetBrains Mono',monospace">Group</text>
+    <rect x="372" y="90" width="56" height="26" fill="rgba(79,195,247,0.16)" stroke="#3a4048"/>
+    <text x="400.0" y="107.5" text-anchor="middle" font-size="11.5" fill="#4FC3F7" font-weight="700" font-family="'JetBrains Mono',monospace">A</text>
+    <rect x="372" y="116" width="56" height="26" fill="rgba(79,195,247,0.16)" stroke="#3a4048"/>
+    <text x="400.0" y="133.5" text-anchor="middle" font-size="11.5" fill="#4FC3F7" font-weight="700" font-family="'JetBrains Mono',monospace">A</text>
+    <rect x="372" y="142" width="56" height="26" fill="rgba(79,195,247,0.16)" stroke="#3a4048"/>
+    <text x="400.0" y="159.5" text-anchor="middle" font-size="11.5" fill="#4FC3F7" font-weight="700" font-family="'JetBrains Mono',monospace">A</text>
+    <rect x="428" y="64" width="56" height="26" fill="#262b33" stroke="#3a4048"/>
+    <text x="456.0" y="81.5" text-anchor="middle" font-size="11.5" fill="#bbb" font-family="'JetBrains Mono',monospace">Clicks</text>
+    <rect x="428" y="90" width="56" height="26" fill="rgba(79,195,247,0.16)" stroke="#3a4048"/>
+    <text x="456.0" y="107.5" text-anchor="middle" font-size="11.5" fill="#4FC3F7" font-family="'JetBrains Mono',monospace">15</text>
+    <rect x="428" y="116" width="56" height="26" fill="rgba(79,195,247,0.16)" stroke="#3a4048"/>
+    <text x="456.0" y="133.5" text-anchor="middle" font-size="11.5" fill="#4FC3F7" font-family="'JetBrains Mono',monospace">14</text>
+    <rect x="428" y="142" width="56" height="26" fill="rgba(79,195,247,0.16)" stroke="#3a4048"/>
+    <text x="456.0" y="159.5" text-anchor="middle" font-size="11.5" fill="#4FC3F7" font-family="'JetBrains Mono',monospace">21</text>
+    <rect x="556" y="64" width="64" height="26" fill="#262b33" stroke="#3a4048"/>
+    <text x="588.0" y="81.5" text-anchor="middle" font-size="11.5" fill="#bbb" font-family="'JetBrains Mono',monospace">Clicks</text>
+    <rect x="556" y="90" width="64" height="26" fill="#1a1a1a" stroke="#3a4048"/>
+    <text x="588.0" y="107.5" text-anchor="middle" font-size="11.5" fill="#FFB800" font-weight="700" font-family="'JetBrains Mono',monospace">15</text>
+    <rect x="556" y="116" width="64" height="26" fill="#1a1a1a" stroke="#3a4048"/>
+    <text x="588.0" y="133.5" text-anchor="middle" font-size="11.5" fill="#FFB800" font-weight="700" font-family="'JetBrains Mono',monospace">14</text>
+    <rect x="556" y="142" width="64" height="26" fill="#1a1a1a" stroke="#3a4048"/>
+    <text x="588.0" y="159.5" text-anchor="middle" font-size="11.5" fill="#FFB800" font-weight="700" font-family="'JetBrains Mono',monospace">21</text>
+    <line x1="140" y1="155" x2="184" y2="155" stroke="#888" stroke-width="1.6"/><polygon points="192,155 183,150 183,160" fill="#888"/>
+    <line x1="294" y1="155" x2="356" y2="155" stroke="#888" stroke-width="1.6"/><polygon points="364,155 355,150 355,160" fill="#888"/>
+    <line x1="492" y1="155" x2="540" y2="155" stroke="#888" stroke-width="1.6"/><polygon points="548,155 539,150 539,160" fill="#888"/>
+    <text x="74" y="252" text-anchor="middle" font-size="11" fill="#aaa" font-family="'Noto Sans JP',sans-serif">元の表（AとBが混在）</text>
+    <text x="243" y="245" text-anchor="middle" font-size="11" fill="#aaa" font-family="'Noto Sans JP',sans-serif">① 1行ずつ「Aか？」を判定</text>
+    <text x="243" y="261" text-anchor="middle" font-size="11" fill="#aaa" font-family="'Noto Sans JP',sans-serif">→ True／False の列になる</text>
+    <text x="428" y="245" text-anchor="middle" font-size="11" fill="#aaa" font-family="'Noto Sans JP',sans-serif">② True の行だけ残した</text>
+    <text x="428" y="261" text-anchor="middle" font-size="11" fill="#aaa" font-family="'Noto Sans JP',sans-serif">新しい表（5行 → 3行）</text>
+    <text x="588" y="245" text-anchor="middle" font-size="11" fill="#aaa" font-family="'Noto Sans JP',sans-serif">③ そこから列を</text>
+    <text x="588" y="261" text-anchor="middle" font-size="11" fill="#aaa" font-family="'Noto Sans JP',sans-serif">1本だけ取り出す</text>
+        </svg>
+        </div>
+        <figcaption class="exec-cap"><strong>読み方:</strong> かっこの<strong>内側から</strong>、①判定 → ②行を絞る → ③列を取る。第5回の <code>df[df['event'] == 'move']</code> は ②までで止めた形 ― <strong>まったく同じ仕組み</strong>。</figcaption>
+      </figure>
+      <p style="font-size:0.88rem;color:#999;margin-bottom:0">第5回の <code>df[df['event'] == 'move']</code> と<strong>まったく同じ形</strong>。「絞ってから、列を取る」。</p>
+    </div>
+
+    <div id="std6-2" class="card standard">
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std6-2：ABテストのCSVを前処理して、U検定で判断する</h3></div>
+      <p style="margin-bottom:0.5rem">std6-1 と同じ型（<strong>読む → 前処理 → 記述統計 → 正規性 → 検定 → グラフ</strong>）を、<strong>対応のないデータ</strong>で通す。今度は<strong>欠損値が本当に入っている</strong>。ここも<strong>先生と一緒に1セルずつ実行して動作確認</strong>し、意味の説明を聞いたら、最後に<strong>自分の言葉</strong>で書く（下の 📝）。</p>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.1rem 0 0.3rem">セル1 ── 読んで、目で見る</p>
+      <pre><span class="code-label">Jupyter ── セル1（新しいノートブックでも、続きのセルでもよい）</span><span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">from</span> scipy <span class="kw">import</span> stats
+
+df = pd.<span class="fn">read_csv</span>(<span class="str">'md2w6_ab_test.csv'</span>)
+<span class="fn">print</span>(df.<span class="fn">head</span>())
+<span class="fn">print</span>(<span class="str">f'行数: {</span><span class="fn">len</span>(df)<span class="str">}'</span>)</pre>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">Jupyter ── セル1の出力</span></div>
+        <div style="padding:0.8rem 1rem;font-family:'JetBrains Mono',monospace;font-size:0.78rem;line-height:1.65;color:#d0d0d0;white-space:pre-wrap">  Group  Clicks
+0     A    15.0
+1     A    14.0
+2     A    21.0
+3     A     6.0
+4     A    11.0
+行数: 60</div>
+        <figcaption class="exec-cap"><strong>確認:</strong> 縦持ちの60行。<code>Clicks</code> が <code>15.0</code> と<strong>小数表示</strong>なのは、<strong>列のどこかに欠損（NaN）がある</strong>サイン。</figcaption>
+      </figure>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.3rem 0 0.3rem">セル2 ── 欠損値を確認して、落とす</p>
+      <pre><span class="code-label">Jupyter ── セル2</span><span class="fn">print</span>(df.<span class="fn">isnull</span>().<span class="fn">sum</span>())
+df = df.<span class="fn">dropna</span>()          <span class="cmt"># 欠損値を含む行を削除する</span>
+<span class="fn">print</span>(<span class="str">f'欠損値を削除したあとの行数: {</span><span class="fn">len</span>(df)<span class="str">}'</span>)</pre>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">Jupyter ── セル2の出力</span></div>
+        <div style="padding:0.8rem 1rem;font-family:'JetBrains Mono',monospace;font-size:0.78rem;line-height:1.65;color:#d0d0d0;white-space:pre-wrap">Group     0
+Clicks    2
+dtype: int64
+欠損値を削除したあとの行数: 58</div>
+        <figcaption class="exec-cap"><strong>確認:</strong> <code>Clicks</code> に欠損が2件 → 削除して 60 → 58行。<strong>何行落としたかを必ず記録する</strong>のがレポートの作法。</figcaption>
+      </figure>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.3rem 0 0.3rem">セル3 ── グループごとに取り出して、記述統計</p>
+      <pre><span class="code-label">Jupyter ── セル3</span>clicks_A = df[df[<span class="str">'Group'</span>] == <span class="str">'A'</span>][<span class="str">'Clicks'</span>]
+clicks_B = df[df[<span class="str">'Group'</span>] == <span class="str">'B'</span>][<span class="str">'Clicks'</span>]
+<span class="fn">print</span>(<span class="str">f'広告A: {</span><span class="fn">len</span>(clicks_A)<span class="str">}人, 平均 {</span>clicks_A.<span class="fn">mean</span>()<span class="str">:.2f} 回 (SD: {</span>clicks_A.<span class="fn">std</span>()<span class="str">:.2f})'</span>)
+<span class="fn">print</span>(<span class="str">f'広告B: {</span><span class="fn">len</span>(clicks_B)<span class="str">}人, 平均 {</span>clicks_B.<span class="fn">mean</span>()<span class="str">:.2f} 回 (SD: {</span>clicks_B.<span class="fn">std</span>()<span class="str">:.2f})'</span>)</pre>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">Jupyter ── セル3の出力</span></div>
+        <div style="padding:0.8rem 1rem;font-family:'JetBrains Mono',monospace;font-size:0.78rem;line-height:1.65;color:#d0d0d0;white-space:pre-wrap">広告A: 29人, 平均 12.62 回 (SD: 5.76)
+広告B: 29人, 平均 19.17 回 (SD: 8.30)</div>
+        <figcaption class="exec-cap"><strong>読み方:</strong> Bの方が平均6.5回多い。<strong>でもまだ言い切らない</strong> ― ばらつき（SD）も大きい。</figcaption>
+      </figure>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.3rem 0 0.3rem">セル4 ── 分布を重ねて見る</p>
+      <pre><span class="code-label">Jupyter ── セル4</span>fig, ax = plt.<span class="fn">subplots</span>(figsize=(<span class="num">7</span>, <span class="num">4</span>))
+ax.<span class="fn">hist</span>(clicks_A, bins=<span class="num">12</span>, alpha=<span class="num">0.6</span>, label=<span class="str">'Ad A'</span>, color=<span class="str">'#4FC3F7'</span>)
+ax.<span class="fn">hist</span>(clicks_B, bins=<span class="num">12</span>, alpha=<span class="num">0.6</span>, label=<span class="str">'Ad B'</span>, color=<span class="str">'#FFB800'</span>)
+ax.<span class="fn">set_xlabel</span>(<span class="str">'Clicks'</span>)
+ax.<span class="fn">set_ylabel</span>(<span class="str">'Count'</span>)
+ax.<span class="fn">set_title</span>(<span class="str">'Distribution of Clicks'</span>)
+ax.<span class="fn">legend</span>()
+plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">show</span>()</pre>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">Jupyter ── セル4の出力</span></div>
+        <img src="img/md2w6_ab_hist_sample.png" alt="広告Aと広告Bのクリック数のヒストグラム。2つの山が重なりつつ、右側の山が広く歪んでいる">
+        <figcaption class="exec-cap"><strong>読み方:</strong> 山が<strong>右に裾を引いて歪んでいる</strong>（たまにすごくクリックする人がいる）。正規分布には見えない。</figcaption>
+      </figure>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.3rem 0 0.3rem">セル5 ── 正規性の確認</p>
+      <pre><span class="code-label">Jupyter ── セル5</span>stat_a, p_a = stats.<span class="fn">shapiro</span>(clicks_A)
+stat_b, p_b = stats.<span class="fn">shapiro</span>(clicks_B)
+<span class="fn">print</span>(<span class="str">f'広告A: W={</span>stat_a<span class="str">:.4f}, p={</span>p_a<span class="str">:.4f}'</span>)
+<span class="fn">print</span>(<span class="str">f'広告B: W={</span>stat_b<span class="str">:.4f}, p={</span>p_b<span class="str">:.4f}'</span>)</pre>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">Jupyter ── セル5の出力</span></div>
+        <div style="padding:0.8rem 1rem;font-family:'JetBrains Mono',monospace;font-size:0.78rem;line-height:1.65;color:#d0d0d0;white-space:pre-wrap">広告A: W=0.8966, p=0.0081
+広告B: W=0.8806, p=0.0035</div>
+        <figcaption class="exec-cap"><strong>読み方:</strong> 両方 p &lt; 0.05 → 正規性なし。<strong>対応なし × 正規性なし</strong> → 表の行き先は<strong>マン・ホイットニーのU検定</strong>。</figcaption>
+      </figure>
+
+      <figure class="exec-shot" style="margin-top:0.7rem">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">いまたどっている道 ── 対応なし × 正規性なし</span></div>
+        <div style="overflow-x:auto;background:#0f1114;padding:0.6rem 0">
+        <svg viewBox="0 0 700 348" role="img" aria-labelledby="tree-std62-t" style="display:block;min-width:620px;width:100%">
+    <title id="tree-std62-t">検定の選び方のフローチャート</title>
+    <path d="M 350 44 L 350 74" fill="none" stroke="#4FC3F7" stroke-width="2.6"/>
+    <polygon points="350,74 345.5,67 354.5,67" fill="#4FC3F7"/>
+    <path d="M 350 104 L 350 120 L 175 120 L 175 148" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="175,148 170.5,141 179.5,141" fill="#4a4f57"/>
+    <text x="250" y="115" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">あり</text>
+    <path d="M 350 104 L 350 120 L 525 120 L 525 148" fill="none" stroke="#4FC3F7" stroke-width="2.6"/>
+    <polygon points="525,148 520.5,141 529.5,141" fill="#4FC3F7"/>
+    <text x="450" y="115" text-anchor="middle" font-size="10.5" fill="#4FC3F7" font-weight="700" font-family="'Noto Sans JP',sans-serif">なし</text>
+    <path d="M 175 178 L 175 198 L 85 198 L 85 232" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="85,232 80.5,225 89.5,225" fill="#4a4f57"/>
+    <text x="120" y="193" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">あり</text>
+    <path d="M 175 178 L 175 198 L 265 198 L 265 232" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="265,232 260.5,225 269.5,225" fill="#4a4f57"/>
+    <text x="232" y="193" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">なし</text>
+    <path d="M 525 178 L 525 198 L 450 198 L 450 232" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="450,232 445.5,225 454.5,225" fill="#4a4f57"/>
+    <text x="476" y="193" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">あり</text>
+    <path d="M 525 178 L 525 198 L 620 198 L 620 232" fill="none" stroke="#4FC3F7" stroke-width="2.6"/>
+    <polygon points="620,232 615.5,225 624.5,225" fill="#4FC3F7"/>
+    <text x="585" y="193" text-anchor="middle" font-size="10.5" fill="#4FC3F7" font-weight="700" font-family="'Noto Sans JP',sans-serif">なし</text>
+    <path d="M 450 262 L 450 280 L 390 280 L 390 302" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="390,302 385.5,295 394.5,295" fill="#4a4f57"/>
+    <text x="410" y="275" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">あり</text>
+    <path d="M 450 262 L 450 280 L 532 280 L 532 302" fill="none" stroke="#4a4f57" stroke-width="1.4"/>
+    <polygon points="532,302 527.5,295 536.5,295" fill="#4a4f57"/>
+    <text x="500" y="275" text-anchor="middle" font-size="10.5" fill="#8a8f96" font-family="'Noto Sans JP',sans-serif">なし</text>
+    <rect x="250.0" y="14" width="200" height="30" rx="8" fill="rgba(79,195,247,0.13)" stroke="#4FC3F7" stroke-width="2"/>
+    <text x="350" y="33.0" text-anchor="middle" font-size="11.5" fill="#4FC3F7" font-weight="700" font-family="'Noto Sans JP',sans-serif">2群の平均を比べたい</text>
+    <rect x="265.0" y="74" width="170" height="30" rx="8" fill="rgba(79,195,247,0.13)" stroke="#4FC3F7" stroke-width="2"/>
+    <text x="350" y="93.0" text-anchor="middle" font-size="11.5" fill="#4FC3F7" font-weight="700" font-family="'Noto Sans JP',sans-serif">データに対応は？</text>
+    <rect x="110.0" y="148" width="130" height="30" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="175" y="167.0" text-anchor="middle" font-size="11.5" fill="#999" font-family="'Noto Sans JP',sans-serif">正規性は？</text>
+    <rect x="460.0" y="148" width="130" height="30" rx="8" fill="rgba(79,195,247,0.13)" stroke="#4FC3F7" stroke-width="2"/>
+    <text x="525" y="167.0" text-anchor="middle" font-size="11.5" fill="#4FC3F7" font-weight="700" font-family="'Noto Sans JP',sans-serif">正規性は？</text>
+    <rect x="395.0" y="232" width="110" height="30" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="450" y="251.0" text-anchor="middle" font-size="11.5" fill="#999" font-family="'Noto Sans JP',sans-serif">等分散？</text>
+    <rect x="10.0" y="232" width="150" height="40" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="85" y="256.0" text-anchor="middle" font-size="11.5" fill="#c9c9c9" font-family="'Noto Sans JP',sans-serif">対応のあるT検定</text>
+    <rect x="185.0" y="232" width="160" height="40" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="265" y="249.0" text-anchor="middle" font-size="11.5" fill="#c9c9c9" font-family="'Noto Sans JP',sans-serif">ウィルコクソン</text>
+    <text x="265" y="263.0" text-anchor="middle" font-size="11.5" fill="#c9c9c9" font-family="'Noto Sans JP',sans-serif">符号順位検定</text>
+    <rect x="321.0" y="302" width="138" height="32" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="390" y="322.0" text-anchor="middle" font-size="11.5" fill="#c9c9c9" font-family="'Noto Sans JP',sans-serif">スチューデントのT検定</text>
+    <rect x="471.0" y="302" width="122" height="32" rx="8" fill="#1a1a1a" stroke="#444" stroke-width="1.2"/>
+    <text x="532" y="322.0" text-anchor="middle" font-size="11.5" fill="#c9c9c9" font-family="'Noto Sans JP',sans-serif">ウェルチのT検定</text>
+    <rect x="546.0" y="232" width="148" height="40" rx="8" fill="rgba(255,184,0,0.14)" stroke="#FFB800" stroke-width="2.2"/>
+    <text x="620" y="249.0" text-anchor="middle" font-size="11.5" fill="#FFB800" font-weight="800" font-family="'Noto Sans JP',sans-serif">マン・ホイットニー</text>
+    <text x="620" y="263.0" text-anchor="middle" font-size="11.5" fill="#FFB800" font-weight="800" font-family="'Noto Sans JP',sans-serif">のU検定</text>
+        </svg>
+        </div>
+        <figcaption class="exec-cap"><strong>たどり方:</strong> 別々のユーザが広告A／Bを見た（<strong>対応なし</strong>）→ セル5で p &lt; 0.05（<strong>正規性なし</strong>）→ <strong>マン・ホイットニーのU検定</strong>。今日はじめて<strong>右側の道</strong>に入った。</figcaption>
+      </figure>
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.3rem 0 0.3rem">セル6 ── マン・ホイットニーのU検定（両側検定）</p>
+      <pre><span class="code-label">Jupyter ── セル6</span>u_stat, p_value = stats.<span class="fn">mannwhitneyu</span>(clicks_A, clicks_B, alternative=<span class="str">'two-sided'</span>)
+<span class="fn">print</span>(<span class="str">f'U値: {</span>u_stat<span class="str">:.1f}'</span>)
+<span class="fn">print</span>(<span class="str">f'p値: {</span>p_value<span class="str">:.4f}'</span>)
+<span class="kw">if</span> p_value &lt; <span class="num">0.05</span>:
+    <span class="fn">print</span>(<span class="str">'→ 広告Aと広告Bのクリック数に有意差あり'</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">'→ 広告Aと広告Bのクリック数に有意差なし'</span>)</pre>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">Jupyter ── セル6の出力</span></div>
+        <div style="padding:0.8rem 1rem;font-family:'JetBrains Mono',monospace;font-size:0.78rem;line-height:1.65;color:#d0d0d0;white-space:pre-wrap">U値: 223.5
+p値: 0.0022
+→ 広告Aと広告Bのクリック数に有意差あり</div>
+        <figcaption class="exec-cap"><strong>結論:</strong> p = 0.0022 &lt; 0.05 ― <strong>広告Bのクリック数はAより有意に多い</strong>。次の広告はBでいく、と<strong>データで意思決定</strong>できる。</figcaption>
+      </figure>
+
+      <div class="callout-info" style="margin-top:0.5rem">
+        <h4><code>alternative='two-sided'</code> ― 両側検定と片側検定</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><strong>両側検定（two-sided）：</strong>「<strong>どちらの方向でも</strong>差があるか」を調べる。<strong>事前にどちらが優れているか予測がないとき</strong>はこちら。今日は常にこれ</li>
+          <li><strong>片側検定（one-sided）：</strong>「Bの方が<strong>多い</strong>」など、<strong>特定の方向</strong>の差だけを調べる。事前に明確な予測（仮説）があるときに使う</li>
+        </ul>
+      </div>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.3rem 0 0.3rem">セル7 ── 仕上げのグラフ</p>
+      <pre><span class="code-label">Jupyter ── セル7</span>labels = [<span class="str">'Ad A'</span>, <span class="str">'Ad B'</span>]
+means = [clicks_A.<span class="fn">mean</span>(), clicks_B.<span class="fn">mean</span>()]
+sds = [clicks_A.<span class="fn">std</span>(), clicks_B.<span class="fn">std</span>()]
+
+fig, ax = plt.<span class="fn">subplots</span>(figsize=(<span class="num">4.2</span>, <span class="num">3.6</span>), dpi=<span class="num">120</span>)
+ax.<span class="fn">bar</span>(labels, means, width=<span class="num">0.45</span>, color=[<span class="str">'#4FC3F7'</span>, <span class="str">'#FFB800'</span>], zorder=<span class="num">3</span>)
+ax.<span class="fn">errorbar</span>(labels, means, yerr=sds, fmt=<span class="str">'none'</span>,
+            ecolor=<span class="str">'#555555'</span>, elinewidth=<span class="num">1.2</span>, capsize=<span class="num">4</span>, zorder=<span class="num">4</span>)
+ax.<span class="fn">set_ylabel</span>(<span class="str">'Mean Clicks'</span>)
+ax.spines[[<span class="str">'top'</span>, <span class="str">'right'</span>]].<span class="fn">set_visible</span>(<span class="kw">False</span>)   <span class="cmt"># 上と右の枠線を消す</span>
+ax.<span class="fn">grid</span>(axis=<span class="str">'y'</span>, alpha=<span class="num">0.25</span>, zorder=<span class="num">0</span>)
+ax.<span class="fn">set_axisbelow</span>(<span class="kw">True</span>)
+<span class="kw">if</span> p_value &lt; <span class="num">0.05</span>:
+    <span class="cmt"># 有意差のブラケット（橋）と「*」</span>
+    y = <span class="fn">max</span>(m + s <span class="kw">for</span> m, s <span class="kw">in</span> <span class="fn">zip</span>(means, sds)) + <span class="num">1.5</span>
+    ax.<span class="fn">plot</span>([<span class="num">0</span>, <span class="num">0</span>, <span class="num">1</span>, <span class="num">1</span>], [y, y + <span class="num">0.8</span>, y + <span class="num">0.8</span>, y], color=<span class="str">'#555555'</span>, lw=<span class="num">1.2</span>)
+    ax.<span class="fn">text</span>(<span class="num">0.5</span>, y + <span class="num">1.1</span>, <span class="str">'*'</span>, ha=<span class="str">'center'</span>, fontsize=<span class="num">13</span>, color=<span class="str">'#555555'</span>)
+plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">show</span>()</pre>
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">Jupyter ── セル7の出力</span></div>
+        <img src="img/md2w6_ab_bar_sample.png" alt="広告Aと広告Bの平均クリック数の棒グラフ。エラーバーとアスタリスクが付いている">
+        <figcaption class="exec-cap"><strong>完成:</strong> std6-1 と同じ型のグラフ。<strong>データが変わっても、見せ方の型は同じ</strong>。</figcaption>
+      </figure>
+
+
+      <div style="margin-top:0.7rem;background:linear-gradient(135deg,#1c1710,#141414);border:1px solid #FFB800;border-radius:10px;padding:1rem 1.2rem">
+        <h4 style="color:#FFB800;font-weight:800;font-size:0.95rem;margin-bottom:0.5rem">📝 考えて言葉にする（ここが本体。各2〜3行）</h4>
+        <p style="font-size:0.88rem;color:#ccc;margin-bottom:0.5rem">授業中の説明を<strong>聞いたまま写すのではなく</strong>、<strong>自分の言葉で説明し直せるか</strong>が課題。次の3問に答える：</p>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.92rem">
+          <li><strong>Q1：</strong><code>df[df['Group'] == 'A']['Clicks']</code> を<strong>内側から3段階に分解</strong>して、それぞれの段階で何が起きているか説明せよ</li>
+          <li><strong>Q2：</strong>セル2の <code>dropna()</code> を<strong>忘れたまま</strong>進めると、どこで・何が起きるか。「欠損値」という言葉を使って説明せよ</li>
+          <li><strong>Q3：</strong>今回<strong>マン・ホイットニーのU検定</strong>を選んだ理由を、<strong>検定の選び方の表のたどり方</strong>（対応→正規性）そのままに言葉にせよ。std6-1 のウィルコクソン検定と<strong>何が違う</strong>のかにも触れること</li>
+        </ul>
+      </div>
+      <div class="callout-tip" style="margin-top:0.5rem">
+        <h4>Webで気軽に試せる（検算にも使える）</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li>Wilcoxon符号順位検定（対応あり）：<a href="https://www.gen-info.osaka-u.ac.jp/MEPHAS/wilc2.html" target="_blank" rel="noopener" style="color:#4FC3F7">MEPHAS wilc2</a></li>
+          <li>Wilcoxon順位和検定（対応なし・U検定と同等）：<a href="https://www.gen-info.osaka-u.ac.jp/MEPHAS/wilc1.html" target="_blank" rel="noopener" style="color:#4FC3F7">MEPHAS wilc1</a></li>
+        </ul>
+      </div>
+
+      <div class="notion-submit"><span>Notion に、<strong>①セル2の出力（欠損値の処理が見える形）</strong>、<strong>②セル6の出力（U値とp値）</strong>、<strong>③セル7のグラフ</strong>、<strong>④「考えて言葉にする」Q1〜Q3の答え（各2〜3行）</strong>、<strong>⑤「広告AとBのどちらを採用すべきか」の結論（理由つきで1〜2行）</strong>を貼る（std6-2）。</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GROUP WORK ============ -->
+<section id="sec-plan">
+  <div class="container">
+    <div class="section-header toggle-head">
+      <div class="section-num" style="background:#4FC3F7">5</div>
+      <h2>自分たちの実験 ― 「2つを比べるアンケート」をクラスで取る</h2>
+    </div>
+
+    <div id="gw6-2" class="card group">
+      <div class="card-header"><h3><span class="tag tag-group" style="font-size:0.7rem">グループワーク</span> gw6-2：リッカート尺度のアンケートを作り、授業中にクラスメイトから回答を集める</h3></div>
+      <p style="margin-bottom:0.6rem">対応のある2群（std6-1）・ない2群（std6-2）の型は手に入った。ここからは<strong>本物の実験データを自分たちで作る</strong>。<strong>いま Google フォームを作り、Slack の授業チャンネルで公開して、授業中にクラスメイトから回答を得る</strong>。回答者はこの教室にいる ― <strong>お互いのフォームに答え合えば、その場で n が集まる</strong>。</p>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">手順① ― 比べたい「2つ」を決める</p>
+      <ul class="point-list" style="margin-bottom:0.8rem;font-size:0.92rem">
+        <li><strong>同じ回答者が両方を評価できるもの</strong>にする（＝対応のあるデータになる）。例）<strong>コンテンツAとB</strong>、<strong>サービスAとB</strong>、<strong>デザイン案AとB</strong>、学食のメニューAとB…</li>
+        <li>回答者は<strong>この授業のクラスメイト</strong>。目標は<strong>サンプル数 n ≥ 20</strong>（回答数20人以上）― 少ないと、本当に差があっても検定で拾えない</li>
+        <li><strong>クラスメイトが答えられる質問</strong>にする（例）全員が知っている学食メニュー・アプリ・授業設備のA/B比較。誰も知らないものを聞いても回答できない</li>
+      </ul>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">手順② ― リッカート尺度で質問を作る</p>
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin:0.4rem 0 0.8rem">
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-radius:0.5rem;padding:0.9rem">
+          <div style="font-weight:900;font-size:0.9rem;margin-bottom:0.3rem;color:#4FC3F7">5段階（基本形）</div>
+          <div style="font-size:0.85rem;line-height:1.9">非常に満足<br>満足<br>普通<br>不満<br>非常に不満</div>
+        </div>
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-radius:0.5rem;padding:0.9rem">
+          <div style="font-weight:900;font-size:0.9rem;margin-bottom:0.3rem;color:#FFB800">4段階（白黒つけたいとき）</div>
+          <div style="font-size:0.85rem;line-height:1.9">満足<br>やや満足<br>やや不満<br>不満</div>
+          <div style="font-size:0.78rem;color:#999;margin-top:0.3rem">「普通」「どちらともいえない」を<strong>置かない</strong>ことで、真ん中への逃げをなくす</div>
+        </div>
+      </div>
+      <p style="font-size:0.88rem;color:#999;margin-bottom:0.8rem"><strong>リッカート尺度</strong>＝あらかじめ決めた評価段階で答えてもらう方法（社会学者レンシス・リッカートに由来）。白黒はっきり答えづらい質問でも<strong>程度</strong>を測れる。顧客満足度・ブランド認知度など実務でも定番。</p>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">手順③ ― 回答率を上げる「4つのポイント」で依頼文を書く</p>
+      <div class="callout-info">
+        <h4>回答率を上げる4つのポイント（アンケートの冒頭に書く）</h4>
+        <ul class="point-list" style="margin-bottom:0.5rem;font-size:0.9rem">
+          <li><strong>① 依頼者・利用目的を明確に</strong>（誰が・何のために）</li>
+          <li><strong>② デメリットが少ないことを伝える</strong>（匿名で集計・所要1分など）</li>
+          <li><strong>③ メリットがあることを伝える</strong>（結果は授業の質の向上に使われる など）</li>
+          <li><strong>④ すべてを簡潔に伝える</strong>（長い前置きは読まれない）</li>
+        </ul>
+        <div style="background:#111;border:1px solid #333;border-radius:8px;padding:0.8rem;font-size:0.85rem;color:#ccc">
+          <strong style="color:#4FC3F7">依頼文の例：</strong><br>
+          このアンケートは <strong>MUDS学生有志</strong>による<strong>授業の質の向上を目的</strong>としています。回答は<strong>匿名で集計</strong>され、担当教員にフィードバックされます（所要時間 約1分・全2問）。ご協力よろしくお願いします。
+        </div>
+      </div>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">手順④ ― Google Forms で作って配信する</p>
+      <ol style="padding-left:1.4rem;font-size:0.92rem;line-height:2">
+        <li>Google アプリ一覧 → <strong>フォーム</strong> → <strong>空白のフォーム</strong></li>
+        <li>質問の形式を<strong>ラジオボタン</strong>にして、5段階（または4段階）の選択肢を入れる（問1: Aの満足度／問2: Bの満足度）</li>
+        <li>右上の<strong>送信</strong> → <strong>リンクのマーク</strong> → <strong>「URLを短縮」にチェック</strong> → コピー</li>
+        <li>コピーしたURLを <strong>Slack の授業チャンネルに投稿</strong>する（グループで<strong>1回だけ</strong>。「グループ◯◯です。2問・1分で終わります」と添える）</li>
+        <li><strong>授業チャンネルに流れてきた他グループのフォームに、その場で回答する</strong>（お互いさま ― 全グループに答えるつもりで）</li>
+        <li>回答は<strong>「回答」タブ → スプレッドシートにリンク</strong>で表になる。ここから <strong>CSVでダウンロード</strong>して検定に使う（ファイル → ダウンロード → カンマ区切り形式）</li>
+      </ol>
+
+      <div class="callout-warning" style="margin-top:0.5rem">
+        <h4>投稿のマナー（重要）</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li>投稿するのは<strong>この授業のチャンネルだけ</strong>。002_雑談 など他のチャンネルに投げない（アンケートの乱立は大迷惑）</li>
+          <li>投稿は<strong>グループにつき1回</strong>。催促のリマインドで埋めない ― 代わりに<strong>自分たちが他グループへ答える</strong></li>
+          <li>授業中に n が足りなかったら、<strong>第7回までに知人経由で集め足してよい</strong>。それでも足りなければ<strong>ダミーデータとして LLM に回答させてもよい</strong>（その場合はレポートに明記する）</li>
+        </ul>
+      </div>
+
+      <div class="notion-submit"><span>Notion に、<strong>①比べる2つと質問文（選択肢つき）</strong>、<strong>②依頼文</strong>、<strong>③Google Forms のURL</strong>、<strong>④授業終了時点の回答数（スプレッドシートのキャプチャ）</strong>を貼る（gw6-2）。グループで1つ作り、<strong>メンバー全員が自分のNotionに貼る</strong>こと。</span></div>
+    </div>
+
+    <div id="std6-3" class="card standard">
+      <div class="card-header"><h3><span class="tag tag-standard" style="font-size:0.7rem">標準課題</span> std6-3：gw6-2 のアンケート結果を検定して、ミニレポートにまとめる（<strong>最後の課題</strong>）</h3></div>
+      <p style="margin-bottom:0.6rem">配布CSVで練習した型を、<strong>自分たちが集めた本物のデータ</strong>に使う。ここまでできたら、<strong>データサイエンスの一連の流れ（収集 → 前処理 → 分析 → 報告）を1人で回せた</strong>ことになる。</p>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1rem 0 0.3rem">手順</p>
+      <ul class="point-list" style="margin-bottom:0.8rem;font-size:0.92rem">
+        <li><strong>① CSVを取り出す：</strong>授業中に集めた回答を、Google Forms の回答タブ → スプレッドシート → ファイル → ダウンロード → <strong>カンマ区切り形式（.csv）</strong></li>
+        <li><strong>② 検定する：</strong>std6-1 と同じ流れ（読む → 欠損値 → <code>map</code> で数値化 → 記述統計 → 正規性 → 検定 → エラーバーつき棒グラフ）。<strong>コードはほぼ使い回せる</strong>（列名と <code>score_map</code> のラベルを自分のフォームに合わせる）</li>
+        <li><strong>③ ミニレポートにまとめる：</strong>次の3部構成で書く（学会発表・論文の最小形）</li>
+      </ul>
+
+      <table style="font-size:0.88rem">
+        <tr><th style="width:22%">構成</th><th>書くこと</th></tr>
+        <tr><td><strong>1. はじめに</strong></td><td>実験の目的・方法・結果の概要（3〜4行）</td></tr>
+        <tr><td><strong>2. 実験方法</strong></td><td>第3者が読んで<strong>再現できる</strong>くらい具体的に：何と何を・誰に・何人に・どの尺度で聞いたか</td></tr>
+        <tr><td><strong>3. 実験結果</strong></td><td>表・グラフを示しながら説明：n、各群の μ と σ、正規性の結果、<strong>使った検定名</strong>、p値、結論</td></tr>
+      </table>
+
+      <div class="callout-warning" style="margin-top:0.6rem">
+        <h4>ぶつかりやすい壁</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><strong><code>map</code> のあとが全部 <code>NaN</code>：</strong><code>score_map</code> のラベルが<strong>フォームの選択肢の文字列と1文字でも違う</strong>と NaN になる（前後の空白にも注意）。<code>df['A'].unique()</code> で実際のラベルを確認</li>
+          <li><strong>n が少なくて有意差が出ない：</strong>n &lt; 20 だと本当に差があっても拾えないことが多い。「有意差なし＝差がない証明ではない」と書けば、それも<strong>正しい報告</strong></li>
+          <li><strong>授業中に n が足りなかった：</strong>第7回までに集め足して、第7回の総合演習で仕上げてもよい</li>
+        </ul>
+      </div>
+
+
+      <div class="notion-submit"><span>Notion に、<strong>ミニレポート（はじめに／実験方法／実験結果）</strong>と<strong>使ったコード</strong>を貼る（std6-3）。</span></div>
+    </div>
+  </div>
+</section>
+<!-- ============ SECTION 6: ADVANCED ============ -->
+<section id="sec-advance">
+  <div class="container">
+    <div class="section-header toggle-head">
+      <div class="section-num" style="background:#FFB800;color:#111">6</div>
+      <h2>発展課題 ― 先輩にアンケート調査をする（任意）</h2>
+    </div>
+
+    <div id="adv6-1" class="card advanced">
+      <div class="card-header"><h3><span class="tag tag-advanced" style="font-size:0.7rem">発展課題</span> adv6-1：<strong>先輩に</strong>アンケート調査をして、検定まで通す（任意）</h3></div>
+      <p style="margin-bottom:0.6rem">gw6-2〜std6-3 の回答者はクラスメイトだった。今度は<strong>先輩</strong>に聞く。回答者が変わると、<strong>依頼のしかたも、聞けることも変わる</strong> ― 企画から結論まで、ぜんぶ1人でやる。</p>
+
+      <p style="font-weight:700;color:#FFB800;font-size:0.95rem;margin:1rem 0 0.3rem">手順（gw6-2 と同じ型を、1人で）</p>
+      <ul class="point-list" style="margin-bottom:0.8rem;font-size:0.92rem">
+        <li><strong>① 「先輩だから答えられること」を問いにする：</strong>同じ回答者が<strong>2つを比べられる</strong>テーマを選ぶ（例）先輩が履修した科目AとB、使ってきた学習アプリAとB、キャンパスの施設AとB、1年次と2年次の忙しさ…<strong>後輩として本当に知りたいこと</strong>ほどよい調査になる</li>
+        <li><strong>② リッカート尺度で設計：</strong>回答率を上げる4つのポイントを押さえた依頼文つきで Google Forms を作る</li>
+        <li><strong>③ 先輩から回答を集める：</strong>サークル・ゼミ・バイト先・SA の先輩などに個別にお願いして <strong>n ≥ 20</strong> を目標に（<strong>授業チャンネルには投稿しない</strong>。乱立は大迷惑）</li>
+        <li><strong>④ 検定 → ミニレポート：</strong>std6-3 とまったく同じ流れ（<code>map</code> → 記述統計 → 正規性 → 検定 → グラフ → 3部構成のレポート）</li>
+      </ul>
+
+      <div class="callout-warning" style="margin-top:0.5rem">
+        <h4>個人調査ならではの注意</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><strong>依頼文の質＝回答率</strong>。相手は忙しい先輩 ― 誰が・何のため・匿名か・何分かかるか、を最初の4行で伝え、<strong>お願いとお礼のことば</strong>を忘れない</li>
+          <li><strong>n が集まらないのも学び</strong>。集まらなかった理由の考察（配信先・依頼文・質問の重さ）をレポートに書けば、それも立派な結果</li>
+          <li>回答者の<strong>個人情報を集めない</strong>（名前・学籍番号は不要。匿名で設計する）</li>
+        </ul>
+      </div>
+
+      <div class="notion-submit"><span>Notion に、<strong>①テーマ（問い）と質問文</strong>、<strong>②ミニレポート（はじめに／実験方法／実験結果）</strong>、<strong>③使ったコード</strong>を貼る（adv6-1・任意）。</span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>MD2 第6回 ― その差は本物か？（アンケートと有意差検定）</p>
+    <div style="margin-top:0.5rem;font-size:0.8rem;color:#666">&copy;2026 Ryota Nakamura.</div>
+  </div>
+</footer>
+<!-- ============ SCRIPTS ============ -->
+<script>
+// 大見出し（section-header）ごとに本文を折りたたむ。既定は閉じた状態。
+(function() {
+  // header（.section-header / .card-header）を折りたたみの見出しに変え、
+  // それ以降の兄弟要素を .section-body でくるむ
+  function makeToggle(header) {
+    var parent = header.parentElement;
+    var body = document.createElement('div');
+    body.className = 'section-body';
+    while (header.nextSibling) { body.appendChild(header.nextSibling); }
+    parent.appendChild(body);
+
+    var chevron = document.createElement('span');
+    chevron.className = 'section-chevron';
+    chevron.textContent = '▶';
+    header.appendChild(chevron);
+    header.classList.add('toggle-head');
+
+    function setOpen(open) {
+      header.classList.toggle('open', open);
+      body.classList.toggle('open', open);
+    }
+    header.addEventListener('click', function() {
+      setOpen(!header.classList.contains('open'));
+    });
+
+    // 本文の最後に「閉じる」ボタンを置く。押すと閉じて、見出しの位置まで戻る
+    var closeWrap = document.createElement('div');
+    closeWrap.className = 'section-close-wrap';
+    var closeBtn = document.createElement('button');
+    closeBtn.className = 'section-close';
+    closeBtn.type = 'button';
+    closeBtn.textContent = '▲ 閉じる';
+    closeBtn.addEventListener('click', function() {
+      setOpen(false);
+      header.scrollIntoView({ block: 'center' });
+    });
+    closeWrap.appendChild(closeBtn);
+    body.appendChild(closeWrap);
+  }
+
+  document.querySelectorAll('section').forEach(function(section) {
+    var header = section.querySelector('.section-header');
+    if (header) { makeToggle(header); return; }
+    // 大見出しを持たない導入セクション（位置づけ・授業の流れ）はカード見出しで折りたたむ
+    section.querySelectorAll(':scope > .container > .card > .card-header').forEach(makeToggle);
+  });
+
+  // 折りたたまれた中にある要素へ飛べるように、その節を開いてからスクロールする
+  function reveal(target) {
+    var body = target.closest('.section-body');
+    while (body) {
+      var header = body.previousElementSibling;
+      if (header && header.classList.contains('toggle-head')) {
+        header.classList.add('open');
+        body.classList.add('open');
+      }
+      body = body.parentElement ? body.parentElement.closest('.section-body') : null;
+    }
+  }
+
+  // ページ内リンク（提出ガイド・上部ナビ）のクリック
+  document.addEventListener('click', function(e) {
+    var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if (!a) return;
+    var id = a.getAttribute('href').slice(1);
+    if (!id) return;
+    var target = document.getElementById(id);
+    if (!target) return;
+    e.preventDefault();
+    reveal(target);          // 閉じている節なら開く
+    target.scrollIntoView();
+    history.replaceState(null, '', '#' + id);
+  });
+
+  // #xxx 付きで開いたとき
+  function scrollFromHash() {
+    var id = location.hash.slice(1);
+    if (!id) return;
+    var target = document.getElementById(id);
+    if (!target) return;
+    reveal(target);
+    target.scrollIntoView();
+  }
+  scrollFromHash();
+  window.addEventListener('hashchange', scrollFromHash);
+})();
+</script>
+<script>
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    // ラベル(.code-label)とコピーボタンを取り除いた複製から、純粋なコードだけを取り出す
+    var clone = pre.cloneNode(true);
+    clone.querySelectorAll('.code-label, .copy-btn').forEach(function(el) { el.remove(); });
+    var code = clone.textContent.replace(/^\n+/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() { btn.textContent = 'コピー'; btn.classList.remove('copied'); }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+document.querySelectorAll(':not(pre) > code').forEach(function(code) {
+  code.title = 'クリックでコピー';
+  code.addEventListener('click', function() {
+    navigator.clipboard.writeText(code.textContent).then(function() {
+      code.classList.add('copied');
+      setTimeout(function() { code.classList.remove('copied'); }, 1500);
+    });
+  });
+});
+</script>
+<script>
+// 尺度水準ワークの答え合わせ（PBKDF2 + AES-256-GCM。answer-gate.js と同形式）
+(function() {
+  var box = document.getElementById('scale-answer');
+  var btn = document.getElementById('scale-pass-btn');
+  var input = document.getElementById('scale-pass');
+  if (!box || !btn || !input) return;
+  var errEl = document.getElementById('scale-pass-error');
+
+  function decrypt(b64, password) {
+    var raw = Uint8Array.from(atob(b64), function(c) { return c.charCodeAt(0); });
+    var salt = raw.slice(0, 16), iv = raw.slice(16, 28), tag = raw.slice(28, 44), ct = raw.slice(44);
+    var combined = new Uint8Array(ct.length + tag.length);
+    combined.set(ct); combined.set(tag, ct.length);
+    return crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey'])
+      .then(function(k) { return crypto.subtle.deriveKey({ name: 'PBKDF2', salt: salt, iterations: 100000, hash: 'SHA-256' }, k, { name: 'AES-GCM', length: 256 }, false, ['decrypt']); })
+      .then(function(aes) { return crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv }, aes, combined); })
+      .then(function(buf) { return new TextDecoder().decode(buf); })
+      .catch(function() { return null; });
+  }
+
+  function attempt() {
+    var pw = input.value;
+    if (!pw) return;
+    btn.disabled = true; btn.textContent = '確認中…';
+    decrypt(box.getAttribute('data-cipher'), pw).then(function(htmlStr) {
+      if (htmlStr) {
+        box.innerHTML = htmlStr;
+        errEl.style.display = 'none';
+        btn.parentElement.style.display = 'none';
+      } else {
+        errEl.style.display = 'inline';
+        btn.disabled = false; btn.textContent = '答えを見る';
+      }
+    });
+  }
+  btn.addEventListener('click', attempt);
+  input.addEventListener('keydown', function(e) { if (e.key === 'Enter') attempt(); });
+})();
+</script>
+</body>
+</html>
