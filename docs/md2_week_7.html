@@ -1,0 +1,3100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第7回: 自由創作 ― 分析したくなるデータが自然に集まる空間をつくる | MD2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET & BASE ============ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: clamp(13px, 1.6vw, 28px); }
+html, body { overflow-x: hidden; max-width: 100%; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #111111;
+  color: #e0e0e0;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+img, video, iframe, svg, canvas { max-width: 100%; height: auto; }
+
+/* ============ LAYOUT ============ */
+.container { max-width: 1600px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+
+/* ============ HEADER ============ */
+.hero {
+  background: linear-gradient(135deg, #111111, #0a1e2e, #0a0a1a);
+  color: white;
+  padding: clamp(3rem, 8vw, 6rem) 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(79,195,247,0.28), transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(79,195,247,0.12), transparent 50%);
+}
+.hero .container { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 100px;
+  padding: 0.35rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+}
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+
+/* ============ SUBMISSION BOX ============ */
+.submission-box {
+  background: linear-gradient(135deg, #1A1A1A, #0a1e2e);
+  border: 2px solid #4FC3F7;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin: 2rem 0;
+}
+.submission-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #4FC3F7;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.submission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.5rem;
+}
+.sub-item {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  gap: 0.3rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.4rem;
+  padding: 0.6rem 0.4rem;
+  font-size: 0.55rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.sub-item .sub-count { margin-bottom: 0.1rem; }
+.sub-item .tag { margin-bottom: 0.15rem; }
+.sub-count {
+  background: #4FC3F7;
+  color: white;
+  border-radius: 0.2rem;
+  min-width: 1.5rem; height: 1.5rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700;
+}
+
+/* ============ TAGS ============ */
+.tag {
+  display: inline-flex; align-items: center; gap: 0.2rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 100px;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.tag-note      { background: #0a1a2e; color: #4FC3F7; }
+.tag-standard  { background: #0a1a2e; color: #4FC3F7; }
+.tag-advanced  { background: #2e2410; color: #FFB800; }
+.tag-group     { background: #0a1a2e; color: #4FC3F7; }
+
+/* ============ BLANK (穴埋め) ============ */
+.blk {
+  display: inline-block;
+  min-width: 2.2em;
+  padding: 0 0.5em;
+  margin: 0 0.1em;
+  background: rgba(79,195,247,0.14);
+  border: 1px dashed #4FC3F7;
+  border-radius: 5px;
+  color: #4FC3F7;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ============ SECTION HEADERS ============ */
+.section-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.section-num {
+  width: 2.5rem; height: 2.5rem;
+  border-radius: 0.4rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 900; color: white;
+  flex-shrink: 0;
+}
+.section-header h2 {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+/* ============ SECTION TOGGLE ============ */
+.section-header.toggle-head {
+  cursor: pointer;
+  user-select: none;
+  margin-bottom: 0;
+  padding: 0.5rem 0;
+  border-radius: 0.5rem;
+  transition: background 0.15s;
+}
+.section-header.toggle-head:hover { background: rgba(255,255,255,0.04); }
+.section-header.toggle-head h2 { flex: 1; }
+.section-chevron {
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  color: #888;
+  transition: transform 0.2s;
+}
+.section-header.toggle-head.open .section-chevron { transform: rotate(90deg); }
+.section-body { display: none; }
+section[id], .card[id] { scroll-margin-top: 3.2rem; }
+.section-body.open { display: block; padding-top: 1.5rem; }
+
+.card-header.toggle-head {
+  cursor: pointer;
+  user-select: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+  transition: opacity 0.15s;
+}
+.card-header.toggle-head:hover { opacity: 0.75; }
+.card-header.toggle-head h3 { flex: 1; }
+.card-header.toggle-head.open {
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #222;
+}
+.card-header.toggle-head.open .section-chevron { transform: rotate(90deg); }
+.card > .section-body.open { padding-top: 0; }
+
+.section-close-wrap {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+.section-close {
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #999;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 100px;
+  padding: 0.45rem 1.1rem;
+  transition: color 0.15s, border-color 0.15s;
+}
+.section-close:hover { color: #4FC3F7; border-color: #4FC3F7; }
+
+/* ============ CARDS ============ */
+.card {
+  background: #141414;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  border: 1px solid #2a2a2a;
+}
+.card-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #222;
+}
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.standard  { border-left: 4px solid #4FC3F7; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.card.group     { border-left: 4px solid #4FC3F7; }
+
+/* ============ NOTION CALLOUT ============ */
+.notion-submit {
+  background: #0a1e2e;
+  border: 1px solid #4FC3F7;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  display: flex; align-items: flex-start; gap: 0.5rem;
+}
+.notion-submit::before { content: '\1F4DD'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+
+/* ============ TABLES ============ */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem;
+  margin: 1rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+th {
+  background: rgba(79, 195, 247, 0.15);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  color: #4FC3F7;
+  letter-spacing: 0.02em;
+}
+td { padding: 0.55rem 0.8rem; border-top: 1px solid #222; }
+tr:nth-child(even) td { background: #111; }
+
+/* ============ CODE ============ */
+pre {
+  background: #0A0A0A;
+  color: #E0E0E0;
+  border-radius: 12px;
+  padding: clamp(0.8rem, 2vw, 1.4rem);
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
+  font-size: clamp(0.75rem, 1.3vw, 0.88rem);
+  line-height: 1.7;
+  margin: 1rem 0;
+  position: relative;
+}
+pre .kw { color: #4FC3F7; }
+pre .fn { color: #C3CEDA; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #FFB800; }
+pre .op { color: #9AA6B2; }
+/* ハイライト行（この手順で書き足す部分） */
+pre .hl { display: block; background: rgba(79,195,247,0.14); box-shadow: inset 3px 0 0 #4FC3F7; }
+/* ディレクトリツリー */
+.dirtree { background:#0A0A0A; border:1px solid #333; border-radius:12px; padding:0.9rem 1.1rem; font-family:'JetBrains Mono',monospace; font-size:0.82rem; line-height:1.7; color:#c3ceda; overflow-x:auto; white-space:pre; margin:0.6rem 0; }
+.dirtree .dir { color:#4FC3F7; font-weight:700; }
+.dirtree .target { background:rgba(79,195,247,0.18); color:#fff; font-weight:700; border-radius:4px; padding:0 0.25rem; }
+.dirtree .arrow { color:#8fb7d4; }
+.dirtree .mut { color:#666; }
+.hl-legend { font-size:0.82rem; color:#8fb7d4; margin:0.3rem 0 0.2rem; }
+.hl-legend b { color:#4FC3F7; }
+.code-label {
+  position: absolute; top: 0; right: 0;
+  background: rgba(255,255,255,0.08);
+  color: #999999;
+  padding: 0.2rem 0.8rem;
+  border-radius: 0 12px 0 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+:not(pre) > code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(79,195,247,0.15);
+  padding: 0.15em 0.45em;
+  border-radius: 5px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+:not(pre) > code:hover { background: rgba(79,195,247,0.3); }
+:not(pre) > code.copied { background: rgba(79,195,247,0.5); }
+
+/* ============ EXPLANATION BLOCKS ============ */
+.concept-box {
+  background: rgba(79, 195, 247, 0.12);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  border: 1px solid #2a3a3a;
+}
+.concept-box h4 { font-size: 0.95rem; font-weight: 700; color: #4FC3F7; margin-bottom: 0.5rem; }
+.analogy {
+  background: #1a1a0a;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 0.75rem 0;
+  border-left: 3px solid #FFB800;
+  font-size: 0.95rem;
+}
+.analogy::before {
+  content: '\1F4A1 日常の例';
+  display: block;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #FFB800;
+  margin-bottom: 0.3rem;
+}
+.point-list { list-style: none; padding: 0; }
+.point-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+}
+.point-list li::before {
+  content: '\25B8';
+  position: absolute; left: 0;
+  color: #4FC3F7;
+  font-weight: 700;
+}
+
+/* ============ EXEC SHOT (実行結果キャプチャ) ============ */
+.exec-shot {
+  margin: 1rem 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #333;
+  background: #0d0d0d;
+}
+.exec-bar {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.5rem 0.8rem;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+}
+.exec-bar .d { width: 0.7rem; height: 0.7rem; border-radius: 50%; }
+.exec-bar .d.r { background: #ff5f57; }
+.exec-bar .d.y { background: #febc2e; }
+.exec-bar .d.g { background: #28c840; }
+.exec-bar .u { margin-left: 0.5rem; font-size: 0.72rem; color: #999; font-family: 'JetBrains Mono', monospace; }
+.exec-shot img { display: block; width: 100%; }
+.exec-cap { padding: 0.6rem 0.9rem; font-size: 0.82rem; color: #aaa; background: #0d0d0d; }
+.exec-cap strong { color: #4FC3F7; }
+.exec-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 720px) { .exec-pair { grid-template-columns: 1fr; } }
+
+/* ============ ANSWERS (COLLAPSIBLE) ============ */
+details {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+details summary {
+  padding: 0.8rem 1.2rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 0.5rem;
+  background: #1a1a1a;
+  user-select: none;
+}
+details summary::marker { content: ''; }
+details summary::before {
+  content: '\25B6';
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+  color: #666;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
+
+/* ============ CALLOUTS ============ */
+.callout-danger {
+  background: rgba(255, 82, 82, 0.08);
+  border: 1px solid rgba(255, 82, 82, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-danger h4 { color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
+.callout-warning {
+  background: rgba(255, 184, 0, 0.08);
+  border: 1px solid rgba(255, 184, 0, 0.3);
+  border-left: 4px solid #FFB800;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-warning h4 { color: #FFB800; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
+.callout-info {
+  background: rgba(79, 195, 247, 0.08);
+  border: 1px solid rgba(79, 195, 247, 0.3);
+  border-left: 4px solid #4FC3F7;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-info h4 { color: #4FC3F7; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
+.callout-tip {
+  background: rgba(79, 195, 247, 0.08);
+  border: 1px solid rgba(79, 195, 247, 0.3);
+  border-left: 4px solid #4FC3F7;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.callout-tip h4 { color: #4FC3F7; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
+
+/* ============ FOOTER ============ */
+footer {
+  background: #0A0A0A;
+  color: #999999;
+  padding: 2rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 640px) {
+  .submission-items { grid-template-columns: 1fr; }
+  .section-num { width: 2rem; height: 2rem; font-size: 0.85rem; }
+  table { max-width: 100%; font-size: 0.78rem; }
+  th, td { padding: 0.4rem 0.5rem; white-space: normal; }
+  th { font-size: 0.72rem; }
+  .callout-danger, .callout-warning, .callout-info, .callout-tip,
+  .concept-box, .analogy, .notion-submit { padding: 0.8rem 0.9rem; border-radius: 10px; font-size: 0.88rem; overflow-x: hidden; }
+  details summary { padding: 0.7rem 0.9rem; font-size: 0.9rem; }
+  details .answer-content { padding: 0.8rem 0.9rem; overflow-x: auto; }
+  p, li, td, th, summary, .card, div { overflow-wrap: anywhere; }
+  :not(pre) > code { white-space: normal; overflow-wrap: anywhere; word-break: break-all; }
+  [id] { scroll-margin-top: 2.5rem; }
+}
+@media (max-width: 420px) {
+  .container { padding: 0 0.6rem; }
+  .hero { padding: 1.3rem 0; }
+  .hero h1 { font-size: 1rem !important; }
+  .hero p { font-size: 0.78rem !important; }
+  .section-header h2 { font-size: 0.95rem; }
+  .section-num { width: 1.7rem; height: 1.7rem; font-size: 0.78rem; }
+  .card { padding: 0.75rem; }
+  .card-header h3 { font-size: 0.92rem; }
+  th, td { padding: 0.3rem 0.35rem; font-size: 0.7rem; }
+  pre { font-size: 0.65rem; padding: 0.55rem; }
+  .section-nav a { font-size: 0.6rem !important; padding: 0.2rem 0.4rem !important; }
+  .submission-box { padding: 0.8rem; }
+}
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #4FC3F7; color: white; border-color: #4FC3F7; }
+.copy-btn.copied { background: #4FC3F7; color: white; border-color: #4FC3F7; }
+
+a.sub-item { transition: transform 0.15s, box-shadow 0.15s; text-decoration: none; color: inherit; }
+a.sub-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79,195,247,0.3);
+  border-color: #4FC3F7;
+}
+
+/* ============ SECTION NAV ============ */
+.section-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.2rem 0;
+  display: flex; justify-content: center; gap: 0.3rem; flex-wrap: wrap;
+}
+body { padding-top: 2.2rem; }
+.section-nav a {
+  color: #999; text-decoration: none;
+  font-size: 0.45rem; font-weight: 500;
+  padding: 0.15rem 0.4rem; border-radius: 6px;
+  transition: all 0.2s; white-space: nowrap;
+}
+.section-nav a:hover { color: #4FC3F7; background: rgba(79,195,247,0.1); }
+.section-nav a.nav-assignment { color: #4FC3F7; }
+.section-nav a.nav-exam { color: #FFB800; }
+[id] { scroll-margin-top: 3.5rem; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  details summary::before { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SECTION NAV ============ -->
+<nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_1.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_2.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_3.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_4.html">4</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_5.html">5</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="md2_week_6.html">6</a> <a style="color:#4FC3F7;background:rgba(79,195,247,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="md2_week_7.html">7</a> </div>
+  <a href="#sec-purpose">第7回の位置づけ</a>
+  <a href="#sec-final" class="nav-exam">1. 最終課題</a>
+  <a href="#sec-setup">2. 環境構築</a>
+  <a href="#sec-hint1">3. ヒント① 記録する</a>
+  <a href="#sec-hint2">4. ヒント② 見たを記録</a>
+  <a href="#sec-hint3">5. ヒント③ 行動を記録</a>
+  <a href="#sec-design">6. 自分のテーマへ</a>
+  <a href="#sec-checklist" class="nav-exam">7. 提出前チェック</a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="container">
+    <span class="hero-badge">Media creation Data design 2（MD2）─ 2026年度</span>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.1rem">武蔵野大学データサイエンス学部</p>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:0.3rem">武蔵野大学国際データサイエンス学部（通信教育部）</p>
+    <p style="font-size:0.95rem;opacity:0.85;margin-bottom:1rem">中村 亮太</p>
+    <h1>MD2 第7回: 自由創作 ― 分析したくなるデータが自然に集まる空間をつくる</h1>
+    <div style="display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap;margin-top:0.3rem">
+      <p style="overflow-wrap:normal;word-break:normal;flex:1 1 20rem;min-width:16rem;max-width:640px;margin:0">最終回は<strong style="color:#4FC3F7">自由創作</strong>。これまでに学んだ <strong>A-Frame の3D空間</strong>・<strong>Socket.IO のマルチプレイ</strong>・<strong>SQLite の行動ログ</strong>・<strong>pandas の分析</strong>を全部つないで、<strong>自分のテーマの空間</strong>を作る。大事なのは「ゲームとして面白いこと」ではなく、<strong style="color:#4FC3F7">データを分析すると面白いこと</strong>。この回では課題の説明・環境構築・<strong>そのまま流用できる3つのヒント作品</strong>を渡す。</p>
+      <img src="img/md2w7_hero.png" alt="第7回のタイトル画像。「分析したくなるデータが、自然に集まる空間をつくる。」の見出しの下に、STEP1 空間をつくる（A-Frame＋Socket.IO）→ STEP2 行動が残る（SQLiteに1行ずつ記録）→ STEP3 分析する（pandas＋matplotlib）の3ステップと、player_logs・gaze_logs・event_logs の3つのテーブル名が並んでいる" style="flex:0 1 460px;width:460px;max-width:100%;border-radius:12px;border:1px solid rgba(255,255,255,0.18);box-shadow:0 8px 28px rgba(0,0,0,0.45)">
+    </div>
+  </div>
+</header>
+
+<!-- ============ COURSE PURPOSE ============ -->
+<section id="sec-purpose" style="padding-top:2.5rem;padding-bottom:0">
+  <div class="container">
+    <div class="card" style="border-left:4px solid #4FC3F7;background:linear-gradient(135deg,#141414,#111a20)">
+      <div class="card-header"><h3>📌 第7回の位置づけ：全部つないで、自分の作品にする（はじめに読もう）</h3></div>
+
+      <p style="font-size:1.05rem;margin-bottom:0.7rem">テーマは最後まで <strong style="color:#4FC3F7">「バーチャル空間で、データサイエンスを実践する」</strong>。第1回から積み上げてきた道具は、もう全部そろっている。第7回は<strong>それを1本につないで、自分のテーマで動かす</strong>回。ここで作るものが、そのまま<strong style="color:#4FC3F7">最終課題</strong>になる。</p>
+
+      <div class="callout-info" style="margin-top:0.5rem">
+        <h4>今日の合言葉：「この空間なら、どんなデータが取れて、何が分かる？」</h4>
+        <ul class="point-list" style="margin-bottom:0">
+          <li>面白い空間を作っても、<strong>ログが残らなければ分析できない</strong>。逆に、地味な空間でも<strong>ログが残れば分析できる</strong></li>
+          <li>だから企画の順番は <strong>「何を分析したいか」→「そのために何を記録するか」→「そのためにどんな空間にするか」</strong>。この逆順で考えると失敗しない</li>
+          <li>今日渡す3つのヒントは、<strong>そのままコピーして自分の空間に貼れる部品</strong>。ゼロから書く必要はない</li>
+        </ul>
+      </div>
+
+      <p style="font-size:0.9rem;color:#999;margin:1.2rem 0 0.5rem">本科目全体の流れ（最終確認）。第7回は<strong style="color:#4FC3F7">STEP 1〜3 の全部</strong>を1つの作品でつなぐ。</p>
+
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin:0.5rem 0 1rem">
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #4FC3F7;border-radius:0.5rem;padding:0.9rem">
+          <div style="color:#4FC3F7;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 1 ─ 舞台をつくる</div>
+          <div style="font-size:0.88rem"><strong>3D空間を自分で作る</strong>。<span style="color:#999">（第1〜2回）</span></div>
+        </div>
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #4FC3F7;border-radius:0.5rem;padding:0.9rem">
+          <div style="color:#4FC3F7;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 2 ─ データを扱う</div>
+          <div style="font-size:0.88rem">CSVを可視化（第3回）→ 装置を作る（第4回）→ 記録して取り出す（第5回）。<span style="color:#999">（第3〜5回）</span></div>
+        </div>
+        <div style="flex:1;min-width:14rem;background:#1a1a1a;border:1px solid #333;border-top:3px solid #4FC3F7;border-radius:0.5rem;padding:0.9rem">
+          <div style="color:#4FC3F7;font-weight:900;font-size:0.95rem;margin-bottom:0.3rem">STEP 3 ─ データを分析する <span style="font-size:0.7rem;background:#0a1a2e;border:1px solid #4FC3F7;border-radius:100px;padding:0.05rem 0.5rem">今ここ</span></div>
+          <div style="font-size:0.88rem">統計で差を判断する（第6回）→ <strong>全部つないで自由創作（第7回）</strong>。<span style="color:#999">（第6〜7回）</span></div>
+        </div>
+      </div>
+
+      <h4 style="color:#4FC3F7;font-weight:700;font-size:1.05rem;margin:1.5rem 0 0.3rem">🎯 第7回のゴール</h4>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>自分のテーマで <strong>「何を分析したいか」から逆算して</strong>、記録すべきデータを設計できる</li>
+        <li><code>npm init</code> と <code>npm install express socket.io sqlite3</code> で、<strong>ゼロから環境を作れる</strong></li>
+        <li>3つのヒント（<strong>移動ログ／注視ログ／イベントログ</strong>）を動かし、<strong>自分の空間に移植できる</strong></li>
+        <li>集めたログを <strong>pandas で集計・可視化</strong>し、第6回の<strong>検定</strong>まで通してレポートにできる</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FLOW + SUBMISSION ============ -->
+<section id="sec-flow" style="padding-top:1rem;padding-bottom:0">
+  <div class="container">
+    <div class="card">
+      <div class="card-header"><h3>本日の授業の流れ（ステップ・バイ・ステップ）</h3></div>
+      <table>
+        <tr><th style="width:12%">節</th><th>やること</th><th style="width:24%">形式</th></tr>
+        <tr><td>1</td><td><strong>最終課題の説明</strong>（何を作るのか・何を出すのか・いつまでか・テーマ例40個）</td><td><span class="tag tag-advanced" style="font-size:0.65rem">最終課題</span> fin7</td></tr>
+        <tr><td>2</td><td><strong>環境構築</strong>（Node.js・<code>npm init</code>・<code>express</code>／<code>socket.io</code>／<code>sqlite3</code>・Python側）</td><td>説明・手順</td></tr>
+        <tr><td>3</td><td><strong>ヒント①</strong> DB保存機能つきのシンプルなマルチプレイ空間を動かす</td><td>ヒント（コピペで動く）</td></tr>
+        <tr><td>4</td><td><strong>ヒント②</strong> 「見たデータ」（画面中心の円と重なった時間）も記録する</td><td>ヒント（コピペで動く）</td></tr>
+        <tr><td>5</td><td><strong>ヒント③</strong> 「行動データ」（ボタンを押した・近づいた）も記録する</td><td>ヒント（コピペで動く）</td></tr>
+        <tr><td>6</td><td>自分のテーマに作り変える（ログ設計チェックリスト）</td><td>企画</td></tr>
+        <tr><td>7</td><td>提出前チェック（何を・どう固めて出すか）＋ 残り時間は<strong>自由制作</strong></td><td>作業</td></tr>
+      </table>
+      <div class="callout-tip" style="margin-top:0.6rem">
+        <h4>この回は「自由創作時間」― 提出物は最終課題だけ</h4>
+        <p style="font-size:0.9rem;margin-bottom:0"><strong>第7回に標準課題・グループワーク課題はありません。</strong>提出するのは <strong>fin7（最終課題）だけ</strong>です。節3〜5 の3つのヒントは<strong>提出物ではなく、最終課題のための部品</strong> ― コピペで動くので早く動かして、<strong>残りの時間をすべて自分の作品に使う</strong>のが理想。分からないところはその場で聞くこと ― 授業時間内に質問できるのは今日が最後。</p>
+      </div>
+    </div>
+
+    <div class="submission-box">
+      <h3>📤 提出ガイド（提出物は最終課題の1つだけ）</h3>
+      <div class="submission-items" style="grid-template-columns:1fr">
+        <a href="#fin7" class="sub-item" style="flex-direction:row;justify-content:center;gap:0.6rem;font-size:0.8rem;padding:0.9rem"><span class="sub-count">★</span><span class="tag tag-advanced">最終課題</span>fin7 作品一式＋データ＋分析コード＋レポート</a>
+      </div>
+      <p style="font-size:0.75rem;color:#999;margin:0.6rem 0 0">※ <strong>提出期限は 8月13日（木）13:10</strong>。第7回はこれ以外の提出物（標準課題・グループワーク課題）はありません。授業中に動かしたヒントは、そのまま最終課題の土台として使ってください。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 1: FINAL ASSIGNMENT ============ -->
+<section id="sec-final">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800;color:#111">1</div>
+      <h2>最終課題 ― 分析したくなるデータが自然に集まるマルチプレイ空間</h2>
+    </div>
+
+    <div id="fin7" class="card advanced">
+      <div class="card-header"><h3><span class="tag tag-advanced" style="font-size:0.7rem">最終課題</span> fin7：自分のテーマの空間を作り、集めたデータをPythonで分析する</h3></div>
+
+      <div style="background:linear-gradient(135deg,#2e2410,#1a1508);border:2px solid #FFB800;border-radius:12px;padding:1rem 1.2rem;margin-bottom:1rem">
+        <p style="font-size:1.05rem;font-weight:700;margin-bottom:0.3rem;color:#FFB800">提出期限：8月13日（木）13:10</p>
+        <p style="font-size:0.9rem;margin-bottom:0">提出先は Notion（授業ページ）。<strong>期限を過ぎると受け付けられません</strong>。早めに「動くところまで」作って、あとから足していくのが安全です。</p>
+      </div>
+
+      <h4 style="color:#FFB800;font-weight:700;font-size:1rem;margin:1rem 0 0.4rem">これまでに学んだこと（すべて使う）</h4>
+      <ul class="point-list" style="margin-bottom:0.8rem">
+        <li><strong>A-Frame を用いた 3D Web（WebXR 空間）の作成</strong>（第1〜3回）</li>
+        <li><strong>Node.js（Socket.IO）によるマルチプレイ化</strong>（第4回）</li>
+        <li><strong>複数ユーザが同じ空間を共有する仕組み</strong>と、<strong>行動ログの記録・CSV・pandas</strong>（第4〜5回）</li>
+        <li><strong>実験計画と統計的検定</strong>（第6回）</li>
+      </ul>
+
+      <div class="concept-box">
+        <h4>課題の一言まとめ</h4>
+        <p style="font-size:0.95rem;margin-bottom:0"><strong>「分析したくなるデータが自然に集まるマルチプレイ空間」</strong>を自由に制作する。単にゲームや3D空間を作るだけではなく、<strong>「その空間で人はどのように行動するのか？」「どのようなインタラクションが生まれるのか？」「どのような特徴を持つ人がどのような行動をするのか？」</strong>をデータとして取得し、<strong>Python（pandas・matplotlib など）で分析・可視化するところまで</strong>が課題です。</p>
+      </div>
+
+      <h4 style="color:#FFB800;font-weight:700;font-size:1rem;margin:1.4rem 0 0.4rem">📦 提出物（4点）</h4>
+      <table style="font-size:0.9rem">
+        <tr><th style="width:6%">#</th><th style="width:24%">出すもの</th><th>中身</th></tr>
+        <tr><td>1</td><td><strong>作品一式（ZIP）</strong></td><td><code>server.js</code>・<code>public/</code>・<code>package.json</code>。<strong><code>node_modules</code> は入れない</strong>（重い。<code>package.json</code> があれば <code>npm install</code> で復元できる）</td></tr>
+        <tr><td>2</td><td><strong>集めたデータ</strong></td><td><code>.db</code> ファイル、または各テーブルを書き出した <code>.csv</code></td></tr>
+        <tr><td>3</td><td><strong>分析コード＋結果</strong></td><td><code>analyze.py</code>（または <code>.ipynb</code>）と、出力したグラフ画像</td></tr>
+        <tr><td>4</td><td><strong>レポート（PDF）</strong></td><td>下の5項目。第6回の3部構成（はじめに／方法／結果）を拡張した形</td></tr>
+      </table>
+
+      <h4 style="color:#FFB800;font-weight:700;font-size:1rem;margin:1.4rem 0 0.4rem">📝 レポートに書くこと（5項目）</h4>
+      <table style="font-size:0.9rem">
+        <tr><th style="width:20%">項目</th><th>書くこと</th></tr>
+        <tr><td><strong>1. 企画</strong></td><td>どんな空間か。<strong>何を明らかにしたいのか（問い）</strong>。なぜその問いが面白いのか</td></tr>
+        <tr><td><strong>2. 空間の説明</strong></td><td>スクリーンショットつきで、何ができる空間かを説明。操作方法も書く</td></tr>
+        <tr><td><strong>3. 取得データ</strong></td><td><strong>テーブル定義</strong>（列の名前と意味）と、<strong>何件集まったか・何人が参加したか</strong></td></tr>
+        <tr><td><strong>4. 分析</strong></td><td>集計表・グラフ。<strong>できれば第6回の検定</strong>まで（例：AグループとBグループで滞在時間に差はあるか）</td></tr>
+        <tr><td><strong>5. 考察と課題</strong></td><td>問いへの答え。<strong>うまくいかなかった点</strong>と、次にやるなら何を変えるか</td></tr>
+      </table>
+
+      <div class="callout-warning" style="margin-top:0.7rem">
+        <h4>データは「自分たちで集める」</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><strong>1人でも取れる</strong>：ブラウザの窓を2〜3枚開けば、複数人の空間として動く（第4回でやったとおり）</li>
+          <li><strong>友だちに入ってもらう</strong>と一気に面白くなる。同じLAN内なら <code>http://（自分のIPアドレス）:3000</code> で入れる</li>
+          <li>参加者の<strong>個人情報は集めない</strong>（名前・学籍番号は不要。<code>socket.id</code> のような匿名IDで十分）</li>
+          <li>どうしても人数が足りないときは、<strong>自分で何回もプレイして条件を変える</strong>（例：案内表示あり／なし）のも立派な実験</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>💡 良いテーマとは ― 「ゲームが面白い」ではなく「分析すると面白い」</h3></div>
+      <p style="margin-bottom:0.6rem">評価されるのは<strong>ゲームの完成度ではない</strong>。<strong style="color:#4FC3F7">人の行動がデータとして見えるかどうか</strong>である。次のような問いが立つテーマを考えよう。</p>
+      <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.8rem">
+        <span style="background:#1e242b;border:1px solid #3a4450;border-radius:100px;padding:0.25rem 0.8rem;font-size:0.85rem">人はどこで立ち止まるのか</span>
+        <span style="background:#1e242b;border:1px solid #3a4450;border-radius:100px;padding:0.25rem 0.8rem;font-size:0.85rem">誰と誰がよく近くにいるのか</span>
+        <span style="background:#1e242b;border:1px solid #3a4450;border-radius:100px;padding:0.25rem 0.8rem;font-size:0.85rem">会話はどこで発生するのか</span>
+        <span style="background:#1e242b;border:1px solid #3a4450;border-radius:100px;padding:0.25rem 0.8rem;font-size:0.85rem">初心者と経験者で行動は違うのか</span>
+        <span style="background:#1e242b;border:1px solid #3a4450;border-radius:100px;padding:0.25rem 0.8rem;font-size:0.85rem">時間とともに行動はどう変化するのか</span>
+        <span style="background:#1e242b;border:1px solid #3a4450;border-radius:100px;padding:0.25rem 0.8rem;font-size:0.85rem">グループ行動はどう形成されるのか</span>
+        <span style="background:#1e242b;border:1px solid #3a4450;border-radius:100px;padding:0.25rem 0.8rem;font-size:0.85rem">リーダーは自然に現れるのか</span>
+        <span style="background:#1e242b;border:1px solid #3a4450;border-radius:100px;padding:0.25rem 0.8rem;font-size:0.85rem">空間デザインを変えると行動は変わるのか</span>
+      </div>
+      <div class="analogy">
+        「宝探しゲーム」を作るとき、<strong>ゲームとして</strong>考えると「宝をどこに隠すか」が問題になる。<strong>データとして</strong>考えると「人によって探索ルートは違うのか」「最短で見つける人には特徴があるのか」が問題になる。<strong>後者で企画すると、記録すべきものが自然に決まる</strong>（＝全員の移動軌跡と、発見までの時間）。
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>🎨 テーマ例①：空間・行動系（20例）</h3></div>
+      <p style="font-size:0.9rem;color:#aaa;margin-bottom:0.7rem">そのまま選んでもよいし、組み合わせても、まったく別のものを考えてもよい。カッコ内は<strong>その空間で立てられる問いの例</strong>。</p>
+      <table style="font-size:0.86rem">
+        <tr><th style="width:5%">#</th><th style="width:26%">テーマ</th><th>立てられる問いの例</th></tr>
+        <tr><td>①</td><td><strong>宝探しゲーム</strong></td><td>人によって探索ルートは違う？／最短で見つける人の特徴は？</td></tr>
+        <tr><td>②</td><td><strong>脱出ゲーム</strong></td><td>行き詰まる場所はどこ？／協力するとクリア時間は短くなる？</td></tr>
+        <tr><td>③</td><td><strong>迷路</strong></td><td>初見と2回目で移動パターンはどう変わる？／最短経路を選ぶ人はどれくらい？</td></tr>
+        <tr><td>④</td><td><strong>鬼ごっこ</strong></td><td>鬼はどのルートを通る？／捕まりやすい人には特徴がある？</td></tr>
+        <tr><td>⑤</td><td><strong>お店・ショッピング空間</strong></td><td>どの商品を最初に見る？／滞在時間と購入行動の関係は？</td></tr>
+        <tr><td>⑥</td><td><strong>バーチャル美術館</strong></td><td>人気作品はどれ？／人はどんな順番で展示を見る？</td></tr>
+        <tr><td>⑦</td><td><strong>学園祭・展示会</strong></td><td>人が集まるブースは？／混雑は時間でどう変わる？</td></tr>
+        <tr><td>⑧</td><td><strong>VR教室</strong></td><td>前・後ろ・端の席で発言や移動は変わる？／授業中にどこを見る？</td></tr>
+        <tr><td>⑨</td><td><strong>雑談ラウンジ</strong></td><td>誰が会話の中心になる？／グループは自然に形成される？</td></tr>
+        <tr><td>⑩</td><td><strong>協力パズル</strong></td><td>誰がリーダーになる？／役割分担は自然に生まれる？</td></tr>
+        <tr><td>⑪</td><td><strong>サッカー・スポーツ練習</strong></td><td>パス回数と勝敗の関係は？／よく動く人は誰？</td></tr>
+        <tr><td>⑫</td><td><strong>コンサート・ライブ会場</strong></td><td>観客はどこに集まる？／周囲の動きは自分の行動に影響する？</td></tr>
+        <tr><td>⑬</td><td><strong>避難シミュレーション</strong></td><td>混雑はどこで発生する？／人は他人について行くのか？</td></tr>
+        <tr><td>⑭</td><td><strong>街・観光地</strong></td><td>人気スポットはどこ？／初めて来た人の回遊パターンは？</td></tr>
+        <tr><td>⑮</td><td><strong>SNSのような交流空間</strong></td><td>誰が多く話しかけられる？／コミュニティはどう形成される？</td></tr>
+        <tr><td>⑯</td><td><strong>面接・プレゼン会場</strong></td><td>発表者との距離は評価に影響する？／聴衆はどこを見る？</td></tr>
+        <tr><td>⑰</td><td><strong>バーチャル図書館</strong></td><td>人は静かな場所を選ぶ？／人気エリアはどこ？</td></tr>
+        <tr><td>⑱</td><td><strong>チーム対戦ゲーム</strong></td><td>勝つチームにはどんな特徴がある？／メンバー同士の距離は？</td></tr>
+        <tr><td>⑲</td><td><strong>カフェ・休憩スペース</strong></td><td>席選びに傾向はある？／人が集まりやすい場所は？</td></tr>
+        <tr><td>⑳</td><td><strong>自分だけのオリジナル空間</strong></td><td>自分で「分析したくなるテーマ」を考えてOK</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>💰 テーマ例②：経済・マーケティング系（20例）</h3></div>
+      <p style="font-size:0.9rem;color:#aaa;margin-bottom:0.7rem">「人の行動」を<strong>お金や意思決定</strong>の面から見るテーマ。データサイエンスらしい指標（売上・コンバージョン率・リピート率など）につなげやすい。</p>
+      <table style="font-size:0.86rem">
+        <tr><th style="width:5%">#</th><th style="width:26%">テーマ</th><th>立てられる問いの例</th></tr>
+        <tr><td>①</td><td><strong>バーチャルスーパー</strong></td><td>どの商品から手に取るか／陳列位置で売上は変わるか／セール表示は効果があるか</td></tr>
+        <tr><td>②</td><td><strong>コンビニレイアウト最適化</strong></td><td>商品配置を変えると回遊がどう変わるか／「ついで買い」は増えるか</td></tr>
+        <tr><td>③</td><td><strong>ショッピングモール</strong></td><td>人はどの順番で店を回るか／人気店舗の近くの店は得をするか</td></tr>
+        <tr><td>④</td><td><strong>ECサイトを再現した3D店舗</strong></td><td>商品の見せ方で購入率は変わるか／3D展示は売上につながるか</td></tr>
+        <tr><td>⑤</td><td><strong>広告効果の分析</strong></td><td>看板を置く位置で訪問率は変わるか／動画広告と静止画広告では違うか</td></tr>
+        <tr><td>⑥</td><td><strong>レストラン経営シミュレーション</strong></td><td>人員配置で待ち時間はどう変わるか／混雑時の最適な運営は</td></tr>
+        <tr><td>⑦</td><td><strong>テーマパーク運営</strong></td><td>行列をどう配置すると満足度が高いか／人流はどう変化するか</td></tr>
+        <tr><td>⑧</td><td><strong>オフィスレイアウト</strong></td><td>座席配置でコミュニケーションは変わるか／集中と交流のバランスは</td></tr>
+        <tr><td>⑨</td><td><strong>イベント会場運営</strong></td><td>ブース配置で来場者数は変わるか／混雑をどう分散できるか</td></tr>
+        <tr><td>⑩</td><td><strong>店舗スタッフ配置</strong></td><td>店員をどこに配置すると売上が伸びるか／接客タイミングは重要か</td></tr>
+        <tr><td>⑪</td><td><strong>オークション</strong></td><td>最後まで待つ人は多いか／入札戦略に特徴はあるか</td></tr>
+        <tr><td>⑫</td><td><strong>株式市場シミュレーション</strong></td><td>ニュースによって売買はどう変わるか／バブルは発生するか</td></tr>
+        <tr><td>⑬</td><td><strong>仮想通貨マーケット</strong></td><td>SNS情報だけで価格は動くか／群集心理は生まれるか</td></tr>
+        <tr><td>⑭</td><td><strong>フリーマーケット</strong></td><td>値下げすると売れるのか／値引き交渉の成功率は</td></tr>
+        <tr><td>⑮</td><td><strong>投資ゲーム</strong></td><td>リスクを取る人・取らない人の特徴は／長期的に勝つ戦略は</td></tr>
+        <tr><td>⑯</td><td><strong>募金シミュレーション</strong></td><td>他人の寄付額を見ると増えるか</td></tr>
+        <tr><td>⑰</td><td><strong>災害時の物資購入</strong></td><td>買い占めは起こるか／行動は周囲の影響を受けるか</td></tr>
+        <tr><td>⑱</td><td><strong>価格交渉ゲーム</strong></td><td>最初の提示価格は結果に影響するか</td></tr>
+        <tr><td>⑲</td><td><strong>協力ゲーム</strong></td><td>個人利益と全体利益はどう両立するか／フリーライダーは現れるか</td></tr>
+        <tr><td>⑳</td><td><strong>バーチャル起業・経営ゲーム</strong></td><td>立地・価格・広告・品揃えを自由に決めて競争。どの戦略が最も利益を生むか</td></tr>
+      </table>
+      <div class="callout-info" style="margin-top:0.7rem">
+        <h4>こうしたテーマから取り出せる指標</h4>
+        <p style="font-size:0.9rem;margin-bottom:0">売上／利益／回遊経路／滞在時間／購入率／コンバージョン率／リピート率／広告効果／人流／待ち時間／行列長／<strong>ネットワーク分析（誰が誰に影響を与えたか）</strong> ── いずれも、今日のヒント①〜③のログから計算できる。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>🏛 空間づくりが大変なら ― Sketchfab の 3DCG を置く</h3></div>
+      <p style="margin-bottom:0.5rem">空間の装飾に時間を取られると、肝心の<strong>データ設計と分析</strong>に手が回らない。箱と板だけで作るのがつらくなったら、<strong>Sketchfab などのサイトから 3DCGファイル（glTF / .glb）をダウンロードして配置</strong>しよう。第3回でやった <code>&lt;a-gltf-model&gt;</code> の出番。</p>
+      <pre><span class="code-label">HTML ── モデルを置く（第3回の復習）</span><span class="kw">&lt;a-scene&gt;</span>
+  <span class="kw">&lt;a-assets&gt;</span>
+    <span class="cmt">&lt;!-- ダウンロードした .glb を public に置いて読み込む --&gt;</span>
+    <span class="kw">&lt;a-asset-item</span> id=<span class="str">"shop"</span> src=<span class="str">"shop.glb"</span><span class="kw">&gt;&lt;/a-asset-item&gt;</span>
+  <span class="kw">&lt;/a-assets&gt;</span>
+
+  <span class="kw">&lt;a-gltf-model</span> src=<span class="str">"#shop"</span> position=<span class="str">"0 0 -6"</span> scale=<span class="str">"1 1 1"</span><span class="kw">&gt;&lt;/a-gltf-model&gt;</span>
+<span class="kw">&lt;/a-scene&gt;</span></pre>
+      <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+        <li>モデルは <code>public/</code> の中に置く（サーバが公開しているのは <code>public</code> フォルダだけ）</li>
+        <li>ライセンス表示が必要なモデルは、<strong>レポートに出典を書く</strong>こと</li>
+        <li>重いモデル（数十MB）を何個も置くと動かなくなる。<strong>まず1個</strong>置いて確認してから増やす</li>
+        <li>詳しいやり方は <a href="md2_week_3.html#sec-gltf" style="color:#4FC3F7">第3回のセクション6</a> を参照</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 2: SETUP ============ -->
+<section id="sec-setup">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">2</div>
+      <h2>環境構築 ― ゼロからプロジェクトを作る（今日はここを一人でできるように）</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>これから作るもの（完成形のフォルダ）</h3></div>
+      <p style="margin-bottom:0.5rem">最終課題のフォルダは、最後にこの形になる。<strong>今はまだ何もない</strong> ─ これから1つずつ作っていく。</p>
+      <pre style="margin:0"><span class="code-label">フォルダ構成（完成形）</span>md2_final/
+├── server.js          <span class="cmt">← サーバ側（Node.js）。自分で作る</span>
+├── analyze.py         <span class="cmt">← 分析（Python / pandas）。自分で作る</span>
+├── player_logs.db     <span class="cmt">← データベース（サーバが自動で作る）</span>
+├── package.json       <span class="cmt">← npm init -y が作る</span>
+├── package-lock.json  <span class="cmt">← npm install が作る</span>
+├── node_modules/      <span class="cmt">← 部品置き場（npm install が作る・提出しない）</span>
+├── .venv/             <span class="cmt">← Python の仮想環境（uv venv が作る・提出しない）</span>
+└── public/
+    └── index.html     <span class="cmt">← ブラウザ側（A-Frame）。自分で作る</span></pre>
+      <div class="callout-info" style="margin-top:0.6rem">
+        <h4>覚えておくと迷わない：この中で「自分が書く」のは3つだけ</h4>
+        <p style="font-size:0.9rem;margin-bottom:0"><strong><code>server.js</code></strong>（サーバ）・<strong><code>public/index.html</code></strong>（ブラウザ）・<strong><code>analyze.py</code></strong>（分析）。それ以外は<strong>全部コマンドが自動で作ってくれる</strong>。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>手順① Node.js が入っているか確認する（第4回で入れた人は飛ばしてOK）</h3></div>
+      <p style="margin-bottom:0.5rem">ターミナル（<code>ターミナル.app</code>）を開いて、次の2つを打つ。<strong>バージョン番号が表示されれば入っている</strong>（数字は違ってよい）。</p>
+      <pre><span class="code-label">Terminal</span>node -v
+npm -v</pre>
+      <p style="font-size:0.9rem;margin-bottom:0.4rem"><code>command not found</code> と出たら、まだ入っていない。Homebrew で入れる（数分かかる）。</p>
+      <pre><span class="code-label">Terminal</span><span class="cmt"># Node.js を入れる（npm も一緒に入る）</span>
+brew install node
+
+<span class="cmt"># 入ったか確認する</span>
+node -v
+npm -v</pre>
+      <div class="callout-tip" style="margin-top:0.5rem">
+        <h4>Homebrew がまだ無い人へ</h4>
+        <p style="font-size:0.88rem;margin-bottom:0">まず <a href="https://brew.sh/ja/" style="color:#4FC3F7">brew.sh</a> の手順で Homebrew を入れてから <code>brew install node</code> を実行する。<code>npm</code> は Node.js に付いてくるので、別途入れる必要はない。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>手順② 作業フォルダ <code>md2_final</code> を作って、VS Code で開く</h3></div>
+      <p style="margin-bottom:0.5rem">ターミナルで上から順に実行する。<code>cd</code> の行き先は<strong>自分がいつも授業ファイルを置いている場所</strong>に合わせてよい。</p>
+      <pre><span class="code-label">Terminal</span><span class="cmt"># 1. 授業用フォルダへ移動する（自分の環境に合わせる）</span>
+cd ~/Documents/Lecture/MD2
+
+<span class="cmt"># 2. 最終課題の作業フォルダを作って、その中へ入る</span>
+mkdir md2_final
+cd md2_final
+
+<span class="cmt"># 3. VS Code をこのフォルダで開く</span>
+code .</pre>
+      <div class="callout-tip" style="margin-top:0.5rem">
+        <h4>ここから先は「VS Code の中のターミナル」を使う</h4>
+        <p style="font-size:0.9rem;margin-bottom:0">VS Code のメニュー <strong>「ターミナル」→「新しいターミナル」</strong>を選ぶと、画面の下にターミナルが出る。これは<strong>すでに <code>md2_final</code> の中にいる</strong>状態で開くので、<code>cd</code> し直す必要がない。ファイルを触りながらコマンドを打てるので、こちらのほうが楽。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>手順③ <code>npm init -y</code> ── このフォルダを「Node.js のプロジェクト」にする</h3></div>
+      <pre><span class="code-label">Terminal</span>npm init -y</pre>
+      <p style="font-size:0.92rem;margin-bottom:0.5rem">実行すると <strong><code>package.json</code></strong> という小さなファイルが1つできる。これは<strong>このプロジェクトの説明書</strong>で、「名前は何か」「どんな部品を使っているか」が書かれる。<code>-y</code> は「名前は？ 作者は？ …」という質問を<strong>全部スキップして初期値でOK</strong>という意味。</p>
+      <div class="analogy">
+        <code>package.json</code> は<strong>料理のレシピ</strong>。材料（部品）の名前と分量（バージョン）が書いてある。レシピさえ渡せば、相手は同じ材料を自分でそろえられる ── だから提出時に <code>node_modules</code>（材料そのもの）を渡す必要はない。
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>手順④ 部品を3つ入れる ── <code>express</code> ・ <code>socket.io</code> ・ <code>sqlite3</code></h3></div>
+      <pre><span class="code-label">Terminal</span>npm install express socket.io sqlite3</pre>
+      <p style="font-size:0.92rem;margin-bottom:0.5rem">1〜2分かかることがある。終わると <code>added ○○ packages</code> と出て、<strong><code>node_modules</code> フォルダ</strong>と <strong><code>package-lock.json</code></strong> ができる。3つの部品の役割は次のとおり。</p>
+      <table style="font-size:0.9rem">
+        <tr><th style="width:20%">部品</th><th style="width:26%">役割</th><th>これがないと</th></tr>
+        <tr><td><code>express</code></td><td><strong>Webサーバ</strong>。<code>public</code> フォルダのファイルをブラウザに配る</td><td><code>http://localhost:3000</code> を開いても何も出ない</td></tr>
+        <tr><td><code>socket.io</code></td><td><strong>リアルタイム通信</strong>。位置や行動を全員に配る</td><td>他の人が見えない（第4回の内容が動かない）</td></tr>
+        <tr><td><code>sqlite3</code></td><td><strong>データベース</strong>。ログをファイルに保存する</td><td>サーバを止めた瞬間にデータが消える</td></tr>
+      </table>
+      <div class="callout-warning" style="margin-top:0.6rem">
+        <h4>第5回とは違う部品を使う（重要）</h4>
+        <p style="font-size:0.9rem;margin-bottom:0">第5回では <code>better-sqlite3</code> を使ったが、<strong>今回のヒントコードは <code>sqlite3</code></strong> を使う。名前が似ているが<strong>書き方が少し違う</strong>ので混ぜないこと。<br>・<code>better-sqlite3</code>：<code>db.prepare(...).run(...)</code>（結果をその場で受け取る書き方）<br>・<code>sqlite3</code>：<code>db.run(SQL, [値, 値, ...])</code>（今回の書き方。値は配列で渡す）<br>第5回のコードを流用したい人は <code>better-sqlite3</code> のままでもよい。<strong>どちらか一方に統一する</strong>こと。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>手順⑤ ファイルを2つ作る（<code>server.js</code> と <code>public/index.html</code>）</h3></div>
+      <p style="margin-bottom:0.5rem">VS Code の左側（エクスプローラー）で作る。<strong>置き場所を間違えるとまったく動かない</strong>ので、下の図をよく見ること。</p>
+      <div class="dirtree"><span class="dir">md2_final/</span>
+├── <span class="target">server.js</span>          <span class="arrow">← ①ここに作る（md2_final の直下）</span>
+├── package.json       <span class="mut">（npm init -y で作成ずみ）</span>
+├── node_modules/      <span class="mut">（npm install で作成ずみ）</span>
+└── <span class="dir">public/</span>            <span class="arrow">← ②このフォルダを作り</span>
+    └── <span class="target">index.html</span>      <span class="arrow">← ③その中に作る</span></div>
+      <p style="font-size:0.9rem;margin-top:0.6rem;margin-bottom:0">中身は<strong>節3のヒント①をそのままコピペ</strong>すればよい。まずは動く状態を作って、そこから改造していく。</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>手順⑥ 起動して、ブラウザで開く</h3></div>
+      <pre><span class="code-label">Terminal</span><span class="cmt"># md2_final の中で実行する（このターミナルは開いたままにする）</span>
+node server.js</pre>
+      <p style="font-size:0.92rem;margin-bottom:0.5rem"><code>http://localhost:3000</code> と表示されたら成功。ブラウザでそのURLを開く。<strong>2人以上でテストしたいとき</strong>は、同じURLを<strong>普通の窓＋シークレット窓</strong>の2枚で開く。</p>
+      <table style="font-size:0.9rem">
+        <tr><th style="width:26%">操作</th><th>意味</th></tr>
+        <tr><td><code>node server.js</code></td><td>サーバを起動する。<strong>閉じるとサイトも止まる</strong></td></tr>
+        <tr><td><code>Ctrl</code> + <code>C</code></td><td>サーバを止める。<strong>コードを直したら必ず止めて、起動し直す</strong></td></tr>
+        <tr><td>ブラウザの再読み込み</td><td><code>public/index.html</code> を直したときはこれだけでよい（サーバの再起動は不要）</td></tr>
+      </table>
+      <div class="callout-warning" style="margin-top:0.6rem">
+        <h4>いちばん多いミス：<code>index.html</code> をダブルクリックで開いてしまう</h4>
+        <p style="font-size:0.9rem;margin-bottom:0">ダブルクリックで開くと <code>file:///...</code> になり、<strong>サーバにつながらないので他の人が絶対に見えない</strong>。必ず <code>node server.js</code> を動かした状態で <code>http://localhost:3000</code> を開くこと。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>手順⑦ Python 側の準備（分析用）</h3></div>
+      <p style="margin-bottom:0.6rem">分析は第5回・第6回と同じ流れ。<code>uv</code> で<strong>仮想環境（<code>.venv</code>）</strong>を作り、その中に <code>pandas</code> と <code>matplotlib</code> を入れる。<strong><code>md2_final</code> フォルダの中で</strong>実行する。</p>
+      <h4 style="color:#4FC3F7;font-weight:700;font-size:0.95rem;margin:0.8rem 0 0.3rem">① 仮想環境を作る</h4>
+      <pre><span class="code-label">Terminal</span>uv venv</pre>
+      <h4 style="color:#4FC3F7;font-weight:700;font-size:0.95rem;margin:1rem 0 0.3rem">② 仮想環境を有効にする（毎回必要）</h4>
+      <pre><span class="code-label">Terminal</span>source .venv/bin/activate      <span class="cmt"># Mac / Linux</span></pre>
+      <p style="font-size:0.9rem;margin-bottom:0.4rem">行の先頭に <code>(.venv)</code> が出たら成功。<strong>ターミナルを開き直すたびに、これをやり直す</strong>。</p>
+      <h4 style="color:#4FC3F7;font-weight:700;font-size:0.95rem;margin:1rem 0 0.3rem">③ 部品を入れる</h4>
+      <pre><span class="code-label">Terminal</span>uv pip install pandas matplotlib</pre>
+      <p style="font-size:0.9rem;margin-bottom:0.4rem">第6回の検定（<code>ttest_rel</code> や <code>mannwhitneyu</code>）まで使うなら <code>scipy</code> も、ノートブックで書きたいなら <code>jupyterlab</code> も足す。</p>
+      <pre><span class="code-label">Terminal</span>uv pip install pandas matplotlib scipy jupyterlab</pre>
+      <div class="callout-warning" style="margin-top:0.6rem">
+        <h4>よくあるエラー：<code>ModuleNotFoundError: No module named 'pandas'</code></h4>
+        <p style="font-size:0.9rem;margin-bottom:0">ほぼ確実に <strong><code>(.venv)</code> が出ていない</strong>（有効化を忘れている）。<code>source .venv/bin/activate</code> をもう一度実行してから <code>python analyze.py</code> を打つ。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>手順⑧ データベースの中身を目で見る（VS Code の DB Viewer）</h3></div>
+      <p style="margin-bottom:0.5rem">第5回で入れた拡張機能をそのまま使う。まだの人は、VS Code の<strong>拡張機能</strong>から <code>db</code> で検索して <strong>DB Viewer</strong> を入れる。</p>
+      <div class="exec-pair">
+        <figure class="exec-shot">
+          <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">拡張機能 — DB Viewer を入れる</span></div>
+          <img src="img/md2w5_dbviewer_install.png" alt="VS Code の拡張機能マーケットプレース。検索欄に db と入力し、一覧から MJ Studio の DB Viewer を選んでインストールした状態">
+          <figcaption class="exec-cap"><strong>入れかた:</strong> 拡張機能で <code>db</code> を検索 → <strong>DB Viewer</strong> をインストール。</figcaption>
+        </figure>
+        <figure class="exec-shot">
+          <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">DB Viewer — .db を開く</span></div>
+          <img src="img/md2w5_dbviewer_open.png" alt="DB Viewer で .db ファイルを開いた画面。左に Tables の一覧、右に表形式のデータと Export CSV ボタンが並んでいる">
+          <figcaption class="exec-cap"><strong>使いかた:</strong> <code>player_logs.db</code> をクリック → 左に<strong>テーブル一覧</strong>、右に<strong>中身が表</strong>で出る。<code>Export CSV</code> でCSVに書き出せる。<span style="color:#888">（図は別のDBの例）</span></figcaption>
+        </figure>
+      </div>
+      <div class="callout-tip" style="margin-top:0.6rem">
+        <h4>今回は CSV に書き出さなくてもよい</h4>
+        <p style="font-size:0.9rem;margin-bottom:0">第5回では <code>Export CSV</code> → <code>pd.read_csv</code> という流れだった。実は <strong>pandas は <code>.db</code> を直接読める</strong>（節4の <code>analyze.py</code> でやる）。<strong>ボタンを押す手間が減り、データを取り直すたびに書き出し直さなくてよい</strong>ので、最終課題ではこちらを勧める。DB Viewer は「中身を目で確かめる」ために使う。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>🚑 うまくいかないときの early check（この表で9割は解決する）</h3></div>
+      <table style="font-size:0.88rem">
+        <tr><th style="width:34%">症状・エラー</th><th>原因と対処</th></tr>
+        <tr><td><code>Error: listen EADDRINUSE ... :3000</code></td><td><strong>前に起動したサーバがまだ動いている</strong>。前のターミナルで <code>Ctrl</code>+<code>C</code>。見つからなければ <code>lsof -ti tcp:3000 | xargs kill -9</code> で止める</td></tr>
+        <tr><td><code>Cannot find module 'express'</code></td><td><code>npm install</code> をしていない、または<strong>違うフォルダで実行している</strong>。<code>pwd</code> で今いる場所を確かめ、<code>md2_final</code> の中で <code>npm install express socket.io sqlite3</code></td></tr>
+        <tr><td>ブラウザに <code>Cannot GET /</code></td><td><code>index.html</code> が <strong><code>public</code> フォルダの中にない</strong>。場所を確認する（<code>md2_final/public/index.html</code>）</td></tr>
+        <tr><td>他の人が見えない</td><td>①<code>file://</code> で開いていないか ②2つ目の窓も <code>http://localhost:3000</code> か ③ブラウザの Console にエラーが出ていないか</td></tr>
+        <tr><td>自分のアバターが見えない</td><td><strong>正常</strong>。自分はカメラなので、自分の姿は自分の画面には出ない</td></tr>
+        <tr><td><code>.db</code> に何も入らない</td><td>ヒント①の移動ログは<strong>ブラウザを閉じた（退出した）ときにまとめて保存</strong>される。窓を閉じてから DB Viewer の <strong>Refresh</strong> を押す</td></tr>
+        <tr><td><code>SQLITE_READONLY</code> でサーバが落ちる</td><td><strong>サーバが動いている最中に <code>.db</code> を消した</strong>。<code>Ctrl</code>+<code>C</code> で止めてから消し、もう一度 <code>node server.js</code></td></tr>
+        <tr><td>コードを直したのに変わらない</td><td><code>server.js</code> を直したら<strong>サーバの再起動</strong>が必要（<code>Ctrl</code>+<code>C</code> → <code>node server.js</code>）。<code>index.html</code> ならブラウザの再読み込みだけでよい</td></tr>
+        <tr><td>日本語が □（豆腐）になる</td><td>3D空間の <code>&lt;a-text&gt;</code> は<strong>日本語フォントを持っていない</strong>。日本語はHTML側に出す（節5参照）。matplotlib は <code>plt.rcParams['font.family'] = 'Hiragino Sans'</code></td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 3: HINT 1 ============ -->
+<section id="sec-hint1">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">3</div>
+      <h2>ヒント① ― DB保存機能つきの、シンプルなマルチプレイ空間</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>これは何をするプログラムか</h3></div>
+      <p style="margin-bottom:0.6rem">3つのヒントの<strong>土台</strong>になる作品。第4回（マルチプレイ）と第5回（ログ保存）を合体させたもので、次の3つを同時にやる。</p>
+      <ul class="point-list" style="margin-bottom:0.8rem">
+        <li><strong>みんなが同じ空間に入れる</strong> ─ 入室した人には<strong>色つきのアバター（頭＋体）</strong>が付き、他の人の画面にも現れる</li>
+        <li><strong>位置と向きが同期する</strong> ─ 0.1秒ごとに自分の <code>position</code> と <code>rotation</code> をサーバへ送り、全員に配る</li>
+        <li><strong>その全部が記録される</strong> ─ 送られてきた位置をサーバが配列にため、<strong>退出したときに <code>player_logs.db</code> へまとめて書き込む</strong></li>
+      </ul>
+
+      <div class="exec-pair">
+        <figure class="exec-shot">
+          <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">① 1人目の画面</span></div>
+          <img src="img/md2w7_h1_view1.png" alt="緑の地面と白い空の3D空間。正面に水色の目印の箱があり、その右に他プレイヤーのアバター（球の頭と円柱の体）が立っている">
+          <figcaption class="exec-cap"><strong>1人目の視点:</strong> 水色の目印の箱と、<strong>相手のアバター</strong>（頭＝球・体＝円柱）が見える。</figcaption>
+        </figure>
+        <figure class="exec-shot">
+          <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">② 2人目の画面</span></div>
+          <img src="img/md2w7_h1_view2.png" alt="2人目の視点。振り返った先に、1人目のアバターが立っている">
+          <figcaption class="exec-cap"><strong>2人目の視点:</strong> 振り返ると<strong>1人目</strong>が見える。視点は違っても、位置は一致している。</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>記録される表（<code>player_logs</code>）</h3></div>
+      <p style="margin-bottom:0.5rem">1行が「<strong>ある人が、ある瞬間に、どこに居て、どこを向いていたか</strong>」。これが積み重なると、第3回で見たサッカーの位置データとまったく同じ形になる。</p>
+      <table style="font-size:0.88rem">
+        <tr><th style="width:22%">列</th><th style="width:22%">意味</th><th>分析でどう使うか</th></tr>
+        <tr><td><code>player_id</code></td><td>誰か（匿名ID）</td><td>人ごとにグループ分けする（<code>groupby</code>）</td></tr>
+        <tr><td><code>color</code></td><td>その人の色</td><td>グラフで人を色分けする</td></tr>
+        <tr><td><code>time</code></td><td>いつ（ISO形式の文字列）</td><td>滞在時間・時間帯ごとの変化</td></tr>
+        <tr><td><code>x</code> / <code>y</code> / <code>z</code></td><td>どこに居たか</td><td>移動距離・軌跡・よくいた場所のヒートマップ</td></tr>
+        <tr><td><code>rx</code> / <code>ry</code> / <code>rz</code></td><td>どこを向いていたか</td><td><code>ry</code> でどちらを向いていたか（見ていた方角）</td></tr>
+      </table>
+      <div class="callout-info" style="margin-top:0.6rem">
+        <h4>なぜ「退出したときにまとめて」保存するのか</h4>
+        <p style="font-size:0.9rem;margin-bottom:0">位置は<strong>1人あたり1秒に10件</strong>も届く。届くたびにデータベースへ書き込むと、人数が増えたときに重くなる。そこで<strong>メモリ上の配列 <code>player.logs</code> にためておき、退出時に一気に書き込む</strong>。<br><strong>その代わりの注意点：</strong>サーバを <code>Ctrl</code>+<code>C</code> で強制終了すると、<strong>まだ書き込んでいない分は消える</strong>。データを取るときは<strong>必ず全員がブラウザを閉じてから</strong>サーバを止めること。</p>
+      </div>
+    </div>
+
+    <div id="hint1-run" class="card" style="border-left:4px solid #4FC3F7">
+      <div class="card-header"><h3>やってみる：ヒント①を動かして、ログが溜まることを確かめる</h3></div>
+      <p style="margin-bottom:0.6rem">下の2ファイルを<strong>そのままコピペ</strong>して保存し、動かす。穴埋めはない。<strong>まず動く土台を手に入れる</strong>のが目的。</p>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.9rem;margin:0.8rem 0 0.2rem">📁 どこに作るか</p>
+      <div class="dirtree"><span class="dir">md2_final/</span>
+├── <span class="target">server.js</span>          <span class="arrow">← ①これを作る（md2_final の直下）</span>
+├── package.json       <span class="mut">（作成ずみ）</span>
+├── node_modules/      <span class="mut">（作成ずみ）</span>
+└── <span class="dir">public/</span>
+    └── <span class="target">index.html</span>      <span class="arrow">← ②これを作る（public の中）</span></div>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.1rem 0 0.3rem">ファイル1: <code>server.js</code>（md2_final の直下）</p>
+      <pre><span class="code-label">JavaScript ── server.js</span><span class="cmt">// ExpressでWebサーバを立てる</span>
+<span class="cmt">// Socket.IOでリアルタイム通信を行う</span>
+
+<span class="kw">const</span> express = <span class="fn">require</span>(<span class="str">"express"</span>);
+<span class="kw">const</span> http = <span class="fn">require</span>(<span class="str">"http"</span>);
+<span class="kw">const</span> { Server } = <span class="fn">require</span>(<span class="str">"socket.io"</span>);
+<span class="kw">const</span> sqlite3 = <span class="fn">require</span>(<span class="str">"sqlite3"</span>).<span class="fn">verbose</span>();
+
+<span class="kw">const</span> app = <span class="fn">express</span>();
+<span class="kw">const</span> server = http.<span class="fn">createServer</span>(app);
+<span class="kw">const</span> io = <span class="kw">new</span> <span class="fn">Server</span>(server);
+
+<span class="cmt">// publicフォルダを公開する</span>
+app.<span class="fn">use</span>(express.<span class="fn">static</span>(<span class="str">"public"</span>));
+
+
+<span class="cmt">// ========================================</span>
+<span class="cmt">// SQLite</span>
+<span class="cmt">// ========================================</span>
+
+<span class="cmt">// データベースを開く</span>
+<span class="kw">const</span> db = <span class="kw">new</span> sqlite3.<span class="fn">Database</span>(<span class="str">"player_logs.db"</span>);
+
+<span class="cmt">// テーブルを作る</span>
+db.<span class="fn">run</span>(<span class="str">`
+CREATE TABLE IF NOT EXISTS player_logs(
+
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    player_id TEXT,
+    color TEXT,
+
+    time TEXT,
+
+    x REAL,
+    y REAL,
+    z REAL,
+
+    rx REAL,
+    ry REAL,
+    rz REAL
+
+)
+`</span>);
+
+
+<span class="cmt">// ========================================</span>
+<span class="cmt">// プレイヤー情報</span>
+<span class="cmt">// ========================================</span>
+
+<span class="kw">const</span> players = {};
+
+
+<span class="cmt">// ランダムな色を作る</span>
+<span class="kw">function</span> <span class="fn">createRandomColor</span>() {
+
+    <span class="kw">return</span> <span class="str">"#"</span> +
+        Math.<span class="fn">floor</span>(Math.<span class="fn">random</span>() * <span class="num">16777215</span>)
+        .<span class="fn">toString</span>(<span class="num">16</span>)
+        .<span class="fn">padStart</span>(<span class="num">6</span>, <span class="str">"0"</span>);
+
+}
+
+
+<span class="cmt">// ========================================</span>
+<span class="cmt">// クライアントが接続した</span>
+<span class="cmt">// ========================================</span>
+
+io.<span class="fn">on</span>(<span class="str">"connection"</span>, (socket) <span class="op">=&gt;</span> {
+
+    console.<span class="fn">log</span>(<span class="str">"接続 :"</span>, socket.id);
+
+    <span class="cmt">// プレイヤーを作る</span>
+    players[socket.id] = {
+
+        id: socket.id,
+
+        color: <span class="fn">createRandomColor</span>(),
+
+        position: {
+            x: <span class="num">0</span>,
+            y: <span class="num">1.6</span>,
+            z: <span class="num">0</span>
+        },
+
+        rotation: {
+            x: <span class="num">0</span>,
+            y: <span class="num">0</span>,
+            z: <span class="num">0</span>
+        },
+
+        <span class="cmt">// 移動履歴を保存する配列</span>
+        logs: []
+
+    };
+
+
+    <span class="cmt">// 自分へ送る</span>
+    socket.<span class="fn">emit</span>(
+        <span class="str">"自分の情報"</span>,
+        players[socket.id]
+    );
+
+
+    <span class="cmt">// 現在いるプレイヤー一覧</span>
+    socket.<span class="fn">emit</span>(
+        <span class="str">"プレイヤー一覧"</span>,
+        Object.<span class="fn">values</span>(players)
+    );
+
+
+    <span class="cmt">// 他の人へ通知</span>
+    socket.broadcast.<span class="fn">emit</span>(
+        <span class="str">"他者が入室した"</span>,
+        players[socket.id]
+    );
+
+
+    <span class="cmt">// ====================================</span>
+    <span class="cmt">// プレイヤーが移動した</span>
+    <span class="cmt">// ====================================</span>
+
+    socket.<span class="fn">on</span>(<span class="str">"自分が移動した"</span>, (data) <span class="op">=&gt;</span> {
+
+        <span class="kw">const</span> player = players[socket.id];
+
+        <span class="kw">if</span> (!player) <span class="kw">return</span>;
+
+        <span class="cmt">// 最新の位置</span>
+        player.position = data.position;
+
+        <span class="cmt">// 最新の向き</span>
+        player.rotation = data.rotation;
+
+        <span class="cmt">// 配列へ追加する</span>
+        player.logs.<span class="fn">push</span>({
+
+            time: <span class="kw">new</span> <span class="fn">Date</span>().<span class="fn">toISOString</span>(),
+
+            x: player.position.x,
+            y: player.position.y,
+            z: player.position.z,
+
+            rx: player.rotation.x,
+            ry: player.rotation.y,
+            rz: player.rotation.z
+
+        });
+
+        <span class="cmt">// 他のプレイヤーへ送る</span>
+        socket.broadcast.<span class="fn">emit</span>(
+            <span class="str">"他者が移動した"</span>,
+            player
+        );
+
+    });
+
+
+    <span class="cmt">// ====================================</span>
+    <span class="cmt">// プレイヤーが退出した</span>
+    <span class="cmt">// ====================================</span>
+
+    socket.<span class="fn">on</span>(<span class="str">"disconnect"</span>, () <span class="op">=&gt;</span> {
+
+        console.<span class="fn">log</span>(<span class="str">"切断 :"</span>, socket.id);
+
+        <span class="kw">const</span> player = players[socket.id];
+
+        <span class="kw">if</span> (player) {
+
+            <span class="cmt">// SQLiteへまとめて保存</span>
+            player.logs.<span class="fn">forEach</span>(log <span class="op">=&gt;</span> {
+
+                db.<span class="fn">run</span>(
+
+                    <span class="str">`INSERT INTO player_logs
+                    (
+                        player_id,
+                        color,
+                        time,
+                        x,
+                        y,
+                        z,
+                        rx,
+                        ry,
+                        rz
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`</span>,
+
+                    [
+
+                        player.id,
+
+                        player.color,
+
+                        log.time,
+
+                        log.x,
+                        log.y,
+                        log.z,
+
+                        log.rx,
+                        log.ry,
+                        log.rz
+
+                    ]
+
+                );
+
+            });
+
+        }
+
+        <span class="cmt">// メモリから削除</span>
+        <span class="kw">delete</span> players[socket.id];
+
+        <span class="cmt">// 他のプレイヤーへ通知</span>
+        io.<span class="fn">emit</span>(
+            <span class="str">"他者がいなくなった"</span>,
+            socket.id
+        );
+
+    });
+
+});
+
+
+<span class="cmt">// ========================================</span>
+<span class="cmt">// サーバを起動する</span>
+<span class="cmt">// ========================================</span>
+
+<span class="kw">const</span> PORT = <span class="num">3000</span>;
+
+server.<span class="fn">listen</span>(PORT, () <span class="op">=&gt;</span> {
+    <span class="cmt">// URLを表示する</span>
+    console.<span class="fn">log</span>(<span class="str">`http://localhost:${PORT}`</span>);
+});</pre>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.1rem 0 0.3rem">ファイル2: <code>public/index.html</code>（public の中）</p>
+      <pre><span class="code-label">HTML ── public/index.html</span><span class="kw">&lt;!DOCTYPE html&gt;</span>
+<span class="kw">&lt;html lang=</span><span class="str">"ja"</span><span class="kw">&gt;</span>
+<span class="kw">&lt;head&gt;</span>
+    <span class="kw">&lt;meta charset=</span><span class="str">"UTF-8"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;title&gt;</span>A-Frame マルチプレイ空間<span class="kw">&lt;/title&gt;</span>
+
+    <span class="cmt">&lt;!-- A-Frameを読み込む --&gt;</span>
+    <span class="kw">&lt;script src=</span><span class="str">"https://aframe.io/releases/1.7.1/aframe.min.js"</span><span class="kw">&gt;</span><span class="kw">&lt;/script&gt;</span>
+    <span class="cmt">&lt;!-- Socket.IOを読み込む --&gt;</span>
+    <span class="kw">&lt;script src=</span><span class="str">"/socket.io/socket.io.js"</span><span class="kw">&gt;</span><span class="kw">&lt;/script&gt;</span>
+<span class="kw">&lt;/head&gt;</span>
+
+<span class="kw">&lt;body&gt;</span>
+    <span class="kw">&lt;a-scene&gt;</span>
+        <span class="cmt">&lt;!-- 床 --&gt;</span>
+        <span class="kw">&lt;a-plane
+            position=</span><span class="str">"0 0 0"</span><span class="kw">
+            rotation=</span><span class="str">"-90 0 0"</span><span class="kw">
+            width=</span><span class="str">"30"</span><span class="kw">
+            height=</span><span class="str">"30"</span><span class="kw">
+            color=</span><span class="str">"#7BC8A4"</span><span class="kw">&gt;</span>
+        <span class="kw">&lt;/a-plane&gt;</span>
+
+        <span class="cmt">&lt;!-- 空 --&gt;</span>
+        <span class="kw">&lt;a-sky color=</span><span class="str">"#ECECEC"</span><span class="kw">&gt;</span><span class="kw">&lt;/a-sky&gt;</span>
+
+        <span class="cmt">&lt;!-- 空間内の目印 --&gt;</span>
+        <span class="kw">&lt;a-box
+            position=</span><span class="str">"0 0.5 -3"</span><span class="kw">
+            color=</span><span class="str">"#4CC3D9"</span><span class="kw">&gt;</span>
+        <span class="kw">&lt;/a-box&gt;</span>
+
+        <span class="cmt">&lt;!-- 自分が操作するカメラ --&gt;</span>
+        <span class="kw">&lt;a-camera
+            id=</span><span class="str">"camera"</span><span class="kw">
+            position=</span><span class="str">"0 1.6 0"</span><span class="kw">
+            wasd-controls
+            look-controls&gt;</span>
+        <span class="kw">&lt;/a-camera&gt;</span>
+    <span class="kw">&lt;/a-scene&gt;</span>
+
+    <span class="kw">&lt;script&gt;</span>
+        <span class="cmt">// Socket.IOサーバに接続する</span>
+        <span class="kw">const</span> socket = <span class="fn">io</span>();
+
+        <span class="cmt">// A-Frameのシーンとカメラを取得する</span>
+        <span class="kw">const</span> scene = document.<span class="fn">querySelector</span>(<span class="str">'a-scene'</span>);
+        <span class="kw">const</span> camera = document.<span class="fn">querySelector</span>(<span class="str">'#camera'</span>);
+
+        <span class="cmt">/*
+         * 100ミリ秒ごとに、
+         * 自分の位置と向きをサーバへ送る
+         */</span>
+        <span class="fn">setInterval</span>(() <span class="op">=&gt;</span> {
+            <span class="cmt">// サーバに接続していない場合は何もしない</span>
+            <span class="kw">if</span> (!socket.connected) {
+                <span class="kw">return</span>;
+            }
+
+            <span class="cmt">// カメラの位置を取得する</span>
+            <span class="kw">const</span> position = camera.<span class="fn">getAttribute</span>(<span class="str">'position'</span>);
+
+            <span class="cmt">// カメラの向きを取得する</span>
+            <span class="kw">const</span> rotation = camera.<span class="fn">getAttribute</span>(<span class="str">'rotation'</span>);
+
+            <span class="cmt">// 位置と向きをサーバへ送信する</span>
+            socket.<span class="fn">emit</span>(<span class="str">'自分が移動した'</span>, {
+                position: position,
+                rotation: rotation
+            });
+        }, <span class="num">100</span>);
+
+        <span class="cmt">/*
+         * 他のプレイヤーのアバターを作成する関数
+         */</span>
+        <span class="kw">function</span> <span class="fn">createPlayer</span>(player) {
+            <span class="cmt">// 自分自身のアバターは作らない</span>
+            <span class="kw">if</span> (player.id === socket.id) {
+                <span class="kw">return</span>;
+            }
+
+            <span class="cmt">// 同じプレイヤーがすでに作成されているか確認する</span>
+            <span class="kw">const</span> oldPlayer = document.<span class="fn">getElementById</span>(
+                <span class="str">'player-'</span> + player.id
+            );
+
+            <span class="cmt">// すでに存在する場合は新しく作らない</span>
+            <span class="kw">if</span> (oldPlayer) {
+                <span class="kw">return</span>;
+            }
+
+            <span class="cmt">// アバター全体をまとめる要素を作る</span>
+            <span class="kw">const</span> playerEntity = document.<span class="fn">createElement</span>(<span class="str">'a-entity'</span>);
+
+            <span class="cmt">// プレイヤーごとに異なるIDを付ける</span>
+            playerEntity.<span class="fn">setAttribute</span>(
+                <span class="str">'id'</span>,
+                <span class="str">'player-'</span> + player.id
+            );
+
+            <span class="cmt">// アバターの位置を設定する</span>
+            playerEntity.<span class="fn">setAttribute</span>(
+                <span class="str">'position'</span>,
+                player.position
+            );
+
+            <span class="cmt">// アバターの向きを設定する</span>
+            playerEntity.<span class="fn">setAttribute</span>(<span class="str">'rotation'</span>, {
+                x: <span class="num">0</span>,
+                y: player.rotation.y,
+                z: <span class="num">0</span>
+            });
+
+            <span class="cmt">/*
+             * 頭を作る
+             */</span>
+            <span class="kw">const</span> head = document.<span class="fn">createElement</span>(<span class="str">'a-sphere'</span>);
+
+            head.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, {
+                x: <span class="num">0</span>,
+                y: <span class="num">0</span>,
+                z: <span class="num">0</span>
+            });
+
+            head.<span class="fn">setAttribute</span>(<span class="str">'radius'</span>, <span class="num">0.25</span>);
+            head.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, player.color);
+
+            <span class="cmt">/*
+             * 身体を作る
+             */</span>
+            <span class="kw">const</span> body = document.<span class="fn">createElement</span>(<span class="str">'a-cylinder'</span>);
+
+            body.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, {
+                x: <span class="num">0</span>,
+                y: -<span class="num">0.8</span>,
+                z: <span class="num">0</span>
+            });
+
+            body.<span class="fn">setAttribute</span>(<span class="str">'radius'</span>, <span class="num">0.3</span>);
+            body.<span class="fn">setAttribute</span>(<span class="str">'height'</span>, <span class="num">1.2</span>);
+            body.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, player.color);
+
+            <span class="cmt">// 頭と身体をアバターに追加する</span>
+            playerEntity.<span class="fn">appendChild</span>(head);
+            playerEntity.<span class="fn">appendChild</span>(body);
+
+            <span class="cmt">// アバターをA-Frame空間に追加する</span>
+            scene.<span class="fn">appendChild</span>(playerEntity);
+        }
+
+        <span class="cmt">/*
+         * 他のプレイヤーの位置と向きを更新する関数
+         */</span>
+        <span class="kw">function</span> <span class="fn">updatePlayer</span>(player) {
+            <span class="cmt">// 自分自身は更新しない</span>
+            <span class="kw">if</span> (player.id === socket.id) {
+                <span class="kw">return</span>;
+            }
+
+            <span class="cmt">// 更新するプレイヤーを探す</span>
+            <span class="kw">const</span> playerEntity = document.<span class="fn">getElementById</span>(
+                <span class="str">'player-'</span> + player.id
+            );
+
+            <span class="cmt">// まだアバターが存在しない場合は作成する</span>
+            <span class="kw">if</span> (!playerEntity) {
+                <span class="fn">createPlayer</span>(player);
+                <span class="kw">return</span>;
+            }
+
+            <span class="cmt">// アバターの位置を更新する</span>
+            playerEntity.<span class="fn">setAttribute</span>(
+                <span class="str">'position'</span>,
+                player.position
+            );
+
+            <span class="cmt">// アバターの向きを更新する</span>
+            playerEntity.<span class="fn">setAttribute</span>(<span class="str">'rotation'</span>, {
+                x: <span class="num">0</span>,
+                y: player.rotation.y,
+                z: <span class="num">0</span>
+            });
+        }
+
+        <span class="cmt">/*
+         * 入室時に、現在接続している
+         * プレイヤーの一覧を受け取る
+         */</span>
+        socket.<span class="fn">on</span>(<span class="str">'プレイヤー一覧'</span>, (players) <span class="op">=&gt;</span> {
+            console.<span class="fn">log</span>(<span class="str">'現在のプレイヤー:'</span>, players);
+
+            <span class="cmt">// プレイヤーの人数分、アバターを作る</span>
+            players.<span class="fn">forEach</span>((player) <span class="op">=&gt;</span> {
+                <span class="fn">createPlayer</span>(player);
+            });
+        });
+
+        <span class="cmt">/*
+         * 新しいプレイヤーが入室したとき
+         */</span>
+        socket.<span class="fn">on</span>(<span class="str">'他者が入室した'</span>, (player) <span class="op">=&gt;</span> {
+            console.<span class="fn">log</span>(<span class="str">'プレイヤーが入室しました:'</span>, player);
+
+            <span class="fn">createPlayer</span>(player);
+        });
+
+        <span class="cmt">/*
+         * 他のプレイヤーが移動したとき
+         */</span>
+        socket.<span class="fn">on</span>(<span class="str">'他者が移動した'</span>, (player) <span class="op">=&gt;</span> {
+            <span class="fn">updatePlayer</span>(player);
+        });
+
+        <span class="cmt">/*
+         * 他のプレイヤーが退出したとき
+         */</span>
+        socket.<span class="fn">on</span>(<span class="str">'他者がいなくなった'</span>, (playerId) <span class="op">=&gt;</span> {
+            console.<span class="fn">log</span>(<span class="str">'プレイヤーが退出しました:'</span>, playerId);
+
+            <span class="cmt">// 退出したプレイヤーのアバターを探す</span>
+            <span class="kw">const</span> playerEntity = document.<span class="fn">getElementById</span>(
+                <span class="str">'player-'</span> + playerId
+            );
+
+            <span class="cmt">// アバターが存在する場合は削除する</span>
+            <span class="kw">if</span> (playerEntity) {
+                playerEntity.<span class="fn">remove</span>();
+            }
+        });
+    <span class="kw">&lt;/script&gt;</span>
+<span class="kw">&lt;/body&gt;</span>
+<span class="kw">&lt;/html&gt;</span></pre>
+
+      <p style="margin:1rem 0 0.4rem;font-weight:700;color:#4FC3F7;font-size:0.95rem">動かして確かめる（4ステップ）</p>
+      <ul class="point-list" style="margin-bottom:0.6rem;font-size:0.92rem">
+        <li>ターミナルで <code>node server.js</code>（このターミナルは開いたままにする）</li>
+        <li><code>http://localhost:3000</code> を<strong>2つの窓</strong>で開き、<strong>WASDキー</strong>で歩き、<strong>マウスをドラッグ</strong>して見回す → もう片方にアバターが現れて動く</li>
+        <li><strong>両方の窓を閉じる</strong>（＝退出する。このときログが書き込まれる）</li>
+        <li>VS Code で <code>player_logs.db</code> を開き、<strong>Refresh</strong> → 行が溜まっていることを確認する</li>
+      </ul>
+      <div class="callout-tip">
+        <h4>もう一歩：サーバを止めても消えないことを確かめる</h4>
+        <p style="font-size:0.9rem;margin-bottom:0"><code>Ctrl</code>+<code>C</code> でサーバを止め、もう一度 <code>node server.js</code> して <code>player_logs.db</code> を見る。<strong>前の行が残っている</strong>はず。これが「メモリ」と「データベース」の決定的な違い。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 4: HINT 2 ============ -->
+<section id="sec-hint2">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">4</div>
+      <h2>ヒント② ― 「見たデータ」も記録する空間（注視の検出と注視時間）</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>何を足すのか：画面の中心の円と重なったオブジェクトを検出する</h3></div>
+      <p style="margin-bottom:0.6rem">ヒント①では「<strong>どこに居たか</strong>」しか分からなかった。ここでは「<strong>何を見ていたか</strong>」を足す。<strong>画面のまん中に小さな円（カーソル）</strong>を出し、その円が<strong>オブジェクトと重なっている間の時間</strong>をはかって記録する。</p>
+      <div class="analogy">
+        美術館で、あなたが今どの絵の前に立っているかは「位置」で分かる。でも<strong>本当に見ていたか</strong>は分からない ── 隣の絵を見ながら立っているかもしれない。<strong>視線の先にあるもの</strong>を測るのが、この仕組み。VRの世界では「<strong>ゲイズ（gaze）</strong>」と呼ばれ、実際の視線計測の代わりによく使われる。
+      </div>
+      <ul class="point-list" style="margin-bottom:0">
+        <li>A-Frame の <strong><code>&lt;a-cursor&gt;</code></strong> をカメラの中に置くと、<strong>画面の中心から前方へ見えない光線（レイ）</strong>が伸びる</li>
+        <li>その光線がオブジェクトに当たると <strong><code>mouseenter</code></strong>、外れると <strong><code>mouseleave</code></strong> というイベントが発生する</li>
+        <li>だから <strong>「当たった時刻」を覚えておいて、「外れた時刻」との差を取る</strong>だけで注視時間になる</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>足すコード①：見られる対象に目印をつける（HTML）</h3></div>
+      <p style="margin-bottom:0.5rem">見られたいオブジェクトに <strong><code>class="lookable"</code></strong>（＝光線の当たる相手）と <strong><code>data-name="…"</code></strong>（＝記録に残す名前）を付ける。この2つが目印になる。</p>
+      <pre><span class="code-label">HTML ── 見られる対象</span><span class="cmt">&lt;!-- class と data-name が目印。data-name がそのまま記録に残る --&gt;</span>
+<span class="kw">&lt;a-box</span> class=<span class="str">"lookable"</span> data-name=<span class="str">"作品A"</span>
+       position=<span class="str">"-4 1.5 -6"</span> width=<span class="str">"2"</span> height=<span class="str">"2"</span> depth=<span class="str">"0.2"</span>
+       color=<span class="str">"#E74C3C"</span><span class="kw">&gt;&lt;/a-box&gt;</span></pre>
+      <p style="margin:0.8rem 0 0.5rem;font-size:0.92rem">そして<strong>カメラの中</strong>に円のカーソルを入れる。<code>raycaster="objects: .lookable"</code> と書くことで、<strong><code>lookable</code> が付いたものだけ</strong>を判定の対象にできる（床や空に反応させない）。</p>
+      <pre><span class="code-label">HTML ── カメラとカーソル</span><span class="kw">&lt;a-camera</span> id=<span class="str">"camera"</span> position=<span class="str">"0 1.6 0"</span> wasd-controls look-controls<span class="kw">&gt;</span>
+    <span class="kw">&lt;a-cursor</span>
+        fuse=<span class="str">"false"</span>
+        color=<span class="str">"#4FC3F7"</span>
+        raycaster=<span class="str">"objects: .lookable; far: 30"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;/a-cursor&gt;</span>
+<span class="kw">&lt;/a-camera&gt;</span></pre>
+      <table style="font-size:0.88rem">
+        <tr><th style="width:26%">書いたもの</th><th>意味</th></tr>
+        <tr><td><code>&lt;a-cursor&gt;</code></td><td>画面の中心に出る<strong>円</strong>。カメラの子にすると、いつも視線の正面に来る</td></tr>
+        <tr><td><code>fuse="false"</code></td><td>「一定時間見つめたら自動クリック」を<strong>切る</strong>（今回は見た時間だけ測りたいので不要）</td></tr>
+        <tr><td><code>objects: .lookable</code></td><td><strong>判定する相手を絞る</strong>。これが無いと床や空にも当たってしまう</td></tr>
+        <tr><td><code>far: 30</code></td><td>光線の届く距離（メートル）。遠すぎる物まで「見た」ことにしたくないときは小さくする</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>足すコード②：時間をはかる（JavaScript）</h3></div>
+      <p style="margin-bottom:0.5rem">やることは <strong>「入ったら時刻を覚える／出たら差を取って送る」</strong>だけ。</p>
+      <pre><span class="code-label">JavaScript ── public/index.html の中</span><span class="kw">const</span> cursor = document.<span class="fn">querySelector</span>(<span class="str">'a-cursor'</span>);
+
+<span class="cmt">// いま見ているオブジェクトと、見はじめた時刻</span>
+<span class="kw">let</span> gazeTarget = <span class="kw">null</span>;
+<span class="kw">let</span> gazeStart = <span class="kw">null</span>;
+
+<span class="cmt">// 短すぎる注視（通りすがり）は記録しない</span>
+<span class="kw">const</span> MIN_GAZE_MS = <span class="num">300</span>;
+
+<span class="cmt">// 円がオブジェクトに重なった</span>
+cursor.<span class="fn">addEventListener</span>(<span class="str">'mouseenter'</span>, (event) <span class="op">=&gt;</span> {
+    <span class="kw">const</span> target = event.detail.intersectedEl;
+    <span class="kw">if</span> (!target) <span class="kw">return</span>;
+
+    gazeTarget = target;
+    gazeStart = <span class="kw">new</span> <span class="fn">Date</span>();
+
+    <span class="cmt">// 見られている間だけ、少し薄くする（自分への合図）</span>
+    target.<span class="fn">setAttribute</span>(<span class="str">'opacity'</span>, <span class="num">0.5</span>);
+});
+
+<span class="cmt">// 円がオブジェクトから外れた</span>
+cursor.<span class="fn">addEventListener</span>(<span class="str">'mouseleave'</span>, () <span class="op">=&gt;</span> {
+    <span class="kw">if</span> (!gazeTarget) <span class="kw">return</span>;
+
+    <span class="kw">const</span> gazeEnd = <span class="kw">new</span> <span class="fn">Date</span>();
+    <span class="kw">const</span> duration = gazeEnd - gazeStart;   <span class="cmt">// ミリ秒</span>
+
+    gazeTarget.<span class="fn">setAttribute</span>(<span class="str">'opacity'</span>, <span class="num">1</span>);
+
+    <span class="kw">if</span> (duration &gt;= MIN_GAZE_MS) {
+        socket.<span class="fn">emit</span>(<span class="str">'見た'</span>, {
+            object_name: gazeTarget.dataset.name,
+            start_time: gazeStart.<span class="fn">toISOString</span>(),
+            end_time: gazeEnd.<span class="fn">toISOString</span>(),
+            duration_ms: duration
+        });
+    }
+
+    gazeTarget = <span class="kw">null</span>;
+    gazeStart = <span class="kw">null</span>;
+});</pre>
+      <div class="callout-info" style="margin-top:0.6rem">
+        <h4>設計上のポイント（レポートに書ける話）</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><strong>短い注視を捨てている</strong>（<code>MIN_GAZE_MS = 300</code>）。首を振っている途中に一瞬かすっただけのものを「見た」と数えると、データが<strong>ノイズだらけ</strong>になる。この<strong>しきい値をいくつにするか</strong>は、あなたの分析の重要な判断であり、レポートに書くべきこと</li>
+          <li><strong>ページを閉じる直前（<code>beforeunload</code>）にも送っている</strong>。見ている途中で退出した分を捨てないため</li>
+          <li>これは<strong>本当の視線</strong>ではなく<strong>「画面の中心に何があったか」</strong>。この違いは考察で正直に書くとよい</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>足すコード③：サーバ側 ── 注視ログの表と、受け取る処理</h3></div>
+      <p style="margin-bottom:0.5rem">ヒント①の <code>server.js</code> に、<strong>表を1つ</strong>と<strong>受け口を1つ</strong>足すだけ。</p>
+      <pre><span class="code-label">JavaScript ── server.js に足す（表を作る）</span><span class="cmt">// ★ 注視ログの表（今回の追加）</span>
+db.<span class="fn">run</span>(<span class="str">`
+CREATE TABLE IF NOT EXISTS gaze_logs(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    player_id TEXT,
+    object_name TEXT,
+    start_time TEXT,
+    end_time TEXT,
+    duration_ms INTEGER,
+    x REAL, y REAL, z REAL
+)
+`</span>);</pre>
+      <pre><span class="code-label">JavaScript ── server.js に足す（io.on の中）</span><span class="cmt">// ★ プレイヤーが「見終わった」</span>
+socket.<span class="fn">on</span>(<span class="str">"見た"</span>, (data) <span class="op">=&gt;</span> {
+
+    <span class="kw">const</span> player = players[socket.id];
+    <span class="kw">if</span> (!player) <span class="kw">return</span>;
+
+    db.<span class="fn">run</span>(
+        <span class="str">`INSERT INTO gaze_logs
+        (player_id, object_name, start_time, end_time,
+         duration_ms, x, y, z)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`</span>,
+        [
+            player.id,
+            data.object_name,
+            data.start_time,
+            data.end_time,
+            data.duration_ms,
+            player.position.x,
+            player.position.y,
+            player.position.z
+        ]
+    );
+});</pre>
+      <div class="callout-tip" style="margin-top:0.6rem">
+        <h4>移動ログと違って「その場で1件ずつ」保存している</h4>
+        <p style="font-size:0.9rem;margin-bottom:0">注視は<strong>数が少ない</strong>（1人が1分で数十件）ので、まとめる必要がない。その場で書けば<strong>サーバが落ちても消えない</strong>という利点がある。<br><strong>データの性質によって保存のしかたを変える</strong> ── これは実務でもそのまま使う考え方。</p>
+      </div>
+      <p style="margin:0.9rem 0 0.4rem;font-size:0.92rem">また、<strong>プレイヤーの位置（<code>x, y, z</code>）も一緒に記録している</strong>のがポイント。「<strong>どこに立って</strong>その作品を見ていたか」まで分かるので、「近くで見る人／遠くから見る人」といった分析ができる。</p>
+    </div>
+
+    <div id="hint2-run" class="card" style="border-left:4px solid #4FC3F7">
+      <div class="card-header"><h3>やってみる：ヒント②を動かして、注視時間が記録されることを確かめる</h3></div>
+      <p style="margin-bottom:0.6rem">完成版の全文は下の2ファイル。ヒント①の <code>md2_final</code> をコピーして <code>md2_hint2</code> を作り、そこで試すと元が壊れない。</p>
+
+      <div class="exec-pair">
+        <figure class="exec-shot">
+          <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">① 作品Bを見ているところ</span></div>
+          <img src="img/md2w7_h2_gaze.png" alt="3つの色つきパネル（A赤・B青・C黄）が並ぶ空間。中央の青いパネルBが半透明になり、その上に水色の円のカーソルが重なっている。画面上部に「いま見ている：作品B（5.9秒）」と表示されている">
+          <figcaption class="exec-cap"><strong>見ている間:</strong> 対象が<strong>半透明</strong>になり、上に<strong>「いま見ている：作品B（5.9秒）」</strong>と出る。円が外れた瞬間に記録される。</figcaption>
+        </figure>
+        <figure class="exec-shot">
+          <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">② 別の作品へ視線を移したところ</span></div>
+          <img src="img/md2w7_h2_gaze_a.png" alt="視点を左に振り、赤いパネルAが半透明になってカーソルが重なっている様子">
+          <figcaption class="exec-cap"><strong>視線を移すと:</strong> 前の作品の記録が<strong>確定して保存され</strong>、新しい作品の計測が始まる。</figcaption>
+        </figure>
+      </div>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.1rem 0 0.3rem">完成版 <code>server.js</code></p>
+      <pre><span class="code-label">JavaScript ── server.js</span><span class="cmt">// ヒント2：見たデータ（注視）も保存するマルチプレイ空間</span>
+
+<span class="kw">const</span> express = <span class="fn">require</span>(<span class="str">"express"</span>);
+<span class="kw">const</span> http = <span class="fn">require</span>(<span class="str">"http"</span>);
+<span class="kw">const</span> { Server } = <span class="fn">require</span>(<span class="str">"socket.io"</span>);
+<span class="kw">const</span> sqlite3 = <span class="fn">require</span>(<span class="str">"sqlite3"</span>).<span class="fn">verbose</span>();
+
+<span class="kw">const</span> app = <span class="fn">express</span>();
+<span class="kw">const</span> server = http.<span class="fn">createServer</span>(app);
+<span class="kw">const</span> io = <span class="kw">new</span> <span class="fn">Server</span>(server);
+
+app.<span class="fn">use</span>(express.<span class="fn">static</span>(<span class="str">"public"</span>));
+
+
+<span class="cmt">// ========================================</span>
+<span class="cmt">// SQLite</span>
+<span class="cmt">// ========================================</span>
+
+<span class="kw">const</span> db = <span class="kw">new</span> sqlite3.<span class="fn">Database</span>(<span class="str">"player_logs.db"</span>);
+
+<span class="cmt">// 移動ログの表（ヒント1と同じ）</span>
+db.<span class="fn">run</span>(<span class="str">`
+CREATE TABLE IF NOT EXISTS player_logs(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    player_id TEXT,
+    color TEXT,
+    time TEXT,
+    x REAL, y REAL, z REAL,
+    rx REAL, ry REAL, rz REAL
+)
+`</span>);
+
+<span class="cmt">// ★ 注視ログの表（今回の追加）</span>
+db.<span class="fn">run</span>(<span class="str">`
+CREATE TABLE IF NOT EXISTS gaze_logs(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    player_id TEXT,
+    object_name TEXT,
+    start_time TEXT,
+    end_time TEXT,
+    duration_ms INTEGER,
+    x REAL, y REAL, z REAL
+)
+`</span>);
+
+
+<span class="cmt">// ========================================</span>
+<span class="cmt">// プレイヤー情報</span>
+<span class="cmt">// ========================================</span>
+
+<span class="kw">const</span> players = {};
+
+<span class="kw">function</span> <span class="fn">createRandomColor</span>() {
+    <span class="kw">return</span> <span class="str">"#"</span> + Math.<span class="fn">floor</span>(Math.<span class="fn">random</span>() * <span class="num">16777215</span>)
+        .<span class="fn">toString</span>(<span class="num">16</span>).<span class="fn">padStart</span>(<span class="num">6</span>, <span class="str">"0"</span>);
+}
+
+
+io.<span class="fn">on</span>(<span class="str">"connection"</span>, (socket) <span class="op">=&gt;</span> {
+
+    console.<span class="fn">log</span>(<span class="str">"接続 :"</span>, socket.id);
+
+    players[socket.id] = {
+        id: socket.id,
+        color: <span class="fn">createRandomColor</span>(),
+        position: { x: <span class="num">0</span>, y: <span class="num">1.6</span>, z: <span class="num">0</span> },
+        rotation: { x: <span class="num">0</span>, y: <span class="num">0</span>, z: <span class="num">0</span> },
+        logs: []
+    };
+
+    socket.<span class="fn">emit</span>(<span class="str">"自分の情報"</span>, players[socket.id]);
+    socket.<span class="fn">emit</span>(<span class="str">"プレイヤー一覧"</span>, Object.<span class="fn">values</span>(players));
+    socket.broadcast.<span class="fn">emit</span>(<span class="str">"他者が入室した"</span>, players[socket.id]);
+
+
+    <span class="cmt">// ====================================</span>
+    <span class="cmt">// プレイヤーが移動した（ヒント1と同じ）</span>
+    <span class="cmt">// ====================================</span>
+
+    socket.<span class="fn">on</span>(<span class="str">"自分が移動した"</span>, (data) <span class="op">=&gt;</span> {
+
+        <span class="kw">const</span> player = players[socket.id];
+        <span class="kw">if</span> (!player) <span class="kw">return</span>;
+
+        player.position = data.position;
+        player.rotation = data.rotation;
+
+        player.logs.<span class="fn">push</span>({
+            time: <span class="kw">new</span> <span class="fn">Date</span>().<span class="fn">toISOString</span>(),
+            x: player.position.x,
+            y: player.position.y,
+            z: player.position.z,
+            rx: player.rotation.x,
+            ry: player.rotation.y,
+            rz: player.rotation.z
+        });
+
+        socket.broadcast.<span class="fn">emit</span>(<span class="str">"他者が移動した"</span>, player);
+    });
+
+
+    <span class="cmt">// ====================================</span>
+    <span class="cmt">// ★ プレイヤーが「見終わった」</span>
+    <span class="cmt">// ====================================</span>
+
+    socket.<span class="fn">on</span>(<span class="str">"見た"</span>, (data) <span class="op">=&gt;</span> {
+
+        <span class="kw">const</span> player = players[socket.id];
+        <span class="kw">if</span> (!player) <span class="kw">return</span>;
+
+        console.<span class="fn">log</span>(
+            <span class="str">"注視 :"</span>, data.object_name,
+            data.duration_ms + <span class="str">"ms"</span>
+        );
+
+        db.<span class="fn">run</span>(
+            <span class="str">`INSERT INTO gaze_logs
+            (player_id, object_name, start_time, end_time,
+             duration_ms, x, y, z)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`</span>,
+            [
+                player.id,
+                data.object_name,
+                data.start_time,
+                data.end_time,
+                data.duration_ms,
+                player.position.x,
+                player.position.y,
+                player.position.z
+            ]
+        );
+    });
+
+
+    <span class="cmt">// ====================================</span>
+    <span class="cmt">// プレイヤーが退出した</span>
+    <span class="cmt">// ====================================</span>
+
+    socket.<span class="fn">on</span>(<span class="str">"disconnect"</span>, () <span class="op">=&gt;</span> {
+
+        console.<span class="fn">log</span>(<span class="str">"切断 :"</span>, socket.id);
+
+        <span class="kw">const</span> player = players[socket.id];
+
+        <span class="kw">if</span> (player) {
+            player.logs.<span class="fn">forEach</span>(log <span class="op">=&gt;</span> {
+                db.<span class="fn">run</span>(
+                    <span class="str">`INSERT INTO player_logs
+                    (player_id, color, time, x, y, z, rx, ry, rz)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`</span>,
+                    [
+                        player.id, player.color, log.time,
+                        log.x, log.y, log.z,
+                        log.rx, log.ry, log.rz
+                    ]
+                );
+            });
+        }
+
+        <span class="kw">delete</span> players[socket.id];
+        io.<span class="fn">emit</span>(<span class="str">"他者がいなくなった"</span>, socket.id);
+    });
+
+});
+
+
+<span class="kw">const</span> PORT = <span class="num">3000</span>;
+
+server.<span class="fn">listen</span>(PORT, () <span class="op">=&gt;</span> {
+    console.<span class="fn">log</span>(<span class="str">`http://localhost:${PORT}`</span>);
+});</pre>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.1rem 0 0.3rem">完成版 <code>public/index.html</code></p>
+      <pre><span class="code-label">HTML ── public/index.html</span><span class="kw">&lt;!DOCTYPE html&gt;</span>
+<span class="kw">&lt;html lang=</span><span class="str">"ja"</span><span class="kw">&gt;</span>
+<span class="kw">&lt;head&gt;</span>
+    <span class="kw">&lt;meta charset=</span><span class="str">"UTF-8"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;title&gt;</span>見たデータを記録する空間<span class="kw">&lt;/title&gt;</span>
+    <span class="kw">&lt;script src=</span><span class="str">"https://aframe.io/releases/1.7.1/aframe.min.js"</span><span class="kw">&gt;</span><span class="kw">&lt;/script&gt;</span>
+    <span class="kw">&lt;script src=</span><span class="str">"/socket.io/socket.io.js"</span><span class="kw">&gt;</span><span class="kw">&lt;/script&gt;</span>
+    <span class="kw">&lt;style&gt;</span>
+        /* ★ いま何を見ているかを画面に出す（動作確認用） */
+        #hud {
+            position: fixed;
+            top: 20px; left: 0; right: 0;
+            z-index: 10;
+            text-align: center;
+            font-family: sans-serif;
+            font-size: 18px;
+            color: #fff;
+            pointer-events: none;
+        }
+        #hud span {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 16px;
+            border-radius: 100px;
+        }
+    <span class="kw">&lt;/style&gt;</span>
+<span class="kw">&lt;/head&gt;</span>
+
+<span class="kw">&lt;body&gt;</span>
+    <span class="kw">&lt;a-scene&gt;</span>
+        <span class="kw">&lt;a-plane position=</span><span class="str">"0 0 0"</span><span class="kw"> rotation=</span><span class="str">"-90 0 0"</span><span class="kw">
+                 width=</span><span class="str">"30"</span><span class="kw"> height=</span><span class="str">"30"</span><span class="kw"> color=</span><span class="str">"#7BC8A4"</span><span class="kw">&gt;</span><span class="kw">&lt;/a-plane&gt;</span>
+        <span class="kw">&lt;a-sky color=</span><span class="str">"#ECECEC"</span><span class="kw">&gt;</span><span class="kw">&lt;/a-sky&gt;</span>
+
+        <span class="cmt">&lt;!-- ★ 見られる対象。class="lookable" と data-name が目印 --&gt;</span>
+        <span class="kw">&lt;a-box class=</span><span class="str">"lookable"</span><span class="kw"> data-name=</span><span class="str">"作品A"</span><span class="kw">
+               position=</span><span class="str">"-4 1.5 -6"</span><span class="kw"> width=</span><span class="str">"2"</span><span class="kw"> height=</span><span class="str">"2"</span><span class="kw"> depth=</span><span class="str">"0.2"</span><span class="kw">
+               color=</span><span class="str">"#E74C3C"</span><span class="kw">&gt;</span><span class="kw">&lt;/a-box&gt;</span>
+        <span class="kw">&lt;a-text value=</span><span class="str">"A"</span><span class="kw"> position=</span><span class="str">"-4 3 -6"</span><span class="kw"> align=</span><span class="str">"center"</span><span class="kw">
+                color=</span><span class="str">"#333"</span><span class="kw"> width=</span><span class="str">"8"</span><span class="kw">&gt;</span><span class="kw">&lt;/a-text&gt;</span>
+
+        <span class="kw">&lt;a-box class=</span><span class="str">"lookable"</span><span class="kw"> data-name=</span><span class="str">"作品B"</span><span class="kw">
+               position=</span><span class="str">"0 1.5 -6"</span><span class="kw"> width=</span><span class="str">"2"</span><span class="kw"> height=</span><span class="str">"2"</span><span class="kw"> depth=</span><span class="str">"0.2"</span><span class="kw">
+               color=</span><span class="str">"#3498DB"</span><span class="kw">&gt;</span><span class="kw">&lt;/a-box&gt;</span>
+        <span class="kw">&lt;a-text value=</span><span class="str">"B"</span><span class="kw"> position=</span><span class="str">"0 3 -6"</span><span class="kw"> align=</span><span class="str">"center"</span><span class="kw">
+                color=</span><span class="str">"#333"</span><span class="kw"> width=</span><span class="str">"8"</span><span class="kw">&gt;</span><span class="kw">&lt;/a-text&gt;</span>
+
+        <span class="kw">&lt;a-box class=</span><span class="str">"lookable"</span><span class="kw"> data-name=</span><span class="str">"作品C"</span><span class="kw">
+               position=</span><span class="str">"4 1.5 -6"</span><span class="kw"> width=</span><span class="str">"2"</span><span class="kw"> height=</span><span class="str">"2"</span><span class="kw"> depth=</span><span class="str">"0.2"</span><span class="kw">
+               color=</span><span class="str">"#F1C40F"</span><span class="kw">&gt;</span><span class="kw">&lt;/a-box&gt;</span>
+        <span class="kw">&lt;a-text value=</span><span class="str">"C"</span><span class="kw"> position=</span><span class="str">"4 3 -6"</span><span class="kw"> align=</span><span class="str">"center"</span><span class="kw">
+                color=</span><span class="str">"#333"</span><span class="kw"> width=</span><span class="str">"8"</span><span class="kw">&gt;</span><span class="kw">&lt;/a-text&gt;</span>
+
+        <span class="cmt">&lt;!-- ★ カメラの中に円のカーソルを置く（画面の中心に出る） --&gt;</span>
+        <span class="kw">&lt;a-camera id=</span><span class="str">"camera"</span><span class="kw"> position=</span><span class="str">"0 1.6 0"</span><span class="kw"> wasd-controls look-controls&gt;</span>
+            <span class="kw">&lt;a-cursor
+                fuse=</span><span class="str">"false"</span><span class="kw">
+                color=</span><span class="str">"#4FC3F7"</span><span class="kw">
+                raycaster=</span><span class="str">"objects: .lookable; far: 30"</span><span class="kw">&gt;</span>
+            <span class="kw">&lt;/a-cursor&gt;</span>
+        <span class="kw">&lt;/a-camera&gt;</span>
+    <span class="kw">&lt;/a-scene&gt;</span>
+
+    <span class="cmt">&lt;!-- ★ いま何を見ているかの表示 --&gt;</span>
+    <span class="kw">&lt;div id=</span><span class="str">"hud"</span><span class="kw">&gt;</span><span class="kw">&lt;/div&gt;</span>
+
+    <span class="kw">&lt;script&gt;</span>
+        <span class="kw">const</span> socket = <span class="fn">io</span>();
+        <span class="kw">const</span> scene = document.<span class="fn">querySelector</span>(<span class="str">'a-scene'</span>);
+        <span class="kw">const</span> camera = document.<span class="fn">querySelector</span>(<span class="str">'#camera'</span>);
+        <span class="kw">const</span> cursor = document.<span class="fn">querySelector</span>(<span class="str">'a-cursor'</span>);
+        <span class="kw">const</span> hud = document.<span class="fn">getElementById</span>(<span class="str">'hud'</span>);
+
+        <span class="cmt">// ================================</span>
+        <span class="cmt">// 位置と向きを送る（ヒント1と同じ）</span>
+        <span class="cmt">// ================================</span>
+        <span class="fn">setInterval</span>(() <span class="op">=&gt;</span> {
+            <span class="kw">if</span> (!socket.connected) <span class="kw">return</span>;
+            socket.<span class="fn">emit</span>(<span class="str">'自分が移動した'</span>, {
+                position: camera.<span class="fn">getAttribute</span>(<span class="str">'position'</span>),
+                rotation: camera.<span class="fn">getAttribute</span>(<span class="str">'rotation'</span>)
+            });
+        }, <span class="num">100</span>);
+
+        <span class="cmt">// ================================</span>
+        <span class="cmt">// ★ 見た時間をはかる</span>
+        <span class="cmt">// ================================</span>
+
+        <span class="cmt">// いま見ているオブジェクトと、見はじめた時刻</span>
+        <span class="kw">let</span> gazeTarget = <span class="kw">null</span>;
+        <span class="kw">let</span> gazeStart = <span class="kw">null</span>;
+
+        <span class="cmt">// 短すぎる注視（通りすがり）は記録しない</span>
+        <span class="kw">const</span> MIN_GAZE_MS = <span class="num">300</span>;
+
+        <span class="cmt">// 円がオブジェクトに重なった</span>
+        cursor.<span class="fn">addEventListener</span>(<span class="str">'mouseenter'</span>, (event) <span class="op">=&gt;</span> {
+            <span class="kw">const</span> target = event.detail.intersectedEl;
+            <span class="kw">if</span> (!target) <span class="kw">return</span>;
+
+            gazeTarget = target;
+            gazeStart = <span class="kw">new</span> <span class="fn">Date</span>();
+
+            <span class="cmt">// 見られている間だけ、少し薄くする（自分への合図）</span>
+            target.<span class="fn">setAttribute</span>(<span class="str">'opacity'</span>, <span class="num">0.5</span>);
+        });
+
+        <span class="cmt">// 円がオブジェクトから外れた</span>
+        cursor.<span class="fn">addEventListener</span>(<span class="str">'mouseleave'</span>, () <span class="op">=&gt;</span> {
+            <span class="kw">if</span> (!gazeTarget) <span class="kw">return</span>;
+
+            <span class="kw">const</span> gazeEnd = <span class="kw">new</span> <span class="fn">Date</span>();
+            <span class="kw">const</span> duration = gazeEnd - gazeStart;
+
+            gazeTarget.<span class="fn">setAttribute</span>(<span class="str">'opacity'</span>, <span class="num">1</span>);
+
+            <span class="kw">if</span> (duration &gt;= MIN_GAZE_MS) {
+                socket.<span class="fn">emit</span>(<span class="str">'見た'</span>, {
+                    object_name: gazeTarget.dataset.name,
+                    start_time: gazeStart.<span class="fn">toISOString</span>(),
+                    end_time: gazeEnd.<span class="fn">toISOString</span>(),
+                    duration_ms: duration
+                });
+                console.<span class="fn">log</span>(<span class="str">'見た :'</span>, gazeTarget.dataset.name, duration + <span class="str">'ms'</span>);
+            }
+
+            gazeTarget = <span class="kw">null</span>;
+            gazeStart = <span class="kw">null</span>;
+        });
+
+        <span class="cmt">// いま見ているものと、その秒数を画面に出しつづける</span>
+        <span class="fn">setInterval</span>(() <span class="op">=&gt;</span> {
+            <span class="kw">if</span> (!gazeTarget) { hud.innerHTML = <span class="str">''</span>; <span class="kw">return</span>; }
+            <span class="kw">const</span> sec = ((<span class="kw">new</span> <span class="fn">Date</span>() - gazeStart) / <span class="num">1000</span>).<span class="fn">toFixed</span>(<span class="num">1</span>);
+            hud.innerHTML = <span class="str">'&lt;span&gt;いま見ている：'</span>
+                + gazeTarget.dataset.name + <span class="str">'（'</span> + sec + <span class="str">'秒）&lt;/span&gt;'</span>;
+        }, <span class="num">100</span>);
+
+        <span class="cmt">// ページを閉じる直前に、見ている途中の分も送る</span>
+        window.<span class="fn">addEventListener</span>(<span class="str">'beforeunload'</span>, () <span class="op">=&gt;</span> {
+            <span class="kw">if</span> (!gazeTarget) <span class="kw">return</span>;
+            <span class="kw">const</span> gazeEnd = <span class="kw">new</span> <span class="fn">Date</span>();
+            socket.<span class="fn">emit</span>(<span class="str">'見た'</span>, {
+                object_name: gazeTarget.dataset.name,
+                start_time: gazeStart.<span class="fn">toISOString</span>(),
+                end_time: gazeEnd.<span class="fn">toISOString</span>(),
+                duration_ms: gazeEnd - gazeStart
+            });
+        });
+
+        <span class="cmt">// ================================</span>
+        <span class="cmt">// 他プレイヤーの表示（ヒント1と同じ）</span>
+        <span class="cmt">// ================================</span>
+        <span class="kw">function</span> <span class="fn">createPlayer</span>(player) {
+            <span class="kw">if</span> (player.id === socket.id) <span class="kw">return</span>;
+            <span class="kw">if</span> (document.<span class="fn">getElementById</span>(<span class="str">'player-'</span> + player.id)) <span class="kw">return</span>;
+
+            <span class="kw">const</span> playerEntity = document.<span class="fn">createElement</span>(<span class="str">'a-entity'</span>);
+            playerEntity.<span class="fn">setAttribute</span>(<span class="str">'id'</span>, <span class="str">'player-'</span> + player.id);
+            playerEntity.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, player.position);
+            playerEntity.<span class="fn">setAttribute</span>(<span class="str">'rotation'</span>, { x: <span class="num">0</span>, y: player.rotation.y, z: <span class="num">0</span> });
+
+            <span class="kw">const</span> head = document.<span class="fn">createElement</span>(<span class="str">'a-sphere'</span>);
+            head.<span class="fn">setAttribute</span>(<span class="str">'radius'</span>, <span class="num">0.25</span>);
+            head.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, player.color);
+
+            <span class="kw">const</span> body = document.<span class="fn">createElement</span>(<span class="str">'a-cylinder'</span>);
+            body.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, { x: <span class="num">0</span>, y: -<span class="num">0.8</span>, z: <span class="num">0</span> });
+            body.<span class="fn">setAttribute</span>(<span class="str">'radius'</span>, <span class="num">0.3</span>);
+            body.<span class="fn">setAttribute</span>(<span class="str">'height'</span>, <span class="num">1.2</span>);
+            body.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, player.color);
+
+            playerEntity.<span class="fn">appendChild</span>(head);
+            playerEntity.<span class="fn">appendChild</span>(body);
+            scene.<span class="fn">appendChild</span>(playerEntity);
+        }
+
+        <span class="kw">function</span> <span class="fn">updatePlayer</span>(player) {
+            <span class="kw">if</span> (player.id === socket.id) <span class="kw">return</span>;
+            <span class="kw">const</span> playerEntity = document.<span class="fn">getElementById</span>(<span class="str">'player-'</span> + player.id);
+            <span class="kw">if</span> (!playerEntity) { <span class="fn">createPlayer</span>(player); <span class="kw">return</span>; }
+            playerEntity.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, player.position);
+            playerEntity.<span class="fn">setAttribute</span>(<span class="str">'rotation'</span>, { x: <span class="num">0</span>, y: player.rotation.y, z: <span class="num">0</span> });
+        }
+
+        socket.<span class="fn">on</span>(<span class="str">'プレイヤー一覧'</span>, (players) <span class="op">=&gt;</span> players.<span class="fn">forEach</span>(createPlayer));
+        socket.<span class="fn">on</span>(<span class="str">'他者が入室した'</span>, createPlayer);
+        socket.<span class="fn">on</span>(<span class="str">'他者が移動した'</span>, updatePlayer);
+        socket.<span class="fn">on</span>(<span class="str">'他者がいなくなった'</span>, (playerId) <span class="op">=&gt;</span> {
+            <span class="kw">const</span> playerEntity = document.<span class="fn">getElementById</span>(<span class="str">'player-'</span> + playerId);
+            <span class="kw">if</span> (playerEntity) playerEntity.<span class="fn">remove</span>();
+        });
+    <span class="kw">&lt;/script&gt;</span>
+<span class="kw">&lt;/body&gt;</span>
+<span class="kw">&lt;/html&gt;</span></pre>
+
+      <p style="margin:1rem 0 0.4rem;font-weight:700;color:#4FC3F7;font-size:0.95rem">確かめること</p>
+      <ul class="point-list" style="margin-bottom:0.6rem;font-size:0.92rem">
+        <li>作品を見ると<strong>半透明</strong>になり、画面上部に<strong>秒数</strong>が出る</li>
+        <li>視線を外すと、ターミナルに <code>注視 : 作品B 2366ms</code> のように出る</li>
+        <li>DB Viewer で <code>gaze_logs</code> を開くと、<strong>1回の注視が1行</strong>で入っている</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>集めた注視ログを分析する（<code>analyze.py</code>）</h3></div>
+      <p style="margin-bottom:0.6rem">ここが最終課題の心臓部。<strong><code>.db</code> を pandas で直接読む</strong>ので、CSVに書き出す手間はいらない。<code>md2_final</code> の直下に <code>analyze.py</code> を作る。</p>
+      <pre><span class="code-label">Python ── analyze.py</span><span class="kw">import</span> sqlite3
+
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+
+<span class="cmt"># Macで日本語を表示する（豆腐□になるのを防ぐ）</span>
+plt.rcParams[<span class="str">'font.family'</span>] = <span class="str">'Hiragino Sans'</span>
+
+<span class="cmt"># ------------------------------------</span>
+<span class="cmt"># 1. データベースを、そのまま pandas で読む</span>
+<span class="cmt">#    （CSVに書き出さなくてもよい）</span>
+<span class="cmt"># ------------------------------------</span>
+conn = sqlite3.<span class="fn">connect</span>(<span class="str">'player_logs.db'</span>)
+
+gaze = pd.<span class="fn">read_sql_query</span>(<span class="str">'SELECT * FROM gaze_logs'</span>, conn)
+moves = pd.<span class="fn">read_sql_query</span>(<span class="str">'SELECT * FROM player_logs'</span>, conn)
+
+conn.<span class="fn">close</span>()
+
+<span class="kw">print</span>(<span class="str">'注視ログ:'</span>, <span class="fn">len</span>(gaze), <span class="str">'件'</span>)
+<span class="kw">print</span>(<span class="str">'移動ログ:'</span>, <span class="fn">len</span>(moves), <span class="str">'件'</span>)
+<span class="kw">print</span>(gaze.<span class="fn">head</span>())
+
+<span class="cmt"># ------------------------------------</span>
+<span class="cmt"># 1.5 前処理：入室直後、原点（0,0）で</span>
+<span class="cmt">#     止まったままの行を捨てる</span>
+<span class="cmt">#     （残すと「原点が大人気」というウソの結果になる）</span>
+<span class="cmt"># ------------------------------------</span>
+moves = moves[~((moves[<span class="str">'x'</span>] == <span class="num">0</span>) &amp; (moves[<span class="str">'z'</span>] == <span class="num">0</span>))]
+<span class="kw">print</span>(<span class="str">'原点を除いた移動ログ:'</span>, <span class="fn">len</span>(moves), <span class="str">'件'</span>)
+
+<span class="cmt"># ------------------------------------</span>
+<span class="cmt"># 2. 人気の作品ランキング（合計注視時間）</span>
+<span class="cmt"># ------------------------------------</span>
+ranking = (gaze.<span class="fn">groupby</span>(<span class="str">'object_name'</span>)[<span class="str">'duration_ms'</span>]
+                .<span class="fn">agg</span>([<span class="str">'count'</span>, <span class="str">'sum'</span>, <span class="str">'mean'</span>])
+                .<span class="fn">rename</span>(columns={<span class="str">'count'</span>: <span class="str">'見られた回数'</span>,
+                                 <span class="str">'sum'</span>: <span class="str">'合計注視時間'</span>,
+                                 <span class="str">'mean'</span>: <span class="str">'平均注視時間'</span>}))
+
+ranking[<span class="str">'合計注視時間'</span>] = ranking[<span class="str">'合計注視時間'</span>] / <span class="num">1000</span>
+ranking[<span class="str">'平均注視時間'</span>] = ranking[<span class="str">'平均注視時間'</span>] / <span class="num">1000</span>
+ranking = ranking.<span class="fn">sort_values</span>(<span class="str">'合計注視時間'</span>, ascending=<span class="kw">False</span>)
+
+<span class="kw">print</span>()
+<span class="kw">print</span>(ranking)
+
+<span class="cmt"># ------------------------------------</span>
+<span class="cmt"># 3. グラフにする</span>
+<span class="cmt"># ------------------------------------</span>
+fig, axes = plt.<span class="fn">subplots</span>(<span class="num">1</span>, <span class="num">2</span>, figsize=(<span class="num">11</span>, <span class="num">4.2</span>))
+
+<span class="cmt"># 左：作品ごとの合計注視時間</span>
+axes[<span class="num">0</span>].<span class="fn">bar</span>(ranking.index, ranking[<span class="str">'合計注視時間'</span>], color=<span class="str">'#4FC3F7'</span>)
+axes[<span class="num">0</span>].<span class="fn">set_title</span>(<span class="str">'作品ごとの合計注視時間'</span>)
+axes[<span class="num">0</span>].<span class="fn">set_ylabel</span>(<span class="str">'秒'</span>)
+
+<span class="cmt"># 右：人がよくいた場所（真上から見たヒートマップ）</span>
+heat = axes[<span class="num">1</span>].<span class="fn">hist2d</span>(moves[<span class="str">'x'</span>], moves[<span class="str">'z'</span>], bins=<span class="num">30</span>, cmap=<span class="str">'YlOrRd'</span>)
+fig.<span class="fn">colorbar</span>(heat[<span class="num">3</span>], ax=axes[<span class="num">1</span>], label=<span class="str">'いた回数'</span>)
+axes[<span class="num">1</span>].<span class="fn">set_title</span>(<span class="str">'人がよくいた場所（真上から）'</span>)
+axes[<span class="num">1</span>].<span class="fn">set_xlabel</span>(<span class="str">'x'</span>)
+axes[<span class="num">1</span>].<span class="fn">set_ylabel</span>(<span class="str">'z'</span>)
+axes[<span class="num">1</span>].<span class="fn">invert_yaxis</span>()
+
+plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">savefig</span>(<span class="str">'result.png'</span>, dpi=<span class="num">120</span>)
+<span class="kw">print</span>()
+<span class="kw">print</span>(<span class="str">'result.png を保存しました'</span>)</pre>
+      <p style="margin:0.9rem 0 0.4rem;font-weight:700;color:#4FC3F7;font-size:0.95rem">実行する</p>
+      <pre><span class="code-label">Terminal</span><span class="cmt"># (.venv) が出ていることを確認してから</span>
+python analyze.py</pre>
+
+      <figure class="exec-shot">
+        <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">analyze.py の出力 — result.png</span></div>
+        <img src="img/md2w7_analyze.png" alt="2枚並んだグラフ。左は作品ごとの合計注視時間の棒グラフで、作品Bが約99秒と最も長く、作品A約64秒、作品C約34秒と続く。右は人がよくいた場所を真上から見たヒートマップで、3つの作品の前あたりが濃く色づいている">
+        <figcaption class="exec-cap"><strong>出てくるもの:</strong> 左＝<strong>作品ごとの合計注視時間</strong>（人気ランキング）、右＝<strong>人がよくいた場所</strong>のヒートマップ。作品の正面が濃くなっており、<strong>「人は作品の前で立ち止まる」</strong>ことがデータで見えている。<span style="color:#888">（動作確認のため自動操作で集めたデータの例）</span></figcaption>
+      </figure>
+
+      <div class="callout-warning" style="margin-top:0.6rem">
+        <h4>前処理を忘れると、ウソの結果になる</h4>
+        <p style="font-size:0.9rem;margin-bottom:0">上のコードで <strong>原点 <code>(0, 0)</code> の行を捨てている</strong>のには理由がある。全員が<strong>入室直後に原点で止まっている</strong>ため、そのまま集計すると<strong>「原点がいちばん人気の場所」</strong>という結果になってしまう。<br>第5回でやった<strong>前処理</strong>そのもの ── <strong>「そのデータは、本当に人の行動を表しているか？」</strong>を必ず疑うこと。</p>
+      </div>
+
+      <div class="callout-tip" style="margin-top:0.6rem">
+        <h4>ここから広げられる分析（レポート用）</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><strong>人気ランキング：</strong>合計注視時間・平均注視時間・見られた回数（3つは別の意味を持つ。「短く何度も見られる作品」と「長くじっくり見られる作品」は違う）</li>
+          <li><strong>鑑賞の順番：</strong><code>start_time</code> で並べ替えて、人ごとに「最初に見たもの→次に見たもの」を並べる</li>
+          <li><strong>立ち位置：</strong><code>x, z</code> と作品の座標から距離を計算し、<strong>近くで見る人／遠くから見る人</strong>を比べる</li>
+          <li><strong>第6回につなぐ：</strong>「作品Aと作品Bで平均注視時間に差はあるか」を<strong>マン・ホイットニーのU検定</strong>にかける</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 5: HINT 3 ============ -->
+<section id="sec-hint3">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">5</div>
+      <h2>ヒント③ ― 「行動データ」も記録する空間（ボタン・クリック・接近）</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>何を足すのか：起きたことを、なんでも1つの表に入れる</h3></div>
+      <p style="margin-bottom:0.6rem">ヒント①は「どこに居たか」、ヒント②は「何を見たか」。ここでは<strong>「何をしたか」</strong>を記録する。しかも<strong>種類が増えても表を増やさない</strong>作り方をする。</p>
+      <ul class="point-list" style="margin-bottom:0.8rem">
+        <li><strong>アクションボタンを押した</strong> ─ 画面下のボタン、またはキーボード（E / R）</li>
+        <li><strong>オブジェクトをクリックした</strong> ─ 画面中心の円を合わせてクリック</li>
+        <li><strong>誰かに近づいた／離れた</strong> ─ <strong>サーバが0.5秒ごとに全員の距離を測って</strong>自動で記録（一緒にいた時間つき）</li>
+        <li>おまけで <strong>入室・退室</strong>も記録する（滞在時間の計算に使える）</li>
+      </ul>
+
+      <div class="exec-pair">
+        <figure class="exec-shot">
+          <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">① 相手が「手をふる」を押したところ</span></div>
+          <img src="img/md2w7_h3_action.png" alt="緑のアバターが目の前に立ち、その頭上に赤い球の印が出ている。画面上部の黒い帯に「だれかが「手をふる」」と表示され、画面下には「手をふる（E）」「拍手する（R）」の2つの青いボタンが並んでいる">
+          <figcaption class="exec-cap"><strong>行動が見える:</strong> 画面上部に<strong>日本語の知らせ</strong>、3D空間では<strong>相手の頭上に赤い印</strong>。同時にサーバ側で <code>event_logs</code> に1行入る。</figcaption>
+        </figure>
+        <figure class="exec-shot">
+          <div class="exec-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="u">② スイッチをクリックする直前</span></div>
+          <img src="img/md2w7_h3_click.png" alt="赤い立方体のスイッチの中央に水色の円のカーソルが重なっている。右奥には青いスイッチも見える">
+          <figcaption class="exec-cap"><strong>クリック:</strong> 円をオブジェクトに合わせてクリックすると、<strong>どのオブジェクトを押したか</strong>が名前つきで記録される。</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>表の設計：<code>event_logs</code> ひとつで全部まかなう</h3></div>
+      <p style="margin-bottom:0.5rem">行動の種類ごとに表を作ると、<strong>新しい行動を思いつくたびに表が増えて</strong>分析が大変になる。そこで<strong>「何が起きたか」を列の値で表す</strong>。実務のイベントログでも定番の設計。</p>
+      <pre><span class="code-label">SQL ── event_logs</span><span class="kw">CREATE TABLE IF NOT EXISTS</span> event_logs(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    player_id TEXT,
+    time TEXT,
+    event_type TEXT,   <span class="cmt">-- 何が起きたか（"手をふる" "接近" "クリック" …）</span>
+    target TEXT,       <span class="cmt">-- 相手・対象（相手のID、押したオブジェクト名 …）</span>
+    x REAL, y REAL, z REAL,
+    value REAL         <span class="cmt">-- 数値の付加情報（距離、一緒にいた時間 …）</span>
+)</pre>
+      <table style="font-size:0.86rem">
+        <tr><th style="width:16%"><code>event_type</code></th><th style="width:26%"><code>target</code></th><th style="width:22%"><code>value</code></th><th>いつ記録されるか</th></tr>
+        <tr><td><code>入室</code> / <code>退室</code></td><td>（空）</td><td>0</td><td>接続・切断したとき</td></tr>
+        <tr><td><code>手をふる</code> / <code>拍手する</code></td><td>（空）</td><td>0</td><td>ボタン or キーを押したとき</td></tr>
+        <tr><td><code>クリック</code></td><td>押したオブジェクト名</td><td>0</td><td>円を合わせてクリックしたとき</td></tr>
+        <tr><td><code>接近</code></td><td>相手の <code>player_id</code></td><td><strong>そのときの距離（m）</strong></td><td>2人の距離が3m未満になった瞬間</td></tr>
+        <tr><td><code>離脱</code></td><td>相手の <code>player_id</code></td><td><strong>一緒にいた時間（ミリ秒）</strong></td><td>2人の距離が3m以上に離れた瞬間</td></tr>
+      </table>
+      <div class="callout-warning" style="margin-top:0.6rem">
+        <h4><code>value</code> の意味は <code>event_type</code> によって変わる</h4>
+        <p style="font-size:0.9rem;margin-bottom:0">上の表のとおり、<code>接近</code> のときは<strong>距離</strong>、<code>離脱</code> のときは<strong>時間</strong>が入る。1つの列を使い回すのは便利だが、<strong>意味を表にして書き残さないと、後で自分でも分からなくなる</strong>。<strong>レポートの「取得データ」の項目に、必ずこの対応表を書くこと。</strong></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>足すコード①：イベントを1件保存する関数（サーバ）</h3></div>
+      <p style="margin-bottom:0.5rem">同じ <code>INSERT</code> を何度も書かないように、<strong>関数にまとめておく</strong>。あとは何か起きるたびにこれを呼ぶだけ。</p>
+      <pre><span class="code-label">JavaScript ── server.js</span><span class="cmt">// ★ イベントを1件保存する関数（これを何回も呼ぶ）</span>
+<span class="kw">function</span> <span class="fn">saveEvent</span>(player, eventType, target, value) {
+
+    db.<span class="fn">run</span>(
+        <span class="str">`INSERT INTO event_logs
+        (player_id, time, event_type, target, x, y, z, value)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`</span>,
+        [
+            player.id,
+            <span class="kw">new</span> <span class="fn">Date</span>().<span class="fn">toISOString</span>(),
+            eventType,
+            target,
+            player.position.x,
+            player.position.y,
+            player.position.z,
+            value
+        ]
+    );
+
+    console.<span class="fn">log</span>(<span class="str">"イベント :"</span>, eventType, target, value);
+}</pre>
+      <div class="callout-tip" style="margin-top:0.5rem">
+        <h4>自分の作品に行動を足すのは、たった1行</h4>
+        <p style="font-size:0.9rem;margin-bottom:0">たとえば「商品をカゴに入れた」を記録したいなら <code>saveEvent(player, "カゴに入れる", "りんご", 150)</code> と呼ぶだけ。<strong>表も分析コードも変えなくていい</strong> ── これがこの設計のうまみ。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>足すコード②：アクションボタン（クライアント）</h3></div>
+      <p style="margin-bottom:0.5rem">ボタンは <strong>3D空間の中ではなく HTML として画面に重ねる</strong>。そのほうが作りやすく、<strong>日本語も表示できる</strong>。</p>
+      <pre><span class="code-label">HTML ── 画面に重ねるボタン</span><span class="kw">&lt;div</span> id=<span class="str">"actionBar"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;button</span> data-action=<span class="str">"手をふる"</span><span class="kw">&gt;</span>👋 手をふる（E）<span class="kw">&lt;/button&gt;</span>
+    <span class="kw">&lt;button</span> data-action=<span class="str">"拍手する"</span><span class="kw">&gt;</span>👏 拍手する（R）<span class="kw">&lt;/button&gt;</span>
+<span class="kw">&lt;/div&gt;</span></pre>
+      <pre><span class="code-label">JavaScript ── ボタンとキーボード</span><span class="cmt">// ★ アクションを送る</span>
+<span class="kw">function</span> <span class="fn">doAction</span>(action) {
+    socket.<span class="fn">emit</span>(<span class="str">'行動した'</span>, { action: action });
+}
+
+<span class="cmt">// ボタンを押したとき</span>
+document.<span class="fn">querySelectorAll</span>(<span class="str">'#actionBar button'</span>).<span class="fn">forEach</span>((button) <span class="op">=&gt;</span> {
+    button.<span class="fn">addEventListener</span>(<span class="str">'click'</span>, () <span class="op">=&gt;</span> {
+        <span class="fn">doAction</span>(button.dataset.action);
+        <span class="cmt">// ボタンにフォーカスが残るとWASDが効かなくなるので外す</span>
+        button.<span class="fn">blur</span>();
+    });
+});
+
+<span class="cmt">// キーボードを押したとき</span>
+window.<span class="fn">addEventListener</span>(<span class="str">'keydown'</span>, (event) <span class="op">=&gt;</span> {
+    <span class="kw">if</span> (event.key === <span class="str">'e'</span> || event.key === <span class="str">'E'</span>) <span class="fn">doAction</span>(<span class="str">'手をふる'</span>);
+    <span class="kw">if</span> (event.key === <span class="str">'r'</span> || event.key === <span class="str">'R'</span>) <span class="fn">doAction</span>(<span class="str">'拍手する'</span>);
+});</pre>
+      <div class="callout-warning" style="margin-top:0.5rem">
+        <h4>3D空間の中の文字（<code>&lt;a-text&gt;</code>）に日本語は出ない</h4>
+        <p style="font-size:0.9rem;margin-bottom:0">A-Frame の標準フォントは<strong>日本語の字を持っていない</strong>ので、<code>&lt;a-text value="手をふる"&gt;</code> と書いても<strong>ほとんど表示されない</strong>（matplotlib の豆腐と同じ現象）。<br><strong>対策：</strong>日本語は<strong>HTMLとして画面に重ねる</strong>。3D空間の中では<strong>色・形・大きさ</strong>で伝える（今回は<strong>頭の上に赤い球</strong>を出している）。アルファベットや数字なら <code>&lt;a-text&gt;</code> でも表示できる。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>足すコード③：接近の検出（サーバが見張る）</h3></div>
+      <p style="margin-bottom:0.5rem">「近づいた」は<strong>クライアントでは判定しにくい</strong>（自分は相手の正確な位置を持っていない）。<strong>全員の位置を持っているサーバ</strong>が判定するのが自然。</p>
+      <pre><span class="code-label">JavaScript ── server.js</span><span class="cmt">// この距離より近ければ「接近」（単位はメートル）</span>
+<span class="kw">const</span> NEAR_DISTANCE = <span class="num">3</span>;
+
+<span class="cmt">// いま接近中のペアと、その開始時刻</span>
+<span class="kw">const</span> nearPairs = {};
+
+<span class="cmt">// 2点間の距離を求める（三平方の定理）</span>
+<span class="kw">function</span> <span class="fn">getDistance</span>(a, b) {
+    <span class="kw">const</span> dx = a.x - b.x;
+    <span class="kw">const</span> dy = a.y - b.y;
+    <span class="kw">const</span> dz = a.z - b.z;
+    <span class="kw">return</span> Math.<span class="fn">sqrt</span>(dx * dx + dy * dy + dz * dz);
+}
+
+<span class="fn">setInterval</span>(() <span class="op">=&gt;</span> {
+
+    <span class="kw">const</span> ids = Object.<span class="fn">keys</span>(players);
+
+    <span class="cmt">// すべての2人の組み合わせを調べる</span>
+    <span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; ids.length; i++) {
+        <span class="kw">for</span> (<span class="kw">let</span> j = i + <span class="num">1</span>; j &lt; ids.length; j++) {
+
+            <span class="kw">const</span> a = players[ids[i]];
+            <span class="kw">const</span> b = players[ids[j]];
+
+            <span class="cmt">// まだ位置が届いていない人は飛ばす</span>
+            <span class="kw">if</span> (!a.ready || !b.ready) <span class="kw">continue</span>;
+
+            <span class="kw">const</span> distance = <span class="fn">getDistance</span>(a.position, b.position);
+
+            <span class="cmt">// ペアの名前（順番をそろえて1つに決める）</span>
+            <span class="kw">const</span> key = [a.id, b.id].<span class="fn">sort</span>().<span class="fn">join</span>(<span class="str">"+"</span>);
+
+            <span class="kw">const</span> startedAt = nearPairs[key];
+
+            <span class="kw">if</span> (distance &lt; NEAR_DISTANCE &amp;&amp; !startedAt) {
+                <span class="cmt">// 近づいた瞬間</span>
+                nearPairs[key] = Date.<span class="fn">now</span>();
+                <span class="fn">saveEvent</span>(a, <span class="str">"接近"</span>, b.id, Math.<span class="fn">round</span>(distance * <span class="num">100</span>) / <span class="num">100</span>);
+
+            } <span class="kw">else</span> <span class="kw">if</span> (distance &gt;= NEAR_DISTANCE &amp;&amp; startedAt) {
+                <span class="cmt">// 離れた瞬間。一緒にいた時間を value に入れる</span>
+                <span class="kw">const</span> together = Date.<span class="fn">now</span>() - startedAt;
+                <span class="kw">delete</span> nearPairs[key];
+                <span class="fn">saveEvent</span>(a, <span class="str">"離脱"</span>, b.id, together);
+            }
+        }
+    }
+
+}, <span class="num">500</span>);</pre>
+      <div class="callout-info" style="margin-top:0.6rem">
+        <h4>ここに詰まっている3つの工夫（作るとき必ず必要になる）</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><strong>「状態が変わった瞬間」だけ記録する。</strong>0.5秒ごとに「近い」を記録すると、10秒一緒にいただけで20行たまる。<strong>接近した瞬間と離れた瞬間の2行</strong>にすれば、そのあいだの時間もきれいに出る</li>
+          <li><strong>ペアの名前をそろえる。</strong><code>[a.id, b.id].sort().join("+")</code> としないと、A+B と B+A が別のペアとして数えられてしまう</li>
+          <li><strong>まだ動いていない人を除く（<code>ready</code>）。</strong>全員の初期位置は原点なので、そのままだと<strong>入室した全員が必ず「接近」と記録される</strong>。クライアント側でも<strong>開始位置をばらけさせて</strong>、この偽の接近を防いでいる</li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="hint3-run" class="card" style="border-left:4px solid #4FC3F7">
+      <div class="card-header"><h3>やってみる：ヒント③を動かして、行動と接近が記録されることを確かめる</h3></div>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:0.6rem 0 0.3rem">完成版 <code>server.js</code></p>
+      <pre><span class="code-label">JavaScript ── server.js</span><span class="cmt">// ヒント3：インタラクション（行動・接近）も保存するマルチプレイ空間</span>
+
+<span class="kw">const</span> express = <span class="fn">require</span>(<span class="str">"express"</span>);
+<span class="kw">const</span> http = <span class="fn">require</span>(<span class="str">"http"</span>);
+<span class="kw">const</span> { Server } = <span class="fn">require</span>(<span class="str">"socket.io"</span>);
+<span class="kw">const</span> sqlite3 = <span class="fn">require</span>(<span class="str">"sqlite3"</span>).<span class="fn">verbose</span>();
+
+<span class="kw">const</span> app = <span class="fn">express</span>();
+<span class="kw">const</span> server = http.<span class="fn">createServer</span>(app);
+<span class="kw">const</span> io = <span class="kw">new</span> <span class="fn">Server</span>(server);
+
+app.<span class="fn">use</span>(express.<span class="fn">static</span>(<span class="str">"public"</span>));
+
+
+<span class="cmt">// ========================================</span>
+<span class="cmt">// SQLite</span>
+<span class="cmt">// ========================================</span>
+
+<span class="kw">const</span> db = <span class="kw">new</span> sqlite3.<span class="fn">Database</span>(<span class="str">"player_logs.db"</span>);
+
+<span class="cmt">// 移動ログの表（ヒント1と同じ）</span>
+db.<span class="fn">run</span>(<span class="str">`
+CREATE TABLE IF NOT EXISTS player_logs(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    player_id TEXT,
+    color TEXT,
+    time TEXT,
+    x REAL, y REAL, z REAL,
+    rx REAL, ry REAL, rz REAL
+)
+`</span>);
+
+<span class="cmt">// ★ イベントログの表（何が起きても、この1つの表に入れる）</span>
+db.<span class="fn">run</span>(<span class="str">`
+CREATE TABLE IF NOT EXISTS event_logs(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    player_id TEXT,
+    time TEXT,
+    event_type TEXT,
+    target TEXT,
+    x REAL, y REAL, z REAL,
+    value REAL
+)
+`</span>);
+
+<span class="cmt">// ★ イベントを1件保存する関数（これを何回も呼ぶ）</span>
+<span class="kw">function</span> <span class="fn">saveEvent</span>(player, eventType, target, value) {
+
+    db.<span class="fn">run</span>(
+        <span class="str">`INSERT INTO event_logs
+        (player_id, time, event_type, target, x, y, z, value)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`</span>,
+        [
+            player.id,
+            <span class="kw">new</span> <span class="fn">Date</span>().<span class="fn">toISOString</span>(),
+            eventType,
+            target,
+            player.position.x,
+            player.position.y,
+            player.position.z,
+            value
+        ]
+    );
+
+    console.<span class="fn">log</span>(<span class="str">"イベント :"</span>, eventType, target, value);
+}
+
+
+<span class="cmt">// ========================================</span>
+<span class="cmt">// プレイヤー情報</span>
+<span class="cmt">// ========================================</span>
+
+<span class="kw">const</span> players = {};
+
+<span class="kw">function</span> <span class="fn">createRandomColor</span>() {
+    <span class="kw">return</span> <span class="str">"#"</span> + Math.<span class="fn">floor</span>(Math.<span class="fn">random</span>() * <span class="num">16777215</span>)
+        .<span class="fn">toString</span>(<span class="num">16</span>).<span class="fn">padStart</span>(<span class="num">6</span>, <span class="str">"0"</span>);
+}
+
+<span class="cmt">// ★ 接近判定に使うもの（この距離より近ければ「接近」・単位はメートル）</span>
+<span class="kw">const</span> NEAR_DISTANCE = <span class="num">3</span>;
+
+<span class="cmt">// いま接近中のペアと、その開始時刻</span>
+<span class="kw">const</span> nearPairs = {};
+
+
+io.<span class="fn">on</span>(<span class="str">"connection"</span>, (socket) <span class="op">=&gt;</span> {
+
+    console.<span class="fn">log</span>(<span class="str">"接続 :"</span>, socket.id);
+
+    players[socket.id] = {
+        id: socket.id,
+        color: <span class="fn">createRandomColor</span>(),
+        position: { x: <span class="num">0</span>, y: <span class="num">1.6</span>, z: <span class="num">0</span> },
+        rotation: { x: <span class="num">0</span>, y: <span class="num">0</span>, z: <span class="num">0</span> },
+
+        <span class="cmt">// ★ まだ一度も位置が届いていない（全員が原点にいる扱いなので接近判定しない）</span>
+        ready: <span class="kw">false</span>,
+
+        logs: []
+    };
+
+    socket.<span class="fn">emit</span>(<span class="str">"自分の情報"</span>, players[socket.id]);
+    socket.<span class="fn">emit</span>(<span class="str">"プレイヤー一覧"</span>, Object.<span class="fn">values</span>(players));
+    socket.broadcast.<span class="fn">emit</span>(<span class="str">"他者が入室した"</span>, players[socket.id]);
+
+    <span class="cmt">// 入室そのものもイベントとして残す</span>
+    <span class="fn">saveEvent</span>(players[socket.id], <span class="str">"入室"</span>, <span class="str">""</span>, <span class="num">0</span>);
+
+
+    <span class="cmt">// ====================================</span>
+    <span class="cmt">// プレイヤーが移動した（ヒント1と同じ）</span>
+    <span class="cmt">// ====================================</span>
+
+    socket.<span class="fn">on</span>(<span class="str">"自分が移動した"</span>, (data) <span class="op">=&gt;</span> {
+
+        <span class="kw">const</span> player = players[socket.id];
+        <span class="kw">if</span> (!player) <span class="kw">return</span>;
+
+        player.position = data.position;
+        player.rotation = data.rotation;
+        player.ready = <span class="kw">true</span>;
+
+        player.logs.<span class="fn">push</span>({
+            time: <span class="kw">new</span> <span class="fn">Date</span>().<span class="fn">toISOString</span>(),
+            x: player.position.x,
+            y: player.position.y,
+            z: player.position.z,
+            rx: player.rotation.x,
+            ry: player.rotation.y,
+            rz: player.rotation.z
+        });
+
+        socket.broadcast.<span class="fn">emit</span>(<span class="str">"他者が移動した"</span>, player);
+    });
+
+
+    <span class="cmt">// ====================================</span>
+    <span class="cmt">// ★ アクションボタンが押された</span>
+    <span class="cmt">// ====================================</span>
+
+    socket.<span class="fn">on</span>(<span class="str">"行動した"</span>, (data) <span class="op">=&gt;</span> {
+
+        <span class="kw">const</span> player = players[socket.id];
+        <span class="kw">if</span> (!player) <span class="kw">return</span>;
+
+        <span class="fn">saveEvent</span>(player, data.action, data.target || <span class="str">""</span>, <span class="num">0</span>);
+
+        <span class="cmt">// 他の人の画面にも見せる</span>
+        socket.broadcast.<span class="fn">emit</span>(<span class="str">"他者が行動した"</span>, {
+            id: player.id,
+            action: data.action
+        });
+    });
+
+
+    <span class="cmt">// ====================================</span>
+    <span class="cmt">// ★ オブジェクトがクリックされた</span>
+    <span class="cmt">// ====================================</span>
+
+    socket.<span class="fn">on</span>(<span class="str">"クリックした"</span>, (data) <span class="op">=&gt;</span> {
+
+        <span class="kw">const</span> player = players[socket.id];
+        <span class="kw">if</span> (!player) <span class="kw">return</span>;
+
+        <span class="fn">saveEvent</span>(player, <span class="str">"クリック"</span>, data.object_name, <span class="num">0</span>);
+    });
+
+
+    <span class="cmt">// ====================================</span>
+    <span class="cmt">// プレイヤーが退出した</span>
+    <span class="cmt">// ====================================</span>
+
+    socket.<span class="fn">on</span>(<span class="str">"disconnect"</span>, () <span class="op">=&gt;</span> {
+
+        console.<span class="fn">log</span>(<span class="str">"切断 :"</span>, socket.id);
+
+        <span class="kw">const</span> player = players[socket.id];
+
+        <span class="kw">if</span> (player) {
+
+            <span class="fn">saveEvent</span>(player, <span class="str">"退室"</span>, <span class="str">""</span>, <span class="num">0</span>);
+
+            player.logs.<span class="fn">forEach</span>(log <span class="op">=&gt;</span> {
+                db.<span class="fn">run</span>(
+                    <span class="str">`INSERT INTO player_logs
+                    (player_id, color, time, x, y, z, rx, ry, rz)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`</span>,
+                    [
+                        player.id, player.color, log.time,
+                        log.x, log.y, log.z,
+                        log.rx, log.ry, log.rz
+                    ]
+                );
+            });
+        }
+
+        <span class="kw">delete</span> players[socket.id];
+
+        <span class="cmt">// 接近中だったペアの記録を消す</span>
+        Object.<span class="fn">keys</span>(nearPairs).<span class="fn">forEach</span>(key <span class="op">=&gt;</span> {
+            <span class="kw">if</span> (key.<span class="fn">includes</span>(socket.id)) <span class="kw">delete</span> nearPairs[key];
+        });
+
+        io.<span class="fn">emit</span>(<span class="str">"他者がいなくなった"</span>, socket.id);
+    });
+
+});
+
+
+<span class="cmt">// ========================================</span>
+<span class="cmt">// ★ 接近の検出（サーバが 0.5 秒ごとに見張る）</span>
+<span class="cmt">// ========================================</span>
+
+<span class="cmt">// 2点間の距離を求める（三平方の定理）</span>
+<span class="kw">function</span> <span class="fn">getDistance</span>(a, b) {
+    <span class="kw">const</span> dx = a.x - b.x;
+    <span class="kw">const</span> dy = a.y - b.y;
+    <span class="kw">const</span> dz = a.z - b.z;
+    <span class="kw">return</span> Math.<span class="fn">sqrt</span>(dx * dx + dy * dy + dz * dz);
+}
+
+<span class="fn">setInterval</span>(() <span class="op">=&gt;</span> {
+
+    <span class="kw">const</span> ids = Object.<span class="fn">keys</span>(players);
+
+    <span class="cmt">// すべての2人の組み合わせを調べる</span>
+    <span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; ids.length; i++) {
+        <span class="kw">for</span> (<span class="kw">let</span> j = i + <span class="num">1</span>; j &lt; ids.length; j++) {
+
+            <span class="kw">const</span> a = players[ids[i]];
+            <span class="kw">const</span> b = players[ids[j]];
+
+            <span class="cmt">// まだ位置が届いていない人は飛ばす</span>
+            <span class="kw">if</span> (!a.ready || !b.ready) <span class="kw">continue</span>;
+
+            <span class="kw">const</span> distance = <span class="fn">getDistance</span>(a.position, b.position);
+
+            <span class="cmt">// ペアの名前（順番をそろえて1つに決める）</span>
+            <span class="kw">const</span> key = [a.id, b.id].<span class="fn">sort</span>().<span class="fn">join</span>(<span class="str">"+"</span>);
+
+            <span class="kw">const</span> startedAt = nearPairs[key];
+
+            <span class="kw">if</span> (distance &lt; NEAR_DISTANCE &amp;&amp; !startedAt) {
+                <span class="cmt">// 近づいた瞬間</span>
+                nearPairs[key] = Date.<span class="fn">now</span>();
+                <span class="fn">saveEvent</span>(a, <span class="str">"接近"</span>, b.id, Math.<span class="fn">round</span>(distance * <span class="num">100</span>) / <span class="num">100</span>);
+
+            } <span class="kw">else</span> <span class="kw">if</span> (distance &gt;= NEAR_DISTANCE &amp;&amp; startedAt) {
+                <span class="cmt">// 離れた瞬間。一緒にいた時間を value に入れる</span>
+                <span class="kw">const</span> together = Date.<span class="fn">now</span>() - startedAt;
+                <span class="kw">delete</span> nearPairs[key];
+                <span class="fn">saveEvent</span>(a, <span class="str">"離脱"</span>, b.id, together);
+            }
+        }
+    }
+
+}, <span class="num">500</span>);
+
+
+<span class="kw">const</span> PORT = <span class="num">3000</span>;
+
+server.<span class="fn">listen</span>(PORT, () <span class="op">=&gt;</span> {
+    console.<span class="fn">log</span>(<span class="str">`http://localhost:${PORT}`</span>);
+});</pre>
+
+      <p style="font-weight:700;color:#4FC3F7;font-size:0.95rem;margin:1.1rem 0 0.3rem">完成版 <code>public/index.html</code></p>
+      <pre><span class="code-label">HTML ── public/index.html</span><span class="kw">&lt;!DOCTYPE html&gt;</span>
+<span class="kw">&lt;html lang=</span><span class="str">"ja"</span><span class="kw">&gt;</span>
+<span class="kw">&lt;head&gt;</span>
+    <span class="kw">&lt;meta charset=</span><span class="str">"UTF-8"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;title&gt;</span>インタラクションを記録する空間<span class="kw">&lt;/title&gt;</span>
+    <span class="kw">&lt;script src=</span><span class="str">"https://aframe.io/releases/1.7.1/aframe.min.js"</span><span class="kw">&gt;</span><span class="kw">&lt;/script&gt;</span>
+    <span class="kw">&lt;script src=</span><span class="str">"/socket.io/socket.io.js"</span><span class="kw">&gt;</span><span class="kw">&lt;/script&gt;</span>
+    <span class="kw">&lt;style&gt;</span>
+        /* ★ 画面の上に重ねるアクションボタン */
+        #actionBar {
+            position: fixed;
+            left: 0; right: 0; bottom: 20px;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        #actionBar button {
+            font-family: sans-serif;
+            font-size: 16px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #4FC3F7;
+            color: #fff;
+            cursor: pointer;
+        }
+        #actionBar button:hover { background: #039BE5; }
+
+        /* ★ 他の人の行動を知らせる帯 */
+        #toast {
+            position: fixed;
+            top: 20px; left: 0; right: 0;
+            z-index: 10;
+            text-align: center;
+            font-family: sans-serif;
+            font-size: 18px;
+            color: #fff;
+            pointer-events: none;
+        }
+        #toast span {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 16px;
+            border-radius: 100px;
+        }
+    <span class="kw">&lt;/style&gt;</span>
+<span class="kw">&lt;/head&gt;</span>
+
+<span class="kw">&lt;body&gt;</span>
+    <span class="kw">&lt;a-scene&gt;</span>
+        <span class="kw">&lt;a-plane position=</span><span class="str">"0 0 0"</span><span class="kw"> rotation=</span><span class="str">"-90 0 0"</span><span class="kw">
+                 width=</span><span class="str">"30"</span><span class="kw"> height=</span><span class="str">"30"</span><span class="kw"> color=</span><span class="str">"#7BC8A4"</span><span class="kw">&gt;</span><span class="kw">&lt;/a-plane&gt;</span>
+        <span class="kw">&lt;a-sky color=</span><span class="str">"#ECECEC"</span><span class="kw">&gt;</span><span class="kw">&lt;/a-sky&gt;</span>
+
+        <span class="cmt">&lt;!-- ★ クリックできるオブジェクト --&gt;</span>
+        <span class="kw">&lt;a-box class=</span><span class="str">"clickable"</span><span class="kw"> data-name=</span><span class="str">"赤いスイッチ"</span><span class="kw">
+               position=</span><span class="str">"-3 1.6 -5"</span><span class="kw"> color=</span><span class="str">"#E74C3C"</span><span class="kw">&gt;</span><span class="kw">&lt;/a-box&gt;</span>
+        <span class="kw">&lt;a-box class=</span><span class="str">"clickable"</span><span class="kw"> data-name=</span><span class="str">"青いスイッチ"</span><span class="kw">
+               position=</span><span class="str">"3 1.6 -5"</span><span class="kw"> color=</span><span class="str">"#3498DB"</span><span class="kw">&gt;</span><span class="kw">&lt;/a-box&gt;</span>
+
+        <span class="kw">&lt;a-camera id=</span><span class="str">"camera"</span><span class="kw"> position=</span><span class="str">"0 1.6 0"</span><span class="kw"> wasd-controls look-controls&gt;</span>
+            <span class="kw">&lt;a-cursor fuse=</span><span class="str">"false"</span><span class="kw"> color=</span><span class="str">"#4FC3F7"</span><span class="kw">
+                      raycaster=</span><span class="str">"objects: .clickable; far: 30"</span><span class="kw">&gt;</span><span class="kw">&lt;/a-cursor&gt;</span>
+        <span class="kw">&lt;/a-camera&gt;</span>
+    <span class="kw">&lt;/a-scene&gt;</span>
+
+    <span class="cmt">&lt;!-- ★ アクションボタン（HTMLとして画面に重ねる） --&gt;</span>
+    <span class="kw">&lt;div id=</span><span class="str">"actionBar"</span><span class="kw">&gt;</span>
+        <span class="kw">&lt;button data-action=</span><span class="str">"手をふる"</span><span class="kw">&gt;</span>👋 手をふる（E）<span class="kw">&lt;/button&gt;</span>
+        <span class="kw">&lt;button data-action=</span><span class="str">"拍手する"</span><span class="kw">&gt;</span>👏 拍手する（R）<span class="kw">&lt;/button&gt;</span>
+    <span class="kw">&lt;/div&gt;</span>
+
+    <span class="cmt">&lt;!-- ★ 他の人の行動を知らせる帯 --&gt;</span>
+    <span class="kw">&lt;div id=</span><span class="str">"toast"</span><span class="kw">&gt;</span><span class="kw">&lt;/div&gt;</span>
+
+    <span class="kw">&lt;script&gt;</span>
+        <span class="kw">const</span> socket = <span class="fn">io</span>();
+        <span class="kw">const</span> scene = document.<span class="fn">querySelector</span>(<span class="str">'a-scene'</span>);
+        <span class="kw">const</span> camera = document.<span class="fn">querySelector</span>(<span class="str">'#camera'</span>);
+
+        <span class="cmt">// ================================</span>
+        <span class="cmt">// ★ 開始位置をばらけさせる</span>
+        <span class="cmt">//    全員が同じ場所に出ると、開始直後に必ず</span>
+        <span class="cmt">//    「接近」が記録されてしまうため</span>
+        <span class="cmt">// ================================</span>
+        camera.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, {
+            x: (Math.<span class="fn">random</span>() - <span class="num">0.5</span>) * <span class="num">12</span>,
+            y: <span class="num">1.6</span>,
+            z: (Math.<span class="fn">random</span>() - <span class="num">0.5</span>) * <span class="num">12</span>
+        });
+
+        <span class="cmt">// ================================</span>
+        <span class="cmt">// 位置と向きを送る（ヒント1と同じ）</span>
+        <span class="cmt">// ================================</span>
+        <span class="fn">setInterval</span>(() <span class="op">=&gt;</span> {
+            <span class="kw">if</span> (!socket.connected) <span class="kw">return</span>;
+            socket.<span class="fn">emit</span>(<span class="str">'自分が移動した'</span>, {
+                position: camera.<span class="fn">getAttribute</span>(<span class="str">'position'</span>),
+                rotation: camera.<span class="fn">getAttribute</span>(<span class="str">'rotation'</span>)
+            });
+        }, <span class="num">100</span>);
+
+        <span class="cmt">// ================================</span>
+        <span class="cmt">// ★ アクションを送る</span>
+        <span class="cmt">// ================================</span>
+        <span class="kw">function</span> <span class="fn">doAction</span>(action) {
+            socket.<span class="fn">emit</span>(<span class="str">'行動した'</span>, { action: action });
+            console.<span class="fn">log</span>(<span class="str">'行動 :'</span>, action);
+        }
+
+        <span class="cmt">// ボタンを押したとき</span>
+        document.<span class="fn">querySelectorAll</span>(<span class="str">'#actionBar button'</span>).<span class="fn">forEach</span>((button) <span class="op">=&gt;</span> {
+            button.<span class="fn">addEventListener</span>(<span class="str">'click'</span>, () <span class="op">=&gt;</span> {
+                <span class="fn">doAction</span>(button.dataset.action);
+                <span class="cmt">// ボタンにフォーカスが残るとWASDが効かなくなるので外す</span>
+                button.<span class="fn">blur</span>();
+            });
+        });
+
+        <span class="cmt">// キーボードを押したとき</span>
+        window.<span class="fn">addEventListener</span>(<span class="str">'keydown'</span>, (event) <span class="op">=&gt;</span> {
+            <span class="kw">if</span> (event.key === <span class="str">'e'</span> || event.key === <span class="str">'E'</span>) <span class="fn">doAction</span>(<span class="str">'手をふる'</span>);
+            <span class="kw">if</span> (event.key === <span class="str">'r'</span> || event.key === <span class="str">'R'</span>) <span class="fn">doAction</span>(<span class="str">'拍手する'</span>);
+        });
+
+        <span class="cmt">// ================================</span>
+        <span class="cmt">// ★ オブジェクトをクリックしたとき</span>
+        <span class="cmt">// ================================</span>
+        document.<span class="fn">querySelectorAll</span>(<span class="str">'.clickable'</span>).<span class="fn">forEach</span>((object) <span class="op">=&gt;</span> {
+            object.<span class="fn">addEventListener</span>(<span class="str">'click'</span>, () <span class="op">=&gt;</span> {
+                socket.<span class="fn">emit</span>(<span class="str">'クリックした'</span>, {
+                    object_name: object.dataset.name
+                });
+                console.<span class="fn">log</span>(<span class="str">'クリック :'</span>, object.dataset.name);
+
+                <span class="cmt">// 押した合図に、少しだけ小さくする</span>
+                object.<span class="fn">setAttribute</span>(<span class="str">'scale'</span>, <span class="str">'0.8 0.8 0.8'</span>);
+                <span class="fn">setTimeout</span>(() <span class="op">=&gt;</span> {
+                    object.<span class="fn">setAttribute</span>(<span class="str">'scale'</span>, <span class="str">'1 1 1'</span>);
+                }, <span class="num">200</span>);
+            });
+        });
+
+        <span class="cmt">// ================================</span>
+        <span class="cmt">// ★ 他の人の行動を、画面に知らせる</span>
+        <span class="cmt">//    （A-Frameの a-text は日本語フォントを持っていないので、</span>
+        <span class="cmt">//      日本語の文字は HTML 側に出す）</span>
+        <span class="cmt">// ================================</span>
+        <span class="kw">const</span> toast = document.<span class="fn">getElementById</span>(<span class="str">'toast'</span>);
+
+        socket.<span class="fn">on</span>(<span class="str">'他者が行動した'</span>, (data) <span class="op">=&gt;</span> {
+
+            <span class="cmt">// ① 画面の上に文字で出す</span>
+            toast.innerHTML = <span class="str">'&lt;span&gt;だれかが「'</span> + data.action + <span class="str">'」&lt;/span&gt;'</span>;
+            <span class="fn">setTimeout</span>(() <span class="op">=&gt;</span> { toast.innerHTML = <span class="str">''</span>; }, <span class="num">2000</span>);
+
+            <span class="cmt">// ② 3D空間では、その人の頭の上に印を出す</span>
+            <span class="kw">const</span> playerEntity = document.<span class="fn">getElementById</span>(<span class="str">'player-'</span> + data.id);
+            <span class="kw">if</span> (!playerEntity) <span class="kw">return</span>;
+
+            <span class="kw">const</span> mark = document.<span class="fn">createElement</span>(<span class="str">'a-sphere'</span>);
+            mark.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, <span class="str">'0 0.7 0'</span>);
+            mark.<span class="fn">setAttribute</span>(<span class="str">'radius'</span>, <span class="num">0.15</span>);
+            mark.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, <span class="str">'#E74C3C'</span>);
+            playerEntity.<span class="fn">appendChild</span>(mark);
+
+            <span class="fn">setTimeout</span>(() <span class="op">=&gt;</span> mark.<span class="fn">remove</span>(), <span class="num">2000</span>);
+        });
+
+        <span class="cmt">// ================================</span>
+        <span class="cmt">// 他プレイヤーの表示（ヒント1と同じ）</span>
+        <span class="cmt">// ================================</span>
+        <span class="kw">function</span> <span class="fn">createPlayer</span>(player) {
+            <span class="kw">if</span> (player.id === socket.id) <span class="kw">return</span>;
+            <span class="kw">if</span> (document.<span class="fn">getElementById</span>(<span class="str">'player-'</span> + player.id)) <span class="kw">return</span>;
+
+            <span class="kw">const</span> playerEntity = document.<span class="fn">createElement</span>(<span class="str">'a-entity'</span>);
+            playerEntity.<span class="fn">setAttribute</span>(<span class="str">'id'</span>, <span class="str">'player-'</span> + player.id);
+            playerEntity.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, player.position);
+            playerEntity.<span class="fn">setAttribute</span>(<span class="str">'rotation'</span>, { x: <span class="num">0</span>, y: player.rotation.y, z: <span class="num">0</span> });
+
+            <span class="kw">const</span> head = document.<span class="fn">createElement</span>(<span class="str">'a-sphere'</span>);
+            head.<span class="fn">setAttribute</span>(<span class="str">'radius'</span>, <span class="num">0.25</span>);
+            head.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, player.color);
+
+            <span class="kw">const</span> body = document.<span class="fn">createElement</span>(<span class="str">'a-cylinder'</span>);
+            body.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, { x: <span class="num">0</span>, y: -<span class="num">0.8</span>, z: <span class="num">0</span> });
+            body.<span class="fn">setAttribute</span>(<span class="str">'radius'</span>, <span class="num">0.3</span>);
+            body.<span class="fn">setAttribute</span>(<span class="str">'height'</span>, <span class="num">1.2</span>);
+            body.<span class="fn">setAttribute</span>(<span class="str">'color'</span>, player.color);
+
+            playerEntity.<span class="fn">appendChild</span>(head);
+            playerEntity.<span class="fn">appendChild</span>(body);
+            scene.<span class="fn">appendChild</span>(playerEntity);
+        }
+
+        <span class="kw">function</span> <span class="fn">updatePlayer</span>(player) {
+            <span class="kw">if</span> (player.id === socket.id) <span class="kw">return</span>;
+            <span class="kw">const</span> playerEntity = document.<span class="fn">getElementById</span>(<span class="str">'player-'</span> + player.id);
+            <span class="kw">if</span> (!playerEntity) { <span class="fn">createPlayer</span>(player); <span class="kw">return</span>; }
+            playerEntity.<span class="fn">setAttribute</span>(<span class="str">'position'</span>, player.position);
+            playerEntity.<span class="fn">setAttribute</span>(<span class="str">'rotation'</span>, { x: <span class="num">0</span>, y: player.rotation.y, z: <span class="num">0</span> });
+        }
+
+        socket.<span class="fn">on</span>(<span class="str">'プレイヤー一覧'</span>, (players) <span class="op">=&gt;</span> players.<span class="fn">forEach</span>(createPlayer));
+        socket.<span class="fn">on</span>(<span class="str">'他者が入室した'</span>, createPlayer);
+        socket.<span class="fn">on</span>(<span class="str">'他者が移動した'</span>, updatePlayer);
+        socket.<span class="fn">on</span>(<span class="str">'他者がいなくなった'</span>, (playerId) <span class="op">=&gt;</span> {
+            <span class="kw">const</span> playerEntity = document.<span class="fn">getElementById</span>(<span class="str">'player-'</span> + playerId);
+            <span class="kw">if</span> (playerEntity) playerEntity.<span class="fn">remove</span>();
+        });
+    <span class="kw">&lt;/script&gt;</span>
+<span class="kw">&lt;/body&gt;</span>
+<span class="kw">&lt;/html&gt;</span></pre>
+
+      <p style="margin:1rem 0 0.4rem;font-weight:700;color:#4FC3F7;font-size:0.95rem">確かめること（2つの窓で）</p>
+      <ul class="point-list" style="margin-bottom:0.6rem;font-size:0.92rem">
+        <li>ボタンや <code>E</code> / <code>R</code> キーを押す → もう片方の画面に<strong>知らせの帯</strong>と<strong>頭上の赤い印</strong>が出る</li>
+        <li>2人を<strong>3m以内に近づける</strong> → ターミナルに <code>イベント : 接近 …</code> と出る</li>
+        <li><strong>離れる</strong> → <code>イベント : 離脱 … 5006</code>（＝5.0秒一緒にいた）のように出る</li>
+        <li>スイッチに円を合わせてクリック → <code>イベント : クリック 赤いスイッチ</code></li>
+        <li>DB Viewer で <code>event_logs</code> を開き、<strong>1つの表にすべての行動が並んでいる</strong>ことを確認する</li>
+      </ul>
+
+      <div class="callout-tip">
+        <h4>ここから広げられる分析（レポート用）</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><strong>誰と誰が仲がよいか（ネットワーク分析）：</strong><code>離脱</code> の行を <code>player_id</code> と <code>target</code> でまとめ、<code>value</code>（一緒にいた時間）を合計する</li>
+          <li><strong>行動の起きた場所：</strong><code>x, z</code> を散布図に描くと、<strong>「会話が発生した場所」</strong>が地図になる</li>
+          <li><strong>滞在時間：</strong>同じ <code>player_id</code> の <code>入室</code> と <code>退室</code> の <code>time</code> の差</li>
+          <li><strong>第6回につなぐ：</strong>「レイアウトAとレイアウトBで、接近の回数に差はあるか」を検定する</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 6: DESIGN YOUR OWN ============ -->
+<section id="sec-design">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">6</div>
+      <h2>自分のテーマに作り変える ― 3つのヒントを合体させて、自分の空間にする</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>3つは、そのまま1つに合体できる</h3></div>
+      <p style="margin-bottom:0.6rem">ヒント①②③は<strong>けんかしない</strong>。<code>server.js</code> に<strong>表を3つ作り</strong>、それぞれの受け口を並べて書けばよい。最終課題ではこの形を勧める。</p>
+      <pre><span class="code-label">JavaScript ── 合体させた server.js の骨組み</span><span class="cmt">// 表は3つ作る</span>
+db.<span class="fn">run</span>(<span class="str">`CREATE TABLE IF NOT EXISTS player_logs( ... )`</span>);   <span class="cmt">// ヒント①：移動</span>
+db.<span class="fn">run</span>(<span class="str">`CREATE TABLE IF NOT EXISTS gaze_logs( ... )`</span>);     <span class="cmt">// ヒント②：注視</span>
+db.<span class="fn">run</span>(<span class="str">`CREATE TABLE IF NOT EXISTS event_logs( ... )`</span>);    <span class="cmt">// ヒント③：行動</span>
+
+io.<span class="fn">on</span>(<span class="str">"connection"</span>, (socket) <span class="op">=&gt;</span> {
+
+    socket.<span class="fn">on</span>(<span class="str">"自分が移動した"</span>, (data) <span class="op">=&gt;</span> { <span class="cmt">/* ヒント① */</span> });
+    socket.<span class="fn">on</span>(<span class="str">"見た"</span>,          (data) <span class="op">=&gt;</span> { <span class="cmt">/* ヒント② */</span> });
+    socket.<span class="fn">on</span>(<span class="str">"行動した"</span>,      (data) <span class="op">=&gt;</span> { <span class="cmt">/* ヒント③ */</span> });
+    socket.<span class="fn">on</span>(<span class="str">"クリックした"</span>,  (data) <span class="op">=&gt;</span> { <span class="cmt">/* ヒント③ */</span> });
+
+    socket.<span class="fn">on</span>(<span class="str">"disconnect"</span>, () <span class="op">=&gt;</span> { <span class="cmt">/* まとめて保存して片づける */</span> });
+});
+
+<span class="fn">setInterval</span>(() <span class="op">=&gt;</span> { <span class="cmt">/* ヒント③：接近の見張り */</span> }, <span class="num">500</span>);</pre>
+      <p style="font-size:0.92rem;margin-top:0.7rem;margin-bottom:0">クライアント側も同じで、<strong><code>&lt;a-cursor&gt;</code> は1つ</strong>あればよい。<code>raycaster="objects: .lookable, .clickable"</code> のように<strong>カンマで並べる</strong>と、見る対象と押す対象の両方を判定できる。</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>ログ設計チェックリスト（作りはじめる前に埋める）</h3></div>
+      <p style="margin-bottom:0.6rem">コードを書く前に、この5行を紙かNotionに書く。<strong>ここが埋まっていれば作品は必ず完成する</strong>し、埋まらないまま作りはじめると<strong>あとで「分析するデータが無い」</strong>ことになる。</p>
+      <table style="font-size:0.9rem">
+        <tr><th style="width:8%">#</th><th style="width:30%">埋めること</th><th>例（バーチャル美術館の場合）</th></tr>
+        <tr><td>1</td><td><strong>明らかにしたい問い</strong></td><td>人気の作品はどれか。人はどんな順番で展示を見るか</td></tr>
+        <tr><td>2</td><td><strong>その答えに必要な数字</strong></td><td>作品ごとの合計注視時間／人ごとの鑑賞の順番</td></tr>
+        <tr><td>3</td><td><strong>そのために記録する行</strong></td><td><code>gaze_logs</code>（誰が・どの作品を・いつから・何ミリ秒）</td></tr>
+        <tr><td>4</td><td><strong>そのために空間に必要なもの</strong></td><td><code>lookable</code> を付けた作品を5点、名前つきで配置する</td></tr>
+        <tr><td>5</td><td><strong>比べる2つ（あれば強い）</strong></td><td>順路の案内が<strong>ある</strong>／<strong>ない</strong>の2条件で、鑑賞の順番は変わるか</td></tr>
+      </table>
+      <div class="callout-tip" style="margin-top:0.6rem">
+        <h4>5番の「比べる2つ」があると、レポートが一段よくなる</h4>
+        <p style="font-size:0.9rem;margin-bottom:0">条件を2つ用意すると、第6回の<strong>検定</strong>がそのまま使えて「<strong>差があると言える／言えない</strong>」まで書ける。空間を2種類作るのが大変なら、<strong>同じ空間で「1回目／2回目」</strong>や<strong>「案内あり／なし」</strong>のように条件を変えるだけでもよい。</p>
+      </div>
+    </div>
+
+    <div id="hint-review" class="card">
+      <div class="card-header"><h3>おすすめ：作りはじめる前に、隣の人に1分で説明してみる（提出はなし）</h3></div>
+      <p style="margin-bottom:0.5rem">課題ではないが、やっておくと確実に得をする。<strong>上のチェックリスト5行を声に出して説明</strong>し、ツッコミをもらう。作りはじめてから気づく穴を、<strong>作りはじめる前に</strong>見つけられる。</p>
+      <div class="callout-info" style="margin-top:0.4rem">
+        <h4>聞く側は、この3つを聞いてあげる</h4>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><strong>「そのデータ、本当に取れる？」</strong> ─ 記録するコードが書ける形になっているか（第4回〜今日の範囲でできるか）</li>
+          <li><strong>「そのグラフ、何が言えるの？」</strong> ─ 集計した結果、<strong>問いの答え</strong>になっているか</li>
+          <li><strong>「人が集まらなくても成立する？」</strong> ─ 参加者が2人でも何か言えるか。ダメなら<strong>1人で条件を変える</strong>設計に直す</li>
+        </ul>
+      </div>
+      <p style="font-size:0.88rem;color:#999;margin:0.7rem 0 0">もらったツッコミと、それを受けて企画をどう直したかは、<strong>最終レポートの「1. 企画」</strong>に書くとそのまま使える。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 7: FINAL CHECK ============ -->
+<section id="sec-checklist">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800;color:#111">7</div>
+      <h2>提出前チェック ― 8月13日（木）13:10 に向けて</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>✅ 出す前に、この順で確認する</h3></div>
+      <table style="font-size:0.9rem">
+        <tr><th style="width:6%"></th><th style="width:30%">確認すること</th><th>やり方</th></tr>
+        <tr><td>1</td><td><strong>まっさらな状態から動くか</strong></td><td><code>node_modules</code> を消して <code>npm install</code> → <code>node server.js</code> で動くか。動かないなら <code>package.json</code> が不完全</td></tr>
+        <tr><td>2</td><td><strong>ZIPに <code>node_modules</code> が入っていないか</strong></td><td>数百MBになっていたら入っている。消してから固め直す（<code>.venv</code> も同様）</td></tr>
+        <tr><td>3</td><td><strong>データが空になっていないか</strong></td><td>DB Viewer で各テーブルの行数を見る。移動ログは<strong>ブラウザを閉じてから</strong>入る</td></tr>
+        <tr><td>4</td><td><strong>分析コードが最後まで通るか</strong></td><td><code>python analyze.py</code> をもう一度実行して、エラーなくグラフが出るか</td></tr>
+        <tr><td>5</td><td><strong>グラフに軸ラベルと単位があるか</strong></td><td>「秒」「回数」など。第5回・第6回で作ったグラフを見返す</td></tr>
+        <tr><td>6</td><td><strong>レポートに5項目そろっているか</strong></td><td>企画／空間の説明／取得データ／分析／考察と課題</td></tr>
+        <tr><td>7</td><td><strong>テーブルの列の意味を書いたか</strong></td><td>特に <code>event_logs</code> の <code>value</code>（<code>event_type</code> ごとに意味が変わる）</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>⏰ 時間が足りないときの優先順位</h3></div>
+      <p style="margin-bottom:0.6rem">全部やろうとして<strong>何も完成しない</strong>のがいちばんもったいない。困ったらこの順で削る。</p>
+      <ul class="point-list" style="margin-bottom:0.8rem">
+        <li><strong>絶対に削らない：</strong>①ログが溜まること ②そのログをpandasで読んでグラフ1枚出すこと ③レポート。<strong>この3つがあれば課題は成立する</strong></li>
+        <li><strong>次に大事：</strong>「比べる2つ」の条件を用意して、第6回の検定まで通すこと</li>
+        <li><strong>削ってよい：</strong>3Dモデルの美しさ、複雑なゲームルール、凝ったUI。<strong>箱と板だけの空間でも、良い分析なら高く評価される</strong></li>
+      </ul>
+      <div class="callout-danger">
+        <h4>いちばんの失敗パターン</h4>
+        <p style="font-size:0.9rem;margin-bottom:0"><strong>空間づくりに全部の時間を使い、締切前日にログを取りはじめる。</strong>そこでバグが見つかると、もう分析する時間がない。<br><strong>おすすめの順番：</strong>①ヒント①をそのまま動かす → ②<strong>自分のテーマの記録を1種類だけ</strong>足して、<strong>その日のうちに <code>analyze.py</code> でグラフを1枚出す</strong> → ③そこから空間を作り込む。<strong>「分析が回る」状態を最初に作ってしまう</strong>のがコツ。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>📚 困ったときに戻る場所</h3></div>
+      <table style="font-size:0.9rem">
+        <tr><th style="width:22%">困りごと</th><th>戻る資料</th></tr>
+        <tr><td>3D空間の作り方</td><td><a href="md2_week_1.html" style="color:#4FC3F7">第1回</a>（A-Frameの基本）・<a href="md2_week_2.html" style="color:#4FC3F7">第2回</a>（JavaScriptとイベント）</td></tr>
+        <tr><td>座標データを動かす／glTFモデル</td><td><a href="md2_week_3.html" style="color:#4FC3F7">第3回</a>（アニメーション・<a href="md2_week_3.html#sec-gltf" style="color:#4FC3F7">Sketchfabのモデル配置</a>）</td></tr>
+        <tr><td>マルチプレイ・Socket.IO</td><td><a href="md2_week_4.html" style="color:#4FC3F7">第4回</a>（<code>emit</code> と <code>on</code> の対応）</td></tr>
+        <tr><td>ログ保存・pandas・前処理</td><td><a href="md2_week_5.html" style="color:#4FC3F7">第5回</a>（SQLite・CSV・pandas・matplotlib）</td></tr>
+        <tr><td>検定・レポートの書き方</td><td><a href="md2_week_6.html" style="color:#4FC3F7">第6回</a>（p値・検定の選び方・3部構成のレポート）</td></tr>
+      </table>
+      <div class="callout-info" style="margin-top:0.7rem">
+        <h4>最後に</h4>
+        <p style="font-size:0.95rem;margin-bottom:0">この半期で、<strong>データを「もらう人」から「生み出して、集めて、読み解く人」</strong>になった。空間を設計すればデータの形が決まり、データの形が決まれば言えることが決まる ── <strong>分析は、測る前から始まっている</strong>。自由な発想を期待しています。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>MD2 第7回 ― 自由創作（最終課題：分析したくなるデータが集まるマルチプレイ空間）</p>
+    <div style="margin-top:0.5rem;font-size:0.8rem;color:#666">&copy;2026 Ryota Nakamura.</div>
+  </div>
+</footer>
+
+<!-- ============ SCRIPTS ============ -->
+<script>
+// 大見出し（section-header）ごとに本文を折りたたむ。既定は閉じた状態。
+(function() {
+  // header（.section-header / .card-header）を折りたたみの見出しに変え、
+  // それ以降の兄弟要素を .section-body でくるむ
+  function makeToggle(header) {
+    var parent = header.parentElement;
+    var body = document.createElement('div');
+    body.className = 'section-body';
+    while (header.nextSibling) { body.appendChild(header.nextSibling); }
+    parent.appendChild(body);
+
+    var chevron = document.createElement('span');
+    chevron.className = 'section-chevron';
+    chevron.textContent = '▶';
+    header.appendChild(chevron);
+    header.classList.add('toggle-head');
+
+    function setOpen(open) {
+      header.classList.toggle('open', open);
+      body.classList.toggle('open', open);
+    }
+    header.addEventListener('click', function() {
+      setOpen(!header.classList.contains('open'));
+    });
+
+    // 本文の最後に「閉じる」ボタンを置く。押すと閉じて、見出しの位置まで戻る
+    var closeWrap = document.createElement('div');
+    closeWrap.className = 'section-close-wrap';
+    var closeBtn = document.createElement('button');
+    closeBtn.className = 'section-close';
+    closeBtn.type = 'button';
+    closeBtn.textContent = '▲ 閉じる';
+    closeBtn.addEventListener('click', function() {
+      setOpen(false);
+      header.scrollIntoView({ block: 'center' });
+    });
+    closeWrap.appendChild(closeBtn);
+    body.appendChild(closeWrap);
+  }
+
+  document.querySelectorAll('section').forEach(function(section) {
+    var header = section.querySelector('.section-header');
+    if (header) { makeToggle(header); return; }
+    // 大見出しを持たない導入セクション（位置づけ・授業の流れ）はカード見出しで折りたたむ
+    section.querySelectorAll(':scope > .container > .card > .card-header').forEach(makeToggle);
+  });
+
+  // 折りたたまれた中にある要素へ飛べるように、その節を開いてからスクロールする
+  function reveal(target) {
+    var body = target.closest('.section-body');
+    while (body) {
+      var header = body.previousElementSibling;
+      if (header && header.classList.contains('toggle-head')) {
+        header.classList.add('open');
+        body.classList.add('open');
+      }
+      body = body.parentElement ? body.parentElement.closest('.section-body') : null;
+    }
+  }
+
+  // ページ内リンク（提出ガイド・上部ナビ）のクリック
+  document.addEventListener('click', function(e) {
+    var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if (!a) return;
+    var id = a.getAttribute('href').slice(1);
+    if (!id) return;
+    var target = document.getElementById(id);
+    if (!target) return;
+    e.preventDefault();
+    reveal(target);          // 閉じている節なら開く
+    target.scrollIntoView();
+    history.replaceState(null, '', '#' + id);
+  });
+
+  // #xxx 付きで開いたとき
+  function scrollFromHash() {
+    var id = location.hash.slice(1);
+    if (!id) return;
+    var target = document.getElementById(id);
+    if (!target) return;
+    reveal(target);
+    target.scrollIntoView();
+  }
+  scrollFromHash();
+  window.addEventListener('hashchange', scrollFromHash);
+})();
+</script>
+<script>
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    // ラベル(.code-label)とコピーボタンを取り除いた複製から、純粋なコードだけを取り出す
+    var clone = pre.cloneNode(true);
+    clone.querySelectorAll('.code-label, .copy-btn').forEach(function(el) { el.remove(); });
+    var code = clone.textContent.replace(/^\n+/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() { btn.textContent = 'コピー'; btn.classList.remove('copied'); }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+document.querySelectorAll(':not(pre) > code').forEach(function(code) {
+  code.title = 'クリックでコピー';
+  code.addEventListener('click', function() {
+    navigator.clipboard.writeText(code.textContent).then(function() {
+      code.classList.add('copied');
+      setTimeout(function() { code.classList.remove('copied'); }, 1500);
+    });
+  });
+});
+</script>
+</body>
+</html>
