@@ -657,7 +657,7 @@ body { padding-top: 2.2rem; }
 
       <div style="background:linear-gradient(135deg,#2e2410,#1a1508);border:2px solid #FFB800;border-radius:12px;padding:1rem 1.2rem;margin-bottom:1rem">
         <p style="font-size:1.05rem;font-weight:700;margin-bottom:0.3rem;color:#FFB800">提出期限：8月13日（木）13:10</p>
-        <p style="font-size:0.9rem;margin-bottom:0">提出先は Notion（授業ページ）。<strong>期限を過ぎると受け付けられません</strong>。早めに「動くところまで」作って、あとから足していくのが安全です。</p>
+        <p style="font-size:0.9rem;margin-bottom:0">提出先は <strong>Google Classroom</strong>。<strong>期限を過ぎると受け付けられません</strong>。早めに「動くところまで」作って、あとから足していくのが安全です。</p>
       </div>
 
       <h4 style="color:#FFB800;font-weight:700;font-size:1rem;margin:1rem 0 0.4rem">これまでに学んだこと（すべて使う）</h4>
@@ -697,8 +697,25 @@ body { padding-top: 2.2rem; }
         <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
           <li><strong>1人でも取れる</strong>：ブラウザの窓を2〜3枚開けば、複数人の空間として動く（第4回でやったとおり）</li>
           <li><strong>友だちに入ってもらう</strong>と一気に面白くなる。同じLAN内なら <code>http://（自分のIPアドレス）:3000</code> で入れる</li>
+          <li><strong>さらに、履修者全員がそれぞれWebXRコンテンツを公開できる仕組みを用意しました</strong>（次のブロック参照）。Webアプリを公開すれば、<strong>グループメンバや友達にプレイしてもらえます</strong>。そこで取得したデータを分析に使ってください</li>
           <li>参加者の<strong>個人情報は集めない</strong>（名前・学籍番号は不要。<code>socket.id</code> のような匿名IDで十分）</li>
           <li>どうしても人数が足りないときは、<strong>自分で何回もプレイして条件を変える</strong>（例：案内表示あり／なし）のも立派な実験</li>
+        </ul>
+      </div>
+
+      <div class="callout-info" style="margin-top:0.7rem">
+        <h4>🌐 作った空間を公開する ― 全員ぶんのWebXR公開環境を用意しました</h4>
+        <p style="font-size:0.9rem;margin-bottom:0.6rem">履修者全員が<strong>それぞれ自分のWebXRコンテンツを公開できる仕組み</strong>を作りました。公開すればURLを送るだけで、<strong>グループメンバや友達にプレイしてもらえます</strong>。実際に人に遊んでもらって集まったデータを、そのまま分析に使ってください。</p>
+        <table style="font-size:0.9rem">
+          <tr><th style="width:14%">用途</th><th>URL</th></tr>
+          <tr><td><strong>編集</strong></td><td><code>https://user.md2.aixrlab.space/</code>（全員共通・<strong>大学のGoogleアカウントで認証</strong>）</td></tr>
+          <tr><td><strong>表示</strong></td><td><code>https://学籍番号.md2.aixrlab.space</code>（<strong>「学籍番号」を自分の学籍番号に置き換える</strong>）</td></tr>
+        </table>
+        <p style="font-size:0.9rem;margin:0.7rem 0 0.4rem"><strong>公開したら、Google Classroom の返信欄にURLを共有してください。</strong>私もプレイしたいです。</p>
+        <p style="font-size:0.9rem;font-weight:700;margin:0.8rem 0 0.3rem;color:#4FC3F7">公開環境で取得したデータを分析するには</p>
+        <ul class="point-list" style="margin-bottom:0;font-size:0.9rem">
+          <li><code>.db</code> ファイルをダウンロードし、<strong>VSCodeの拡張機能</strong>（SQLite Viewer など）で表示して <strong>CSVファイルに書き出す</strong></li>
+          <li>もしくは<strong>サーバログをコピペ</strong>して、自分で前処理してから使う</li>
         </ul>
       </div>
     </div>
